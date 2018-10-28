@@ -1,0 +1,12 @@
+{
+  "manifest_version": 2,
+  "name": "ND - Network Debugger",
+  "description": "Network Debugger - easy network debugger for developers",
+  "version": "0.0.1",
+  "icons": {
+    "128": "test_icon_128.png"
+  },
+  "permissions": [
+    "debugger"
+  ]
+}
