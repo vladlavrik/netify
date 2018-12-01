@@ -1,3 +1,4 @@
+import EventEmitter from './helpers/EventEmitter'
 import {compileRawResponse, mutateHeaders} from './helpers/http.js'
 import {compileUrlFromPattern} from './helpers/url.js'
 
@@ -9,36 +10,74 @@ const interceptPatterns = [{
 	interceptionStage: 'HeadersReceived'
 }];
 
-
-export default class Debugger {
+//TODO replace request method
+export default class Debugger extends EventEmitter {
 	debuggerVersion = '1.3';
 
 	debugTarget = null;
 
 	rulesList = [];
 
+	/**
+	 *
+	 * @param {Object} options
+	 * @param {number} options.tabId
+	 *
+	 *
+	 * Triggered events:
+	 * 	- logRequest
+	 * 	    params:
+	 * 	      {string} id
+	 *        {string} method
+	 *        {string} requestType
+	 *        {string} url
+	 *
+	 * 	- logResponse
+	 * 		params:
+	 * 		  {string} id
+	 *        {number} statusCode
+	 */
 	constructor({tabId}) {
+		super();
+
 		this.debugTarget = {tabId}
 	}
 
+	/**
+	 * @public
+	 */
 	async initialize() {
 		await this.attach();
 		await this.sendCommand('Network.setRequestInterception', {patterns: interceptPatterns});
 		chrome.debugger.onEvent.addListener(this.messageHandler);
 	}
 
+	/**
+	 * @public
+	 */
 	clearAllRules() {
 		this.rulesList = [];
 	}
 
+	/**
+	 * @public
+	 * @param {RulesItem} rules
+	 */
 	addRules(rules) {
+		console.log(rules.filter.id);
 		this.rulesList.push(rules)
 	}
 
+	/**
+	 * @public
+	 */
 	removeRules(rules) {
 		this.rulesList.push(rules)
 	}
 
+	/**
+	 * @private
+	 */
 	attach() {
 		return new Promise((resolve, reject) => {
 			chrome.debugger.attach(this.debugTarget, this.debuggerVersion, () => {
@@ -51,10 +90,16 @@ export default class Debugger {
 		});
 	}
 
+	/**
+	 * @private
+	 */
 	sendCommand(command, params) {
 		return new Promise(resolve => chrome.debugger.sendCommand(this.debugTarget, command, params, resolve));
 	}
 
+	/**
+	 * @private
+	 */
 	messageHandler = (source, method, params) => {
 		if(method === "Network.requestIntercepted") {
 			if (params.hasOwnProperty('responseStatusCode')) {
@@ -65,6 +110,9 @@ export default class Debugger {
 		}
 	};
 
+	/**
+	 * @private
+	 */
 	async handleClientRequest({interceptionId, request, resourceType}) {
 		const actions = this.selectRuleActions({request, resourceType});
 
@@ -123,6 +171,9 @@ export default class Debugger {
 		// TODO add throttle
 	}
 
+	/**
+	 * @private
+	 */
 	async handleServerResponse({interceptionId, request, resourceType, responseHeaders, responseStatusCode}) {
 		const actions = this.selectRuleActions({request, resourceType});
 
@@ -185,6 +236,9 @@ export default class Debugger {
 		// TODO add throttle
 	}
 
+	/**
+	 * @private
+	 */
 	continueIntercepted(interceptionId, params, waitTime) {
 		const continueCommand = () => {
 			this.sendCommand('Network.continueInterceptedRequest', {
@@ -200,6 +254,9 @@ export default class Debugger {
 		}
 	}
 
+	/**
+	 * @private
+	 */
 	selectRuleActions({request, resourceType}) {
 		const rules = this.rulesList.find(({filter}) => {
 			if (filter.requestTypes.length && !filter.requestTypes.includes(resourceType)) {

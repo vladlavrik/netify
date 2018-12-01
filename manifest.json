@@ -8,5 +8,9 @@
   },
   "permissions": [
     "debugger"
-  ]
+  ],
+//  "devtools_page": "devtools.html",
+  "background": {
+    "page": "background.html"
+  }
 }
