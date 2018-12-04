@@ -1,0 +1,10 @@
+<fieldset [formGroup]="fieldSet">
+	<input type="checkbox" formControlName="enabled">
+	<select formControlName="reason">
+		<option
+			*ngFor="let reason of errorReasons; let i = index" [value]="reason"
+			[attr.selected]="i === 0 ? true : null">
+			{{reason}}
+		</option>
+	</select>
+</fieldset>

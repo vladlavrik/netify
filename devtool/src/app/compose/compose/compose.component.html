@@ -1,0 +1,7 @@
+<form (ngSubmit)="onSave()">
+	<app-compose-filter [fieldSet]="form.get('filter')"></app-compose-filter>
+	<app-compose-request [fieldSet]="form.get('request')"></app-compose-request>
+	<app-compose-response [fieldSet]="form.get('response')"></app-compose-response>
+	<app-compose-error [fieldSet]="form.get('error')"></app-compose-error>
+	<button>Save</button>
+</form>

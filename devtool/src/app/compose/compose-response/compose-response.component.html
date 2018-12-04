@@ -1,0 +1,14 @@
+<fieldset [formGroup]="fieldSet">
+	<div>
+		<input type="checkbox" formControlName="enabled"> Enabled
+	</div>
+	<div>
+		<input type="radio" formControlName="locally" [value]="true">
+		Pass to server
+		<input type="radio" formControlName="locally" [value]="false">
+		Response on client
+	</div>
+	<input formControlName="status">
+	<app-compose-field-headers [fieldSet]="fieldSet.get('headers')"></app-compose-field-headers>
+	<app-compose-field-body [fieldSet]="fieldSet.get('body')"></app-compose-field-body>
+</fieldset>

@@ -1,0 +1,8 @@
+<ul [formGroup]="fieldSet">
+	<li *ngFor="let _ of fieldSet.controls; let i = index" [formGroupName]="i">
+		<input type="text" formControlName="name">
+		<input type="text" formControlName="value">
+		<button type="button" (click)="removeHeaders(i)" *ngIf="i !== fieldSet.controls.length - 1">Remove</button>
+		<button type="button" (click)="addHeaders()" *ngIf="i === fieldSet.controls.length - 1">Add</button>
+	</li>
+</ul>

@@ -1,0 +1,8 @@
+<fieldset [formGroup]="fieldSet">
+	<div>
+		<input type="checkbox" formControlName="enabled"> Enabled
+	</div>
+	<input formControlName="endpointUrl">
+	<app-compose-field-headers [fieldSet]="fieldSet.get('headers')"></app-compose-field-headers>
+	<app-compose-field-body [fieldSet]="fieldSet.get('body')"></app-compose-field-body>
+</fieldset>

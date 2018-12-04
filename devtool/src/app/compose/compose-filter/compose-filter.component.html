@@ -1,0 +1,9 @@
+<fieldset [formGroup]="fieldSet">
+	<input formControlName="url">
+	<select multiple formControlName="requestTypes">
+		<option *ngFor="let type of requestTypes" [value]="type">{{type}}</option>
+	</select>
+	<select multiple formControlName="methods">
+		<option *ngFor="let method of requestMethods" [value]="method">{{method}}</option>
+	</select>
+</fieldset>

@@ -1,0 +1,9 @@
+<ul [formGroup]="fieldSet">
+	<div>
+		<input type="radio" formControlName="type" value="text">
+		Text
+		<input type="radio" formControlName="type" value="JSON">
+		JSON
+	</div>
+	<textarea formControlName="content"></textarea>
+</ul>
