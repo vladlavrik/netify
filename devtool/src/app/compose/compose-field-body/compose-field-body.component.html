@@ -1,9 +1,8 @@
-<ul [formGroup]="fieldSet">
+<div [formGroup]="fieldSet">
 	<div>
-		<input type="radio" formControlName="type" value="text">
-		Text
-		<input type="radio" formControlName="type" value="JSON">
+		<app-form-radio [formControl]="fieldSet.get('type')" value="text">Text</app-form-radio>
+		<app-form-radio [formControl]="fieldSet.get('type')" value="JSON">JSON</app-form-radio>
 		JSON
 	</div>
 	<textarea formControlName="content"></textarea>
-</ul>
+</div>

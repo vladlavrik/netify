@@ -1,13 +1,13 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, ViewEncapsulation} from '@angular/core';
+import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
-  selector: 'app-compose',
-  templateUrl: './compose.component.html',
-  styleUrls: ['./compose.component.css'],
-	encapsulation: ViewEncapsulation.ShadowDom
+	selector: 'app-compose',
+	templateUrl: './compose.component.html',
+	styleUrls: ['./compose.component.css'],
+	encapsulation: ViewEncapsulation.ShadowDom,
 })
-export class ComposeComponent implements OnInit {
+export class ComposeComponent {
 
 	form = new FormGroup({
 			filter: new FormGroup({
@@ -44,7 +44,7 @@ export class ComposeComponent implements OnInit {
 					content: new FormControl(''),
 				}),
 			}),
-			error:  new FormGroup({
+			error: new FormGroup({
 				enabled: new FormControl(false),
 				reason: new FormControl(null),
 			}),
@@ -58,9 +58,8 @@ export class ComposeComponent implements OnInit {
 		},
 	);
 
-  constructor() { }
-
-	OnInit() {}
+	constructor() {
+	}
 
 	onSave() {
 		console.log('save', this.form.valid, this.form.value);

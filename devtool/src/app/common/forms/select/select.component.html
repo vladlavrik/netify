@@ -1,0 +1,19 @@
+<button
+	id="label"
+	[title]="selectedNames"
+	[class.empty]="!!selectedNames"
+	(click)="toggleExpand()"
+	(keydown)="handleNavigation($event)">
+	{{selectedNames || placeholder}}
+</button>
+
+<ul #optionsRef *ngIf="expanded" id="content">
+	<li
+		*ngFor="let option of options; index as i;"
+		(click)="selectOption(option.value, $event.metaKey || $event.shiftKey)"
+		class="option"
+		[class.selected]="selectedSet.has(option)"
+		[class.highlighted]="i === highlightedIndex">
+		{{option.name}} {{selectedSet.has(option) ? '^' : ''}}
+	</li>
+</ul>
