@@ -63,7 +63,7 @@ export default class RulesItem extends BaseUIElement<state> {
 			#remove-button {
 				flex-shrink: 0;
 				margin: 0 6px 0 12px;
-				--icon-button-bg: url("/devtool-ui/styles/icons/remove.svg");
+				--icon-button-bg: url("/devtool/styles/icons/remove.svg");
 				cursor: pointer;
 			}
 			.placeholder {

@@ -38,7 +38,7 @@ class ExpandableCheck extends BaseUIElement<state> {
 				border: transparent 1px solid;
 				border-radius: 50%;
 				margin-right: 4px;
-				background: url("/devtool-ui/styles/icons/check-inactive.svg") no-repeat center;
+				background: url("/devtool/styles/icons/check-inactive.svg") no-repeat center;
 			}
 			#title:focus {
 				outline: none;
@@ -47,7 +47,7 @@ class ExpandableCheck extends BaseUIElement<state> {
 				border-color: #356A9E;
 			}
 			#title.active::before {
-				background: url("/devtool-ui/styles/icons/check-active.svg") no-repeat center;
+				background: url("/devtool/styles/icons/check-active.svg") no-repeat center;
 			}
 			:host([disabled]) #title {
 				opacity: .5;

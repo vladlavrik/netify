@@ -23,19 +23,19 @@ class AppScaffold extends BaseUIElement<state> {
 				margin: 0 6px;
 			}
 			.header-control.type-add {
-				--icon-button-bg: url('/devtool-ui/styles/icons/add.svg');
+				--icon-button-bg: url('/devtool/styles/icons/add.svg');
 			}
 			.header-control.type-add.to-close {
 				--icon-button-rotate: 45deg;
 			}
 			.header-control.type-clean {
-				--icon-button-bg: url('/devtool-ui/styles/icons/clean.svg');
+				--icon-button-bg: url('/devtool/styles/icons/clean.svg');
 			}
 			.header-control.type-collapse {
-				--icon-button-bg: url('/devtool-ui/styles/icons/panel-collapse.svg');
+				--icon-button-bg: url('/devtool/styles/icons/panel-collapse.svg');
 			}
 			.header-control.type-collapse.to-expand {
-				--icon-button-bg: url('/devtool-ui/styles/icons/panel-expand.svg');
+				--icon-button-bg: url('/devtool/styles/icons/panel-expand.svg');
 			}
 			#sectionSeparator {
 				padding: 2px 0;

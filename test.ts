@@ -1,4 +1,4 @@
-import BaseUIElement from './devtool-ui/helpers/BaseUIElement.js'
+import BaseUIElement from './devtool/helpers/BaseUIElement.js'
 
 type state = {
 	user: {

@@ -50,7 +50,7 @@ class LogsItem extends BaseUIElement<state> {
 			#follow-button {
 				flex-shrink: 0;
 				margin: 0 6px;
-				--icon-button-bg: url("/devtool-ui/styles/icons/follow.svg");
+				--icon-button-bg: url("/devtool/styles/icons/follow.svg");
 				cursor: pointer;
 			}
 		</style>

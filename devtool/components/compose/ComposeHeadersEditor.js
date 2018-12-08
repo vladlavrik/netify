@@ -31,10 +31,10 @@ tpl.innerHTML = `
 	}
 	.control-add {
 		display: none;
-		--icon-button-bg: url('/devtool-ui/styles/icons/add.svg');
+		--icon-button-bg: url('/devtool/styles/icons/add.svg');
 	}
 	.control-remove {
-		--icon-button-bg: url('/devtool-ui/styles/icons/remove.svg');
+		--icon-button-bg: url('/devtool/styles/icons/remove.svg');
 	}
 	.item:last-child .control-add {
 		display: block;
