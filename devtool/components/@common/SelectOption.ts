@@ -31,7 +31,7 @@ export class SelectOption extends LitElement {
 		this.addEventListener('click', this.handleSelectByClick)
 	}
 
-	render() {
+	protected render() {
 		return html`
 		<style>
 			:host {

@@ -19,11 +19,10 @@ export class RadioButton extends LitElement {
 	value!: radioValue;
 
 	protected createRenderRoot() {
-		// workaround to provide the "delegatesFocus" property pass
 		return this.attachShadow({mode: 'open', delegatesFocus: true});
 	}
 
-	render() {
+	protected render() {
 		return html`
 		<style>
 			:host {

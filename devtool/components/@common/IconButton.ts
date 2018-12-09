@@ -17,11 +17,10 @@ export class IconButton extends LitElement {
 	disabled?: boolean;
 
 	protected createRenderRoot() {
-		// workaround to provide the "delegatesFocus" property pass
 		return this.attachShadow({mode: 'open', delegatesFocus: true});
 	}
 
-	render() {
+	protected render() {
 		return html`
 		<style>
 			:host {
@@ -52,6 +51,7 @@ export class IconButton extends LitElement {
 				opacity: 0.75;
 				background: var(--icon-button-bg, none) center no-repeat;
 				transform: rotate(var(--icon-button-rotate, 0));
+				transition: transform .1s ease-out;
 				clip-path: var(--icon-button-clip, none);
 			}
 			#button:hover::before {

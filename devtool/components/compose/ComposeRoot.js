@@ -82,7 +82,7 @@ tpl.innerHTML = `
 
 // TODO improve UI small window width
 
-class ComposeSection extends HTMLElement {
+class ComposeRoot extends HTMLElement {
 
 	constructor(){
 		super();
@@ -101,7 +101,7 @@ class ComposeSection extends HTMLElement {
         };
 
         this.onCancel = () => {
-            this.dispatchEvent(new Event('requireComposeHide', {bubbles: true}));
+            this.dispatchEvent(new Event('requireComposeHide', {bubbles: true, composed: true}));
         }
 	}
 
@@ -118,4 +118,4 @@ class ComposeSection extends HTMLElement {
 }
 
 
-customElements.define('compose-section', ComposeSection);
+customElements.define('compose-root', ComposeRoot);

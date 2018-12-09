@@ -46,7 +46,6 @@ export class SelectDropdown extends LitElement {
 	}
 
 	protected createRenderRoot() {
-		// workaround to provide the "delegatesFocus" property pass
 		return this.attachShadow({mode: 'open', delegatesFocus: true});
 	}
 
@@ -55,7 +54,7 @@ export class SelectDropdown extends LitElement {
 		this.addEventListener('optionSelection', this.handleOptionSelection as any);
 	}
 
-	render() {
+	protected render() {
 		return html`
 		<style>
 			:host {

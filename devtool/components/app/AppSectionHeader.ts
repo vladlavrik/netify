@@ -7,6 +7,7 @@ class AppSectionHeader extends BaseUIElement {
 				display: flex;
 				height: 28px;
 				align-items: center;
+				padding-top: 1px;
 				border-bottom: #555555 1px solid;
 			}
 			.title {

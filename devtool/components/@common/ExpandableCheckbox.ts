@@ -19,8 +19,7 @@ export class ExpandableCheckbox extends LitElement {
 	@property({attribute: true, type: Boolean, reflect: true})
 	disabled = false;
 
-	render() {
-		console.log(this.expanded);
+	protected render() {
 		return html`
 		<style>
 			:host {

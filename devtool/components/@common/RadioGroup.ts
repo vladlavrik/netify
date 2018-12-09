@@ -34,7 +34,7 @@ export class RadioGroup extends LitElement {
 		this.addEventListener('radioButtonRequireFocusPrev', this.handleFocusChange, {capture: true});
 	}
 
-	render() {
+	protected render() {
 		return html`
 		<style>
 			:host {

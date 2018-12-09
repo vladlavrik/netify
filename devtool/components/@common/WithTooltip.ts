@@ -22,7 +22,7 @@ export class WithTooltip extends LitElement {
 		this.addEventListener('pointerleave', this.hideTooltip);
 	}
 
-	render() {
+	protected render() {
 		return html`
 		<style>
 			@keyframes showTooltip {

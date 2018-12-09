@@ -14,11 +14,10 @@ export class TextAreaField extends LitElement {
 	disabled?: boolean;
 
 	protected createRenderRoot() {
-		// workaround to provide the "delegatesFocus" property pass
 		return this.attachShadow({mode: 'open', delegatesFocus: true});
 	}
 
-	render() {
+	protected render() {
 		return html`
 		<style>
 			:host {
