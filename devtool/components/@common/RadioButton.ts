@@ -1,12 +1,30 @@
-import BaseUIElement from '../../helpers/BaseUIElement.js'
+import {LitElement, html, customElement, property} from '@polymer/lit-element'
+import {classMap} from "lit-html/directives/class-map";
 
-type state = {
-	selected: boolean,
-	value: string,
+declare global {
+	interface HTMLElementTagNameMap {
+		'radio-button': RadioButton;
+	}
 }
 
-export default class RadioButton extends BaseUIElement<state> {
-	static template = BaseUIElement.htmlToTemplate(`
+export type radioValue = string | number;
+
+@customElement('radio-button' as any)
+export class RadioButton extends LitElement {
+
+	@property({type: Boolean})
+	selected?: boolean;
+
+	@property({attribute: true, reflect: true})
+	value!: radioValue;
+
+	protected createRenderRoot() {
+		// workaround to provide the "delegatesFocus" property pass
+		return this.attachShadow({mode: 'open', delegatesFocus: true});
+	}
+
+	render() {
+		return html`
 		<style>
 			:host {
 				all: initial;
@@ -42,7 +60,7 @@ export default class RadioButton extends BaseUIElement<state> {
 				opacity: 0;
 				transition: opacity .1s ease-out;
 			}
-			#indicator.active::before {
+			#indicator.selected::before {
 				opacity: 1;
 			}
 			#label {
@@ -52,51 +70,43 @@ export default class RadioButton extends BaseUIElement<state> {
 				user-select: none;
 			}
 		</style>
-		<div id="indicator" $classif.active="selected" tabindex="0"></div>
+		<div
+			id="indicator"
+			class="${classMap({
+				selected: !!this.selected,
+			})}"
+			tabindex="0">
+		</div>
 		<div id="label">
 			<slot></slot>
 		</div>
-	`);
-
-	protected events = [
-		{root: true, event: 'click', handler: this.handleCheck},
-		{root: true, event: 'keydown', handler: this.handleKey},
-	];
-
-	protected get defaultState() {
-		return {
-			selected: false,
-			value: '',
-		};
+		`;
 	}
-
-	protected static boundPropertiesToState = ['selected', 'value'];
-	protected static boundAttributesToState = ['selected', 'value'];
-	public static observedAttributes = ['selected', 'value'];
-
-	public selected!: boolean;
-	public value!: string;
 
 	constructor(){
 		super();
-		this.render({delegatesFocus: true});
+		this.addEventListener('click', this.dispatchSelect);
+		this.addEventListener('keydown', this.handleKey);
 	}
 
-	protected stateChangedCallback([propName]: string[], _oldValue: any, value: any) {
-		if (propName === 'selected' && value === true) {
-			this.dispatchEvent(new Event('radioButtonSelected', {bubbles: true}));
+	public connectedCallback() {
+		super.connectedCallback();
+		if (this.selected) {
+			this.dispatchSelect();
 		}
 	}
 
-	private handleCheck() {
-		this.state.selected = true;
-	}
+	protected dispatchSelect = () => {
+		this.selected = true;
+		this.dispatchEvent(new Event('radioButtonSelected', {bubbles: true}));
+	};
 
-	private handleKey(event: KeyboardEvent) {
+	private handleKey = (event: KeyboardEvent) => {
 		switch (event.code) {
+			case 'Enter':
 			case 'Space':
 				event.preventDefault();
-				this.state.selected = true;
+				this.dispatchSelect();
 				break;
 
 			case 'ArrowUp':
@@ -111,7 +121,5 @@ export default class RadioButton extends BaseUIElement<state> {
 				this.dispatchEvent(new Event('radioButtonRequireFocusNext', {bubbles: true}));
 				break;
 		}
-	}
+	};
 }
-
-customElements.define('radio-button', RadioButton);

@@ -1,5 +1,5 @@
-import '../@common/TextField.js'
-import '../@common/IconButton.js'
+import '../@common/TextField'
+import '../@common/IconButton'
 
 const tpl = document.createElement('template');
 tpl.innerHTML = `
@@ -61,23 +61,27 @@ class ComposeHeadersEditor extends HTMLElement {
 		super();
 		const shadowRoot = this.attachShadow({mode: 'open'});
 		shadowRoot.appendChild(tpl.content.cloneNode(true));
-		this.addField();
-	}
 
-	addField = () => {
-		this.shadowRoot.appendChild(itemTpl.content.cloneNode(true));
+       this.removeField = event => {
+            const itemNode = event.target.parentNode;
+            itemNode.querySelector('.control-add').removeEventListener('click', this.addField);
+            itemNode.querySelector('.control-remove').removeEventListener('click', this.removeField);
+            itemNode.remove();
+        }
 
-		const itemNode = this.shadowRoot.lastElementChild;
-		itemNode.querySelector('.control-add').addEventListener('click', this.addField);
-		itemNode.querySelector('.control-remove').addEventListener('click', this.removeField);
-	};
+        this.addField = () => {
+            this.shadowRoot.appendChild(itemTpl.content.cloneNode(true));
 
-	removeField = event => {
-		const itemNode = event.target.parentNode;
-		itemNode.querySelector('.control-add').removeEventListener('click', this.addField);
-		itemNode.querySelector('.control-remove').removeEventListener('click', this.removeField);
-		itemNode.remove();
-	}
+            const itemNode = this.shadowRoot.lastElementChild;
+            itemNode.querySelector('.control-add').addEventListener('click', this.addField);
+            itemNode.querySelector('.control-remove').addEventListener('click', this.removeField);
+        };
+
+        this.addField();
+
+    }
+
+
 }
 
 

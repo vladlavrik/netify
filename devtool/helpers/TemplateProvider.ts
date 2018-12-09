@@ -1,4 +1,4 @@
-import {baseState, stateKey} from './StateProvider.js';
+import {baseState, stateKey} from './StateProvider';
 
 //TODO type stateKey = string[]
 const parseInjectableValueDelimiter = /(.*?)({([a-z0-9_.]+?)})/gi;

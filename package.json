@@ -1,0 +1,17 @@
+{
+  "name": "deep-network-debugger-extension",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev":   "webpack --entry ./devtool/devtool.ts --output ./devtool/build/devtool.js --resolve-extensions .ts,.js --module-bind ts=ts-loader --mode development --hide-modules -w",
+    "build": "webpack --entry ./devtool/devtool.ts --output ./devtool/build/devtool.js --resolve-extensions .ts,.js --module-bind ts=ts-loader --mode production  --hide-modules"
+  },
+  "dependencies": {
+    "@polymer/lit-element": "^0.6.4",
+    "lit-html": "^0.14.0"
+  },
+  "devDependencies": {
+    "ts-loader": "^5.3.1",
+    "typescript": "^3.2.2"
+  }
+}

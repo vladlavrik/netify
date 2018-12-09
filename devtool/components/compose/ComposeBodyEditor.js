@@ -1,6 +1,6 @@
-import '../@common/RadioGroup.js'
-import '../@common/RadioButton.js'
-import '../@common/TextAreaField.js'
+import '../@common/RadioGroup'
+import '../@common/RadioButton'
+import '../@common/TextAreaField'
 
 const tpl = document.createElement('template');
 tpl.innerHTML = `
@@ -30,13 +30,12 @@ tpl.innerHTML = `
 
 class ComposeBodyEditor extends HTMLElement {
 
-	/** @private */
-	blocks = {};
 
 	constructor(){
 		super();
 		const shadowRoot = this.attachShadow({mode: 'open'});
 		shadowRoot.appendChild(tpl.content.cloneNode(true));
+      this.blocks = {};
 
 		this.blocks.cancelButton = this.shadowRoot.querySelector('#cancel');
 

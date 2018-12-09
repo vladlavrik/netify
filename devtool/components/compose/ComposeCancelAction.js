@@ -1,5 +1,5 @@
-import '../@common/SelectDropdown.js'
-import '../@common/SelectOption.js'
+import '../@common/SelectDropdown'
+import '../@common/SelectOption'
 import './ComposeActionRow.js'
 
 const tpl = document.createElement('template');
@@ -49,14 +49,14 @@ tpl.innerHTML = `
 
 class ComposeCancelAction extends HTMLElement {
 
-	/** @private */
-	blocks = {};
-
 	constructor(){
 		super();
 		const shadowRoot = this.attachShadow({mode: 'open'});
 		shadowRoot.appendChild(tpl.content.cloneNode(true));
 
+
+        /** @private */
+        this.blocks = {};
 		this.blocks.cancelButton = this.shadowRoot.querySelector('#cancel');
 
 	}
@@ -67,10 +67,6 @@ class ComposeCancelAction extends HTMLElement {
 
 	disconnectedCallback() {
 		// this.blocks.cancelButton.removeEventListener('click', this.onCancel);
-	}
-
-	onCancel = () => {
-		// this.dispatchEvent(new Event('requireComposeHide', {bubbles: true}));
 	}
 }
 

@@ -1,5 +1,5 @@
-import TemplateProvider from './TemplateProvider.js';
-import StateProvider, {baseState, stateKey} from './StateProvider.js';
+import TemplateProvider from './TemplateProvider';
+import StateProvider, {baseState, stateKey} from './StateProvider';
 
 const toUpperCaseRegexp = /-([a-z])/g;
 const toUpperCaseTransform = (s: string) => s[1].toUpperCase();

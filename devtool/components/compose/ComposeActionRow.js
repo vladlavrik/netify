@@ -39,12 +39,12 @@ class ComposeActionRow extends HTMLElement {
 	}
 
 	/** @private*/
-	blocks = {};
 
 	constructor() {
 		super();
 		const shadowRoot = this.attachShadow({mode: 'open'});
 		shadowRoot.appendChild(tpl.content.cloneNode(true));
+        this.blocks = {};
 
 		this.blocks.title = this.shadowRoot.querySelector('#title');
 	}

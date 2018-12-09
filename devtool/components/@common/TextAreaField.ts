@@ -1,13 +1,25 @@
-import BaseUIElement from '../../helpers/BaseUIElement.js';
+import {LitElement, html, customElement, property} from '@polymer/lit-element'
 
-type state = {
-	placeholder: string,
-	maxlength: string,
-	disabled: boolean,
-}
 
-export default class TextAreaField extends BaseUIElement<state> {
-	static template = BaseUIElement.htmlToTemplate(`
+@customElement('text-area-field' as any)
+export class TextAreaField extends LitElement {
+
+	@property({attribute: true, reflect: true})
+	placeholder?: string;
+
+	@property({attribute: true, reflect: true})
+	maxlength?: string;
+
+	@property({attribute: true, reflect: true})
+	disabled?: boolean;
+
+	protected createRenderRoot() {
+		// workaround to provide the "delegatesFocus" property pass
+		return this.attachShadow({mode: 'open', delegatesFocus: true});
+	}
+
+	render() {
+		return html`
 		<style>
 			:host {
 				all: initial;
@@ -44,38 +56,12 @@ export default class TextAreaField extends BaseUIElement<state> {
 				color: #CFCFCF;
 			}
 		</style>
-		<textarea id="input" spellcheck="false" $placeholder="placeholder" $maxlength="maxlength" $disabled="disabled"></textarea>
-	`);
-
-
-	protected static boundPropertiesToState = ['placeholder', 'maxlength', 'disabled'];
-	protected static boundAttributesToState = ['placeholder', 'maxlength', 'disabled'];
-	public static observedAttributes = ['placeholder', 'maxlength', 'disabled'];
-
-	protected get defaultState() {
-		return {
-			placeholder: '',
-			disabled: false,
-			value: '',
-		};
-	}
-
-	public get value () {
-		return (this.$.input as HTMLInputElement).value;
-	}
-	public set value (val) {
-		(this.$.input as HTMLInputElement).value = val;
-	}
-
-	public placeholder!: string;
-	public maxlength!: string;
-	public disabled!: boolean;
-
-	constructor(){
-		super();
-		this.render({delegatesFocus: true});
+		<textarea
+			id="input"
+			spellcheck="false"
+			placeholder="${this.placeholder}"
+			maxlength="${this.maxlength}"
+			?disabled="${this.disabled}"></textarea>
+		`;
 	}
 }
-
-
-customElements.define('text-area-field', TextAreaField);

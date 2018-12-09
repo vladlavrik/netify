@@ -1,4 +1,4 @@
-import BaseUIElement from '../../helpers/BaseUIElement.js';
+import BaseUIElement from '../../helpers/BaseUIElement';
 
 class AppSectionHeader extends BaseUIElement {
 	static template = BaseUIElement.htmlToTemplate(`

@@ -1,6 +1,6 @@
-import '../@common/TextField.js'
-import '../@common/SelectDropdown.js'
-import '../@common/SelectOption.js'
+import '../@common/TextField'
+import '../@common/SelectDropdown'
+import '../@common/SelectOption'
 
 const tpl = document.createElement('template');
 tpl.innerHTML = `
@@ -69,8 +69,6 @@ tpl.innerHTML = `
 
 class ComposeFilter extends HTMLElement {
 
-	/** @private */
-	blocks = {};
 
 	constructor(){
 		super();

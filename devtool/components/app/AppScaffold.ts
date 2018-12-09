@@ -1,6 +1,6 @@
-import '../@common/IconButton.js'
-import './AppSectionHeader.js'
-import BaseUIElement from '../../helpers/BaseUIElement.js';
+import '../@common/IconButton'
+import './AppSectionHeader'
+import BaseUIElement from '../../helpers/BaseUIElement';
 
 type state = {
 	showCompose: boolean,
@@ -107,10 +107,13 @@ class AppScaffold extends BaseUIElement<state> {
 		// TODO cursor on separator move
 	];
 
+	//TODO tooltip on shown compose
+
 	constructor(){
 		super();
 		this.render();
-		// this.onShowCompose();
+		this.state.showCompose = true;
+
 	}
 
 

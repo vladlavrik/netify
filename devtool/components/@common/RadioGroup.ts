@@ -1,30 +1,21 @@
-import BaseUIElement from '../../helpers/BaseUIElement.js'
-import RadioButton from './RadioButton.js'
+import {LitElement, html, customElement, property} from '@polymer/lit-element'
+import {RadioButton, radioValue} from './RadioButton'
 
-export default class RadioGroup extends BaseUIElement {
-	static template = BaseUIElement.htmlToTemplate(`
-		<style>
-			:host {
-				all: initial;
-				display: block;
-				font-family: inherit;
-			}
-		</style>
-		<slot></slot>
-	`);
+declare global {
+	interface HTMLElementTagNameMap {
+		'radio-group': RadioGroup;
+	}
+}
 
-	protected events = [
-		{root: true, event: 'radioButtonSelected', handler: this.handleOptionCheck, options: {capture: true}},
-		{root: true, event: 'radioButtonRequireFocusNext', handler: this.handleFocusChange, options: {capture: true}},
-		{root: true, event: 'radioButtonRequireFocusPrev', handler: this.handleFocusChange, options: {capture: true}},
-	];
+@customElement('radio-group' as any)
+export class RadioGroup extends LitElement {
 
-	get value(): string|null {
-		const selectedOption = this.options.find(option => option.selected);
+	@property()
+	get value(): radioValue | null {
+		const selectedOption = this.options.find(option => !!option.selected);
 		return selectedOption ? selectedOption.value : null;
 	}
-
-	set value(val: string|null) {
+	set value(val: radioValue | null) {
 		const option = this.options.find(option => option.value === val);
 		if (option) {
 			option.selected = true;
@@ -36,17 +27,33 @@ export default class RadioGroup extends BaseUIElement {
 		return Array.from(this.querySelectorAll('radio-button'));
 	}
 
-	constructor(){
+	constructor() {
 		super();
-		this.render();
+		this.addEventListener('radioButtonSelected', this.handleOptionCheck, {capture: true});
+		this.addEventListener('radioButtonRequireFocusNext', this.handleFocusChange, {capture: true});
+		this.addEventListener('radioButtonRequireFocusPrev', this.handleFocusChange, {capture: true});
 	}
 
-	private handleOptionCheck(event: Event) {
+	render() {
+		return html`
+		<style>
+			:host {
+				all: initial;
+				display: block;
+				font-family: inherit;
+			}
+		</style>
+		<slot></slot>
+		`;
+	}
+
+
+	private handleOptionCheck = (event: Event) => {
 		event.stopPropagation();
 		this.unselectExcept(event.target as RadioButton);
-	}
+	};
 
-	private handleFocusChange(event: Event) {
+	private handleFocusChange = (event: Event) => {
 		const {options} = this;
 		let focusIndex = options.indexOf(event.target as RadioButton);
 		if (event.type === 'radioButtonRequireFocusNext') {
@@ -63,7 +70,7 @@ export default class RadioGroup extends BaseUIElement {
 		}
 
 		(options[focusIndex] as HTMLElement).focus();
-	}
+	};
 
 	private unselectExcept(exceptOption?: RadioButton|null) {
 		for (const option of this.options) {
@@ -73,5 +80,3 @@ export default class RadioGroup extends BaseUIElement {
 		}
 	}
 }
-
-customElements.define('radio-group', RadioGroup);

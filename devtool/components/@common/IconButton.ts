@@ -1,13 +1,28 @@
-import BaseUIElement from '../../helpers/BaseUIElement.js'
-import './WithTooltip.js'
+import {LitElement, html, customElement, property} from '@polymer/lit-element';
+import './WithTooltip';
 
-type state = {
-	tooltip: string,
-	disabled: boolean,
+declare global {
+	interface HTMLElementTagNameMap {
+		'icon-button': IconButton;
+	}
 }
 
-class IconButton extends BaseUIElement<state> {
-	static template = BaseUIElement.htmlToTemplate(`
+@customElement('icon-button' as any)
+export class IconButton extends LitElement {
+
+	@property({attribute: true, reflect: true})
+	tooltip?: string;
+
+	@property({attribute: true, reflect: true})
+	disabled?: boolean;
+
+	protected createRenderRoot() {
+		// workaround to provide the "delegatesFocus" property pass
+		return this.attachShadow({mode: 'open', delegatesFocus: true});
+	}
+
+	render() {
+		return html`
 		<style>
 			:host {
 				all: initial;
@@ -53,30 +68,10 @@ class IconButton extends BaseUIElement<state> {
 				white-space: nowrap;
 			}
 		</style>
-		<with-tooltip $disabled="disabled">
-			<button id="button" type="button" $disabled="disabled"></button>
-			<span id="tooltip" slot="tooltip">{tooltip}</span>
+		<with-tooltip ?disabled="${this.disabled}">
+			<button id="button" type="button" ?disabled="${this.disabled}"></button>
+			<span id="tooltip" slot="tooltip">${this.tooltip}</span>
 		</with-tooltip>
-	`);
-
-	protected static boundPropertiesToState = ['tooltip', 'disabled'];
-	protected static boundAttributesToState = ['tooltip', 'disabled'];
-	public static observedAttributes = ['tooltip', 'disabled'];
-
-	public tooltip!: string;
-	public disabled!: boolean;
-
-	protected get defaultState() {
-		return {
-			tooltip: '',
-			disabled: false,
-		};
-	}
-
-	constructor(){
-		super();
-		this.render({delegatesFocus: true});
+		`;
 	}
 }
-
-customElements.define('icon-button', IconButton);

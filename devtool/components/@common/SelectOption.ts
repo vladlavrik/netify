@@ -1,17 +1,38 @@
-import BaseUIElement from '../../helpers/BaseUIElement.js'
+import {LitElement, html, customElement, property} from '@polymer/lit-element'
+import {classMap} from 'lit-html/directives/class-map'
 
-type state = {
-	selected: boolean,
-	highlighted: boolean,
-	value: string,
+declare global {
+	interface HTMLElementTagNameMap {
+		'select-option': SelectOption;
+	}
 }
 
-export default class SelectOption extends BaseUIElement<state> {
+export type optionValue = string | number;
+
+@customElement('select-option' as any)
+export class SelectOption extends LitElement {
+
+	@property({type: Boolean})
+	highlighted?: boolean;
+
+	@property({type: Boolean})
+	selected?: boolean;
+
+	@property({attribute: true, reflect: true})
+	value!: optionValue;
+
 	/*
 	 * TODO
 	 * notify about connect to DOM to SelectDropdown update options list
 	 **/
-	static template = BaseUIElement.htmlToTemplate(`
+
+	constructor() {
+		super();
+		this.addEventListener('click', this.handleSelectByClick)
+	}
+
+	render() {
+		return html`
 		<style>
 			:host {
 				all: initial;
@@ -25,7 +46,7 @@ export default class SelectOption extends BaseUIElement<state> {
 			#wrapper {
 				padding: 0 8px;
 			}
-			#wrapper.active {
+			#wrapper.selected {
 				background: #424242;
 			}
 			#wrapper:hover,
@@ -33,57 +54,34 @@ export default class SelectOption extends BaseUIElement<state> {
 				background: #356A9E;
 			}
 		</style>
-		<div id="wrapper" $classif.highlighted="highlighted" $classif.active="selected">
+		<div
+			id="wrapper"
+			class="${classMap({
+				highlighted: !!this.highlighted,
+				selected: !!this.selected,
+			})}">
 			<slot></slot>
 		</div>
-		</label>
-	`);
-
-	protected events = [
-		{root: true, event: 'click', handler: this.handleSelectByClick},
-	];
-
-	protected get defaultState() {
-		return {
-			highlighted: false,
-			selected: false,
-			value: '',
-		};
+		`;
 	}
 
-	protected static boundPropertiesToState = ['selected', 'highlighted', 'value'];
-	protected static boundAttributesToState = ['selected', 'value'];
-	public static observedAttributes = ['selected', 'value'];
-
-	public selected!: boolean;
-	public highlighted!: boolean;
-	public value!: string;
-
-	constructor(){
-		super();
-		this.render();
-	}
-
-	public attributeChangedCallback(attrName: string, oldValue: any, value: any) {
-		super.attributeChangedCallback(attrName, oldValue, value);
-		if (attrName === 'selected' && value !== null) {
+	public connectedCallback() {
+		super.connectedCallback();
+		if (this.selected) {
 			this.dispatchSelect(true);
 		}
 	}
 
-	private handleSelectByClick(event: MouseEvent) {
+	private handleSelectByClick = (event: MouseEvent) =>  {
 		const allowMultiCheck = event.metaKey || event.shiftKey;
 		this.dispatchSelect(allowMultiCheck);
-	}
+	};
 
 	private dispatchSelect(allowMultiCheck: boolean) {
 		this.dispatchEvent(new CustomEvent('optionSelection', {
 			bubbles: true,
-			composed: true,
+			// composed: true,
 			detail: {allowMultiCheck},
 		}));
 	};
 }
-
-
-customElements.define('select-option', SelectOption);

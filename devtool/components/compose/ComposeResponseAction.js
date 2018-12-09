@@ -1,4 +1,4 @@
-import '../@common/TextField.js'
+import '../@common/TextField'
 import './ComposeActionRow.js'
 import './ComposeHeadersEditor.js'
 import './ComposeBodyEditor.js'
@@ -39,13 +39,13 @@ tpl.innerHTML = `
 class ComposeResponseAction extends HTMLElement {
 
 	/** @private */
-	blocks = {};
+
 
 	constructor(){
 		super();
 		const shadowRoot = this.attachShadow({mode: 'open'});
 		shadowRoot.appendChild(tpl.content.cloneNode(true));
-
+        this.blocks = {};
 		this.blocks.cancelButton = this.shadowRoot.querySelector('#cancel');
 
 	}
@@ -58,9 +58,6 @@ class ComposeResponseAction extends HTMLElement {
 		// this.blocks.cancelButton.removeEventListener('click', this.onCancel);
 	}
 
-	onCancel = () => {
-		// this.dispatchEvent(new Event('requireComposeHide', {bubbles: true}));
-	}
 }
 
 

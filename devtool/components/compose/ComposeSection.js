@@ -1,4 +1,4 @@
-import '../@common/ExpandableCheck.js'
+import '../@common/ExpandableCheckbox'
 import './ComposeFilter.js'
 import './ComposeRequestAction.js'
 import './ComposeResponseAction.js'
@@ -63,15 +63,15 @@ tpl.innerHTML = `
 	<compose-filter></compose-filter>
 	
 	<h3 class="title">Actions:</h3>
-	<expandable-check title="Mutate request">
+	<expandable-checkbox label="Mutate request">
 		<compose-request-action></compose-request-action>
-	</expandable-check>
-	<expandable-check title="Mutate Response">
+	</expandable-checkbox>
+	<expandable-checkbox label="Mutate Response">
 		<compose-response-action></compose-response-action>
-	</expandable-check>
-	<expandable-check title="Cancel">
+	</expandable-checkbox>
+	<expandable-checkbox label="Cancel">
 		<compose-cancel-action></compose-cancel-action>
-	</expandable-check>
+	</expandable-checkbox>
 	
 	<div class="controls">
 		<button id="save">Save</button>
@@ -84,18 +84,25 @@ tpl.innerHTML = `
 
 class ComposeSection extends HTMLElement {
 
-	/** @private */
-	blocks = {};
-
 	constructor(){
 		super();
 		const shadowRoot = this.attachShadow({mode: 'open'});
 		shadowRoot.appendChild(tpl.content.cloneNode(true));
 
-		this.blocks = {
+		// @ts-ignore
+        this.blocks = {
 			saveButton: this.shadowRoot.querySelector('#save'),
 			cancelButton: this.shadowRoot.querySelector('#cancel'),
-		}
+		};
+
+        this. onSave = () => {
+            console.log(this.shadowRoot.querySelector('compose-filter').getValue());
+            this.dispatchEvent(new Event('requireComposeSave', {bubbles: true}));
+        };
+
+        this.onCancel = () => {
+            this.dispatchEvent(new Event('requireComposeHide', {bubbles: true}));
+        }
 	}
 
 	connectedCallback() {
@@ -108,14 +115,6 @@ class ComposeSection extends HTMLElement {
 		this.blocks.cancelButton.removeEventListener('click', this.onCancel);
 	}
 
-	onSave = () => {
-		console.log(this.shadowRoot.querySelector('compose-filter').getValue());
-		this.dispatchEvent(new Event('requireComposeSave', {bubbles: true}));
-	};
-
-	onCancel = () => {
-		this.dispatchEvent(new Event('requireComposeHide', {bubbles: true}));
-	}
 }
 
 
