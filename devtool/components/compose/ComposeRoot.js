@@ -96,8 +96,12 @@ class ComposeRoot extends HTMLElement {
 		};
 
         this. onSave = () => {
-            console.log(this.shadowRoot.querySelector('compose-filter').getValue());
-            this.dispatchEvent(new Event('requireComposeSave', {bubbles: true}));
+            this.dispatchEvent(new CustomEvent('requireComposeSave', {
+            	bubbles: true,
+				detail: {
+            		rule: this.shadowRoot.querySelector('compose-filter').getValue()
+				}
+            }));
         };
 
         this.onCancel = () => {

@@ -45,7 +45,7 @@ export class AppSeparatedSections extends LitElement {
 			#sectionSeparator::before {
 				display: block;
 				content: '';
-				height: 3px;
+				height: 2px;
 				background: #777;
 			}
 		</style>

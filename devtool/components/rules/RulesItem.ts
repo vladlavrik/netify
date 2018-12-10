@@ -1,22 +1,25 @@
-import BaseUIElement from '../../helpers/BaseUIElement.js';
-import '../@common/IconButton.js'
+import {LitElement, html, customElement, property} from '@polymer/lit-element'
+import {Rule} from "../../debugger/constants/Rule";
+import '../@common/IconButton'
 
-type state = {
-	ruleId: string,
-	methods: string[],
-	requestTypes: string[],
-	url: string,
-	actions: string[],
-	formattedMethods: string,
-	formattedRequestTypes: string,
-	formattedUrl: string,
-	formattedActions: string,
-	expanded: boolean,
+declare global {
+	interface HTMLElementTagNameMap {
+		'rules-item': RulesItem;
+	}
 }
 
-export default class RulesItem extends BaseUIElement<state> {
+@customElement('rules-item' as any)
+export class RulesItem extends LitElement {
+	@property()
+	rule!: Rule;
 
-	static template = BaseUIElement.htmlToTemplate(`
+	expanded = false;
+
+	protected render() {
+		const {methods, requestTypes, url} = this.rule.filter;
+		const actions = this.parseActionsArray().join(', ');
+
+		return html`
 		<style>
 			:host {
 				all: inherit;
@@ -24,9 +27,6 @@ export default class RulesItem extends BaseUIElement<state> {
 				font-family: inherit;
 				font-size: 12px;
 				min-height: 48px;
-			}
-			:host(:nth-child(odd)) {
-				background: #2f2f2f;
 			}
 			#entry {
 				display: flex;
@@ -69,91 +69,101 @@ export default class RulesItem extends BaseUIElement<state> {
 			.placeholder {
 				color: #616161;
 			}
-			.value:empty > .placeholder {
-				display: block;
-			}
 		</style>
 		<div id="entry">
-			<icon-button id="expand-button"></icon-button>
+			<icon-button
+				id="expand-button"
+				@click="${this.handleExpand}">
+			</icon-button>
 			<div id="summary">
 				<div id="filter-info">
 					<span class="value" id="method">
-						{formattedMethods}
-						<span $if="!formattedMethods" class="placeholder">All methods</span>
+						${methods.length === 0 ? (
+							html`<span class="placeholder">All methods</span>`
+						) : (
+							methods.join('/')
+						)}
 					</span>
 					<span class="value" id="type">
-						{formattedRequestTypes}
-						<span $if="!formattedRequestTypes" class="placeholder">All types</span>
+						${requestTypes.length === 0 ? (
+							html`<span class="placeholder">All types</span>`
+						) : (
+							requestTypes.join('/')
+						)}
 					</span>
 					<span class="value" id="url" title="">
-						{formattedUrl}
-						<span $if="!formattedUrl" class="placeholder">Any url</span>
+						${url.value ? (
+							url.value.toString()
+						) : (
+							html`<span class="placeholder">Any url</span>`
+						)}
 					</span>
 				</div>
-				<p id="actions-info">
-					<span $if="actions includes replaceEndpoint" class="action-item">Replace request endpoint</span>
-					<span $if="actions includes requestHeaders" class="action-item">Modify request headers</span>
-					<span $if="actions includes requestBody" class="action-item">Defined request body</span>
-					<span $if="actions includes responseLocally" class="action-item">Response locally</span>
-					<span $if="actions includes responseStatus" class="action-item">Modify response status</span>
-					<span $if="actions includes responseHeaders" class="action-item">Modify response header</span>
-					<span $if="actions includes responseBody" class="action-item">Defined response body</span>
-					<span $if="actions includes responseError" class="action-item">Return error</span>
-				</p>
+				<p id="actions-info">${actions}</p>
 			</div>
-			<icon-button id="remove-button" tooltip="Remove the rule"></icon-button>
+			<icon-button
+				id="remove-button"
+				tooltip="Remove the rule"
+				@click="${this.handleRemove}">
+			</icon-button>
 		</div>
-		<div $if="expanded" id="details">
-			<slot></slot>
-		</div>
-	`);
-
-	static boundPropertiesToState = ['timestamp', 'methods', 'requestTypes', 'url', 'actions'];
-	static boundAttributesToState = ['rule-id'];
-	static observedAttributes = ['rule-id'];
-
-	public methods!: string[];
-	public requestTypes!: string[];
-	public url!: string;
-	public actions!: string[];
-
-	protected events = [
-		{id: 'expand-button', event: 'click', handler: this.handleExpand},
-		{id: 'remove-button', event: 'click', handler: this.handleRemove},
-	];
-
-	constructor() {
-		super();
-		this.render();
-		this.state.expanded = true;
-
+		${this.expanded ? (
+			html`
+			<div id="details">
+				<slot></slot>
+			</div>
+			`
+		) : ''}
+		`;
 	}
 
-	protected stateChangedCallback([propName]: string[], _oldValue: any, value: any) {
-		switch (propName) {
-			case 'methods':
-				this.state.formattedMethods = (value as state['methods']).join('/');
-				break;
-			case 'requestTypes':
-				this.state.formattedRequestTypes= (value as state['requestTypes']).join('/');
-				break;
-			case 'url':
-				this.state.formattedUrl= (value as state['url']);
-				break;
-			case 'actions':
-				this.state.formattedActions = (value as state['actions']).join('|');
-				break;
+	private parseActionsArray() {
+		const actions = [];
+
+		if (this.rule.mutateRequest.enabled) {
+			const {endpointReplace, headersToAdd, headersToRemove, replaceBody} = this.rule.mutateRequest;
+			if (endpointReplace) {
+				actions.push('Redirect to url');
+			}
+			if (Object.keys(headersToAdd).length > 0 || headersToRemove.length > 0) {
+				actions.push('Modify request headers');
+			}
+			if (replaceBody.enabled) {
+				actions.push('Defined request body');
+			}
 		}
+
+		if (this.rule.mutateRequest.enabled) {
+			const {statusCode, headersToAdd, headersToRemove, replaceBody} = this.rule.mutateResponse;
+			if (statusCode) {
+				actions.push('Modify response status');
+			}
+			if (Object.keys(headersToAdd).length > 0 || headersToRemove.length > 0) {
+				actions.push('Modify request headers');
+			}
+			if (replaceBody.enabled) {
+				actions.push('Defined request body');
+			}
+		}
+		if (this.rule.responseError.enabled) {
+			actions.push('Return error');
+		}
+
+		return actions;
 	}
 
-	private handleExpand() {
-		this.state.expanded = !this.state.expanded;
-	}
+	private handleExpand = () => {
+		this.expanded = !this.expanded;
+		this.requestUpdate('expanded', !this.expanded);
+	};
 
 	private handleRemove() {
-		console.log('remove', this.state.ruleId);
+		this.dispatchEvent(new CustomEvent('requireRuleRemove', {
+			bubbles: true,
+			composed: true,
+			detail: {
+				id: this.rule.id,
+			},
+		}));
 	}
 }
-
-
-customElements.define('rules-item', RulesItem);

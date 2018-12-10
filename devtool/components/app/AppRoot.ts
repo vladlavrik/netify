@@ -1,7 +1,13 @@
 import {LitElement, html, customElement} from '@polymer/lit-element';
 import {classMap} from "lit-html/directives/class-map";
+// import {Log} from '../../debugger/constants/Log';
+import {Rule} from '../../debugger/constants/Rule';
 import '../@common/IconButton';
 import '../compose/ComposeRoot';
+import '../rules/RulesRoot';
+import '../logs/LogsRoot';
+import {RulesRoot} from '../rules/RulesRoot';
+import {LogsRoot} from '../logs/LogsRoot';
 import './AppSectionHeader';
 import './AppSeparatedSections';
 import {AppSeparatedSections, resizeEvent} from './AppSeparatedSections';
@@ -14,7 +20,14 @@ declare global {
 }
 
 /*
- * TODO use "ifTrusty" directive
+ * TODO
+ * use "ifTrusty" directive
+ * Add info hints
+ * Add %fullUrl% to "replaceEndpoint"
+ * Replace eventHandler prefix form "handle" to "on"
+ * Format code style
+ * Add feature: disable/enable rule
+ * Use compose options from constants
  */
 
 @customElement('app-root' as any)
@@ -45,8 +58,8 @@ export class AppRoot extends LitElement {
 			.header-control.type-close {
 				--icon-button-rotate: 45deg;
 			}
-			.header-control.type-clean {
-				--icon-button-bg: url('/devtool/styles/icons/clean.svg');
+			.header-control.type-clear {
+				--icon-button-bg: url('/devtool/styles/icons/clear.svg');
 			}
 			.header-control.type-collapse {
 				--icon-button-bg: url('/devtool/styles/icons/panel-collapse.svg');
@@ -97,7 +110,6 @@ export class AppRoot extends LitElement {
 				Rules
 				<icon-button
 					slot="controls"
-					id="controlCompose"
 					class="${classMap({
 						'header-control': true,
 						'type-add': !this.composeShown,
@@ -108,30 +120,27 @@ export class AppRoot extends LitElement {
 				</icon-button>
 				<icon-button
 					slot="controls"
-					id="controlCleanRules"
-					class="header-control type-clean"
-					tooltip="Clean all rules"
-					@click="${this.onCleanRules}">
+					class="header-control type-clear"
+					tooltip="Clear all rules"
+					@click="${this.onClearRules}">
 				</icon-button>
 			</app-section-header>
-			<div class="section-content" slot="top-section">
-				rules
-				<!--<rules-root></rules-root>-->
-			</div>
-
+			<rules-root
+				class="section-content"
+				slot="top-section"
+				@requireRuleRemove="${this.onRequireRuleRemove}">
+			</rules-root>
 
 			<app-section-header slot="bottom-section">
 				Logs
 				<icon-button
 					slot="controls"
-					id="controlCleanLogs"
-					class="header-control type-clean"
-					tooltip="Clean log"
-					@click="${this.onCleanLogs}">
+					class="header-control type-clear"
+					tooltip="Clear log"
+					@click="${this.onClearLogs}">
 				</icon-button>
 				<icon-button
 					slot="controls"
-					id="controlToggleLogs"
 					class="${classMap({
 						'header-control': true,
 						'type-collapse': !this.logsCollapsed,
@@ -140,41 +149,56 @@ export class AppRoot extends LitElement {
 					@click="${this.onToggleLogsShow}">
 				</icon-button>
 			</app-section-header>
-			<div class="section-content" slot="bottom-section">
-				logs
-				<!--<logs-root></logs-root>-->
-			</div>
+			<logs-root
+				class="section-content"
+				slot="bottom-section"
+				@requireRuleHighlight="${this.onRequireRuleHighlight}">
+			</logs-root>
 		</app-separated-sections>
 		${this.composeShown ? (
 			html`
 				<compose-root
 					id="compose"
-					@requireComposeHide="${this.onHideCompose}">
+					@requireComposeHide="${this.onHideCompose}"
+					@requireComposeSave="${this.onSaveRule}">
 				</compose-root>
 			`
-		) : ''} 
+		) : ''}
 		`;
 	}
-
-	public onHideCompose = () => {
+	
+	public onToggleComposeShow = () => {
+		this.composeShown = !this.composeShown;
+		this.requestUpdate('composeShown', !this.composeShown);
+	};
+	
+	public onHideCompose = (event: Event) => {
+		event.stopPropagation();
 		if (this.composeShown) {
 			this.composeShown = false;
 			this.requestUpdate('composeShown', true);
 		}
 	};
 
-	public onToggleComposeShow = () => {
-		this.composeShown = !this.composeShown;
-		this.requestUpdate('composeShown', !this.composeShown);
+	private onSaveRule = (event: CustomEvent<{rule: Rule}>) => {
+		// TODO
+		console.log('onSaveRule', event.detail.rule);
 	};
 
-	private onCleanRules = () => {
+	private onClearRules = () => {
+		// TODO
 		console.log('onCleanRules');
 	};
 
-	private onCleanLogs = () => {
-		console.log('onCleanLogs');
+	private onClearLogs = () => {
+		(this.shadowRoot!.querySelector('logs-root') as LogsRoot).clearLogs();
 	};
+
+/* TODO
+	private onAddLog = (log: Log) => {
+		(this.shadowRoot!.querySelector('logs-root') as LogsRoot).addLog(log);
+	};
+*/
 
 	private onToggleLogsShow = () => {
 		let ratio;
@@ -191,10 +215,22 @@ export class AppRoot extends LitElement {
 	};
 
 	private onSectionsResize(event: CustomEvent<resizeEvent>) {
+		event.stopPropagation();
 		const oldLogsCollapsed  = this.logsCollapsed;
 		this.logsCollapsed = event.detail.edgesReached.bottom;
 		if (this.logsCollapsed !== oldLogsCollapsed) {
 			this.requestUpdate('logsCollapsed', oldLogsCollapsed);
 		}
+	}
+
+	private onRequireRuleRemove(event: CustomEvent) {
+		//TODO
+		event.stopPropagation();
+		console.log('requireRuleRemove', event.detail.id);
+	}
+
+	private onRequireRuleHighlight(event: CustomEvent) {
+		event.stopPropagation();
+		(this.shadowRoot!.querySelector('rules-root') as RulesRoot).highlightRule(event.detail.ruleId);
 	}
 }

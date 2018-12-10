@@ -1,16 +1,40 @@
-import BaseUIElement from '../../helpers/BaseUIElement.js';
-import '../@common/IconButton.js'
+import {LitElement, html, customElement, property} from '@polymer/lit-element'
+import {Log} from "../../debugger/constants/Log";
+import '../@common/IconButton'
 
-type state = {
-	timestamp: string,
-	formattedTime: string,
-	method: string,
-	type: string,
-	url: string,
+declare global {
+	interface HTMLElementTagNameMap {
+		'logs-item': LogsItem;
+	}
 }
 
-class LogsItem extends BaseUIElement<state> {
-	static template = BaseUIElement.htmlToTemplate(`
+const visibleDateFormat = {
+	minute: '2-digit',
+	second: '2-digit',
+};
+
+const titleDateFormat = {
+	year: 'numeric',
+	day: 'numeric',
+	month: 'short',
+	minute: '2-digit',
+	second: '2-digit',
+};
+
+@customElement('logs-item' as any)
+export class LogsItem extends LitElement {
+	@property({attribute: true, type: Number, reflect: true})
+	requestIdId!: string;
+	
+	@property()
+	log!: Log;
+	
+	protected render() {
+		const {date, method, requestType, url} = this.log;
+		const formattedTime = LogsItem.formatTime(date);
+		const fullDate = date.toLocaleString('en-US', titleDateFormat);
+
+		return html`
 		<style>
 			:host {
 				all: inherit;
@@ -21,10 +45,6 @@ class LogsItem extends BaseUIElement<state> {
 				color: #B1B9C0;
 				height: 28px;
 			}
-			:host(:nth-child(odd)) {
-				background: #2f2f2f;
-			}
-		
 			#time {
 				width: 56px;
 				margin: 0 8px;
@@ -46,7 +66,6 @@ class LogsItem extends BaseUIElement<state> {
 				overflow: hidden;
 				text-overflow: ellipsis;
 			}
-		
 			#follow-button {
 				flex-shrink: 0;
 				margin: 0 6px;
@@ -54,52 +73,31 @@ class LogsItem extends BaseUIElement<state> {
 				cursor: pointer;
 			}
 		</style>
-		<span id="time">{formattedTime}</span>
-		<span id="method">{method}</span>
-		<span id="type">{type}</span>
-		<span id="url" $title="url">{url}</span>
-		<icon-button id="follow-button" tooltip="To rule"></icon-button>
-	`);
-
-	static boundPropertiesToState = ['timestamp', 'method', 'type', 'url'];
-	static boundAttributesToState = ['timestamp', 'method', 'type', 'url'];
-	static observedAttributes = ['timestamp', 'method', 'type', 'url'];
-
-	public timestamp!: string;
-	public method!: string;
-	public type!: string;
-	public url!: string;
-
-
-	protected events = [
-		{id: 'follow', event: 'click', handler: this.handleFollowRule},
-	];
-
-	constructor(){
-		super();
-		this.render();
-		this.parseTime(this.state.timestamp);
+		<span id="time" title="${fullDate}">${formattedTime}</span>
+		<span id="method">${method}</span>
+		<span id="type">${requestType}</span>
+		<span id="url" title="${url}">${url}</span>
+		<icon-button
+			id="follow-button"
+			tooltip="Highlight rule"
+			@click="${this.onFollowRule}">
+		</icon-button>
+		`;
 	}
 
-	protected stateChangedCallback([propName]: string[], _oldValue: any, value: any) {
-		if (propName === 'attrName') {
-			this.parseTime(value);
-		}
+	private static formatTime(date: Date) {
+		const time = date.toLocaleString('en-US', visibleDateFormat);
+		const milliseconds = date.getMilliseconds().toString().padStart(3, '0');
+		return `${time}.${milliseconds}`;
 	}
 
-	private parseTime(value: string) {
-		const date = new Date(Number(value));
-		const minutes = date.getMinutes().toString().padStart(2, '0');
-		const seconds = date.getSeconds().toString().padStart(2, '0');
-		const milliseconds = date.getMilliseconds().toString().padStart(2, '0');
-
-		this.state.formattedTime = `${minutes}:${seconds}.${milliseconds}`;
-	}
-
-	private handleFollowRule() {
-
-	}
+	private onFollowRule = () => {
+		this.dispatchEvent(new CustomEvent('requireRuleHighlight', {
+			bubbles: true,
+			composed: true,
+			detail: {
+				ruleId: this.log.ruleId,
+			},
+		}));
+	};
 }
-
-
-customElements.define('logs-item', LogsItem);
