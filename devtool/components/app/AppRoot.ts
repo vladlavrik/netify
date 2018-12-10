@@ -77,15 +77,19 @@ export class AppRoot extends LitElement {
 				height: 3px;
 				background: #777;
 			}
+			.section-content {
+				height: calc(100% - 30px);
+			}
 			#compose {
 				position: absolute;
-				top: 28px;
+				top: 29px;
 				left: 0;
 				right: 0;
 				bottom: 0;
 				border-top: #555555 1px solid;
 				background: #383838;
-				z-index: 1;
+				height: calc(100% - 29px);
+				z-index: 10;
 			}
 			#compose::before {
 				content: '';
@@ -97,9 +101,6 @@ export class AppRoot extends LitElement {
 				top: -6px;
 				clip-path: polygon(0 100%, 50% 0, 100% 100%);
 				background: #555555;
-			}
-			.section-content {
-				height: calc(100% - 29px);
 			}
 		</style>
 
@@ -157,11 +158,12 @@ export class AppRoot extends LitElement {
 		</app-separated-sections>
 		${this.composeShown ? (
 			html`
-				<compose-root
-					id="compose"
-					@requireComposeHide="${this.onHideCompose}"
-					@requireComposeSave="${this.onSaveRule}">
-				</compose-root>
+				<div id="compose">
+					<compose-root
+						@requireComposeHide="${this.onHideCompose}"
+						@requireComposeSave="${this.onSaveRule}">
+					</compose-root>
+				</div>
 			`
 		) : ''}
 		`;
