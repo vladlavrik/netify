@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev":   "webpack --entry ./devtool/devtool.ts --output ./devtool/build/devtool.js --resolve-extensions .ts,.js --module-bind ts=ts-loader --mode development --hide-modules -w",
+    "dev": "webpack --entry ./devtool/devtool.ts --output ./devtool/build/devtool.js --resolve-extensions .ts,.js --module-bind ts=ts-loader --mode development --hide-modules -w",
     "build": "webpack --entry ./devtool/devtool.ts --output ./devtool/build/devtool.js --resolve-extensions .ts,.js --module-bind ts=ts-loader --mode production  --hide-modules"
   },
   "dependencies": {

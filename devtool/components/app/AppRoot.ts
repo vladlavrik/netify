@@ -1,6 +1,7 @@
 import {LitElement, html, customElement} from '@polymer/lit-element';
 import {classMap} from "lit-html/directives/class-map";
 // import {Log} from '../../debugger/constants/Log';
+import state from '../../helpers/decorators/state';
 import {Rule} from '../../debugger/constants/Rule';
 import '../@common/IconButton';
 import '../compose/ComposeRoot';
@@ -33,7 +34,10 @@ declare global {
 @customElement('app-root' as any)
 export class AppRoot extends LitElement {
 
-	private composeShown = false;
+	@state()
+	private composeShown = true;
+
+	@state()
 	private logsCollapsed = false;
 
 	protected render() {
@@ -44,9 +48,6 @@ export class AppRoot extends LitElement {
 				position: relative;
 				height: 100vh;
 				flex-direction: column;
-			}
-			.section {
-				min-height: 30px;
 			}
 			.header-control {
 				margin: 0 6px;
@@ -66,16 +67,6 @@ export class AppRoot extends LitElement {
 			}
 			.header-control.type-expand {
 				--icon-button-bg: url('/devtool/styles/icons/panel-expand.svg');
-			}
-			#sectionSeparator {
-				padding: 2px 0;
-				cursor: row-resize;
-			}
-			#sectionSeparator::before {
-				display: block;
-				content: '';
-				height: 3px;
-				background: #777;
 			}
 			.section-content {
 				height: calc(100% - 30px);
@@ -108,7 +99,7 @@ export class AppRoot extends LitElement {
 			minHeight="30"
 			@separatedSectionResize="${this.onSectionsResize}">
 			<app-section-header slot="top-section">
-				Rules
+				Rules ${undefined}
 				<icon-button
 					slot="controls"
 					class="${classMap({
@@ -168,17 +159,15 @@ export class AppRoot extends LitElement {
 		) : ''}
 		`;
 	}
-	
+
 	public onToggleComposeShow = () => {
 		this.composeShown = !this.composeShown;
-		this.requestUpdate('composeShown', !this.composeShown);
 	};
-	
+
 	public onHideCompose = (event: Event) => {
 		event.stopPropagation();
 		if (this.composeShown) {
 			this.composeShown = false;
-			this.requestUpdate('composeShown', true);
 		}
 	};
 
@@ -213,7 +202,6 @@ export class AppRoot extends LitElement {
 		(this.shadowRoot!.querySelector('app-separated-sections') as AppSeparatedSections).setRatio(ratio);
 
 		this.logsCollapsed = !this.logsCollapsed;
-		this.requestUpdate('logsCollapsed', !this.logsCollapsed);
 	};
 
 	private onSectionsResize(event: CustomEvent<resizeEvent>) {
@@ -221,7 +209,6 @@ export class AppRoot extends LitElement {
 		const oldLogsCollapsed  = this.logsCollapsed;
 		this.logsCollapsed = event.detail.edgesReached.bottom;
 		if (this.logsCollapsed !== oldLogsCollapsed) {
-			this.requestUpdate('logsCollapsed', oldLogsCollapsed);
 		}
 	}
 

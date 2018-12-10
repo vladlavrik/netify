@@ -1,5 +1,6 @@
 import {LitElement, html, customElement, property} from '@polymer/lit-element';
 import {styleMap} from "lit-html/directives/style-map";
+import state from "../../helpers/decorators/state";
 import '../@common/IconButton';
 import '../compose/ComposeRoot';
 import './AppSectionHeader';
@@ -24,6 +25,8 @@ declare global {
 
 @customElement('app-separated-sections' as any)
 export class AppSeparatedSections extends LitElement {
+
+	@state()
 	private sectionsRatio = 50;
 
 	@property({type: Number})
@@ -72,9 +75,7 @@ export class AppSeparatedSections extends LitElement {
 
 
 	public setRatio(ratio: number) {
-		const oldRatioValue = this.sectionsRatio;
 		this.sectionsRatio = ratio;
-		this.requestUpdate('sectionsRatio', oldRatioValue);
 	}
 
 	private onStartSectionsResize = (event: PointerEvent) => {
@@ -93,11 +94,9 @@ export class AppSeparatedSections extends LitElement {
 
 	private onUpdateSectionsResize = (event: PointerEvent) => {
 		//TODO wait previous render and throttle
-		const oldRatioValue = this.sectionsRatio;
 		const docHeight = document.documentElement!.clientHeight;
 		const ratio = event.pageY / docHeight;
 		this.sectionsRatio = Math.round(ratio * 10000) / 100;
-		this.requestUpdate('sectionsRatio', oldRatioValue);
 
 		const separatorPosition = ratio * docHeight;
 

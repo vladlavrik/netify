@@ -1,5 +1,6 @@
 import {LitElement, html, customElement} from '@polymer/lit-element'
 import {repeat} from "lit-html/directives/repeat";
+import state from "../../helpers/decorators/state";
 import {Log} from '../../debugger/constants/Log'
 import {RequestTypes} from "../../debugger/constants/RequestTypes";
 import {RequestMethods} from "../../debugger/constants/RequestMethods";
@@ -36,9 +37,10 @@ declare global {
 
 @customElement('logs-root' as any)
 export class LogsRoot extends LitElement {
-	
+
+	@state()
 	logs: Log[] = logs;
-	
+
 	protected render() {
 		return html`
 		<style>
@@ -83,16 +85,12 @@ export class LogsRoot extends LitElement {
 		) : ''}
 		`;
 	}
-	
+
 	public addLog(log: Log) {
-		const oldValue = this.logs;
 		this.logs = [...this.logs, log];
-		this.requestUpdate('logs', oldValue);
 	}
-	
+
 	public clearLogs() {
-		const oldValue = this.logs;
 		this.logs = [];
-		this.requestUpdate('logs', oldValue);
 	}
 }

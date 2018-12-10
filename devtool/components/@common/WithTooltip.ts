@@ -1,5 +1,6 @@
 import {LitElement, html, customElement, property} from '@polymer/lit-element'
 import {classMap} from "lit-html/directives/class-map";
+import state from "../../helpers/decorators/state";
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -13,7 +14,10 @@ export class WithTooltip extends LitElement {
 	@property({attribute: true, type: Boolean, reflect: true})
 	disabled?: string;
 
+	@state()
 	private tooltipShown = false;
+
+	@state()
 	public invertedDirection = false;
 
 	constructor (){
@@ -71,7 +75,6 @@ export class WithTooltip extends LitElement {
 		super.updated(changedProperties);
 		if (changedProperties.has('disabled') && this.tooltipShown) {
 			this.tooltipShown = false;
-			this.requestUpdate('tooltipShown', true);
 		}
 	}
 
@@ -87,7 +90,7 @@ export class WithTooltip extends LitElement {
 
 		const minPadding = 8;
 		this.tooltipShown = true;
-		await this.requestUpdate('tooltipShown', false);
+		await this.updateComplete;
 
 		const slotNodes = (this.shadowRoot!.querySelector('#tooltipSlot') as HTMLSlotElement).assignedNodes();
 		const hasContent = Array.from(slotNodes)
@@ -97,7 +100,7 @@ export class WithTooltip extends LitElement {
 
 		if (!hasContent) { // hide if tooltip is empty
 			this.tooltipShown = false;
-			await this.requestUpdate('tooltipShown', true);
+			await this.updateComplete;
 			return;
 		}
 
@@ -107,7 +110,7 @@ export class WithTooltip extends LitElement {
 		if (viewportWidth - this.offsetLeft - tooltipWidth < minPadding) {
 			// expand to left if at he right is not enough space
 			this.invertedDirection = true;
-			await this.requestUpdate('invertedDirection', false);
+			await this.updateComplete;
 		}
 	};
 
@@ -117,6 +120,5 @@ export class WithTooltip extends LitElement {
 		}
 		this.tooltipShown = false;
 		this.invertedDirection = false;
-		this.requestUpdate('tooltipShown', true);
 	}
 }

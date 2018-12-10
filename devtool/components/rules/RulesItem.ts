@@ -1,5 +1,6 @@
 import {LitElement, html, customElement, property} from '@polymer/lit-element'
 import {Rule} from "../../debugger/constants/Rule";
+import state from "../../helpers/decorators/state";
 import '../@common/IconButton'
 
 declare global {
@@ -13,6 +14,7 @@ export class RulesItem extends LitElement {
 	@property()
 	rule!: Rule;
 
+	@state()
 	expanded = false;
 
 	protected render() {
@@ -154,7 +156,6 @@ export class RulesItem extends LitElement {
 
 	private handleExpand = () => {
 		this.expanded = !this.expanded;
-		this.requestUpdate('expanded', !this.expanded);
 	};
 
 	private handleRemove() {

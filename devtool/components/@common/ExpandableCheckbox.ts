@@ -1,5 +1,6 @@
 import {LitElement, html, customElement, property} from '@polymer/lit-element'
 import {classMap} from "lit-html/directives/class-map";
+import state from "../../helpers/decorators/state";
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -13,7 +14,7 @@ export class ExpandableCheckbox extends LitElement {
 	@property({attribute: true, reflect: true})
 	label?: string;
 
-	@property({attribute: true, type: Boolean, reflect: true})
+	@state()
 	expanded = false;
 
 	@property({attribute: true, type: Boolean, reflect: true})
@@ -100,7 +101,6 @@ export class ExpandableCheckbox extends LitElement {
 		}
 
 		this.expanded = !this.expanded;
-		this.requestUpdate('expanded', !this.expanded);
 	};
 }
 

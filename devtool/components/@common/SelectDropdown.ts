@@ -1,6 +1,7 @@
 import {LitElement, html, customElement, property} from '@polymer/lit-element'
 import {SelectOption, optionValue} from './SelectOption'
 import {classMap} from 'lit-html/directives/class-map'
+import state from "../../helpers/decorators/state";
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -36,9 +37,16 @@ export class SelectDropdown extends LitElement {
 		this.updateLabelValue();
 	}
 
+	@state()
 	selectedValues: string = '';
+
+	@state()
 	expanded = false;
+
+	@state()
 	expandInverted = false;
+
+	@state()
 	maxHeight: number | null = null;
 
 	private get options(): SelectOption[] {
@@ -169,13 +177,10 @@ export class SelectDropdown extends LitElement {
 	};
 
 	private updateLabelValue() {
-		const oldValue = this.selectedValues;
 		this.selectedValues = this.options
 			.filter(option => option.selected)
 			.map(option => option.textContent)
 			.join(', ');
-
-		this.requestUpdate('selectedValues', oldValue);
 	}
 
 	private handleNavigation = (event: KeyboardEvent) => {
@@ -272,7 +277,7 @@ export class SelectDropdown extends LitElement {
 		}
 
 		this.expanded = true;
-		await this.requestUpdate('expanded', false);
+		await this.updateComplete;
 
 		const labelNode = this.shadowRoot!.querySelector('#label')!;
 		const contentNode = this.shadowRoot!.querySelector('#content')!;
@@ -295,7 +300,7 @@ export class SelectDropdown extends LitElement {
 		}
 
 		this.maxHeight = maxHeight ? maxHeight - minPadding : null;
-		await this.requestUpdate('maxHeight', null);
+		await this.updateComplete;
 	}
 
 	private collapse = () => {
@@ -306,7 +311,6 @@ export class SelectDropdown extends LitElement {
 		this.expanded = false;
 		this.expandInverted = false;
 		this.maxHeight = null;
-		this.requestUpdate();
 	};
 
 	private toggleExpansion = () => {

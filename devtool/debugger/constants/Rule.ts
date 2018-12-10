@@ -4,8 +4,7 @@ import {UrlFilterTypes} from './UrlFilterTypes'
 import {ErrorReasons} from './ErrorReasons'
 import {RequestBodyTypes} from './RequestBodyTypes'
 
-export interface Rule {
-	id: number,
+export interface RuleData {
 	filter: {
 		url: {
 			type: UrlFilterTypes,
@@ -43,6 +42,10 @@ export interface Rule {
 		locally: boolean,
 		reason: ErrorReasons,
 	},
+}
+
+export interface Rule extends RuleData {
+	id: number,
 }
 
 
