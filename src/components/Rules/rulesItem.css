@@ -1,0 +1,46 @@
+.root {
+    position: relative;
+    font-size: 12px;
+    min-height: 48px;
+}
+.entry {
+    display: flex;
+    align-items: center;
+    color: #B1B9C0;
+}
+.expandButton {
+    flex-shrink: 0;
+    margin: 0 3px;
+    --icon-button-bg: #616161;
+    --icon-button-clip: polygon(30% 34%, 70% 34%, 50% 66%);
+}
+.summary {
+    flex-grow: 1;
+    overflow: hidden;
+}
+.filterInfo {
+    display: flex;
+    margin-top: 8px;
+}
+.method, .type {
+    width: 120px;
+    min-width: 100px;
+}
+.url {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.actionsInfo {
+    margin: 4px 0 8px 0;
+    color: #7E7E7E;
+}
+.removeButton {
+    flex-shrink: 0;
+    margin: 0 6px 0 12px;
+    --icon-button-bg: url("./icons/remove.svg");
+    cursor: pointer;
+}
+.placeholder {
+    color: #616161;
+}

@@ -1,0 +1,33 @@
+.root {
+    display: flex;
+    align-items: center;
+    color: #B1B9C0;
+    height: 28px;
+}
+.time {
+    width: 56px;
+    margin: 0 8px;
+    flex-shrink: 0;
+    opacity: 0.5;
+}
+.method {
+    width: 48px;
+    flex-shrink: 0;
+}
+.type {
+    width: 58px;
+    margin: 0 8px;
+    flex-shrink: 0;
+}
+.url {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.followButton {
+    flex-shrink: 0;
+    margin: 0 6px;
+    --icon-button-bg: url('./icons/follow.svg');
+    cursor: pointer;
+}

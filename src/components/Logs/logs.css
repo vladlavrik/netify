@@ -1,0 +1,26 @@
+.root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    font-size: 12px;
+}
+.list {
+    height: 100%;
+    min-width: 500px;
+    margin: 0;
+    padding: 0;
+}
+.item {
+    display: block;
+}
+.item:nth-child(odd) {
+    background: #2f2f2f;
+}
+.placeholder {
+    position: relative;
+    top: calc(50% - 8px);
+    font-size: 12px;
+    text-align: center;
+    color: #7E7E7E;
+}
