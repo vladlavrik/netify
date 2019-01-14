@@ -1,4 +1,4 @@
-export enum ErrorReasons {
+export enum CancelReasons {
 	Failed = 'Failed',
 	Aborted = 'Aborted',
 	TimedOut = 'TimedOut',
@@ -15,19 +15,19 @@ export enum ErrorReasons {
 	BlockedByResponse = 'BlockedByResponse',
 }
 
-export const errorReasonsList = [
-	ErrorReasons.Failed,
-	ErrorReasons.Aborted,
-	ErrorReasons.TimedOut,
-	ErrorReasons.AccessDenied,
-	ErrorReasons.ConnectionClosed,
-	ErrorReasons.ConnectionReset,
-	ErrorReasons.ConnectionRefused,
-	ErrorReasons.ConnectionAborted,
-	ErrorReasons.ConnectionFailed,
-	ErrorReasons.NameNotResolved,
-	ErrorReasons.InternetDisconnected,
-	ErrorReasons.AddressUnreachable,
-	ErrorReasons.BlockedByClient,
-	ErrorReasons.BlockedByResponse,
+export const cancelReasonsList = [
+	CancelReasons.Failed,
+	CancelReasons.Aborted,
+	CancelReasons.TimedOut,
+	CancelReasons.AccessDenied,
+	CancelReasons.ConnectionClosed,
+	CancelReasons.ConnectionReset,
+	CancelReasons.ConnectionRefused,
+	CancelReasons.ConnectionAborted,
+	CancelReasons.ConnectionFailed,
+	CancelReasons.NameNotResolved,
+	CancelReasons.InternetDisconnected,
+	CancelReasons.AddressUnreachable,
+	CancelReasons.BlockedByClient,
+	CancelReasons.BlockedByResponse,
 ];

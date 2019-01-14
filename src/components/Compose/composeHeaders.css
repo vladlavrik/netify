@@ -1,0 +1,28 @@
+.root {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+.item {
+	display: flex;
+	align-items: center;
+	margin-bottom: 8px;
+}
+.item:last-child {
+	margin-bottom: 0;
+}
+.field {
+	width: auto;
+	max-width: 256px;
+	margin-right: 8px;
+	flex-grow: 1;
+}
+.control {
+	flex-shrink: 0;
+}
+.control.typeAdd {
+	--icon-button-bg: url('./icons/add.svg');
+}
+.control.typeRemove {
+	--icon-button-bg: url('./icons/remove.svg');
+}

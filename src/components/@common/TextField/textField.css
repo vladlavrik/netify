@@ -1,0 +1,45 @@
+.root {
+	display: flex;
+	position: relative;
+	width: 300px;
+	background: #242424;
+	color: #A5A5A5;
+}
+.prefix, .suffix {
+	position: relative;
+	flex-shrink: 1;
+	z-index: 1;
+}
+.input {
+	position: relative;
+	flex-grow: 1;
+	padding: 0 8px;
+	border: none;
+	line-height: 18px;
+	font-size: 11px;
+	color: inherit;
+	background: transparent;
+	z-index: 1;
+}
+.border {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	border: transparent 1px solid;
+}
+.input:focus {
+	outline: none;
+}
+.input:focus + .border {
+	border-color: #356A9E;
+}
+.input[disabled] {
+	border-color: transparent;
+	background: #292929;
+	color: #515151;
+}
+.input[disabled] + .border {
+	border-color: transparent;
+}

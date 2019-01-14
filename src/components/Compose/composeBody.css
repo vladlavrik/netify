@@ -1,0 +1,13 @@
+.root {
+	width: 100%;
+}
+.typeFieldset {
+	display: flex;
+	margin-bottom: 8px;
+}
+.typeItem {
+	margin-right: 16px;
+}
+.content {
+	width: 100%;
+}

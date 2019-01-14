@@ -1,0 +1,13 @@
+.root {
+
+}
+
+.modeFieldset {
+	display: flex;
+}
+.modeField {
+	margin-right: 16px;
+}
+.statusCode {
+	width: 168px;
+}

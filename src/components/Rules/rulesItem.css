@@ -14,6 +14,9 @@
     --icon-button-bg: #616161;
     --icon-button-clip: polygon(30% 34%, 70% 34%, 50% 66%);
 }
+.expandButton.expanded {
+    --icon-button-clip: polygon(30% 66%, 70% 66%, 50% 34%);
+}
 .summary {
     flex-grow: 1;
     overflow: hidden;

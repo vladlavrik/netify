@@ -1,0 +1,46 @@
+.root {
+	display: flex;
+	height: 20px;
+	align-items: center;
+	font-size: 12px;
+	color: #A5A5A5;
+}
+.input {
+	width: 0;
+	height: 0;
+	margin: 0;
+	opacity: 0;
+}
+.imitator {
+	flex-shrink: 0;
+	width: 10px;
+	height: 10px;
+	margin: 1px 0;
+	border-radius: 6px;
+	border: #A5A5A5 1px solid;
+}
+.input:focus + .imitator {
+	outline: none;
+	box-shadow: 0 0 1px 2px #cc7f1c;
+}
+.imitator::before {
+	content: '';
+	display: block;
+	margin: 3px;
+	flex-shrink: 0;
+	width: 4px;
+	height: 4px;
+	border-radius: 5px;
+	background: #A5A5A5;
+	opacity: 0;
+	transition: opacity .1s ease-out;
+}
+.input:checked + .imitator::before {
+	opacity: 1;
+}
+.label {
+	margin: 0 0 0 8px;
+	padding-right: 8px;
+	line-height: 14px;
+	user-select: none;
+}

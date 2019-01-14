@@ -1,0 +1,22 @@
+.root {
+    height: 100%;
+    box-sizing: border-box;
+    overflow: auto;
+}
+.form {
+    min-width: 500px;
+    padding: 0 8px 16px 8px;
+}
+.title {
+    font-size: 12px;
+    margin: 16px 0 6px 0;
+    font-weight: normal;
+    color: #A5A5A5;
+}
+.controls {
+    display: flex;
+    margin-top: 16px;
+}
+.saveButton {
+    margin-right: 8px;
+}

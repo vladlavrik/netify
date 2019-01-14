@@ -4,69 +4,65 @@ import {Rule} from '@/debugger/constants/Rule';
 import {IconButton} from '@/components/@common/IconButton';
 import styles from './rulesItem.css';
 
-
 interface Props {
-	data: Rule
+	data: Rule;
 }
 
 interface State {
-	expanded: boolean
+	expanded: boolean;
 }
 
 export class RulesItem extends React.Component<Props, State> {
-
 	state = {
 		expanded: false,
 	};
 
 	render() {
 		const {filter} = this.props.data;
+		const {expanded} = this.state;
+		const {methods, requestTypes} = filter;
+		const url = filter.url.value
+			? filter.url.value.toString()
+			: undefined;
 
 		return (
 			<div className={styles.root}>
 				<div className={styles.entry}>
 					<IconButton
-						className={styles.expandButton}
-						onClick={this.onExpand}/>
+						className={classNames(styles.expandButton, expanded && styles.expanded)}
+						onClick={this.onToggleExpand}
+					/>
 
 					<div className={styles.summary}>
 						<div className={styles.filterInfo}>
 							<span className={classNames(styles.value, styles.method)}>
-								{filter.methods.length === 0 ? (
+								{methods.length === 0 ? (
 									<span className={styles.placeholder}>All methods</span>
 								) : (
-									filter.methods.join('/')
+									methods.join('/')
 								)}
 							</span>
 							<span className={classNames(styles.value, styles.type)}>
-								{filter.requestTypes.length === 0 ? (
+								{requestTypes.length === 0 ? (
 									<span className={styles.placeholder}>All types</span>
 								) : (
-									filter.requestTypes.join('/')
+									requestTypes.join('/')
 								)}
 							</span>
-							<span className={classNames(styles.value, styles.url)} title="">
-								{!filter.url.value ? (
+							<span className={classNames(styles.value, styles.url)} title={url && url.toString()}>
+								{!url ? (
 									<span className={styles.placeholder}>All urls</span>
 								) : (
-									filter.url.value.toString()
+									url.toString()
 								)}
 							</span>
 						</div>
 						<p className={styles.actionsInfo}>{this.parseActionsArray()}</p>
 					</div>
-					<IconButton
-						className={styles.removeButton}
-						tooltip="Remove the rule"
-						onClick={this.onRemove}>
-					</IconButton>
+					<IconButton className={styles.removeButton} tooltip='Remove the rule' onClick={this.onRemove} />
 				</div>
 
-				{this.state.expanded && (
-					<div>
-						{this.props.children}
-					</div>
-				)}
+				{expanded && <div>{this.props.children}</div>}
 			</div>
 		);
 	}
@@ -107,9 +103,8 @@ export class RulesItem extends React.Component<Props, State> {
 		return actions;
 	}
 
-
-	private onExpand = () => {
-		console.log('onExpand');
+	private onToggleExpand = () => {
+		this.setState(state => ({expanded: !state.expanded}));
 	};
 
 	private onRemove = () => {

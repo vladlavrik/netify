@@ -1,13 +1,13 @@
 import {RequestMethods} from './RequestMethods';
 import {RequestTypes} from './RequestTypes';
-import {UrlFilterTypes} from './UrlFilterTypes';
-import {ErrorReasons} from './ErrorReasons';
+import {UrlCompareTypes} from './UrlCompareTypes';
+import {CancelReasons} from './CancelReasons';
 import {RequestBodyTypes} from './RequestBodyTypes';
 
 export interface RuleData {
 	filter: {
 		url: {
-			type: UrlFilterTypes;
+			type: UrlCompareTypes;
 			value: string | RegExp;
 		};
 		requestTypes: RequestTypes[];
@@ -39,8 +39,7 @@ export interface RuleData {
 	};
 	responseError: {
 		enabled: boolean;
-		locally: boolean;
-		reason: ErrorReasons;
+		reason: CancelReasons;
 	};
 }
 

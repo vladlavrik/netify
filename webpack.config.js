@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = (env, {mode}) => ({
+module.exports = (env, {mode} = {}) => ({
 	entry: './src/index.ts',
 	output: {
 		publicPath: '/',
@@ -22,22 +22,20 @@ module.exports = (env, {mode}) => ({
 				loader: 'css-loader',
 				options: {
 					modules: true,
-					// importLoaders: 1,
 					localIdentName: '[name]__[local]-[hash:base64:5]',
-					// minimize: false,
 				},
 			}],
 		}, {
 			test: /\.svg$/,
 			loader: 'file-loader',
 			options: {
-				name: '[path][name].[ext]'
-			}
+				name: 'icons/[name]-[hash:hex:8].[ext]',
+			},
 		}],
 	},
 	resolve: {
 		alias: {
-			'@': path.resolve('src')
+			'@': path.resolve('src'),
 		},
 		extensions: ['.tsx', '.ts', '.js'],
 	},
@@ -45,15 +43,13 @@ module.exports = (env, {mode}) => ({
 		new HtmlWebpackPlugin({
 			template: './src/panel.html',
 		}),
-		...mode ? [
-			new webpack.HotModuleReplacementPlugin(),
-		] : [],
+		...(mode ? [
+			new webpack.HotModuleReplacementPlugin()
+		] : []),
 	],
 	devtool: mode === 'development' ? 'inline-source-map' : 'source-map',
 	devServer: {
-		// publicPath: '/src',
 		port: 8080,
-		// compress: true,
 		hot: true,
 		inline: true,
 		stats: 'minimal',

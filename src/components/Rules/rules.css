@@ -32,8 +32,13 @@
 }
 .placeholder {
     position: relative;
-    top: calc(50% - 8px);
+    top: calc(50% - 30px);
+    margin: 0;
     font-size: 12px;
     text-align: center;
     color: #7E7E7E;
+}
+.composeButton {
+    display: block;
+    margin: 20px auto 0;
 }

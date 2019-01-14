@@ -1,0 +1,76 @@
+.root {
+	position: relative;
+	width: 80px;
+	font-size: 12px;
+	color: #A5A5A5;
+}
+.label {
+	position: relative;
+	width: 100%;
+	padding: 0 18px 0 8px;
+	overflow: hidden;
+	border: transparent 1px solid;
+	border-radius: 2px;
+	line-height: 18px;
+	text-align: left;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	user-select: none;
+	background: #242424;
+	color: inherit;
+}
+.label::after {
+	content: '';
+	display: block;
+	position: absolute;
+	right: 6px;
+	top: 7px;
+	width: 7px;
+	height: 6px;
+	background: #616161;
+	clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.label.empty {
+	color: #656565;
+}
+.label:focus {
+	outline: none;
+	border-color: #356A9E;
+}
+.content {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	margin: 0;
+	padding: 2px 0;
+	overflow-y: scroll;
+	border: #1a1a1a 1px solid;
+	color: #A5A5A5;
+	background: #303030;
+	user-select: none;
+	z-index: 2;
+}
+.content.inverted {
+	top: auto;
+	bottom: 100%;
+}
+.option {
+	display: block;
+	padding: 0 8px;
+	font-size: 12px;
+	line-height: 20px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	color: #A5A5A5;
+	cursor: pointer;
+}
+.option.selected {
+	background: #424242;
+}
+.option:hover,
+.option.highlighted {
+	background: #356A9E;
+}
+
