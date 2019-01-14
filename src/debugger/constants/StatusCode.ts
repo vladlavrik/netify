@@ -1,4 +1,4 @@
-export default {
+export const StatusCode: {[s: number]: string} = {
 	100: 'Continue',
 	101: 'Switching Protocols',
 	102: 'Processing',                 // RFC 2518, obsoleted by RFC 4918

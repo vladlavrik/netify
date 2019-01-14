@@ -1,10 +1,10 @@
 import {observable, action} from 'mobx';
-import {Rule} from '@/debugger/constants/Rule';
+import {Rule} from '@/debugger/interfaces/Rule';
 import {RootStore} from '@/components/App/RootStore';
-import {UrlCompareTypes} from '@/debugger/constants/UrlCompareTypes';
-import {RequestTypes} from '@/debugger/constants/RequestTypes';
-import {RequestMethods} from '@/debugger/constants/RequestMethods';
-import {RequestBodyTypes} from '@/debugger/constants/RequestBodyTypes';
+import {UrlCompareType} from '@/debugger/constants/UrlCompareType';
+import {ResourceType} from '@/debugger/constants/ResourceType';
+import {RequestMethod} from '@/debugger/constants/RequestMethod';
+import {RequestBodyType} from '@/debugger/constants/RequestBodyType';
 import {CancelReasons} from '@/debugger/constants/CancelReasons';
 
 export class RulesStore {
@@ -16,41 +16,44 @@ export class RulesStore {
 			id: 0,
 			filter: {
 				url: {
-					type: UrlCompareTypes.StartsWith,
+					compareType: UrlCompareType.StartsWith,
 					value: 'http://vlad-accounts.dev.ukr.net/api/v1/token/verification/acquire',
 				},
-				requestTypes: [RequestTypes.XHR, RequestTypes.Fetch],
-				methods: [RequestMethods.GET, RequestMethods.POST],
+				resourceTypes: [ResourceType.XHR, ResourceType.Fetch],
+				methods: [RequestMethod.GET, RequestMethod.POST],
 			},
-			mutateRequest: {
-				enabled: true,
-				endpointReplace:
-					'https://hacker-server.anonim.com/youtube-stream?url=%protocol%//%hostname%:%port%%path%%query%',
-				method: RequestMethods.POST,
-				headersToAdd: {'X-my-header': 'secret-header'},
-				headersToRemove: ['s-id'],
-				replaceBody: {
+			actions: {
+				mutateRequest: {
 					enabled: true,
-					type: RequestBodyTypes.Text,
-					value: 'new Body',
+					endpointReplace:
+						'https://hacker-server.anonim.com/youtube-stream?url=%protocol%//%hostname%:%port%%path%%query%',
+					method: RequestMethod.POST,
+					headersToAdd: {'X-my-header': 'secret-header'},
+					headersToRemove: ['s-id'],
+					replaceBody: {
+						enabled: true,
+						type: RequestBodyType.Text,
+						value: 'new Body',
+					},
 				},
-			},
-			mutateResponse: {
-				enabled: true,
-				responseLocally: false,
-				statusCode: 200,
-				headersToAdd: {'X-Sid': 'null'},
-				headersToRemove: [],
-				replaceBody: {
+				mutateResponse: {
 					enabled: true,
-					type: RequestBodyTypes.Text,
-					value: 'response body',
+					responseLocally: false,
+					statusCode: 200,
+					headersToAdd: {'X-Sid': 'null'},
+					headersToRemove: [],
+					replaceBody: {
+						enabled: true,
+						type: RequestBodyType.Text,
+						value: 'response body',
+					},
 				},
-			},
-			responseError: {
-				enabled: false,
-				reason: CancelReasons.Aborted,
-			},
+				cancelRequest: {
+					enabled: false,
+					reason: CancelReasons.Aborted,
+				},
+			}
+
 		},
 	];
 

@@ -1,4 +1,4 @@
-export enum UrlCompareTypes {
+export enum UrlCompareType {
 	StartsWith = 'Starts with',
 	Exact = 'Exact',
 	RegExp = 'RegExp',
@@ -6,7 +6,7 @@ export enum UrlCompareTypes {
 }
 
 export const urlCompareTypeList = [
-	UrlCompareTypes.StartsWith,
-	UrlCompareTypes.Exact,
-	UrlCompareTypes.RegExp,
+	UrlCompareType.StartsWith,
+	UrlCompareType.Exact,
+	UrlCompareType.RegExp,
 ];

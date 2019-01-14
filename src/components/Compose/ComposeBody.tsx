@@ -2,7 +2,7 @@ import * as React from 'react';
 // import {Field} from 'formik';
 import {RadioButton} from '@/components/@common/RadioButton';
 import {TextareaField} from '@/components/@common/TextaredField';
-import {requestBodyTypesList} from '@/debugger/constants/RequestBodyTypes';
+import {requestBodyTypesList} from '@/debugger/constants/RequestBodyType';
 import styles from './composeBody.css';
 
 interface Props {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import {Rule} from '@/debugger/constants/Rule';
+import {Rule} from '@/debugger/interfaces/Rule';
 import {IconButton} from '@/components/@common/IconButton';
 import styles from './rulesItem.css';
 
@@ -20,7 +20,7 @@ export class RulesItem extends React.Component<Props, State> {
 	render() {
 		const {filter} = this.props.data;
 		const {expanded} = this.state;
-		const {methods, requestTypes} = filter;
+		const {methods, resourceTypes} = filter;
 		const url = filter.url.value
 			? filter.url.value.toString()
 			: undefined;
@@ -43,10 +43,10 @@ export class RulesItem extends React.Component<Props, State> {
 								)}
 							</span>
 							<span className={classNames(styles.value, styles.type)}>
-								{requestTypes.length === 0 ? (
+								{resourceTypes.length === 0 ? (
 									<span className={styles.placeholder}>All types</span>
 								) : (
-									requestTypes.join('/')
+									resourceTypes.join('/')
 								)}
 							</span>
 							<span className={classNames(styles.value, styles.url)} title={url && url.toString()}>
@@ -68,7 +68,7 @@ export class RulesItem extends React.Component<Props, State> {
 	}
 
 	private parseActionsArray() {
-		const {mutateRequest, mutateResponse, responseError} = this.props.data;
+		const {mutateRequest, mutateResponse, cancelRequest} = this.props.data.actions;
 		const actions = [];
 
 		if (mutateRequest.enabled) {
@@ -96,7 +96,7 @@ export class RulesItem extends React.Component<Props, State> {
 				actions.push('Defined request body');
 			}
 		}
-		if (responseError.enabled) {
+		if (cancelRequest.enabled) {
 			actions.push('Return error');
 		}
 

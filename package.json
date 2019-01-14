@@ -7,6 +7,7 @@
     "build": "webpack --mode=production"
   },
   "dependencies": {
+    "@types/chrome": "0.0.77",
     "@types/classnames": "^2.2.7",
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",

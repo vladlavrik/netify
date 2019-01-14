@@ -43,7 +43,7 @@ module.exports = (env, {mode} = {}) => ({
 		new HtmlWebpackPlugin({
 			template: './src/panel.html',
 		}),
-		...(mode ? [
+		...(mode === 'development' ? [
 			new webpack.HotModuleReplacementPlugin()
 		] : []),
 	],

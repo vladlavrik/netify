@@ -14,7 +14,7 @@
 	margin: 0 8px;
 	background: #616161;
 }
-.requestTypesField {
+.resourceTypesField {
 	flex-shrink: 0;
 	width: 110px;
 }

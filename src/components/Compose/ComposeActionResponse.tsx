@@ -12,10 +12,10 @@ export class ComposeActionResponse extends React.Component {
 			<div className={styles.root}>
 				<ComposeRow title='Response mode:'>
 					<div className={styles.modeFieldset}>
-						<RadioButton className={styles.modeField} name='mutateResponse.mode' value='server'>
+						<RadioButton className={styles.modeField} name='actions.mutateResponse.mode' value='server'>
 							After server response
 						</RadioButton>
-						<RadioButton className={styles.modeField} name='mutateResponse.mode' value='locally'>
+						<RadioButton className={styles.modeField} name='actions.mutateResponse.mode' value='locally'>
 							Response locally
 						</RadioButton>
 					</div>
@@ -23,16 +23,16 @@ export class ComposeActionResponse extends React.Component {
 				<ComposeRow title='Status code:'>
 					<TextField
 						className={styles.statusCode}
-						name='mutateResponse.statusCode'
+						name='actions.mutateResponse.statusCode'
 						maxlength={3}
 						placeholder='Default - from server or 200'
 					/>
 				</ComposeRow>
 				<ComposeRow title='Headers:'>
-					<ComposeHeaders name='mutateResponse.headers' />
+					<ComposeHeaders name='actions.mutateResponse.headers' />
 				</ComposeRow>
 				<ComposeRow title='Body:'>
-					<ComposeBody name='mutateResponse.body' />
+					<ComposeBody name='actions.mutateResponse.body' />
 				</ComposeRow>
 			</div>
 		);

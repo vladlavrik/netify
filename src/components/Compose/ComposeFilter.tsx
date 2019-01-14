@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {TextField} from '@/components/@common/TextField';
 import {DropdownPicker} from '@/components/@common/DropdownPicker';
-import {urlCompareTypeList} from '@/debugger/constants/UrlCompareTypes';
-import {requestTypesList} from '@/debugger/constants/RequestTypes';
-import {requestMethodsList} from '@/debugger/constants/RequestMethods';
+import {urlCompareTypeList} from '@/debugger/constants/UrlCompareType';
+import {resourceTypesList} from '@/debugger/constants/ResourceType';
+import {requestMethodsList} from '@/debugger/constants/RequestMethod';
 import styles from './composeFilter.css';
 
 export class ComposeFilter extends React.Component {
@@ -21,9 +21,9 @@ export class ComposeFilter extends React.Component {
 				<div className={styles.separator} />
 
 				<DropdownPicker
-					className={styles.requestTypesField}
-					name='filter.requestTypes'
-					options={requestTypesList}
+					className={styles.resourceTypesField}
+					name='filter.resourceTypes'
+					options={resourceTypesList}
 					multiple
 					placeholder='All types'
 				/>

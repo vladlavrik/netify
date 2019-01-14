@@ -1,8 +1,8 @@
 import {observable, action} from 'mobx';
 import {RootStore} from '@/components/App/RootStore';
-import {Log} from '@/debugger/constants/Log';
-import {RequestTypes} from '@/debugger/constants/RequestTypes';
-import {RequestMethods} from '@/debugger/constants/RequestMethods';
+import {Log} from '@/debugger/interfaces/Log';
+import {ResourceType} from '@/debugger/constants/ResourceType';
+import {RequestMethod} from '@/debugger/constants/RequestMethod';
 
 export class LogsStore {
 	constructor(_rootStore: RootStore) {}
@@ -10,29 +10,32 @@ export class LogsStore {
 	@observable
 	readonly list: Log[] = [
 		{
-			requestId: 0,
+			id: '0',
 			ruleId: 0,
+			loaded: true,
 			date: new Date(),
-			requestType: RequestTypes.Fetch,
-			method: RequestMethods.GET,
+			resourceType: ResourceType.Fetch,
+			method: RequestMethod.GET,
 			url:
 				'https://youtube.com/api/3/videos/streem/webrtc/public/AHWqTUl5Pb92BoXYQ6JhM9q4msaEy2gQqL7STOooj03YT5G',
 		},
 		{
-			requestId: 1,
+			id: '1',
 			ruleId: 0,
+			loaded: true,
 			date: new Date(),
-			requestType: RequestTypes.Fetch,
-			method: RequestMethods.GET,
+			resourceType: ResourceType.Fetch,
+			method: RequestMethod.GET,
 			url:
 				'https://youtube.com/api/3/videos/streem/webrtc/public/AHWqTUl5Pb92BoXYQ6JhM9q4msaEy2gQqL7STOooj03YT5G',
 		},
 		{
-			requestId: 2,
+			id: '2',
 			ruleId: 0,
+			loaded: false,
 			date: new Date(),
-			requestType: RequestTypes.Fetch,
-			method: RequestMethods.GET,
+			resourceType: ResourceType.Fetch,
+			method: RequestMethod.GET,
 			url:
 				'https://youtube.com/api/3/videos/streem/webrtc/public/AHWqTUl5Pb92BoXYQ6JhM9q4msaEy2gQqL7STOooj03YT5G',
 		},

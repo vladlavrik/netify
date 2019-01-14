@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import {Rule} from '@/debugger/constants/Rule';
+import {Rule} from '@/debugger/interfaces/Rule';
 import styles from './rulesDetails.css';
 
 interface Props {
@@ -9,7 +9,8 @@ interface Props {
 
 export class RulesDetails extends React.Component<Props> {
 	render() {
-		const {filter, mutateRequest, mutateResponse, responseError} = this.props.data;
+		const {filter} = this.props.data;
+		const {mutateRequest, mutateResponse, cancelRequest} = this.props.data.actions;
 
 		return (
 			<div className={styles.root}>
@@ -29,10 +30,10 @@ export class RulesDetails extends React.Component<Props> {
 								<td className={styles.dataValue}>{filter.methods.join(', ') || 'All methods'}</td>
 							</tr>
 						)}
-						{filter.requestTypes.length > 0 && (
+						{filter.resourceTypes.length > 0 && (
 							<tr>
 								<td className={styles.dataTitle}>Request types:</td>
-								<td className={styles.dataValue}>{filter.requestTypes.join(', ') || 'All types'}</td>
+								<td className={styles.dataValue}>{filter.resourceTypes.join(', ') || 'All types'}</td>
 							</tr>
 						)}
 					</tbody>
@@ -118,10 +119,10 @@ export class RulesDetails extends React.Component<Props> {
 
 				<table>
 					<tbody>
-						{responseError.enabled && (
+						{cancelRequest.enabled && (
 							<tr>
 								<td className={styles.dataTitle}>Response error:</td>
-								<td className={styles.dataValue}>{responseError.reason.toString()}</td>
+								<td className={styles.dataValue}>{cancelRequest.reason.toString()}</td>
 							</tr>
 						)}
 					</tbody>

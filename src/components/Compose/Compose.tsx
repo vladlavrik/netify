@@ -8,10 +8,10 @@ import {ComposeActionResponse} from './ComposeActionResponse';
 import {ComposeActionCancel} from './ComposeActionCancel';
 import {Button} from '@/components/@common/Button';
 import {ExpandableCheckbox} from '@/components/@common/ExpandableCheckbox';
-import {UrlCompareTypes} from '@/debugger/constants/UrlCompareTypes';
-import {RequestTypes} from '@/debugger/constants/RequestTypes';
-import {RequestMethods} from '@/debugger/constants/RequestMethods';
-import {RequestBodyTypes} from '@/debugger/constants/RequestBodyTypes';
+import {UrlCompareType} from '@/debugger/constants/UrlCompareType';
+import {ResourceType} from '@/debugger/constants/ResourceType';
+import {RequestMethod} from '@/debugger/constants/RequestMethod';
+import {RequestBodyType} from '@/debugger/constants/RequestBodyType';
 import {CancelReasons} from '@/debugger/constants/CancelReasons';
 import styles from './compose.css';
 
@@ -22,40 +22,43 @@ interface Props {
 interface FormValue {
 	filter: {
 		url: string;
-		urlCompareType: UrlCompareTypes;
-		requestTypes: RequestTypes[];
-		methods: RequestMethods[];
+		urlCompareType: UrlCompareType;
+		resourceTypes: ResourceType[];
+		methods: RequestMethod[];
 	};
-	mutateRequest: {
-		enabled: boolean;
-		endpointReplace: string;
-		method: RequestMethods;
-		headers: {
-			name: string;
-			value: string;
-		}[];
-		body: {
-			type: RequestBodyTypes;
-			value: string;
+	actions: {
+		mutateRequest: {
+			enabled: boolean;
+			endpointReplace: string;
+			method: RequestMethod;
+			headers: {
+				name: string;
+				value: string;
+			}[];
+			body: {
+				type: RequestBodyType;
+				value: string;
+			};
 		};
-	};
-	mutateResponse: {
-		enabled: boolean;
-		mode: 'server' | 'locally';
-		statusCode: string;
-		headers: {
-			name: string;
-			value: string;
-		}[];
-		body: {
-			type: RequestBodyTypes;
-			value: string;
+		mutateResponse: {
+			enabled: boolean;
+			mode: 'server' | 'locally';
+			statusCode: string;
+			headers: {
+				name: string;
+				value: string;
+			}[];
+			body: {
+				type: RequestBodyType;
+				value: string;
+			};
 		};
-	};
-	responseError: {
-		enabled: boolean;
-		reason: CancelReasons;
-	};
+		cancelRequest: {
+			enabled: boolean;
+			reason: CancelReasons;
+		};
+	}
+
 }
 
 @inject('appStore')
@@ -65,44 +68,46 @@ export class Compose extends React.Component<Props> {
 	formInitialValue: FormValue = {
 		filter: {
 			url: 'https://',
-			urlCompareType: UrlCompareTypes.Exact,
-			requestTypes: [RequestTypes.Fetch],
+			urlCompareType: UrlCompareType.Exact,
+			resourceTypes: [ResourceType.Fetch],
 			methods: [],
 		},
-		mutateRequest: {
-			enabled: false,
-			endpointReplace: '',
-			method: RequestMethods.GET,
-			headers: [
-				{
-					name: '',
+		actions: {
+			mutateRequest: {
+				enabled: false,
+				endpointReplace: '',
+				method: RequestMethod.GET,
+				headers: [
+					{
+						name: '',
+						value: '',
+					},
+				],
+				body: {
+					type: RequestBodyType.Text,
 					value: '',
 				},
-			],
-			body: {
-				type: RequestBodyTypes.Text,
-				value: '',
 			},
-		},
-		mutateResponse: {
-			enabled: false,
-			mode: 'server' as FormValue['mutateResponse']['mode'],
-			statusCode: '',
-			headers: [
-				{
-					name: '',
+			mutateResponse: {
+				enabled: false,
+				mode: 'server' as FormValue['actions']['mutateResponse']['mode'],
+				statusCode: '',
+				headers: [
+					{
+						name: '',
+						value: '',
+					},
+				],
+				body: {
+					type: RequestBodyType.Text,
 					value: '',
 				},
-			],
-			body: {
-				type: RequestBodyTypes.Text,
-				value: '',
 			},
-		},
-		responseError: {
-			enabled: true,
-			reason: CancelReasons.Aborted,
-		},
+			cancelRequest: {
+				enabled: true,
+				reason: CancelReasons.Aborted,
+			},
+		}
 	};
 
 	render() {
@@ -114,15 +119,15 @@ export class Compose extends React.Component<Props> {
 						<ComposeFilter />
 
 						<h3 className={styles.title}>Actions:</h3>
-						<ExpandableCheckbox name='mutateRequest.enabled' label='Mutate request'>
+						<ExpandableCheckbox name='actions.mutateRequest.enabled' label='Mutate request'>
 							<ComposeActionRequest />
 						</ExpandableCheckbox>
 
-						<ExpandableCheckbox name='mutateResponse.enabled' label='Mutate Response'>
+						<ExpandableCheckbox name='actions.mutateResponse.enabled' label='Mutate Response'>
 							<ComposeActionResponse />
 						</ExpandableCheckbox>
 
-						<ExpandableCheckbox name='responseError.enabled' label='Cancel'>
+						<ExpandableCheckbox name='actions.cancelRequest.enabled' label='Cancel'>
 							<ComposeActionCancel />
 						</ExpandableCheckbox>
 

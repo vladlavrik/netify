@@ -41,6 +41,7 @@ export class App extends React.Component {
 									/>
 									<IconButton
 										className={classNames(styles.headerControl, styles.typeClear)}
+										disabled={composeShown}
 										tooltip='Clear all rules'
 										onClick={this.onClearRules}
 									/>
@@ -92,7 +93,7 @@ export class App extends React.Component {
 
 	private onToggleLogsCollapse = () => this.rootStore.appStore.toggleLogsCollapse();
 
-	private onClearRules = () => this.rootStore.rulesStore.clearAll();
+	private onClearRules = () => this.rootStore.rulesStore.clearAll(); // TODO confirm with popup
 
 	private onClearLogs = () => this.rootStore.logsStore.clearAll();
 }

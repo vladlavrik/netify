@@ -12,15 +12,15 @@ export class ComposeActionRequest extends React.Component {
 				<ComposeRow title='Replace endpoint:'>
 					<TextField
 						className={styles.endpoint}
-						name='mutateRequest.endpoint'
+						name='actions.mutateRequest.endpointReplace'
 						placeholder='%protocol%//%hostname%:%port%%path%%query%'
 					/>
 				</ComposeRow>
 				<ComposeRow title='Headers:'>
-					<ComposeHeaders name='mutateRequest.headers' />
+					<ComposeHeaders name='actions.mutateRequest.headers' />
 				</ComposeRow>
 				<ComposeRow title='Body:'>
-					<ComposeBody name='mutateRequest.body' />
+					<ComposeBody name='actions.mutateRequest.body' />
 				</ComposeRow>
 			</div>
 		);

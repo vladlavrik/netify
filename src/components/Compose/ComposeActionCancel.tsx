@@ -10,10 +10,8 @@ export class ComposeActionCancel extends React.Component<Props> {
 		return (
 			<div className={styles.root}>
 				<DropdownPicker
-
-
 					className={styles.reasonField}
-					name='responseError.reason'
+					name='actions.cancelRequest.reason'
 					options={cancelReasonsList}
 				/>
 			</div>
