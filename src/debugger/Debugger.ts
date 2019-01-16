@@ -1,6 +1,6 @@
 import {compileRawBaseResponse, mutateHeaders, bodyToString} from './helpers/http';
 import {compileUrlFromPattern} from './helpers/url';
-import {RulesManager} from './RulesManager';
+import {RulesManager} from './interfaces/RulesManager';
 import {RequestBodyType} from './constants/RequestBodyType';
 import {Log} from './interfaces/Log';
 import {
@@ -118,10 +118,10 @@ export default class Debugger {
 
 		// if required local response, combine the response form defined status, headers and body
 		if (mutateResponse.enabled && mutateResponse.responseLocally) {
-			const {statusCode = 200, headersToAdd, replaceBody} = mutateResponse;
+			const {statusCode = 200, headers, replaceBody} = mutateResponse;
 			const rawResponse = await compileRawBaseResponse(
 				statusCode || 200,
-				headersToAdd,
+				headers.add,
 				replaceBody.type,
 				replaceBody.value,
 			);
@@ -144,15 +144,10 @@ export default class Debugger {
 			continueParams.url = compileUrlFromPattern(mutateRequest.endpointReplace, request.url);
 		}
 
-		// then, rewrite method
-		if (mutateRequest.method) {
-			continueParams.method = mutateRequest.method;
-		}
-
 		// then, mutate headers
-		if (Reflect.ownKeys(mutateRequest.headersToAdd).length || mutateRequest.headersToRemove.length) {
-			const {headersToAdd, headersToRemove} = mutateRequest;
-			continueParams.headers = mutateHeaders(request.headers, headersToAdd, headersToRemove);
+		if (Reflect.ownKeys(mutateRequest.headers.add).length || mutateRequest.headers.remove.length) {
+			const {add, remove} = mutateRequest.headers;
+			continueParams.headers = mutateHeaders(request.headers, add, remove);
 		}
 
 		// then, rewrite body
@@ -179,8 +174,8 @@ export default class Debugger {
 		const {mutateResponse} = rule.actions;
 
 		const skipHandler = mutateResponse.statusCode === null
-			&& Reflect.ownKeys(mutateResponse.headersToAdd).length === 0
-			&& mutateResponse.headersToRemove.length === 0
+			&& Reflect.ownKeys(mutateResponse.headers.add).length === 0
+			&& mutateResponse.headers.remove.length === 0
 			&& !mutateResponse.replaceBody;
 		if (!mutateResponse.enabled || skipHandler) {
 			await this.continueIntercepted({interceptionId});
@@ -197,8 +192,8 @@ export default class Debugger {
 		// defined mutated headers
 		const finallyHeaders = mutateHeaders(
 			responseHeaders,
-			mutateResponse.headersToAdd,
-			mutateResponse.headersToRemove,
+			mutateResponse.headers.add,
+			mutateResponse.headers.remove,
 		);
 
 		// TODO handle response without full rebuild if body not changed

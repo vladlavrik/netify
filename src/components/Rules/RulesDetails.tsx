@@ -12,13 +12,15 @@ export class RulesDetails extends React.Component<Props> {
 		const {filter} = this.props.data;
 		const {mutateRequest, mutateResponse, cancelRequest} = this.props.data.actions;
 
+		// TODO fix empty tables
+
 		return (
 			<div className={styles.root}>
 				<div className={classNames(styles.separator, styles.separatorTop)} />
 
 				<table>
-					<tbody>
-						{filter.url.value && (
+					<tbody className={styles.dataSection}>
+						{!!filter.url.value && (
 							<tr>
 								<td className={styles.dataTitle}>Url:</td>
 								<td className={styles.dataValue}>{filter.url.value.toString()}</td>
@@ -42,32 +44,29 @@ export class RulesDetails extends React.Component<Props> {
 				<div className={styles.separator} />
 
 				<table>
-					<tbody>
-						{mutateRequest.endpointReplace && (
+					<tbody className={styles.dataSection}>
+						{mutateRequest.endpointReplace.length > 0 && (
 							<tr>
 								<td className={styles.dataTitle}>Request endpoint:</td>
 								<td className={styles.dataValue}>{mutateRequest.endpointReplace}</td>
 							</tr>
 						)}
-
-						{Object.keys(mutateRequest.headersToAdd).length > 0 && (
+						{Object.keys(mutateRequest.headers.add).length > 0 && (
 							<tr>
 								<td className={styles.dataTitle}>Added request headers:</td>
 								<td className={styles.dataValue}>
-									{Object.entries(mutateRequest.headersToAdd)
+									{Object.entries(mutateRequest.headers.add)
 										.map(([name, value]) => name + ': ' + value)
 										.join('<br>')}
 								</td>
 							</tr>
 						)}
-
-						{mutateRequest.headersToRemove.length > 0 && (
+						{mutateRequest.headers.remove.length > 0 && (
 							<tr>
 								<td className={styles.dataTitle}>Removed request headers:</td>
-								<td className={styles.dataValue}>{mutateRequest.headersToRemove.join('<br>')}</td>
+								<td className={styles.dataValue}>{mutateRequest.headers.remove.join('<br>')}</td>
 							</tr>
 						)}
-
 						{mutateRequest.replaceBody.enabled && (
 							<tr>
 								<td className={styles.dataTitle}>Replaced request body</td>
@@ -80,7 +79,7 @@ export class RulesDetails extends React.Component<Props> {
 				<div className={styles.separator} />
 
 				<table>
-					<tbody>
+					<tbody className={styles.dataSection}>
 						{mutateResponse.statusCode && (
 							<tr>
 								<td className={styles.dataTitle}>Response status</td>
@@ -88,21 +87,21 @@ export class RulesDetails extends React.Component<Props> {
 							</tr>
 						)}
 
-						{Object.keys(mutateResponse.headersToAdd).length > 0 && (
+						{Object.keys(mutateResponse.headers.add).length > 0 && (
 							<tr>
 								<td className={styles.dataTitle}>Added response headers:</td>
 								<td className={styles.dataValue}>
-									{Object.entries(mutateResponse.headersToAdd)
+									{Object.entries(mutateResponse.headers.add)
 										.map(([name, value]) => name + ': ' + value)
 										.join('<br>')}
 								</td>
 							</tr>
 						)}
 
-						{mutateResponse.headersToRemove.length > 0 && (
+						{mutateResponse.headers.remove.length > 0 && (
 							<tr>
 								<td className={styles.dataTitle}>Removed response headers:</td>
-								<td className={styles.dataValue}>{mutateResponse.headersToRemove.join('<br>')}</td>
+								<td className={styles.dataValue}>{mutateResponse.headers.remove.join('<br>')}</td>
 							</tr>
 						)}
 
@@ -118,7 +117,7 @@ export class RulesDetails extends React.Component<Props> {
 				<div className={styles.separator} />
 
 				<table>
-					<tbody>
+					<tbody className={styles.dataSection}>
 						{cancelRequest.enabled && (
 							<tr>
 								<td className={styles.dataTitle}>Response error:</td>

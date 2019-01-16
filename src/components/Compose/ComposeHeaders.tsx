@@ -36,7 +36,7 @@ export class ComposeHeaders extends React.Component<Props> {
 									<IconButton
 										className={classNames(styles.control, styles.typeAdd)}
 										tooltip='Add new one'
-										onClick={() => helpers.push({name: '', value: 'v'})}
+										onClick={() => helpers.push({name: '', value: ''})}
 									/>
 								) : (
 									<IconButton

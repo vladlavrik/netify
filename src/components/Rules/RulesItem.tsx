@@ -6,6 +6,7 @@ import styles from './rulesItem.css';
 
 interface Props {
 	data: Rule;
+	onRemove: (id: string) => void
 }
 
 interface State {
@@ -72,11 +73,11 @@ export class RulesItem extends React.Component<Props, State> {
 		const actions = [];
 
 		if (mutateRequest.enabled) {
-			const {endpointReplace, headersToAdd, headersToRemove, replaceBody} = mutateRequest;
+			const {endpointReplace, headers, replaceBody} = mutateRequest;
 			if (endpointReplace) {
 				actions.push('Redirect to url');
 			}
-			if (Object.keys(headersToAdd).length > 0 || headersToRemove.length > 0) {
+			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
 				actions.push('Modify request headers');
 			}
 			if (replaceBody.enabled) {
@@ -85,11 +86,11 @@ export class RulesItem extends React.Component<Props, State> {
 		}
 
 		if (mutateRequest.enabled) {
-			const {statusCode, headersToAdd, headersToRemove, replaceBody} = mutateResponse;
+			const {statusCode, headers, replaceBody} = mutateResponse;
 			if (statusCode) {
 				actions.push('Modify response status');
 			}
-			if (Object.keys(headersToAdd).length > 0 || headersToRemove.length > 0) {
+			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
 				actions.push('Modify request headers');
 			}
 			if (replaceBody.enabled) {
@@ -100,6 +101,10 @@ export class RulesItem extends React.Component<Props, State> {
 			actions.push('Return error');
 		}
 
+		if (actions.length === 0) {
+			actions.push('No actions');
+		}
+
 		return actions;
 	}
 
@@ -108,6 +113,6 @@ export class RulesItem extends React.Component<Props, State> {
 	};
 
 	private onRemove = () => {
-		console.log('onRemove');
+		this.props.onRemove(this.props.data.id);
 	};
 }

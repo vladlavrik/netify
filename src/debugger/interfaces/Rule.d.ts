@@ -5,11 +5,11 @@ import {CancelReasons} from '@/debugger/constants/CancelReasons';
 import {RequestBodyType} from '@/debugger/constants/RequestBodyType';
 
 export interface Rule {
-	id: number;
+	id: string;
 	filter: {
 		url: {
-			compareType: UrlCompareType;
 			value: string | RegExp;
+			compareType: UrlCompareType;
 		};
 		resourceTypes: ResourceType[];
 		methods: RequestMethod[];
@@ -18,9 +18,10 @@ export interface Rule {
 		mutateRequest: {
 			enabled: boolean;
 			endpointReplace: string;
-			method: RequestMethod;
-			headersToAdd: {[s: string]: string;}
-			headersToRemove: string[];
+			headers: {
+				add: {[s: string]: string;},
+				remove: string[];
+			},
 			replaceBody: {
 				enabled: boolean;
 				type: RequestBodyType;
@@ -31,8 +32,10 @@ export interface Rule {
 			enabled: boolean;
 			responseLocally: boolean;
 			statusCode: number | null;
-			headersToAdd: {[s: string]: string;}
-			headersToRemove: string[];
+			headers: {
+				add: {[s: string]: string;},
+				remove: string[];
+			},
 			replaceBody: {
 				enabled: boolean;
 				type: RequestBodyType;

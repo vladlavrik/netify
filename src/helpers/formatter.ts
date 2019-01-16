@@ -23,3 +23,8 @@ export function formatTime(date: Date) {
 export function formatFullTime(date: Date) {
 	return date.toLocaleString('en-US', fullDateFormat);
 }
+
+
+export function trimString(str: string) {
+	return str.replace(/^ +| +$/g, '')
+}

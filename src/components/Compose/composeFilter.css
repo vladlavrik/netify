@@ -5,6 +5,7 @@
 	flex-grow: 20;
 }
 .urlTypeField {
+	width: 86px;
 	flex-shrink: 0;
 	margin-left: 8px;
 }

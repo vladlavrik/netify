@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Log} from '@/debugger/interfaces/Log';
 import {IconButton} from '@/components/@common/IconButton';
-import {formatFullTime, formatTime} from '@/utils/formatter';
+import {formatFullTime, formatTime} from '@/helpers/formatter';
 import styles from './logsItem.css';
 
 interface Props {

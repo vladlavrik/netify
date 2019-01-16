@@ -37,7 +37,9 @@ export class Rules extends React.Component<Props> {
 				<ul className={styles.list}>
 					{list.map(item => (
 						<li className={styles.item} key={item.id}>
-							<RulesItem data={item}>
+							<RulesItem
+								data={item}
+								onRemove={this.onRemove}>
 								<RulesDetails data={item} />
 							</RulesItem>
 						</li>
@@ -48,4 +50,6 @@ export class Rules extends React.Component<Props> {
 	}
 
 	onShowCompose = () => this.props.appStore!.toggleComposeShow();
+
+	onRemove = (id: string) => this.props.rulesStore!.removeById(id); //TODO ask confirmation
 }

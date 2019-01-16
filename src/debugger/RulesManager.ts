@@ -13,7 +13,7 @@ export class RulesManager {
 		this.list.push(...rule);
 	}
 
-	removeById(id: number) {
+	removeById(id: string) {
 		const index = this.list.findIndex(item => item.id === id);
 		this.list.splice(index, 1);
 	}

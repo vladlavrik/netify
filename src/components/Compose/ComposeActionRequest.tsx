@@ -20,7 +20,7 @@ export class ComposeActionRequest extends React.Component {
 					<ComposeHeaders name='actions.mutateRequest.headers' />
 				</ComposeRow>
 				<ComposeRow title='Body:'>
-					<ComposeBody name='actions.mutateRequest.body' />
+					<ComposeBody name='actions.mutateRequest.replaceBody' />
 				</ComposeRow>
 			</div>
 		);

@@ -2,6 +2,8 @@ import {action, observable} from 'mobx';
 import {RootStore} from './RootStore';
 
 export class AppStore {
+	constructor(_rootStore: RootStore) {}
+
 	@observable
 	composeShown = false;
 
@@ -10,8 +12,6 @@ export class AppStore {
 
 	@observable
 	logsCollapsed = false;
-
-	constructor(_rootStore: RootStore) {}
 
 	@action
 	showCompose() {

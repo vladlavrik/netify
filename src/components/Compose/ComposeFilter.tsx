@@ -10,11 +10,11 @@ export class ComposeFilter extends React.Component {
 	render() {
 		return (
 			<div className={styles.root}>
-				<TextField className={styles.urlField} name='filter.url' placeholder='Url' />
+				<TextField className={styles.urlField} name='filter.url.value' placeholder='Url' />
 
 				<DropdownPicker
 					className={styles.urlTypeField}
-					name='filter.urlCompareType'
+					name='filter.url.compareType'
 					options={urlCompareTypeList}
 				/>
 

@@ -1,69 +1,58 @@
 import {observable, action} from 'mobx';
 import {Rule} from '@/debugger/interfaces/Rule';
 import {RootStore} from '@/components/App/RootStore';
-import {UrlCompareType} from '@/debugger/constants/UrlCompareType';
-import {ResourceType} from '@/debugger/constants/ResourceType';
 import {RequestMethod} from '@/debugger/constants/RequestMethod';
-import {RequestBodyType} from '@/debugger/constants/RequestBodyType';
-import {CancelReasons} from '@/debugger/constants/CancelReasons';
+import {ResourceType} from '@/debugger/constants/ResourceType';
+import {UrlCompareType} from '@/debugger/constants/UrlCompareType';
+import {RulesManager} from '@/debugger/interfaces/RulesManager';
 
-export class RulesStore {
-	constructor(_rootStore: RootStore) {}
+export class RulesStore implements RulesManager {
+	constructor(private rootStore: RootStore) {
+	}
 
 	@observable
-	readonly list: Rule[] = [
-		{
-			id: 0,
-			filter: {
-				url: {
-					compareType: UrlCompareType.StartsWith,
-					value: 'http://vlad-accounts.dev.ukr.net/api/v1/token/verification/acquire',
-				},
-				resourceTypes: [ResourceType.XHR, ResourceType.Fetch],
-				methods: [RequestMethod.GET, RequestMethod.POST],
-			},
-			actions: {
-				mutateRequest: {
-					enabled: true,
-					endpointReplace:
-						'https://hacker-server.anonim.com/youtube-stream?url=%protocol%//%hostname%:%port%%path%%query%',
-					method: RequestMethod.POST,
-					headersToAdd: {'X-my-header': 'secret-header'},
-					headersToRemove: ['s-id'],
-					replaceBody: {
-						enabled: true,
-						type: RequestBodyType.Text,
-						value: 'new Body',
-					},
-				},
-				mutateResponse: {
-					enabled: true,
-					responseLocally: false,
-					statusCode: 200,
-					headersToAdd: {'X-Sid': 'null'},
-					headersToRemove: [],
-					replaceBody: {
-						enabled: true,
-						type: RequestBodyType.Text,
-						value: 'response body',
-					},
-				},
-				cancelRequest: {
-					enabled: false,
-					reason: CancelReasons.Aborted,
-				},
-			}
-
-		},
-	];
+	readonly list: Rule[] = [];
 
 	@action
-	add(item: Rule) {
-		this.list.push(item);
+	save(...rules: Rule[]) {
+		this.list.push(...rules);
+		this.rootStore.appStore.hideCompose();
+	}
+
+	@action
+	removeById(id: string) {
+		const index = this.list.findIndex(item => item.id === id);
+		this.list.splice(index, 1);
 	}
 
 	@action
 	clearAll() {
 		this.list.splice(0, this.list.length);
+	}
+
+	selectOne(select: {url: string, method: RequestMethod, resourceType: ResourceType}) {
+		return this.list.find(({filter}) => {
+			if (filter.resourceTypes.length && !filter.resourceTypes.includes(select.resourceType)) {
+				return false;
+			}
+
+			if (filter.methods.length && !filter.methods.includes(select.method)) {
+				return false;
+			}
+
+			if (filter.url.compareType === UrlCompareType.Exact && filter.url.value !== select.url) {
+				return false;
+			}
+
+			if (filter.url.compareType === UrlCompareType.StartsWith && !select.url.startsWith(filter.url.value as string)) {
+				return false;
+			}
+
+			if (filter.url.compareType === UrlCompareType.RegExp && !(filter.url.value as RegExp).test(select.url)) {
+				return false;
+			}
+
+			return true;
+		});
 	}
 }
