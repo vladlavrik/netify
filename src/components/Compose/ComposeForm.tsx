@@ -127,9 +127,7 @@ interface FormValue {
 	}
 }
 
-export class ComposeForm extends React.Component<Props> {
-	formRef: any = React.createRef<Formik>();
-
+export class ComposeForm extends React.PureComponent<Props> {
 	formInitialValue: FormValue = {
 		filter: {
 			url: {
@@ -175,7 +173,6 @@ export class ComposeForm extends React.Component<Props> {
 	render() {
 		return (
 			<Formik
-				ref={this.formRef}
 				validateOnBlur={true}
 				validateOnChange={false}
 				initialValues={this.formInitialValue}
@@ -187,11 +184,6 @@ export class ComposeForm extends React.Component<Props> {
 			</Formik>
 		);
 	}
-
-	// async componentDidMount() {
-	//
-	// 	console.log(await this.formRef.current.validateForm(this.formRef.current.state.value));
-	// }
 
 	private onSubmit = (rawValues: FormValue, a: FormikActions<FormValue>) => {
 		a.setSubmitting(false);

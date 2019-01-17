@@ -5,7 +5,7 @@ interface Props {
 	title: string;
 }
 
-export class ComposeRow extends React.Component<Props> {
+export class ComposeRow extends React.PureComponent<Props> {
 	render() {
 		const {title, children} = this.props;
 

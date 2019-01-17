@@ -18,7 +18,7 @@ interface FieldRenderProps {
 	};
 }
 
-export class RadioButton extends React.Component<Props> {
+export class RadioButton extends React.PureComponent<Props> {
 	render() {
 		const {className, name, value, disabled} = this.props;
 		return (

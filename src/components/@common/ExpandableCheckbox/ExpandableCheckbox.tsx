@@ -18,7 +18,7 @@ interface FieldRenderProps {
 	};
 }
 
-export class ExpandableCheckbox extends React.Component<Props> {
+export class ExpandableCheckbox extends React.PureComponent<Props> {
 	render() {
 		const {className, name, label, disabled, children} = this.props;
 

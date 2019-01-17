@@ -6,9 +6,10 @@ import styles from './logsItem.css';
 
 interface Props {
 	data: Log;
+	onFollowRule: (ruleId: string) => any;
 }
 
-export class LogsItem extends React.Component<Props> {
+export class LogsItem extends React.PureComponent<Props> {
 	render() {
 		const {date, resourceType, method, url} = this.props.data;
 
@@ -31,6 +32,6 @@ export class LogsItem extends React.Component<Props> {
 	}
 
 	private followRule = () => {
-		console.log('followRule');
+		this.props.onFollowRule(this.props.data.ruleId);
 	};
 }

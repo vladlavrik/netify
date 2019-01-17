@@ -13,7 +13,7 @@ interface State {
 	expanded: boolean;
 }
 
-export class RulesItem extends React.Component<Props, State> {
+export class RulesItem extends React.PureComponent<Props, State> {
 	state = {
 		expanded: false,
 	};
@@ -85,7 +85,7 @@ export class RulesItem extends React.Component<Props, State> {
 			}
 		}
 
-		if (mutateRequest.enabled) {
+		if (mutateResponse.enabled) {
 			const {statusCode, headers, replaceBody} = mutateResponse;
 			if (statusCode) {
 				actions.push('Modify response status');
@@ -105,7 +105,7 @@ export class RulesItem extends React.Component<Props, State> {
 			actions.push('No actions');
 		}
 
-		return actions;
+		return actions.join(', ');
 	}
 
 	private onToggleExpand = () => {

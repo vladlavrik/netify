@@ -10,7 +10,7 @@ interface Props {
 	onClick?: (event: React.MouseEvent<HTMLButtonElement>) => any;
 }
 
-export class Button extends React.Component<Props> {
+export class Button extends React.PureComponent<Props> {
 	render() {
 		const {className, type = 'button', styleType = 'main', disabled, onClick, children} = this.props;
 

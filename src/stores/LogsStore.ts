@@ -1,5 +1,5 @@
 import {observable, action} from 'mobx';
-import {RootStore} from '@/components/App/RootStore';
+import {RootStore} from './RootStore';
 import {Log} from '@/debugger/interfaces/Log';
 
 export class LogsStore {
@@ -11,6 +11,11 @@ export class LogsStore {
 	@action
 	add(item: Log) {
 		this.list.push(item);
+	}
+
+	@action
+	makeLoaded(id: string) {
+		this.list.find(item => item.id === id)!.loaded = true;
 	}
 
 	@action

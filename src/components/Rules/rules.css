@@ -17,7 +17,10 @@
     display: block;
     position: relative;
 }
-.item:nth-child(odd)::before {
+.item:nth-child(odd) {
+    background: #2f2f2f;
+}
+.item.highlighted::before {
     content: '';
     display: block;
     position: absolute;
@@ -25,9 +28,6 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background: #2f2f2f;
-}
-.item.highlighted {
     animation: highlight .6s ease-in;
 }
 .placeholder {

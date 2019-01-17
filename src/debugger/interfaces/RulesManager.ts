@@ -4,5 +4,5 @@ import {ResourceType} from '../constants/ResourceType';
 
 
 export interface RulesManager {
-	selectOne(select : {url: string, method: RequestMethod, resourceType: ResourceType}): Rule | undefined;
+	selectOne(select : {url: string, method: RequestMethod, resourceType: ResourceType}): Rule | null;
 }

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import {inject} from 'mobx-react';
-import {AppStore} from '@/components/App';
-import {RulesStore} from '@/components/Rules';
+import {AppStore} from '@/stores/AppStore';
+import {RulesStore} from '@/stores/RulesStore';
+import {Button} from '@/components/@common/Button';
+import {ExpandableCheckbox} from '@/components/@common/ExpandableCheckbox';
 import {ComposeForm} from './ComposeForm';
 import {ComposeFilter} from './ComposeFilter';
 import {ComposeActionRequest} from './ComposeActionRequest';
 import {ComposeActionResponse} from './ComposeActionResponse';
 import {ComposeActionCancel} from './ComposeActionCancel';
-import {Button} from '@/components/@common/Button';
-import {ExpandableCheckbox} from '@/components/@common/ExpandableCheckbox';
 import {Rule} from '@/debugger/interfaces/Rule';
 import styles from './compose.css';
 
@@ -19,7 +19,7 @@ interface Props {
 
 @inject('appStore')
 @inject('rulesStore')
-export class Compose extends React.Component<Props> {
+export class Compose extends React.PureComponent<Props> {
 	render() {
 		return (
 			<div className={styles.root}>

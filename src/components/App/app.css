@@ -3,7 +3,7 @@
     height: 100vh;
 }
 .headerControl {
-    margin: 0 6px;
+    margin: 0 1px 0 9px;
 }
 .headerControl.typeAdd,
 .headerControl.typeClose {

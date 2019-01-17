@@ -7,7 +7,7 @@ interface Props {
 	data: Rule;
 }
 
-export class RulesDetails extends React.Component<Props> {
+export class RulesDetails extends React.PureComponent<Props> {
 	render() {
 		const {filter} = this.props.data;
 		const {mutateRequest, mutateResponse, cancelRequest} = this.props.data.actions;
@@ -69,7 +69,7 @@ export class RulesDetails extends React.Component<Props> {
 						)}
 						{mutateRequest.replaceBody.enabled && (
 							<tr>
-								<td className={styles.dataTitle}>Replaced request body</td>
+								<td className={styles.dataTitle}>Replaced request body:</td>
 								<td className={styles.dataValue}>{mutateRequest.replaceBody.value}</td>
 							</tr>
 						)}
@@ -82,7 +82,7 @@ export class RulesDetails extends React.Component<Props> {
 					<tbody className={styles.dataSection}>
 						{mutateResponse.statusCode && (
 							<tr>
-								<td className={styles.dataTitle}>Response status</td>
+								<td className={styles.dataTitle}>Response status:</td>
 								<td className={styles.dataValue}>{mutateResponse.statusCode.toString()}</td>
 							</tr>
 						)}
@@ -107,7 +107,7 @@ export class RulesDetails extends React.Component<Props> {
 
 						{mutateResponse.replaceBody.enabled && (
 							<tr>
-								<td className={styles.dataTitle}>Replaced response body</td>
+								<td className={styles.dataTitle}>Replaced response body:</td>
 								<td className={styles.dataValue}>{mutateRequest.replaceBody.value}</td>
 							</tr>
 						)}
@@ -120,7 +120,7 @@ export class RulesDetails extends React.Component<Props> {
 					<tbody className={styles.dataSection}>
 						{cancelRequest.enabled && (
 							<tr>
-								<td className={styles.dataTitle}>Response error:</td>
+								<td className={styles.dataTitle}>Cancel reason:</td>
 								<td className={styles.dataValue}>{cancelRequest.reason.toString()}</td>
 							</tr>
 						)}
@@ -129,8 +129,4 @@ export class RulesDetails extends React.Component<Props> {
 			</div>
 		);
 	}
-
-	followRule = () => {
-		console.log('followRule');
-	};
 }

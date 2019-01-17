@@ -10,7 +10,7 @@ interface Props {
 	onClick?: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => any;
 }
 
-export class IconButton extends React.Component<Props> {
+export class IconButton extends React.PureComponent<Props> {
 	render() {
 		const {className, tooltip, disabled, onClick} = this.props;
 		return (

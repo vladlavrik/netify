@@ -2,7 +2,7 @@
     display: flex;
     height: 28px;
     align-items: center;
-    padding-top: 1px;
+    padding: 1px 6px 0 8px;
     border-bottom: #555555 1px solid;
 }
 
@@ -13,5 +13,5 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 12px;
-    margin: 0 0 0 8px;
+    margin: 0;
 }

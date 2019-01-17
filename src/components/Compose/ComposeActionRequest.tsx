@@ -5,7 +5,7 @@ import {ComposeBody} from './ComposeBody';
 import {TextField} from '@/components/@common/TextField';
 import styles from './composeActionRequest.css';
 
-export class ComposeActionRequest extends React.Component {
+export class ComposeActionRequest extends React.PureComponent {
 	render() {
 		return (
 			<div className={styles.root}>

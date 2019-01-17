@@ -1,17 +1,38 @@
-import {observable, action} from 'mobx';
+import {observable, action, toJS} from 'mobx';
 import {Rule} from '@/debugger/interfaces/Rule';
-import {RootStore} from '@/components/App/RootStore';
+import {RootStore} from './RootStore';
+import Debugger from '@/debugger/Debugger';
 import {RequestMethod} from '@/debugger/constants/RequestMethod';
 import {ResourceType} from '@/debugger/constants/ResourceType';
 import {UrlCompareType} from '@/debugger/constants/UrlCompareType';
 import {RulesManager} from '@/debugger/interfaces/RulesManager';
+import {Log} from '@/debugger/interfaces/Log';
+
 
 export class RulesStore implements RulesManager {
 	constructor(private rootStore: RootStore) {
 	}
 
+	private debugger = new Debugger({
+		tabId: chrome.devtools.inspectedWindow.tabId as number,
+		rulesManager: this,
+		onRequestStart: (log: Log) => this.rootStore.logsStore.add(log),
+		onRequestEnd: (id: string) => this.rootStore.logsStore.makeLoaded(id),
+	});
+
+	async initializeDebugger() {
+		await this.debugger.initialize();
+	}
+
+	async destroyDebugger() {
+		await this.debugger.destroy();
+	}
+
 	@observable
 	readonly list: Rule[] = [];
+
+	@observable
+	highlightedId: string | null = null;
 
 	@action
 	save(...rules: Rule[]) {
@@ -30,8 +51,13 @@ export class RulesStore implements RulesManager {
 		this.list.splice(0, this.list.length);
 	}
 
+	@action
+	setHighlighted(id: string | null = null) {
+		this.highlightedId = id;
+	}
+
 	selectOne(select: {url: string, method: RequestMethod, resourceType: ResourceType}) {
-		return this.list.find(({filter}) => {
+		const rule = this.list.find(({filter}) => {
 			if (filter.resourceTypes.length && !filter.resourceTypes.includes(select.resourceType)) {
 				return false;
 			}
@@ -54,5 +80,11 @@ export class RulesStore implements RulesManager {
 
 			return true;
 		});
+
+		if (rule) {
+			return toJS(rule);
+		}
+
+		return null;
 	}
 }

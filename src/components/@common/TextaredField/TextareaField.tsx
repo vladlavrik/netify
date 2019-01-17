@@ -19,7 +19,7 @@ interface FieldRenderProps {
 	};
 }
 
-export class TextareaField extends React.Component<Props> {
+export class TextareaField extends React.PureComponent<Props> {
 	render() {
 		const {className, name, placeholder, maxlength, disabled} = this.props;
 

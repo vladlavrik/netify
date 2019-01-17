@@ -1,12 +1,15 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+const isDevServer = process.argv.find(v => v.includes('webpack-dev-server'));
 
 module.exports = (env, {mode} = {}) => ({
-	entry: './src/index.ts',
+	entry: './src/panel.ts',
 	output: {
 		publicPath: '/',
-		filename: 'bundle.js',
+		filename: 'panel.js',
 		path: path.resolve(__dirname, 'build'),
 	},
 	module: {
@@ -42,11 +45,19 @@ module.exports = (env, {mode} = {}) => ({
 	plugins: [
 		new HtmlWebpackPlugin({
 			template: './src/panel.html',
+			filename: 'panel.html',
 		}),
-		...(mode === 'development' ? [
+		new CopyWebpackPlugin([
+			'src/manifest.json',
+			'src/devtool.html',
+			'src/devtool.js',
+			{from: 'src/icons', to: 'icons'},
+		]),
+		...(isDevServer ? [
 			new webpack.HotModuleReplacementPlugin()
 		] : []),
 	],
+	watch: mode === 'development',
 	devtool: mode === 'development' ? 'inline-source-map' : 'source-map',
 	devServer: {
 		port: 8080,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {observer, Provider} from 'mobx-react';
 import classNames from 'classnames';
-import {RootStore} from './RootStore';
+import {RootStore} from '@/stores/RootStore';
 import {AppSectionHeader} from './AppSectionHeader';
 import {AppSeparatedSections} from './AppSeparatedSections';
 import {Logs} from '@/components/Logs';
@@ -11,7 +11,7 @@ import {IconButton} from '@/components/@common/IconButton';
 import styles from './app.css';
 
 @observer
-export class App extends React.Component {
+export class App extends React.PureComponent {
 	private readonly rootStore = new RootStore();
 
 	render() {
@@ -83,6 +83,14 @@ export class App extends React.Component {
 				</div>
 			</Provider>
 		);
+	}
+
+	async componentDidMount() {
+		// TODO show error in UI
+		await this.rootStore.rulesStore.initializeDebugger();
+		self.addEventListener('beforeunload', async () => {
+			await this.rootStore.rulesStore.destroyDebugger();
+		});
 	}
 
 	private onSectionsRatioChange = (ratio: number, _: boolean, bottomEdgeReached: boolean) => {

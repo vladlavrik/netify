@@ -1,11 +1,13 @@
 import * as React from 'react';
+import {reaction} from 'mobx';
 import {observer, inject} from 'mobx-react';
-import {RulesStore} from './RulesStore';
+import * as classNames from 'classnames';
+import {RulesStore} from '@/stores/RulesStore';
+import {AppStore} from '@/stores/AppStore';
 import {RulesItem} from './RulesItem';
 import {RulesDetails} from './RulesDetails';
-import styles from './rules.css';
 import {Button} from '@/components/@common/Button';
-import {AppStore} from '@/components/App';
+import styles from './rules.css';
 
 interface Props {
 	rulesStore?: RulesStore;
@@ -15,9 +17,13 @@ interface Props {
 @inject('rulesStore')
 @inject('appStore')
 @observer
-export class Rules extends React.Component<Props> {
+export class Rules extends React.PureComponent<Props> {
+
+	private highlightedItemRef = React.createRef<HTMLLIElement>();
+	private shouldScrollToHighlighted = false;
+
 	render() {
-		const {list} = this.props.rulesStore!;
+		const {list, highlightedId} = this.props.rulesStore!;
 
 		if (list.length === 0) {
 			return (
@@ -36,7 +42,11 @@ export class Rules extends React.Component<Props> {
 			<div className={styles.root}>
 				<ul className={styles.list}>
 					{list.map(item => (
-						<li className={styles.item} key={item.id}>
+						<li
+							key={item.id}
+							ref={item.id === highlightedId ? this.highlightedItemRef : null}
+							className={classNames(styles.item, item.id === highlightedId && styles.highlighted)}
+							onAnimationEnd={this.onFinishHighlighting}>
 							<RulesItem
 								data={item}
 								onRemove={this.onRemove}>
@@ -48,6 +58,26 @@ export class Rules extends React.Component<Props> {
 			</div>
 		);
 	}
+
+	componentWillMount() {
+		reaction(() => this.props.rulesStore!.highlightedId, (highlightedId: string | null) => {
+			if (highlightedId) {
+				this.shouldScrollToHighlighted = true;
+			}
+		})
+	}
+	componentDidUpdate() {
+		if (this.shouldScrollToHighlighted && this.highlightedItemRef.current) {
+			this.highlightedItemRef.current!.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start',
+			});
+
+			this.shouldScrollToHighlighted = false;
+		}
+	}
+
+	onFinishHighlighting = () => this.props.rulesStore!.setHighlighted(null);
 
 	onShowCompose = () => this.props.appStore!.toggleComposeShow();
 

@@ -9,7 +9,7 @@ interface Props {
 	name: string;
 }
 
-export class ComposeHeaders extends React.Component<Props> {
+export class ComposeHeaders extends React.PureComponent<Props> {
 	render() {
 		const {name} = this.props;
 		return (

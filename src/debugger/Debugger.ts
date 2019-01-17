@@ -67,6 +67,18 @@ export default class Debugger {
 		});
 	}
 
+	public destroy() {
+		return new Promise((resolve, reject) => {
+			chrome.debugger.detach(this.debugTarget, () => {
+				if (chrome.runtime.lastError) {
+					reject(chrome.runtime.lastError);
+				} else {
+					resolve();
+				}
+			})
+		})
+	}
+
 	private sendCommand<TResult = any>(command: string, params: object): Promise<TResult> {
 		return new Promise(resolve => {
 			return chrome.debugger.sendCommand(this.debugTarget, command, params, (result: any) => {

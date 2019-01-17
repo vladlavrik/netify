@@ -13,7 +13,7 @@ interface State {
 	expandInverted: boolean;
 }
 
-export class WithTooltip extends React.Component<Props, State> {
+export class WithTooltip extends React.PureComponent<Props, State> {
 	private tooltipRef = React.createRef<HTMLParagraphElement>();
 	private rootRef = React.createRef<HTMLDivElement>();
 

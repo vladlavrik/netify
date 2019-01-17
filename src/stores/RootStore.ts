@@ -1,6 +1,6 @@
 import {AppStore} from './AppStore';
-import {LogsStore} from '@/components/Logs';
-import {RulesStore} from '@/components/Rules';
+import {LogsStore} from './LogsStore';
+import {RulesStore} from './RulesStore';
 
 export class RootStore {
 	appStore = new AppStore(this);

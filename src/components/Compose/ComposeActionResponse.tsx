@@ -7,7 +7,7 @@ import {TextField} from '@/components/@common/TextField';
 import styles from './composeActionResponse.css';
 import {RadioButton} from '@/components/@common/RadioButton';
 
-export class ComposeActionResponse extends React.Component {
+export class ComposeActionResponse extends React.PureComponent {
 	render() {
 		return (
 			<div className={styles.root}>

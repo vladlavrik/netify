@@ -4,3 +4,4 @@ import {App} from './components/App';
 
 const appElement = React.createElement(App);
 ReactDOM.render(appElement, document.getElementById('app-root'));
+

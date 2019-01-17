@@ -13,7 +13,7 @@ interface Props {
 	suffix?: JSX.Element;
 }
 
-export class TextField extends React.Component<Props> {
+export class TextField extends React.PureComponent<Props> {
 	render() {
 		const {className, name, placeholder, maxlength, disabled, prefix, suffix} = this.props;
 

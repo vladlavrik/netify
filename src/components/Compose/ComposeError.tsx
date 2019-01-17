@@ -6,7 +6,7 @@ interface Props {
 	name: string;
 }
 
-export class ComposeError extends React.Component<Props> {
+export class ComposeError extends React.PureComponent<Props> {
 	render() {
 		return (
 			<p className={styles.root}>

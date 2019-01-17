@@ -6,7 +6,7 @@ import {resourceTypesList} from '@/debugger/constants/ResourceType';
 import {requestMethodsList} from '@/debugger/constants/RequestMethod';
 import styles from './composeFilter.css';
 
-export class ComposeFilter extends React.Component {
+export class ComposeFilter extends React.PureComponent {
 	render() {
 		return (
 			<div className={styles.root}>

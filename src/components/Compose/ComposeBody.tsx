@@ -9,7 +9,7 @@ interface Props {
 	name: string;
 }
 
-export class ComposeBody extends React.Component<Props> {
+export class ComposeBody extends React.PureComponent<Props> {
 	render() {
 		const {name} = this.props;
 

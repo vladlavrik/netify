@@ -5,7 +5,7 @@ interface Props {
 	title: string;
 }
 
-export class AppSectionHeader extends React.Component<Props> {
+export class AppSectionHeader extends React.PureComponent<Props> {
 	render() {
 		const {title, children} = this.props;
 
