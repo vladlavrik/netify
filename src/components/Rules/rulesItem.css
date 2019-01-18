@@ -26,8 +26,11 @@
     margin-top: 8px;
 }
 .method, .type {
-    width: 120px;
+    width: 100px;
     min-width: 100px;
+    padding-right: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .url {
     white-space: nowrap;

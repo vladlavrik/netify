@@ -1,4 +1,4 @@
-import {observable, action, toJS} from 'mobx';
+import {observable, action, toJS, autorun} from 'mobx';
 import {Rule} from '@/debugger/interfaces/Rule';
 import {RootStore} from './RootStore';
 import Debugger from '@/debugger/Debugger';
@@ -10,8 +10,6 @@ import {Log} from '@/debugger/interfaces/Log';
 
 
 export class RulesStore implements RulesManager {
-	constructor(private rootStore: RootStore) {
-	}
 
 	private debugger = new Debugger({
 		tabId: chrome.devtools.inspectedWindow.tabId as number,
@@ -20,13 +18,28 @@ export class RulesStore implements RulesManager {
 		onRequestEnd: (id: string) => this.rootStore.logsStore.makeLoaded(id),
 	});
 
-	async initializeDebugger() {
-		await this.debugger.initialize();
+	constructor(private rootStore: RootStore) {
+		autorun(this.manageDebuggerActive);
 	}
 
-	async destroyDebugger() {
-		await this.debugger.destroy();
+	manageDebuggerActive = async () => {
+		// TODO disallow switch state when previous operation during
+		if (this.list.length) {
+			await this.initializeDebugger();
+		} else {
+			await this.destroyDebugger();
+		}
+	};
+
+	async initializeDebugger() {
+		await this.debugger.initialize();
+		self.addEventListener('beforeunload', this.destroyDebugger);
 	}
+
+	destroyDebugger = () => {
+		self.removeEventListener('beforeunload', this.destroyDebugger);
+		return this.debugger.destroy();
+	};
 
 	@observable
 	readonly list: Rule[] = [];

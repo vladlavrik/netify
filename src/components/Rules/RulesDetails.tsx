@@ -1,5 +1,4 @@
 import * as React from 'react';
-import classNames from 'classnames';
 import {Rule} from '@/debugger/interfaces/Rule';
 import styles from './rulesDetails.css';
 
@@ -12,46 +11,86 @@ export class RulesDetails extends React.PureComponent<Props> {
 		const {filter} = this.props.data;
 		const {mutateRequest, mutateResponse, cancelRequest} = this.props.data.actions;
 
-		// TODO fix empty tables
+		const existsRows = {
+			filter: {
+				url: !!filter.url.value,
+				methods: filter.methods.length > 0,
+				resourceTypes: filter.resourceTypes.length > 0,
+			},
+			mutateRequest: {
+				endpointReplace: mutateRequest.endpointReplace.length > 0,
+				headersAdd: Object.keys(mutateRequest.headers.add).length > 0,
+				headersRemove: mutateRequest.headers.remove.length > 0,
+				replaceBody: mutateRequest.replaceBody.enabled,
+			},
+			mutateResponse: {
+				statusCode: mutateResponse.statusCode,
+				headersAdd: Object.keys(mutateResponse.headers.add).length > 0,
+				headersRemove: mutateResponse.headers.remove.length > 0,
+				replaceBody: mutateResponse.replaceBody.enabled,
+			},
+			cancelRequest: cancelRequest.enabled,
+		};
+
+		const existsSections = {
+			filter: existsRows.filter.url ||
+				existsRows.filter.methods ||
+				existsRows.filter.resourceTypes,
+
+			mutateRequest: mutateRequest.enabled && (
+				existsRows.mutateRequest.endpointReplace ||
+				existsRows.mutateRequest.headersAdd ||
+				existsRows.mutateRequest.headersRemove ||
+				existsRows.mutateRequest.replaceBody
+			),
+
+			mutateResponse: mutateResponse.enabled && (
+				existsRows.mutateResponse.statusCode ||
+				existsRows.mutateResponse.headersAdd ||
+				existsRows.mutateResponse.headersRemove||
+				existsRows.mutateResponse.replaceBody
+			),
+
+			cancelRequest: mutateResponse.enabled && existsRows.cancelRequest,
+		};
 
 		return (
 			<div className={styles.root}>
-				<div className={classNames(styles.separator, styles.separatorTop)} />
-
-				<table>
-					<tbody className={styles.dataSection}>
-						{!!filter.url.value && (
+				{existsSections.filter && (
+					<table className={styles.dataSection}>
+						<tbody>
+						{existsRows.filter.url && (
 							<tr>
 								<td className={styles.dataTitle}>Url:</td>
 								<td className={styles.dataValue}>{filter.url.value.toString()}</td>
 							</tr>
 						)}
-						{filter.methods.length > 0 && (
+						{existsRows.filter.methods && (
 							<tr>
 								<td className={styles.dataTitle}>Methods:</td>
 								<td className={styles.dataValue}>{filter.methods.join(', ') || 'All methods'}</td>
 							</tr>
 						)}
-						{filter.resourceTypes.length > 0 && (
+						{existsRows.filter.resourceTypes && (
 							<tr>
 								<td className={styles.dataTitle}>Request types:</td>
 								<td className={styles.dataValue}>{filter.resourceTypes.join(', ') || 'All types'}</td>
 							</tr>
 						)}
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				)}
 
-				<div className={styles.separator} />
-
-				<table>
-					<tbody className={styles.dataSection}>
-						{mutateRequest.endpointReplace.length > 0 && (
+				{existsSections.mutateRequest && (
+					<table className={styles.dataSection}>
+						<tbody>
+						{existsRows.mutateRequest.endpointReplace && (
 							<tr>
 								<td className={styles.dataTitle}>Request endpoint:</td>
 								<td className={styles.dataValue}>{mutateRequest.endpointReplace}</td>
 							</tr>
 						)}
-						{Object.keys(mutateRequest.headers.add).length > 0 && (
+						{existsRows.mutateRequest.headersAdd && (
 							<tr>
 								<td className={styles.dataTitle}>Added request headers:</td>
 								<td className={styles.dataValue}>
@@ -61,33 +100,33 @@ export class RulesDetails extends React.PureComponent<Props> {
 								</td>
 							</tr>
 						)}
-						{mutateRequest.headers.remove.length > 0 && (
+						{existsRows.mutateRequest.headersRemove && (
 							<tr>
 								<td className={styles.dataTitle}>Removed request headers:</td>
 								<td className={styles.dataValue}>{mutateRequest.headers.remove.join('<br>')}</td>
 							</tr>
 						)}
-						{mutateRequest.replaceBody.enabled && (
+						{existsRows.mutateRequest.replaceBody && (
 							<tr>
 								<td className={styles.dataTitle}>Replaced request body:</td>
 								<td className={styles.dataValue}>{mutateRequest.replaceBody.value}</td>
 							</tr>
 						)}
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				)}
 
-				<div className={styles.separator} />
-
-				<table>
-					<tbody className={styles.dataSection}>
-						{mutateResponse.statusCode && (
+				{existsSections.mutateResponse && (
+					<table className={styles.dataSection}>
+						<tbody>
+						{existsRows.mutateResponse.statusCode && (
 							<tr>
 								<td className={styles.dataTitle}>Response status:</td>
-								<td className={styles.dataValue}>{mutateResponse.statusCode.toString()}</td>
+								<td className={styles.dataValue}>{mutateResponse.statusCode!.toString()}</td>
 							</tr>
 						)}
 
-						{Object.keys(mutateResponse.headers.add).length > 0 && (
+						{existsRows.mutateResponse.headersAdd && (
 							<tr>
 								<td className={styles.dataTitle}>Added response headers:</td>
 								<td className={styles.dataValue}>
@@ -98,34 +137,35 @@ export class RulesDetails extends React.PureComponent<Props> {
 							</tr>
 						)}
 
-						{mutateResponse.headers.remove.length > 0 && (
+						{existsRows.mutateResponse.headersRemove && (
 							<tr>
 								<td className={styles.dataTitle}>Removed response headers:</td>
 								<td className={styles.dataValue}>{mutateResponse.headers.remove.join('<br>')}</td>
 							</tr>
 						)}
 
-						{mutateResponse.replaceBody.enabled && (
+						{existsRows.mutateResponse.replaceBody && (
 							<tr>
 								<td className={styles.dataTitle}>Replaced response body:</td>
 								<td className={styles.dataValue}>{mutateRequest.replaceBody.value}</td>
 							</tr>
 						)}
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				)}
 
-				<div className={styles.separator} />
-
-				<table>
-					<tbody className={styles.dataSection}>
-						{cancelRequest.enabled && (
+				{existsSections.cancelRequest && (
+					<table className={styles.dataSection}>
+						<tbody>
+						{existsRows.cancelRequest && (
 							<tr>
 								<td className={styles.dataTitle}>Cancel reason:</td>
 								<td className={styles.dataValue}>{cancelRequest.reason.toString()}</td>
 							</tr>
 						)}
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				)}
 			</div>
 		);
 	}

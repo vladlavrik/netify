@@ -1,20 +1,20 @@
 .root {
     background: #383838;
 }
+.dataSection {
+    width: 100%;
+    padding: 8px;
+}
+.dataSection + .dataSection {
+    border-top: #555555 1px solid;
+}
 .dataTitle {
+    width: 210px;
     color: #717171;
-    padding: 4px 16px 4px 24px;
+    padding: 4px 16px 4px 19px;
     vertical-align: top;
 }
 .dataValue {
     color: #B1B9C0;
     padding: 4px 0;
-}
-.separator {
-    height: 1px;
-    background: #555555;
-    margin: 8px 0;
-}
-.separatorTop {
-    margin-top: 0;
 }

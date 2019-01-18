@@ -85,14 +85,6 @@ export class App extends React.PureComponent {
 		);
 	}
 
-	async componentDidMount() {
-		// TODO show error in UI
-		await this.rootStore.rulesStore.initializeDebugger();
-		self.addEventListener('beforeunload', async () => {
-			await this.rootStore.rulesStore.destroyDebugger();
-		});
-	}
-
 	private onSectionsRatioChange = (ratio: number, _: boolean, bottomEdgeReached: boolean) => {
 		this.rootStore.appStore.setSectionRatio(ratio, bottomEdgeReached);
 	};
