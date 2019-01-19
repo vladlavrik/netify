@@ -1,17 +1,24 @@
 import * as React from 'react';
-import {Log} from '@/debugger/interfaces/Log';
+import {ResourceType} from '@/debugger/constants/ResourceType';
+import {RequestMethod} from '@/debugger/constants/RequestMethod';
 import {IconButton} from '@/components/@common/IconButton';
 import {formatFullTime, formatTime} from '@/helpers/formatter';
 import styles from './logsItem.css';
+import {WithTooltip} from '@/components/@common/WithTooltip';
 
 interface Props {
-	data: Log;
+	ruleId: string,
+	date: Date,
+	url: string,
+	resourceType: ResourceType,
+	method: RequestMethod,
+	loaded: boolean,
 	onFollowRule: (ruleId: string) => any;
 }
 
 export class LogsItem extends React.PureComponent<Props> {
 	render() {
-		const {date, resourceType, method, url} = this.props.data;
+		const {date, url, resourceType, method, loaded} = this.props;
 
 		const fullDate = formatFullTime(date);
 		const formattedTime = formatTime(date);
@@ -26,12 +33,17 @@ export class LogsItem extends React.PureComponent<Props> {
 				<span className={styles.url} title={url}>
 					{url}
 				</span>
+				{!loaded && (
+					<WithTooltip tooltip='Request wait to response'>
+						<div className={styles.loading}/>
+					</WithTooltip>
+				)}
 				<IconButton className={styles.followButton} tooltip='Highlight rule' onClick={this.followRule} />
 			</div>
 		);
 	}
 
 	private followRule = () => {
-		this.props.onFollowRule(this.props.data.ruleId);
+		this.props.onFollowRule(this.props.ruleId);
 	};
 }

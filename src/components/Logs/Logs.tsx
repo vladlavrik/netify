@@ -13,7 +13,7 @@ interface Props {
 @inject('logsStore')
 @inject('rulesStore')
 @observer
-export class Logs extends React.PureComponent<Props> {
+export class Logs extends React.Component<Props> {
 	render() {
 		const {list} = this.props.logsStore!;
 		if (list.length === 0) {
@@ -30,7 +30,12 @@ export class Logs extends React.PureComponent<Props> {
 					{list.map(item => (
 						<li className={styles.item} key={item.id}>
 							<LogsItem
-								data={item}
+								ruleId={item.ruleId}
+								date={item.date}
+								url={item.url}
+								resourceType={item.resourceType}
+								method={item.method}
+								loaded={item.loaded}
 								onFollowRule={this.onFollowRule}/>
 						</li>
 					))}

@@ -21,13 +21,13 @@ export class RulesDetails extends React.PureComponent<Props> {
 				endpointReplace: mutateRequest.endpointReplace.length > 0,
 				headersAdd: Object.keys(mutateRequest.headers.add).length > 0,
 				headersRemove: mutateRequest.headers.remove.length > 0,
-				replaceBody: mutateRequest.replaceBody.enabled,
+				replaceBody: mutateRequest.replaceBody.value !== null,
 			},
 			mutateResponse: {
 				statusCode: mutateResponse.statusCode,
 				headersAdd: Object.keys(mutateResponse.headers.add).length > 0,
 				headersRemove: mutateResponse.headers.remove.length > 0,
-				replaceBody: mutateResponse.replaceBody.enabled,
+				replaceBody: mutateResponse.replaceBody.value !== null,
 			},
 			cancelRequest: cancelRequest.enabled,
 		};
@@ -58,6 +58,11 @@ export class RulesDetails extends React.PureComponent<Props> {
 			<div className={styles.root}>
 				{existsSections.filter && (
 					<table className={styles.dataSection}>
+						<thead>
+							<tr>
+								<td className={styles.dataSectionTitle} colSpan={2}>Requests filter</td>
+							</tr>
+						</thead>
 						<tbody>
 						{existsRows.filter.url && (
 							<tr>
@@ -83,16 +88,21 @@ export class RulesDetails extends React.PureComponent<Props> {
 
 				{existsSections.mutateRequest && (
 					<table className={styles.dataSection}>
+						<thead>
+							<tr>
+								<td className={styles.dataSectionTitle} colSpan={2}>Request mutations</td>
+							</tr>
+						</thead>
 						<tbody>
 						{existsRows.mutateRequest.endpointReplace && (
 							<tr>
-								<td className={styles.dataTitle}>Request endpoint:</td>
+								<td className={styles.dataTitle}>Replacing endpoint:</td>
 								<td className={styles.dataValue}>{mutateRequest.endpointReplace}</td>
 							</tr>
 						)}
 						{existsRows.mutateRequest.headersAdd && (
 							<tr>
-								<td className={styles.dataTitle}>Added request headers:</td>
+								<td className={styles.dataTitle}>Adding headers:</td>
 								<td className={styles.dataValue}>
 									{Object.entries(mutateRequest.headers.add)
 										.map(([name, value]) => name + ': ' + value)
@@ -102,13 +112,13 @@ export class RulesDetails extends React.PureComponent<Props> {
 						)}
 						{existsRows.mutateRequest.headersRemove && (
 							<tr>
-								<td className={styles.dataTitle}>Removed request headers:</td>
+								<td className={styles.dataTitle}>Removing headers:</td>
 								<td className={styles.dataValue}>{mutateRequest.headers.remove.join('<br>')}</td>
 							</tr>
 						)}
 						{existsRows.mutateRequest.replaceBody && (
 							<tr>
-								<td className={styles.dataTitle}>Replaced request body:</td>
+								<td className={styles.dataTitle}>Replacing body:</td>
 								<td className={styles.dataValue}>{mutateRequest.replaceBody.value}</td>
 							</tr>
 						)}
@@ -118,17 +128,22 @@ export class RulesDetails extends React.PureComponent<Props> {
 
 				{existsSections.mutateResponse && (
 					<table className={styles.dataSection}>
+						<thead>
+							<tr>
+								<td className={styles.dataSectionTitle} colSpan={2}>Response mutations</td>
+							</tr>
+						</thead>
 						<tbody>
 						{existsRows.mutateResponse.statusCode && (
 							<tr>
-								<td className={styles.dataTitle}>Response status:</td>
+								<td className={styles.dataTitle}>Status code:</td>
 								<td className={styles.dataValue}>{mutateResponse.statusCode!.toString()}</td>
 							</tr>
 						)}
 
 						{existsRows.mutateResponse.headersAdd && (
 							<tr>
-								<td className={styles.dataTitle}>Added response headers:</td>
+								<td className={styles.dataTitle}>Adding headers:</td>
 								<td className={styles.dataValue}>
 									{Object.entries(mutateResponse.headers.add)
 										.map(([name, value]) => name + ': ' + value)
@@ -139,15 +154,15 @@ export class RulesDetails extends React.PureComponent<Props> {
 
 						{existsRows.mutateResponse.headersRemove && (
 							<tr>
-								<td className={styles.dataTitle}>Removed response headers:</td>
+								<td className={styles.dataTitle}>Removing headers:</td>
 								<td className={styles.dataValue}>{mutateResponse.headers.remove.join('<br>')}</td>
 							</tr>
 						)}
 
 						{existsRows.mutateResponse.replaceBody && (
 							<tr>
-								<td className={styles.dataTitle}>Replaced response body:</td>
-								<td className={styles.dataValue}>{mutateRequest.replaceBody.value}</td>
+								<td className={styles.dataTitle}>Replacing body:</td>
+								<td className={styles.dataValue}>{mutateResponse.replaceBody.value}</td>
 							</tr>
 						)}
 						</tbody>
@@ -156,10 +171,15 @@ export class RulesDetails extends React.PureComponent<Props> {
 
 				{existsSections.cancelRequest && (
 					<table className={styles.dataSection}>
+						<thead>
+						<tr>
+							<td className={styles.dataSectionTitle} colSpan={2}>Cancel request</td>
+						</tr>
+						</thead>
 						<tbody>
 						{existsRows.cancelRequest && (
 							<tr>
-								<td className={styles.dataTitle}>Cancel reason:</td>
+								<td className={styles.dataTitle}>Reason:</td>
 								<td className={styles.dataValue}>{cancelRequest.reason.toString()}</td>
 							</tr>
 						)}

@@ -11,7 +11,7 @@ import {IconButton} from '@/components/@common/IconButton';
 import styles from './app.css';
 
 @observer
-export class App extends React.PureComponent {
+export class App extends React.Component {
 	private readonly rootStore = new RootStore();
 
 	render() {

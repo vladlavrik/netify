@@ -1,17 +1,22 @@
 .root {
     background: #383838;
+    border-bottom: #555555 1px solid;
 }
 .dataSection {
     width: 100%;
-    padding: 8px;
-}
-.dataSection + .dataSection {
+    padding: 8px 8px 8px 24px;
     border-top: #555555 1px solid;
 }
+.dataSectionTitle {
+    padding: 4px 0;
+    font-weight: 700;
+    color: #A5A5A5;
+}
 .dataTitle {
-    width: 210px;
+    width: 140px;
+    height: 18px;
     color: #717171;
-    padding: 4px 16px 4px 19px;
+    padding: 0 16px 0 0;
     vertical-align: top;
 }
 .dataValue {

@@ -13,10 +13,16 @@ export class ComposeActionResponse extends React.PureComponent {
 			<div className={styles.root}>
 				<ComposeRow title='Response mode:'>
 					<div className={styles.modeFieldset}>
-						<RadioButton className={styles.modeField} name='actions.mutateResponse.mode' value='server'>
+						<RadioButton
+							className={styles.modeField}
+							name='actions.mutateResponse.responseLocally'
+							value='0'>
 							After server response
 						</RadioButton>
-						<RadioButton className={styles.modeField} name='actions.mutateResponse.mode' value='locally'>
+						<RadioButton
+							className={styles.modeField}
+							name='actions.mutateResponse.responseLocally'
+							value='1'>
 							Response locally
 						</RadioButton>
 					</div>

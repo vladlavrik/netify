@@ -17,7 +17,7 @@ interface Props {
 @inject('rulesStore')
 @inject('appStore')
 @observer
-export class Rules extends React.PureComponent<Props> {
+export class Rules extends React.Component<Props> {
 
 	private highlightedItemRef = React.createRef<HTMLLIElement>();
 	private shouldScrollToHighlighted = false;

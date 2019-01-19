@@ -1,60 +1,59 @@
+import {fromByteArray, toByteArray} from 'base64-js';
 import {StatusCode} from '@/debugger/constants/StatusCode';
 import {RequestBodyType} from '@/debugger/constants/RequestBodyType';
 import {RequestHeaders} from '@/debugger/interfaces/chromeInternal';
 
-//TODO test with HTTP2
-export function compileRawBaseResponse(
-	statusCode: number,
-	headers: RequestHeaders,
-	bodyType: RequestBodyType,
-	bodyValue: Blob | string | null
-): Promise<string> {
-	const statusLine = `HTTP/1.1 ${statusCode} ${StatusCode[statusCode]}`;
-	const headersPart = Object.entries(headers)
-		.map(([key, value]) =>  key + ': ' + value)
-		.join('\n');
 
-	let bodyPartBlob;
-	switch (bodyType) {
-		case null:
-			break;
+export function compileRawResponseFromTextBody(statusCode: number, headers: RequestHeaders, bodyValue: string) {
+	const responseString = compileResponseBase(statusCode, headers) + bodyValue;
+	const responseByteArray = new TextEncoder().encode(responseString);
+	return fromByteArray(responseByteArray);
+}
 
-		case RequestBodyType.Text:
-			bodyPartBlob = new Blob([bodyValue || '']);
-			break;
+export function compileRawResponseFromBase64Body(statusCode: number, headers: RequestHeaders, bodyValue: string) {
+	const baseString = compileResponseBase(statusCode, headers);
+	const baseByteArray = new TextEncoder().encode(baseString);
 
-		case RequestBodyType.Base64:
-			bodyPartBlob = new Blob([atob(bodyValue as string || '')]);
-			break;
+	const bodyByteArray = toByteArray(bodyValue);
 
-		case RequestBodyType.Blob:
-			bodyPartBlob = bodyValue;
-			break;
-	}
+	const responseByteArray = new Uint8Array(baseByteArray.length + bodyByteArray.length);
+	responseByteArray.set(baseByteArray);
+	responseByteArray.set(bodyByteArray, baseByteArray.length);
 
-	const resultBlob = new Blob([
-		statusLine + '\n' + headersPart + '\n\n',
-		bodyPartBlob as Blob | string
-	], {type: 'text/plain'});
+	return fromByteArray(responseByteArray);
+}
 
+export async function compileRawResponseFromBlobBody(statusCode: number, headers: RequestHeaders, bodyValue: Blob) {
+	const baseString = compileResponseBase(statusCode, headers);
+	const baseByteArray = new TextEncoder().encode(baseString);
 
 	const reader = new FileReader();
-	reader.readAsDataURL(resultBlob);
+	reader.readAsArrayBuffer(bodyValue);
 
-	return new Promise((resolve, reject) => {
+	const bodyArrayBuffer = await new Promise<ArrayBuffer>((resolve, reject) => {
 		reader.onerror = () => {
 			reject(reader.error);
 		};
 
 		reader.onloadend = () => {
-			const resultString = reader.result! as string; // result format: "data:<type>;<subtype>,<content>"
-			const contentStart = resultString.indexOf(',');
-			const content = resultString.substr(contentStart + 1);
-			resolve(content);
+			resolve(reader.result! as ArrayBuffer);
 		};
 	});
+
+	const bodyByteArray = new Uint8Array(bodyArrayBuffer);
+	const responseByteArray = new Uint8Array(baseByteArray.length + bodyByteArray.length);
+	responseByteArray.set(baseByteArray);
+	responseByteArray.set(bodyByteArray, baseByteArray.length);
+
+	return fromByteArray(responseByteArray);
 }
 
+/** Compiles base response part: status line, headers part and trail empty line*/
+function compileResponseBase(statusCode: number, headers: RequestHeaders) {
+	const statusLine = `HTTP/1.1 ${statusCode} ${StatusCode[statusCode]}`;
+	const headersPart = Object.entries(headers).map(([key, value]) => key + ': ' + value).join('\n');
+	return statusLine + '\n' + headersPart + '\n\n';
+}
 
 export async function bodyToString(type: RequestBodyType, value: Blob | string): Promise<string> {
 	switch (type) {
@@ -80,7 +79,6 @@ export async function bodyToString(type: RequestBodyType, value: Blob | string):
 			});
 		}
 	}
-
 }
 
 export function mutateHeaders(originalHeaders: RequestHeaders, toAdd: RequestHeaders, toRemove: string[]) {

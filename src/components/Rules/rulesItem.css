@@ -10,7 +10,7 @@
 }
 .expandButton {
     flex-shrink: 0;
-    margin: 0 3px;
+    margin: 0 5px 0 3px;
     --icon-button-bg: #616161;
     --icon-button-clip: polygon(30% 34%, 70% 34%, 50% 66%);
 }

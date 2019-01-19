@@ -16,9 +16,10 @@ interface Props {
 }
 
 const bodySchema = yup.object({
-	enabled: yup.bool(),
 	type: yup.mixed().oneOf(requestBodyTypesList),
-	value: yup.string(),
+	value: yup.string()
+		.nullable(true)
+		.transform((value: string) => value.length === 0 ? null : value),
 });
 
 const headersSchema = yup.mixed().transform((value: {name: string, value: string}[]) => {
@@ -57,7 +58,7 @@ const formSchema = yup.object<Rule>({
 		}),
 		mutateResponse: yup.object({
 			enabled: yup.boolean(),
-			responseLocally: yup.bool(),
+			responseLocally: yup.mixed().transform((value: '0' | '1') => value === '1'),
 			statusCode: yup.mixed()
 				.transform((value: string) => {
 					if (value === '') {
@@ -109,7 +110,7 @@ interface FormValue {
 		};
 		mutateResponse: {
 			enabled: boolean;
-			mode: 'server' | 'locally';
+			responseLocally: '0' | '1';
 			statusCode: string;
 			headers: {
 				name: string;
@@ -152,7 +153,7 @@ export class ComposeForm extends React.PureComponent<Props> {
 			},
 			mutateResponse: {
 				enabled: true,
-				mode: 'server' as FormValue['actions']['mutateResponse']['mode'],
+				responseLocally: '0',
 				statusCode: '',
 				headers: [{
 					name: '',

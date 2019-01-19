@@ -1,7 +1,7 @@
-import {observable, action, toJS, autorun} from 'mobx';
+import {action, autorun, observable, toJS} from 'mobx';
 import {Rule} from '@/debugger/interfaces/Rule';
 import {RootStore} from './RootStore';
-import Debugger from '@/debugger/Debugger';
+import Debugger, {DebuggerState} from '@/debugger/Debugger';
 import {RequestMethod} from '@/debugger/constants/RequestMethod';
 import {ResourceType} from '@/debugger/constants/ResourceType';
 import {UrlCompareType} from '@/debugger/constants/UrlCompareType';
@@ -10,7 +10,6 @@ import {Log} from '@/debugger/interfaces/Log';
 
 
 export class RulesStore implements RulesManager {
-
 	private debugger = new Debugger({
 		tabId: chrome.devtools.inspectedWindow.tabId as number,
 		rulesManager: this,
@@ -24,9 +23,10 @@ export class RulesStore implements RulesManager {
 
 	manageDebuggerActive = async () => {
 		// TODO disallow switch state when previous operation during
-		if (this.list.length) {
+		if (this.list.length > 0 && ![DebuggerState.Active, DebuggerState.Starting].includes(this.debugger.state)) {
 			await this.initializeDebugger();
-		} else {
+		}
+		if (this.list.length === 0 && ![DebuggerState.Inactive, DebuggerState.Stopping].includes(this.debugger.state)) {
 			await this.destroyDebugger();
 		}
 	};

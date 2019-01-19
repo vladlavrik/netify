@@ -23,9 +23,8 @@ export interface Rule {
 				remove: string[];
 			},
 			replaceBody: {
-				enabled: boolean;
 				type: RequestBodyType;
-				value: string | Blob;
+				value: null | string | Blob;
 			};
 		};
 		mutateResponse: {
@@ -37,9 +36,8 @@ export interface Rule {
 				remove: string[];
 			},
 			replaceBody: {
-				enabled: boolean;
 				type: RequestBodyType;
-				value: string | Blob;
+				value: null | string | Blob;
 			};
 		};
 		cancelRequest: {

@@ -1,4 +1,10 @@
-import {compileRawBaseResponse, mutateHeaders, bodyToString} from './helpers/http';
+import {
+	mutateHeaders,
+	bodyToString,
+	compileRawResponseFromTextBody,
+	compileRawResponseFromBase64Body,
+	compileRawResponseFromBlobBody,
+} from './helpers/http';
 import {compileUrlFromPattern} from './helpers/url';
 import {RulesManager} from './interfaces/RulesManager';
 import {RequestBodyType} from './constants/RequestBodyType';
@@ -23,12 +29,20 @@ const interceptPatterns = [{
 }];
 
 
-interface DebuggerConfig {
+export enum DebuggerState {
+	Active,
+	Inactive,
+	Starting,
+	Stopping,
+}
+
+export interface DebuggerConfig {
 	tabId: number,
 	rulesManager: RulesManager,
 	onRequestStart: (data: Log) => any;
 	onRequestEnd: (id: Log['id']) => any;
 }
+
 
 //TODO replace request method
 export default class Debugger {
@@ -41,6 +55,7 @@ export default class Debugger {
 	private readonly onRequestStart: DebuggerConfig['onRequestStart'];
 	private readonly onRequestEnd: DebuggerConfig['onRequestEnd'];
 
+	state = DebuggerState.Inactive;
 
 	constructor({tabId, rulesManager, onRequestStart, onRequestEnd}: DebuggerConfig) {
 		this.debugTarget = {tabId};
@@ -50,9 +65,11 @@ export default class Debugger {
 	}
 
 	async initialize() {
+		this.state = DebuggerState.Starting;
 		await this.attach();
 		await this.sendCommand('Network.setRequestInterception', {patterns: interceptPatterns});
 		chrome.debugger.onEvent.addListener(this.messageHandler);
+		this.state = DebuggerState.Active;
 	}
 
 	private attach() {
@@ -68,6 +85,8 @@ export default class Debugger {
 	}
 
 	public destroy() {
+		this.state = DebuggerState.Stopping;
+
 		return new Promise((resolve, reject) => {
 			chrome.debugger.detach(this.debugTarget, () => {
 				if (chrome.runtime.lastError) {
@@ -75,8 +94,9 @@ export default class Debugger {
 				} else {
 					resolve();
 				}
-			})
-		})
+				this.state = DebuggerState.Inactive;
+			});
+		});
 	}
 
 	private sendCommand<TResult = any>(command: string, params: object): Promise<TResult> {
@@ -130,13 +150,25 @@ export default class Debugger {
 
 		// if required local response, combine the response form defined status, headers and body
 		if (mutateResponse.enabled && mutateResponse.responseLocally) {
-			const {statusCode = 200, headers, replaceBody} = mutateResponse;
-			const rawResponse = await compileRawBaseResponse(
-				statusCode || 200,
-				headers.add,
-				replaceBody.type,
-				replaceBody.value,
-			);
+			const {headers, replaceBody} = mutateResponse;
+			const statusCode = mutateResponse.statusCode || 200;
+
+			let rawResponse;
+			switch (replaceBody.type) {
+				case RequestBodyType.Text:
+					rawResponse = compileRawResponseFromTextBody(statusCode, headers.add, <string>replaceBody.value);
+					break;
+
+				case RequestBodyType.Base64:
+					rawResponse = compileRawResponseFromBase64Body(statusCode, headers.add, <string>replaceBody.value);
+					break;
+
+				case RequestBodyType.Blob:
+					rawResponse = await compileRawResponseFromBlobBody(statusCode, headers.add, <Blob>replaceBody.value);
+					break;
+			}
+
+
 			await this.continueIntercepted({interceptionId, rawResponse});
 			this.onRequestEnd(interceptionId);
 			return;
@@ -163,7 +195,7 @@ export default class Debugger {
 		}
 
 		// then, rewrite body
-		if (mutateRequest.replaceBody.enabled) {
+		if (mutateRequest.replaceBody.value !== null) {
 			// TODO check opportunity of replace to form data or blob
 			const {type, value} = mutateRequest.replaceBody;
 			continueParams.postData = await bodyToString(type, value);
@@ -172,9 +204,10 @@ export default class Debugger {
 		await this.continueIntercepted(continueParams);
 	}
 
-	private async handleServerResponse({interceptionId, request, resourceType, responseHeaders, responseStatusCode}: CompletedRequestEventParams) {
+	private async handleServerResponse(
+		{interceptionId, request, resourceType, responseHeaders, responseStatusCode}: CompletedRequestEventParams
+	) {
 		const rule = this.rulesManager.selectOne({...request, resourceType});
-
 
 		// skip if none rule for the request
 		if (!rule) {
@@ -188,7 +221,8 @@ export default class Debugger {
 		const skipHandler = mutateResponse.statusCode === null
 			&& Reflect.ownKeys(mutateResponse.headers.add).length === 0
 			&& mutateResponse.headers.remove.length === 0
-			&& !mutateResponse.replaceBody;
+			&& mutateResponse.replaceBody.value === null;
+
 		if (!mutateResponse.enabled || skipHandler) {
 			await this.continueIntercepted({interceptionId});
 			this.onRequestEnd(interceptionId);
@@ -196,39 +230,54 @@ export default class Debugger {
 		}
 
 		// define status code
-		let finallyStatusCode = mutateResponse.statusCode === null
+		let newStatusCode = mutateResponse.statusCode === null
 			? responseStatusCode
 			: mutateResponse.statusCode;
 
 
 		// defined mutated headers
-		const finallyHeaders = mutateHeaders(
+		const newHeaders = mutateHeaders(
 			responseHeaders,
 			mutateResponse.headers.add,
 			mutateResponse.headers.remove,
 		);
 
-		// TODO handle response without full rebuild if body not changed
+		// TODO maybe handle response without full rebuild if body not changed
 
 		// define response body from the rules or extract from the server response
-		let finallyBodyType;
-		let finallyBodyValue;
-		if (mutateResponse.replaceBody.enabled) {
-			finallyBodyType = mutateResponse.replaceBody.type;
-			finallyBodyValue = mutateResponse.replaceBody.value;
+		let newBodyType;
+		let newBodyValue;
+		if (mutateResponse.replaceBody.value !== null) {
+			newBodyType = mutateResponse.replaceBody.type;
+			newBodyValue = mutateResponse.replaceBody.value;
 		} else {
-			const {body, base64Encoded} = await this.sendCommand<GetInterceptedBodyResponse>('Network.getResponseBodyForInterception', {interceptionId});
-			finallyBodyType = base64Encoded ? RequestBodyType.Base64 : RequestBodyType.Text;
-			finallyBodyValue = await body;
+			const {body, base64Encoded} = await this.sendCommand<GetInterceptedBodyResponse>(
+				'Network.getResponseBodyForInterception',
+				{interceptionId}
+			);
+			newBodyType = base64Encoded
+				? RequestBodyType.Base64
+				: RequestBodyType.Text;
+			newBodyValue = await body;
 		}
 
 		// combine rawResponse from new body, old and new headers, and status code
-		const rawResponse = await compileRawBaseResponse(
-			finallyStatusCode,
-			finallyHeaders,
-			finallyBodyType,
-			finallyBodyValue,
-		);
+
+		let rawResponse;
+		switch (newBodyType) {
+			case RequestBodyType.Text:
+				rawResponse = compileRawResponseFromTextBody(newStatusCode, newHeaders, <string>newBodyValue);
+				break;
+
+			case RequestBodyType.Base64:
+				rawResponse = compileRawResponseFromBase64Body(newStatusCode, newHeaders, <string>newBodyValue);
+				break;
+
+			case RequestBodyType.Blob:
+				rawResponse = await compileRawResponseFromBlobBody(newStatusCode, newHeaders, <Blob>newBodyValue);
+				break;
+		}
+
 		await this.continueIntercepted({interceptionId, rawResponse});
 		this.onRequestEnd(interceptionId);
 	}

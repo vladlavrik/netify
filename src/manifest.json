@@ -3,11 +3,13 @@
 	"name": "Netify",
 	"description": "Netify - progressive network debugger for developers",
 	"version": "0.0.1",
+	"author": "Vlad Lavrik <vladlavrik95@gmail.com>",
 	"icons": {
 		"16": "icons/logo-16.png",
 		"48": "icons/logo-48.png",
 		"128": "icons/logo-128.png"
 	},
+	"minimum_chrome_version": "73.0.3674.0",
 	"devtools_page": "devtool.html",
 	"permissions": [
 		"debugger"

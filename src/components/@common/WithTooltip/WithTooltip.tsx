@@ -55,6 +55,7 @@ export class WithTooltip extends React.PureComponent<Props, State> {
 	};
 
 	private updateTooltipPosition = () => {
+		// TODO add support of vertical inverse
 		const minPadding = 8;
 		const viewportWidth = document.documentElement!.clientWidth;
 		const tooltipWidth = this.tooltipRef.current!.clientWidth;

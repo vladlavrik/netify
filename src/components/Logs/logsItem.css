@@ -1,3 +1,8 @@
+@keyframes showLoading {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
 .root {
     display: flex;
     align-items: center;
@@ -24,6 +29,15 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.loading {
+    width: 8px;
+    height: 8px;
+    margin: 0 10px 0 8px;
+    border-radius: 4px;
+    background: #c57420;
+    animation: showLoading .1s ease-out .2s; /*delay to show*/
+    animation-fill-mode: backwards;
 }
 .followButton {
     flex-shrink: 0;

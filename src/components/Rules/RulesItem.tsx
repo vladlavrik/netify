@@ -80,7 +80,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
 				actions.push('Modify request headers');
 			}
-			if (replaceBody.enabled) {
+			if (replaceBody.value !== null) {
 				actions.push('Defined request body');
 			}
 		}
@@ -91,12 +91,13 @@ export class RulesItem extends React.PureComponent<Props, State> {
 				actions.push('Modify response status');
 			}
 			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
-				actions.push('Modify request headers');
+				actions.push('Modify response headers');
 			}
-			if (replaceBody.enabled) {
-				actions.push('Defined request body');
+			if (replaceBody.value !== null) {
+				actions.push('Defined response body');
 			}
 		}
+
 		if (cancelRequest.enabled) {
 			actions.push('Return error');
 		}

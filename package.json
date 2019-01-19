@@ -13,6 +13,7 @@
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",
     "@types/yup": "^0.26.4",
+    "base64-js": "^1.3.0",
     "classnames": "^2.2.6",
     "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^2.1.0",
@@ -32,6 +33,7 @@
     "yup": "^0.26.7"
   },
   "devDependencies": {
+    "@types/base64-js": "^1.2.5",
     "prettier": "^1.15.3"
   }
 }

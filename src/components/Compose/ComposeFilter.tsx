@@ -10,7 +10,10 @@ export class ComposeFilter extends React.PureComponent {
 	render() {
 		return (
 			<div className={styles.root}>
-				<TextField className={styles.urlField} name='filter.url.value' placeholder='Url' />
+				<TextField
+					className={styles.urlField}
+					name='filter.url.value'
+					placeholder='Url (include origin or only path when starts with "/")' />
 
 				<DropdownPicker
 					className={styles.urlTypeField}
