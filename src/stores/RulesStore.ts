@@ -70,6 +70,9 @@ export class RulesStore implements RulesManager {
 	}
 
 	selectOne(select: {url: string, method: RequestMethod, resourceType: ResourceType}) {
+		// first double slash is the end of schema, third slash is the path part start
+		const selectUrlOrigin = select.url.split('/').slice(0, 3).join('/');
+
 		const rule = this.list.find(({filter}) => {
 			if (filter.resourceTypes.length && !filter.resourceTypes.includes(select.resourceType)) {
 				return false;
@@ -79,15 +82,20 @@ export class RulesStore implements RulesManager {
 				return false;
 			}
 
-			if (filter.url.compareType === UrlCompareType.Exact && filter.url.value !== select.url) {
+			// if the filter does not include a schema and host, add it for correct comparison
+			const filterUrlValue = filter.url.value.startsWith('/') // it mean schema and host is not defined
+				? selectUrlOrigin + filter.url.value
+				: filter.url.value;
+
+			if (filter.url.compareType === UrlCompareType.Exact && select.url !== filterUrlValue) {
 				return false;
 			}
 
-			if (filter.url.compareType === UrlCompareType.StartsWith && !select.url.startsWith(filter.url.value as string)) {
+			if (filter.url.compareType === UrlCompareType.StartsWith && !select.url.startsWith(filterUrlValue)) {
 				return false;
 			}
 
-			if (filter.url.compareType === UrlCompareType.RegExp && !(filter.url.value as RegExp).test(select.url)) {
+			if (filter.url.compareType === UrlCompareType.RegExp && !RegExp(filterUrlValue).test(select.url)) {
 				return false;
 			}
 

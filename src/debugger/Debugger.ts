@@ -212,7 +212,6 @@ export default class Debugger {
 		// skip if none rule for the request
 		if (!rule) {
 			await this.continueIntercepted({interceptionId});
-			this.onRequestEnd(interceptionId);
 			return;
 		}
 

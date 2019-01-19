@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "Netify",
 	"description": "Netify - progressive network debugger for developers",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"author": "Vlad Lavrik <vladlavrik95@gmail.com>",
 	"icons": {
 		"16": "icons/logo-16.png",

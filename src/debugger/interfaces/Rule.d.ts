@@ -8,7 +8,7 @@ export interface Rule {
 	id: string;
 	filter: {
 		url: {
-			value: string | RegExp;
+			value: string;
 			compareType: UrlCompareType;
 		};
 		resourceTypes: ResourceType[];
