@@ -41,6 +41,7 @@ export interface DebuggerConfig {
 	rulesManager: RulesManager,
 	onRequestStart: (data: Log) => any;
 	onRequestEnd: (id: Log['id']) => any;
+	onUserDetach: () => any; // When user manually destroy debugger by Chrome warning-panel
 }
 
 
@@ -48,20 +49,22 @@ export interface DebuggerConfig {
 export default class Debugger {
 	private readonly debuggerVersion = '1.3';
 
-	private readonly debugTarget: {
-		tabId: number
-	};
+	private readonly debugTarget: {tabId: number};
 	private rulesManager: RulesManager;
 	private readonly onRequestStart: DebuggerConfig['onRequestStart'];
 	private readonly onRequestEnd: DebuggerConfig['onRequestEnd'];
+	private readonly onUserDetach: DebuggerConfig['onUserDetach'];
 
 	state = DebuggerState.Inactive;
 
-	constructor({tabId, rulesManager, onRequestStart, onRequestEnd}: DebuggerConfig) {
+	constructor({tabId, rulesManager, onRequestStart, onRequestEnd, onUserDetach}: DebuggerConfig) {
 		this.debugTarget = {tabId};
 		this.rulesManager = rulesManager;
 		this.onRequestStart = onRequestStart;
 		this.onRequestEnd = onRequestEnd;
+		this.onUserDetach = onUserDetach;
+
+		chrome.debugger.onDetach.addListener(this.detachHandler);
 	}
 
 	async initialize() {
@@ -84,7 +87,7 @@ export default class Debugger {
 		});
 	}
 
-	public destroy() {
+	destroy() {
 		this.state = DebuggerState.Stopping;
 
 		return new Promise((resolve, reject) => {
@@ -106,6 +109,12 @@ export default class Debugger {
 			});
 		});
 	}
+
+	private detachHandler = ({tabId}: {tabId?: number}) => {
+		if (tabId === this.debugTarget.tabId && [DebuggerState.Active, DebuggerState.Starting].includes(this.state)) {
+			this.onUserDetach();
+		}
+	};
 
 	private messageHandler = async (_source: any, method: string, params: any) => {
 		if(method === 'Network.requestIntercepted') {
@@ -167,7 +176,6 @@ export default class Debugger {
 					rawResponse = await compileRawResponseFromBlobBody(statusCode, headers.add, <Blob>replaceBody.value);
 					break;
 			}
-
 
 			await this.continueIntercepted({interceptionId, rawResponse});
 			this.onRequestEnd(interceptionId);
@@ -261,7 +269,6 @@ export default class Debugger {
 		}
 
 		// combine rawResponse from new body, old and new headers, and status code
-
 		let rawResponse;
 		switch (newBodyType) {
 			case RequestBodyType.Text:

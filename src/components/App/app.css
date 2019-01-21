@@ -21,6 +21,14 @@
 .headerControl.typeExpand {
     --icon-button-bg: url('./icons/panel-expand.svg');
 }
+.headerControl.typeStartListen {
+    --icon-button-bg: #CCCCCC;
+    --icon-button-clip: circle(34%);
+}
+.headerControl.typeStopListen {
+    --icon-button-bg: #EB3941;
+    --icon-button-clip: circle(34%);
+}
 .sectionContent {
     height: calc(100% - 30px);
 }

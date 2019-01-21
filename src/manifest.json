@@ -9,7 +9,7 @@
 		"48": "icons/logo-48.png",
 		"128": "icons/logo-128.png"
 	},
-	"minimum_chrome_version": "73.0.3674.0",
+	"minimum_chrome_version": "73.0.3673.0",
 	"devtools_page": "devtool.html",
 	"permissions": [
 		"debugger"

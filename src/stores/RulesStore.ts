@@ -1,4 +1,4 @@
-import {action, autorun, observable, toJS} from 'mobx';
+import {action, autorun, observable, computed, toJS} from 'mobx';
 import {Rule} from '@/debugger/interfaces/Rule';
 import {RootStore} from './RootStore';
 import Debugger, {DebuggerState} from '@/debugger/Debugger';
@@ -15,18 +15,36 @@ export class RulesStore implements RulesManager {
 		rulesManager: this,
 		onRequestStart: (log: Log) => this.rootStore.logsStore.add(log),
 		onRequestEnd: (id: string) => this.rootStore.logsStore.makeLoaded(id),
+		onUserDetach: () => this.debuggerDisabled = true,
 	});
 
 	constructor(private rootStore: RootStore) {
 		autorun(this.manageDebuggerActive);
 	}
 
-	manageDebuggerActive = async () => {
+
+	@observable
+	debuggerDisabled = false;
+
+	@observable
+	readonly list: Rule[] = [];
+
+	@computed
+	get hasRules() {
+		return this.list.length > 0;
+	};
+
+	@observable
+	highlightedId: string | null = null;
+
+	private manageDebuggerActive = async () => {
 		// TODO disallow switch state when previous operation during
-		if (this.list.length > 0 && ![DebuggerState.Active, DebuggerState.Starting].includes(this.debugger.state)) {
+		const debuggerActive = [DebuggerState.Active, DebuggerState.Starting].includes(this.debugger.state);
+
+		if (this.list.length > 0 && !debuggerActive && !this.debuggerDisabled) {
 			await this.initializeDebugger();
 		}
-		if (this.list.length === 0 && ![DebuggerState.Inactive, DebuggerState.Stopping].includes(this.debugger.state)) {
+		if ((this.list.length === 0 || this.debuggerDisabled) && debuggerActive) {
 			await this.destroyDebugger();
 		}
 	};
@@ -40,12 +58,6 @@ export class RulesStore implements RulesManager {
 		self.removeEventListener('beforeunload', this.destroyDebugger);
 		return this.debugger.destroy();
 	};
-
-	@observable
-	readonly list: Rule[] = [];
-
-	@observable
-	highlightedId: string | null = null;
 
 	@action
 	save(...rules: Rule[]) {
@@ -67,6 +79,11 @@ export class RulesStore implements RulesManager {
 	@action
 	setHighlighted(id: string | null = null) {
 		this.highlightedId = id;
+	}
+
+	@action
+	toggleDebuggerDisabled() {
+		this.debuggerDisabled = !this.debuggerDisabled;
 	}
 
 	selectOne(select: {url: string, method: RequestMethod, resourceType: ResourceType}) {

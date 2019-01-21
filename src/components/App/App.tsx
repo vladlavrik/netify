@@ -16,6 +16,7 @@ export class App extends React.Component {
 
 	render() {
 		const {composeShown, sectionRatio, logsCollapsed} = this.rootStore.appStore;
+		const {debuggerDisabled, hasRules} = this.rootStore.rulesStore;
 
 		return (
 			<Provider
@@ -38,6 +39,16 @@ export class App extends React.Component {
 										})}
 										tooltip={composeShown ? 'Cancel add' : 'Add rule'}
 										onClick={this.onToggleComposeShow}
+									/>
+									<IconButton
+										className={classNames({
+											[styles.headerControl]: true,
+											[styles.typeStartListen]: debuggerDisabled || !hasRules,
+											[styles.typeStopListen]: !debuggerDisabled && hasRules,
+										})}
+										disabled={composeShown || !hasRules}
+										tooltip={debuggerDisabled ? 'Enable debugger' : 'Disable debugger'}
+										onClick={this.onToggleDebuggerEnabled}
 									/>
 									<IconButton
 										className={classNames(styles.headerControl, styles.typeClear)}
@@ -90,6 +101,8 @@ export class App extends React.Component {
 	};
 
 	private onToggleComposeShow = () => this.rootStore.appStore.toggleComposeShow();
+
+	private onToggleDebuggerEnabled = () => this.rootStore.rulesStore.toggleDebuggerDisabled();
 
 	private onToggleLogsCollapse = () => this.rootStore.appStore.toggleLogsCollapse();
 
