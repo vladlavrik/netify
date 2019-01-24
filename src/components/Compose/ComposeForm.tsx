@@ -47,8 +47,9 @@ const formSchema = yup.object<Rule>({
 		mutateRequest: yup.object({
 			enabled: yup.boolean(),
 			endpointReplace: yup.string(),
+			methodReplace: yup.mixed().oneOf(requestMethodsList).nullable(true),
 			headers: headersSchema,
-			replaceBody: yup.object({
+			bodyReplace: yup.object({
 				type: yup.mixed().oneOf(requestBodyTypesList),
 				textValue: yup.string(),
 				formValue: yup
@@ -83,7 +84,7 @@ const formSchema = yup.object<Rule>({
 					},
 				),
 			headers: headersSchema,
-			replaceBody: yup.object({
+			bodyReplace: yup.object({
 				type: yup.mixed().oneOf(responseBodyTypesList),
 				textValue: yup.string(),
 				blobValue: yup.mixed().nullable(false),
@@ -109,8 +110,9 @@ interface FormValue {
 		mutateRequest: {
 			enabled: boolean;
 			endpointReplace: string;
+			methodReplace?: RequestMethod;
 			headers: {name: string, value: string;}[];
-			replaceBody: {
+			bodyReplace: {
 				type: RequestBodyType;
 				textValue: string;
 				formValue: {key: string, value: string;}[];
@@ -121,7 +123,7 @@ interface FormValue {
 			responseLocally: '0' | '1';
 			statusCode: string;
 			headers: {name: string, value: string}[];
-			replaceBody: {
+			bodyReplace: {
 				type: ResponseBodyType;
 				textValue: string;
 				blobValue?: Blob;
@@ -148,8 +150,9 @@ export class ComposeForm extends React.PureComponent<Props> {
 			mutateRequest: {
 				enabled: true,
 				endpointReplace: '',
+				methodReplace: undefined,
 				headers: [{name: '', value: ''}],
-				replaceBody: {
+				bodyReplace: {
 					type: RequestBodyType.Original,
 					textValue: '',
 					formValue: [{key: '', value: ''}],
@@ -163,7 +166,7 @@ export class ComposeForm extends React.PureComponent<Props> {
 					name: '',
 					value: '',
 				}],
-				replaceBody: {
+				bodyReplace: {
 					type: ResponseBodyType.Original,
 					textValue: '',
 					blobValue: undefined,

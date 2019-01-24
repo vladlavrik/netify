@@ -21,15 +21,16 @@ export class RulesDetails extends React.PureComponent<Props> {
 			},
 			mutateRequest: {
 				endpointReplace: mutateRequest.endpointReplace.length > 0,
+				methodReplace: !!mutateRequest.methodReplace,
 				headersAdd: Object.keys(mutateRequest.headers.add).length > 0,
 				headersRemove: mutateRequest.headers.remove.length > 0,
-				replaceBody: mutateRequest.replaceBody.type !== RequestBodyType.Original,
+				bodyReplace: mutateRequest.bodyReplace.type !== RequestBodyType.Original,
 			},
 			mutateResponse: {
 				statusCode: mutateResponse.statusCode,
 				headersAdd: Object.keys(mutateResponse.headers.add).length > 0,
 				headersRemove: mutateResponse.headers.remove.length > 0,
-				replaceBody: mutateResponse.replaceBody.type !== ResponseBodyType.Original,
+				bodyReplace: mutateResponse.bodyReplace.type !== ResponseBodyType.Original,
 			},
 			cancelRequest: cancelRequest.enabled,
 		};
@@ -41,16 +42,17 @@ export class RulesDetails extends React.PureComponent<Props> {
 
 			mutateRequest: mutateRequest.enabled && (
 				existsRows.mutateRequest.endpointReplace ||
+				existsRows.mutateRequest.methodReplace ||
 				existsRows.mutateRequest.headersAdd ||
 				existsRows.mutateRequest.headersRemove ||
-				existsRows.mutateRequest.replaceBody
+				existsRows.mutateRequest.bodyReplace
 			),
 
 			mutateResponse: mutateResponse.enabled && (
 				existsRows.mutateResponse.statusCode ||
 				existsRows.mutateResponse.headersAdd ||
 				existsRows.mutateResponse.headersRemove||
-				existsRows.mutateResponse.replaceBody
+				existsRows.mutateResponse.bodyReplace
 			),
 
 			cancelRequest: mutateResponse.enabled && existsRows.cancelRequest,
@@ -98,8 +100,14 @@ export class RulesDetails extends React.PureComponent<Props> {
 						<tbody>
 						{existsRows.mutateRequest.endpointReplace && (
 							<tr>
-								<td className={styles.dataTitle}>Replacing endpoint:</td>
+								<td className={styles.dataTitle}>Redirect to:</td>
 								<td className={styles.dataValue}>{mutateRequest.endpointReplace}</td>
+							</tr>
+						)}
+						{existsRows.mutateRequest.methodReplace && (
+							<tr>
+								<td className={styles.dataTitle}>Replacing method:</td>
+								<td className={styles.dataValue}>{mutateRequest.methodReplace.toUpperCase()}</td>
 							</tr>
 						)}
 						{existsRows.mutateRequest.headersAdd && (
@@ -118,25 +126,25 @@ export class RulesDetails extends React.PureComponent<Props> {
 								<td className={styles.dataValue}>{mutateRequest.headers.remove.join('<br>')}</td>
 							</tr>
 						)}
-						{existsRows.mutateRequest.replaceBody && (
+						{existsRows.mutateRequest.bodyReplace && (
 							<tr>
 								<td className={styles.dataTitle}>Replacing body:</td>
-								{mutateRequest.replaceBody.type === RequestBodyType.Text && (
+								{mutateRequest.bodyReplace.type === RequestBodyType.Text && (
 									<td className={styles.dataValue}>
-										{mutateRequest.replaceBody.textValue.substr(0, 2400)}
+										{mutateRequest.bodyReplace.textValue.substr(0, 2400)}
 									</td>
 								)}
 								{(
-									mutateRequest.replaceBody.type === RequestBodyType.UrlEncodedForm ||
-									mutateRequest.replaceBody.type === RequestBodyType.MultipartFromData
+									mutateRequest.bodyReplace.type === RequestBodyType.UrlEncodedForm ||
+									mutateRequest.bodyReplace.type === RequestBodyType.MultipartFromData
 								) && (
 									<td className={styles.dataValue}>
 										Form:&nbsp;
-										{mutateRequest.replaceBody.type === RequestBodyType.UrlEncodedForm
+										{mutateRequest.bodyReplace.type === RequestBodyType.UrlEncodedForm
 											? 'application/x-www-form-urlencoded'
 											: 'multipart/form-data?'}
 										<br/>
-										{mutateRequest.replaceBody.formValue.map(({key, value}, index) => (
+										{mutateRequest.bodyReplace.formValue.map(({key, value}, index) => (
 											<div key={index}>{key}: {value}</div>
 										))}
 									</td>
@@ -180,20 +188,20 @@ export class RulesDetails extends React.PureComponent<Props> {
 							</tr>
 						)}
 
-						{existsRows.mutateResponse.replaceBody && (
+						{existsRows.mutateResponse.bodyReplace && (
 							<tr>
 								<td className={styles.dataTitle}>Replacing body:</td>
-								{mutateResponse.replaceBody.type === ResponseBodyType.Text && (
+								{mutateResponse.bodyReplace.type === ResponseBodyType.Text && (
 									<td className={styles.dataValue}>
-										{mutateResponse.replaceBody.textValue.substr(0, 2400)}
+										{mutateResponse.bodyReplace.textValue.substr(0, 2400)}
 									</td>
 								)}
-								{mutateResponse.replaceBody.type === ResponseBodyType.Base64 && (
+								{mutateResponse.bodyReplace.type === ResponseBodyType.Base64 && (
 									<td className={styles.dataValue}>
-										Base 64: {mutateResponse.replaceBody.textValue.substr(0, 128)}
+										Base 64: {mutateResponse.bodyReplace.textValue.substr(0, 128)}
 									</td>
 								)}
-								{mutateResponse.replaceBody.type === ResponseBodyType.Blob && (
+								{mutateResponse.bodyReplace.type === ResponseBodyType.Blob && (
 									<td className={styles.dataValue}>&lt;Blob value&gt;</td>
 								)}
 							</tr>

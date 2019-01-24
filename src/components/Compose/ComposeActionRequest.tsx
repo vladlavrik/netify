@@ -1,10 +1,12 @@
 import * as React from 'react';
 import {ComposeRow} from './ComposeRow';
 import {TextField} from '@/components/@common/TextField';
+import {DropdownPicker} from '@/components/@common/DropdownPicker';
 import {RadioTabs} from '@/components/@common/RadioTabs';
-import {RequestBodyType, requestBodyTypesList} from '@/constants/RequestBodyType';
 import {TextareaField} from '@/components/@common/TextaredField';
 import {KeyValueArrayField} from '@/components/@common/KeyValueArrayField';
+import {RequestBodyType, requestBodyTypesList} from '@/constants/RequestBodyType';
+import {requestMethodsList} from '@/constants/RequestMethod';
 import styles from './composeActionRequest.css';
 
 export class ComposeActionRequest extends React.PureComponent {
@@ -13,9 +15,17 @@ export class ComposeActionRequest extends React.PureComponent {
 			<div className={styles.root}>
 				<ComposeRow title='Replace endpoint:'>
 					<TextField
-						className={styles.endpoint}
+						className={styles.endpointField}
 						name='actions.mutateRequest.endpointReplace'
 						placeholder='%protocol%//%hostname%:%port%%path%%query%'
+					/>
+				</ComposeRow>
+				<ComposeRow title='Replace method:'>
+					<DropdownPicker
+						className={styles.methodField}
+						name='actions.mutateRequest.methodReplace'
+						placeholder='Method'
+						options={requestMethodsList}
 					/>
 				</ComposeRow>
 				<ComposeRow title='Headers:'>
@@ -28,7 +38,7 @@ export class ComposeActionRequest extends React.PureComponent {
 				</ComposeRow>
 				<ComposeRow title='Body:'>
 					<RadioTabs
-						radioName='actions.mutateRequest.replaceBody.type'
+						radioName='actions.mutateRequest.bodyReplace.type'
 						tabs={requestBodyTypesList.map(type => ({
 							value: type,
 							title: type,
@@ -45,14 +55,14 @@ export class ComposeActionRequest extends React.PureComponent {
 				return (
 					<TextareaField
 						className={styles.bodyTextField}
-						name={'actions.mutateRequest.replaceBody.textValue'} />
+						name={'actions.mutateRequest.bodyReplace.textValue'} />
 				);
 
 			case RequestBodyType.UrlEncodedForm:
 			case RequestBodyType.MultipartFromData:
 				return (
 					<KeyValueArrayField
-						name='actions.mutateRequest.replaceBody.formValue'
+						name='actions.mutateRequest.bodyReplace.formValue'
 						keyNameSuffix='key'
 						valueNameSuffix='value'
 						keyPlaceholder='Field key'

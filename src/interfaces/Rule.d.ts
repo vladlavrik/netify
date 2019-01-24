@@ -19,11 +19,12 @@ export interface Rule {
 		mutateRequest: {
 			enabled: boolean;
 			endpointReplace: string;
+			methodReplace: RequestMethod;
 			headers: {
 				add: {[s: string]: string;},
 				remove: string[];
 			},
-			replaceBody: {
+			bodyReplace: {
 				type: RequestBodyType;
 				textValue: string;
 				formValue: {key: string, value: string}[];
@@ -37,7 +38,7 @@ export interface Rule {
 				add: {[s: string]: string;},
 				remove: string[];
 			},
-			replaceBody: {
+			bodyReplace: {
 				type: ResponseBodyType;
 				textValue: string;
 				blobValue?: Blob;

@@ -30,10 +30,15 @@ const preventDefault = (event: any) => {
 
 class DropdownPickerField extends React.PureComponent<PropsFormikPart & Props, State> {
 	static getDerivedStateFromProps(props: PropsFormikPart & Props) {
-		const value = getIn(props.formik.values, props.name);
-		return {
-			values: props.multiple ? value : [value],
-		};
+		let values = getIn(props.formik.values, props.name);
+
+		if (!props.multiple) {
+			values = [null, undefined].includes(values)
+				? [] // empty array values if passed value is nullable
+				: [values];
+		}
+
+		return {values};
 	}
 
 	private labelRef = React.createRef<HTMLButtonElement>();

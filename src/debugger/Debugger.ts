@@ -156,26 +156,26 @@ export default class Debugger {
 
 		// if required local response, combine the response form defined status, headers and body
 		if (mutateResponse.enabled && mutateResponse.responseLocally) {
-			const {headers, replaceBody} = mutateResponse;
+			const {headers, bodyReplace} = mutateResponse;
 			const statusCode = mutateResponse.statusCode || 200;
 
 			let rawResponse;
-			switch (replaceBody.type) {
+			switch (bodyReplace.type) {
 				case ResponseBodyType.Original:
 					rawResponse = compileRawResponseFromTextBody(statusCode, headers.add, '');
 					break;
 
 				case ResponseBodyType.Text:
-					rawResponse = compileRawResponseFromTextBody(statusCode, headers.add, replaceBody.textValue);
+					rawResponse = compileRawResponseFromTextBody(statusCode, headers.add, bodyReplace.textValue);
 					break;
 
 				case ResponseBodyType.Base64:
-					rawResponse = compileRawResponseFromBase64Body(statusCode, headers.add, replaceBody.textValue);
+					rawResponse = compileRawResponseFromBase64Body(statusCode, headers.add, bodyReplace.textValue);
 					break;
 
 				case ResponseBodyType.Blob:
-					rawResponse = replaceBody.blobValue
-						? await compileRawResponseFromBlobBody(statusCode, headers.add, replaceBody.blobValue)
+					rawResponse = bodyReplace.blobValue
+						? await compileRawResponseFromBlobBody(statusCode, headers.add, bodyReplace.blobValue)
 						: compileRawResponseFromTextBody(statusCode, headers.add, ''); // not defined blob is equal ro an empty body
 					break;
 			}
@@ -199,6 +199,11 @@ export default class Debugger {
 			continueParams.url = compileUrlFromPattern(mutateRequest.endpointReplace, request.url);
 		}
 
+		// then, rewrite request method
+		if (mutateRequest.methodReplace) {
+			continueParams.method = mutateRequest.methodReplace;
+		}
+
 		// then, mutate headers
 		if (Reflect.ownKeys(mutateRequest.headers.add).length || mutateRequest.headers.remove.length) {
 			const {add, remove} = mutateRequest.headers;
@@ -206,8 +211,8 @@ export default class Debugger {
 		}
 
 		// then, rewrite body
-		if (mutateRequest.replaceBody.type !== RequestBodyType.Original) {
-			const {type, textValue, formValue} = mutateRequest.replaceBody;
+		if (mutateRequest.bodyReplace.type !== RequestBodyType.Original) {
+			const {type, textValue, formValue} = mutateRequest.bodyReplace;
 			let contentType = 'text/plain;charset=UTF-8';
 
 			switch (type) {
@@ -254,7 +259,7 @@ export default class Debugger {
 		const skipHandler = mutateResponse.statusCode === null
 			&& Reflect.ownKeys(mutateResponse.headers.add).length === 0
 			&& mutateResponse.headers.remove.length === 0
-			&& mutateResponse.replaceBody.type === ResponseBodyType.Original;
+			&& mutateResponse.bodyReplace.type === ResponseBodyType.Original;
 
 		if (!mutateResponse.enabled || skipHandler) {
 			await this.continueIntercepted({interceptionId});
@@ -281,10 +286,10 @@ export default class Debugger {
 		let newBodyType;
 		let newBodyTextValue;
 		let newBodyBlobValue: Blob | undefined;
-		if (mutateResponse.replaceBody.type !== ResponseBodyType.Original) {
-			newBodyType = mutateResponse.replaceBody.type;
-			newBodyTextValue = mutateResponse.replaceBody.textValue;
-			newBodyBlobValue = mutateResponse.replaceBody.blobValue;
+		if (mutateResponse.bodyReplace.type !== ResponseBodyType.Original) {
+			newBodyType = mutateResponse.bodyReplace.type;
+			newBodyTextValue = mutateResponse.bodyReplace.textValue;
+			newBodyBlobValue = mutateResponse.bodyReplace.blobValue;
 		} else {
 			const {body, base64Encoded} = await this.sendCommand<GetInterceptedBodyResponse>(
 				'Network.getResponseBodyForInterception',

@@ -50,7 +50,7 @@ export class ComposeActionResponse extends React.PureComponent {
 				</ComposeRow>
 				<ComposeRow title='Body:'>
 					<RadioTabs
-						radioName='actions.mutateResponse.replaceBody.type'
+						radioName='actions.mutateResponse.bodyReplace.type'
 						tabs={responseBodyTypesList.map(type => ({
 							value: type,
 							title: type,
@@ -68,7 +68,7 @@ export class ComposeActionResponse extends React.PureComponent {
 				return (
 					<TextareaField
 						className={styles.bodyTextField}
-						name={'actions.mutateResponse.replaceBody.textValue'} />
+						name={'actions.mutateResponse.bodyReplace.textValue'} />
 				);
 
 			case ResponseBodyType.Blob:

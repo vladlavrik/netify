@@ -62,7 +62,11 @@ export class RulesItem extends React.PureComponent<Props, State> {
 						</div>
 						<p className={styles.actionsInfo}>{this.parseActionsArray()}</p>
 					</div>
-					<IconButton className={styles.removeButton} tooltip='Remove the rule' onClick={this.onRemove} />
+
+					<IconButton
+						className={styles.removeButton}
+						tooltip='Remove the rule'
+						onClick={this.onRemove} />
 				</div>
 
 				{expanded && <div>{this.props.children}</div>}
@@ -75,33 +79,36 @@ export class RulesItem extends React.PureComponent<Props, State> {
 		const actions = [];
 
 		if (mutateRequest.enabled) {
-			const {endpointReplace, headers, replaceBody} = mutateRequest;
+			const {endpointReplace, methodReplace, headers, bodyReplace} = mutateRequest;
 			if (endpointReplace) {
 				actions.push('Redirect to url');
 			}
-			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
-				actions.push('Modify request headers');
+			if (methodReplace) {
+				actions.push('Replacing method');
 			}
-			if (replaceBody.type !== RequestBodyType.Original) {
-				actions.push('Defined request body');
+			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
+				actions.push('Modifying request headers');
+			}
+			if (bodyReplace.type !== RequestBodyType.Original) {
+				actions.push('Replacing request body');
 			}
 		}
 
 		if (mutateResponse.enabled) {
-			const {statusCode, headers, replaceBody} = mutateResponse;
+			const {statusCode, headers, bodyReplace} = mutateResponse;
 			if (statusCode) {
-				actions.push('Modify response status');
+				actions.push('Replacing response status');
 			}
 			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
-				actions.push('Modify response headers');
+				actions.push('Modifying response headers');
 			}
-			if (replaceBody.textValue !== ResponseBodyType.Original) {
-				actions.push('Defined response body');
+			if (bodyReplace.textValue !== ResponseBodyType.Original) {
+				actions.push('Replacing response body');
 			}
 		}
 
 		if (cancelRequest.enabled) {
-			actions.push('Return error');
+			actions.push('Returning error');
 		}
 
 		if (actions.length === 0) {
