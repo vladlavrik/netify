@@ -3,6 +3,8 @@ import classNames from 'classnames';
 import {Rule} from '@/debugger/interfaces/Rule';
 import {IconButton} from '@/components/@common/IconButton';
 import styles from './rulesItem.css';
+import {RequestBodyType} from '@/debugger/constants/RequestBodyType';
+import {ResponseBodyType} from '@/debugger/constants/ResponseBodyType';
 
 interface Props {
 	data: Rule;
@@ -80,7 +82,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
 				actions.push('Modify request headers');
 			}
-			if (replaceBody.value !== null) {
+			if (replaceBody.type !== RequestBodyType.Original) {
 				actions.push('Defined request body');
 			}
 		}
@@ -93,7 +95,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
 				actions.push('Modify response headers');
 			}
-			if (replaceBody.value !== null) {
+			if (replaceBody.textValue !== ResponseBodyType.Original) {
 				actions.push('Defined response body');
 			}
 		}

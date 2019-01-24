@@ -1,5 +1,7 @@
 import * as React from 'react';
 import {Rule} from '@/debugger/interfaces/Rule';
+import {RequestBodyType} from '@/debugger/constants/RequestBodyType';
+import {ResponseBodyType} from '@/debugger/constants/ResponseBodyType';
 import styles from './rulesDetails.css';
 
 interface Props {
@@ -21,13 +23,13 @@ export class RulesDetails extends React.PureComponent<Props> {
 				endpointReplace: mutateRequest.endpointReplace.length > 0,
 				headersAdd: Object.keys(mutateRequest.headers.add).length > 0,
 				headersRemove: mutateRequest.headers.remove.length > 0,
-				replaceBody: mutateRequest.replaceBody.value !== null,
+				replaceBody: mutateRequest.replaceBody.type !== RequestBodyType.Original,
 			},
 			mutateResponse: {
 				statusCode: mutateResponse.statusCode,
 				headersAdd: Object.keys(mutateResponse.headers.add).length > 0,
 				headersRemove: mutateResponse.headers.remove.length > 0,
-				replaceBody: mutateResponse.replaceBody.value !== null,
+				replaceBody: mutateResponse.replaceBody.type !== ResponseBodyType.Original,
 			},
 			cancelRequest: cancelRequest.enabled,
 		};
@@ -119,7 +121,26 @@ export class RulesDetails extends React.PureComponent<Props> {
 						{existsRows.mutateRequest.replaceBody && (
 							<tr>
 								<td className={styles.dataTitle}>Replacing body:</td>
-								<td className={styles.dataValue}>{mutateRequest.replaceBody.value}</td>
+								{mutateRequest.replaceBody.type === RequestBodyType.Text && (
+									<td className={styles.dataValue}>
+										{mutateRequest.replaceBody.textValue.substr(0, 2400)}
+									</td>
+								)}
+								{(
+									mutateRequest.replaceBody.type === RequestBodyType.UrlEncodedForm ||
+									mutateRequest.replaceBody.type === RequestBodyType.MultipartFromData
+								) && (
+									<td className={styles.dataValue}>
+										Form:&nbsp;
+										{mutateRequest.replaceBody.type === RequestBodyType.UrlEncodedForm
+											? 'application/x-www-form-urlencoded'
+											: 'multipart/form-data?'}
+										<br/>
+										{mutateRequest.replaceBody.formValue.map(({key, value}, index) => (
+											<div key={index}>{key}: {value}</div>
+										))}
+									</td>
+								)}
 							</tr>
 						)}
 						</tbody>
@@ -162,7 +183,19 @@ export class RulesDetails extends React.PureComponent<Props> {
 						{existsRows.mutateResponse.replaceBody && (
 							<tr>
 								<td className={styles.dataTitle}>Replacing body:</td>
-								<td className={styles.dataValue}>{mutateResponse.replaceBody.value}</td>
+								{mutateResponse.replaceBody.type === ResponseBodyType.Text && (
+									<td className={styles.dataValue}>
+										{mutateResponse.replaceBody.textValue.substr(0, 2400)}
+									</td>
+								)}
+								{mutateResponse.replaceBody.type === ResponseBodyType.Base64 && (
+									<td className={styles.dataValue}>
+										Base 64: {mutateResponse.replaceBody.textValue.substr(0, 128)}
+									</td>
+								)}
+								{mutateResponse.replaceBody.type === ResponseBodyType.Blob && (
+									<td className={styles.dataValue}>&lt;Blob value&gt;</td>
+								)}
 							</tr>
 						)}
 						</tbody>

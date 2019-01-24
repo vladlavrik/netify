@@ -3,6 +3,7 @@ import {ResourceType} from '@/debugger/constants/ResourceType';
 import {UrlCompareType} from '@/debugger/constants/UrlCompareType';
 import {CancelReasons} from '@/debugger/constants/CancelReasons';
 import {RequestBodyType} from '@/debugger/constants/RequestBodyType';
+import {ResponseBodyType} from '@/debugger/constants/ResponseBodyType';
 
 export interface Rule {
 	id: string;
@@ -24,7 +25,8 @@ export interface Rule {
 			},
 			replaceBody: {
 				type: RequestBodyType;
-				value: null | string | Blob;
+				textValue: string;
+				formValue: {key: string, value: string}[];
 			};
 		};
 		mutateResponse: {
@@ -36,8 +38,9 @@ export interface Rule {
 				remove: string[];
 			},
 			replaceBody: {
-				type: RequestBodyType;
-				value: null | string | Blob;
+				type: ResponseBodyType;
+				textValue: string;
+				blobValue?: Blob;
 			};
 		};
 		cancelRequest: {

@@ -20,6 +20,7 @@
     vertical-align: top;
 }
 .dataValue {
+    padding: 0;
+    vertical-align: top;
     color: #B1B9C0;
-    padding: 4px 0;
 }

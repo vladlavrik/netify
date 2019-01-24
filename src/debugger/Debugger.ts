@@ -1,13 +1,16 @@
 import {
-	mutateHeaders,
-	bodyToString,
-	compileRawResponseFromTextBody,
+	buildRequestBodyFromMultipartForm,
+	buildRequestBodyFromUrlEncodedForm,
 	compileRawResponseFromBase64Body,
 	compileRawResponseFromBlobBody,
+	compileRawResponseFromTextBody,
+	mutateHeaders,
 } from './helpers/http';
 import {compileUrlFromPattern} from './helpers/url';
-import {RulesManager} from './interfaces/RulesManager';
+import {randomHex} from '@/helpers/random'; // Todo to one helpers dir
 import {RequestBodyType} from './constants/RequestBodyType';
+import {RulesManager} from './interfaces/RulesManager';
+import {ResponseBodyType} from '@/debugger/constants/ResponseBodyType';
 import {Log} from './interfaces/Log';
 import {
 	RequestEventParams,
@@ -164,16 +167,22 @@ export default class Debugger {
 
 			let rawResponse;
 			switch (replaceBody.type) {
-				case RequestBodyType.Text:
-					rawResponse = compileRawResponseFromTextBody(statusCode, headers.add, <string>replaceBody.value);
+				case ResponseBodyType.Original:
+					rawResponse = compileRawResponseFromTextBody(statusCode, headers.add, '');
 					break;
 
-				case RequestBodyType.Base64:
-					rawResponse = compileRawResponseFromBase64Body(statusCode, headers.add, <string>replaceBody.value);
+				case ResponseBodyType.Text:
+					rawResponse = compileRawResponseFromTextBody(statusCode, headers.add, replaceBody.textValue);
 					break;
 
-				case RequestBodyType.Blob:
-					rawResponse = await compileRawResponseFromBlobBody(statusCode, headers.add, <Blob>replaceBody.value);
+				case ResponseBodyType.Base64:
+					rawResponse = compileRawResponseFromBase64Body(statusCode, headers.add, replaceBody.textValue);
+					break;
+
+				case ResponseBodyType.Blob:
+					rawResponse = replaceBody.blobValue
+						? await compileRawResponseFromBlobBody(statusCode, headers.add, replaceBody.blobValue)
+						: compileRawResponseFromTextBody(statusCode, headers.add, ''); // not defined blob is equal ro an empty body
 					break;
 			}
 
@@ -203,18 +212,43 @@ export default class Debugger {
 		}
 
 		// then, rewrite body
-		if (mutateRequest.replaceBody.value !== null) {
-			// TODO check opportunity of replace to form data or blob
-			const {type, value} = mutateRequest.replaceBody;
-			continueParams.postData = await bodyToString(type, value);
+		if (mutateRequest.replaceBody.type !== RequestBodyType.Original) {
+			const {type, textValue, formValue} = mutateRequest.replaceBody;
+			let contentType = 'text/plain;charset=UTF-8';
+
+			//TODO check postData with get/delete methods
+			switch (type) {
+				case RequestBodyType.Text:
+					continueParams.postData = textValue;
+					break;
+
+				case RequestBodyType.UrlEncodedForm:
+					continueParams.postData = buildRequestBodyFromUrlEncodedForm(formValue);
+					contentType = 'application/x-www-form-urlencoded';
+					break;
+
+				case RequestBodyType.MultipartFromData:
+					const boundary = '----NetifyBoundary' + randomHex(24);
+					continueParams.postData = buildRequestBodyFromMultipartForm(formValue, boundary);
+					contentType = 'multipart/form-data; boundary=' + boundary;
+					break;
+			}
+
+			// calculate post data length in octets (bytes)
+			const contentLength = new TextEncoder().encode(continueParams.postData).length.toString();
+
+			continueParams.headers = mutateHeaders(continueParams.headers || request.headers, {
+				'Content-Type': contentType,
+				'Content-Length': contentLength,
+			}, []);
 		}
+
 
 		await this.continueIntercepted(continueParams);
 	}
 
-	private async handleServerResponse(
-		{interceptionId, request, resourceType, responseHeaders, responseStatusCode}: CompletedRequestEventParams
-	) {
+	private async handleServerResponse(params: CompletedRequestEventParams) {
+		const {interceptionId, request, resourceType, responseHeaders, responseStatusCode} = params;
 		const rule = this.rulesManager.selectOne({...request, resourceType});
 
 		// skip if none rule for the request
@@ -224,11 +258,10 @@ export default class Debugger {
 		}
 
 		const {mutateResponse} = rule.actions;
-
 		const skipHandler = mutateResponse.statusCode === null
 			&& Reflect.ownKeys(mutateResponse.headers.add).length === 0
 			&& mutateResponse.headers.remove.length === 0
-			&& mutateResponse.replaceBody.value === null;
+			&& mutateResponse.replaceBody.type === ResponseBodyType.Original;
 
 		if (!mutateResponse.enabled || skipHandler) {
 			await this.continueIntercepted({interceptionId});
@@ -253,34 +286,38 @@ export default class Debugger {
 
 		// define response body from the rules or extract from the server response
 		let newBodyType;
-		let newBodyValue;
-		if (mutateResponse.replaceBody.value !== null) {
+		let newBodyTextValue;
+		let newBodyBlobValue: Blob | undefined;
+		if (mutateResponse.replaceBody.type !== ResponseBodyType.Original) {
 			newBodyType = mutateResponse.replaceBody.type;
-			newBodyValue = mutateResponse.replaceBody.value;
+			newBodyTextValue = mutateResponse.replaceBody.textValue;
+			newBodyBlobValue = mutateResponse.replaceBody.blobValue;
 		} else {
 			const {body, base64Encoded} = await this.sendCommand<GetInterceptedBodyResponse>(
 				'Network.getResponseBodyForInterception',
 				{interceptionId}
 			);
 			newBodyType = base64Encoded
-				? RequestBodyType.Base64
-				: RequestBodyType.Text;
-			newBodyValue = await body;
+				? ResponseBodyType.Base64
+				: ResponseBodyType.Text;
+			newBodyTextValue = await body;
 		}
 
 		// combine rawResponse from new body, old and new headers, and status code
 		let rawResponse;
 		switch (newBodyType) {
-			case RequestBodyType.Text:
-				rawResponse = compileRawResponseFromTextBody(newStatusCode, newHeaders, <string>newBodyValue);
+			case ResponseBodyType.Text:
+				rawResponse = compileRawResponseFromTextBody(newStatusCode, newHeaders, newBodyTextValue);
 				break;
 
-			case RequestBodyType.Base64:
-				rawResponse = compileRawResponseFromBase64Body(newStatusCode, newHeaders, <string>newBodyValue);
+			case ResponseBodyType.Base64:
+				rawResponse = compileRawResponseFromBase64Body(newStatusCode, newHeaders, newBodyTextValue);
 				break;
 
-			case RequestBodyType.Blob:
-				rawResponse = await compileRawResponseFromBlobBody(newStatusCode, newHeaders, <Blob>newBodyValue);
+			case ResponseBodyType.Blob:
+				rawResponse = newBodyBlobValue
+					? await compileRawResponseFromBlobBody(newStatusCode, newHeaders, newBodyBlobValue)
+					: compileRawResponseFromTextBody(newStatusCode, newHeaders, ''); // not defined blob is equal to an empty body
 				break;
 		}
 

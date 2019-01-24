@@ -1,11 +1,13 @@
 import * as React from 'react';
-import {ComposeRow} from './ComposeRow';
-import {ComposeHeaders} from './ComposeHeaders';
-import {ComposeBody} from './ComposeBody';
-import {ComposeError} from './ComposeError';
+import {ResponseBodyType, responseBodyTypesList} from '@/debugger/constants/ResponseBodyType';
 import {TextField} from '@/components/@common/TextField';
-import styles from './composeActionResponse.css';
 import {RadioButton} from '@/components/@common/RadioButton';
+import {KeyValueArrayField} from '@/components/@common/KeyValueArrayField';
+import {RadioTabs} from '@/components/@common/RadioTabs';
+import {TextareaField} from '@/components/@common/TextaredField';
+import {ComposeRow} from './ComposeRow';
+import {ComposeError} from './ComposeError';
+import styles from './composeActionResponse.css';
 
 export class ComposeActionResponse extends React.PureComponent {
 	render() {
@@ -39,12 +41,42 @@ export class ComposeActionResponse extends React.PureComponent {
 					</div>
 				</ComposeRow>
 				<ComposeRow title='Headers:'>
-					<ComposeHeaders name='actions.mutateResponse.headers' />
+					<KeyValueArrayField
+						name='actions.mutateResponse.headers'
+						keyNameSuffix='name'
+						valueNameSuffix='value'
+						keyPlaceholder='Header name'
+						valuePlaceholder='Header value (leave empty for delete)'/>
 				</ComposeRow>
 				<ComposeRow title='Body:'>
-					<ComposeBody name='actions.mutateResponse.replaceBody' />
+					<RadioTabs
+						radioName='actions.mutateResponse.replaceBody.type'
+						tabs={responseBodyTypesList.map(type => ({
+							value: type,
+							title: type,
+						}))}
+						render={this.renderBodyReplacer}/>
 				</ComposeRow>
 			</div>
 		);
+	}
+
+	renderBodyReplacer = (tabName: string) => {
+		switch (tabName) {
+			case ResponseBodyType.Text:
+			case ResponseBodyType.Base64:
+				return (
+					<TextareaField
+						className={styles.bodyTextField}
+						name={'actions.mutateResponse.replaceBody.textValue'} />
+				);
+
+			case ResponseBodyType.Blob:
+				return (
+					<b>TODO: implement file upload</b>
+				);
+		}
+
+		return null;
 	}
 }

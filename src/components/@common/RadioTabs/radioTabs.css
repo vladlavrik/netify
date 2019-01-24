@@ -1,0 +1,11 @@
+.root {
+    width: 100%;
+}
+
+.radioWrapper {
+    display: flex;
+    margin-bottom: 8px;
+}
+.radioItem {
+    margin-right: 16px;
+}

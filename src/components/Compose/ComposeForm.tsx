@@ -8,19 +8,13 @@ import {UrlCompareType, urlCompareTypeList} from '@/debugger/constants/UrlCompar
 import {ResourceType, resourceTypesList} from '@/debugger/constants/ResourceType';
 import {RequestMethod, requestMethodsList} from '@/debugger/constants/RequestMethod';
 import {RequestBodyType, requestBodyTypesList} from '@/debugger/constants/RequestBodyType';
+import {ResponseBodyType, responseBodyTypesList} from '@/debugger/constants/ResponseBodyType';
 import {CancelReasons, cancelReasonsList} from '@/debugger/constants/CancelReasons';
 
 interface Props {
 	className?: string;
 	onSave: (rule: Rule) => void;
 }
-
-const bodySchema = yup.object({
-	type: yup.mixed().oneOf(requestBodyTypesList),
-	value: yup.string()
-		.nullable(true)
-		.transform((value: string) => value.length === 0 ? null : value),
-});
 
 const headersSchema = yup.mixed().transform((value: {name: string, value: string}[]) => {
 	const add: {[name: string]: string} = {};
@@ -54,7 +48,19 @@ const formSchema = yup.object<Rule>({
 			enabled: yup.boolean(),
 			endpointReplace: yup.string(),
 			headers: headersSchema,
-			replaceBody: bodySchema,
+			replaceBody: yup.object({
+				type: yup.mixed().oneOf(requestBodyTypesList),
+				textValue: yup.string(),
+				formValue: yup
+					.array().of(yup.object({
+						key: yup.string(),
+						value: yup.string(),
+					}))
+					.transform((values: {key: string, value: string}[]) => {
+						// clean empty items
+						return values.filter(({key}) => trimString(key).length > 0)
+					}),
+			}),
 		}),
 		mutateResponse: yup.object({
 			enabled: yup.boolean(),
@@ -77,7 +83,11 @@ const formSchema = yup.object<Rule>({
 					},
 				),
 			headers: headersSchema,
-			replaceBody: bodySchema,
+			replaceBody: yup.object({
+				type: yup.mixed().oneOf(responseBodyTypesList),
+				textValue: yup.string(),
+				blobValue: yup.mixed().nullable(false),
+			}),
 		}),
 		cancelRequest: yup.object({
 			enabled: yup.boolean(),
@@ -99,26 +109,22 @@ interface FormValue {
 		mutateRequest: {
 			enabled: boolean;
 			endpointReplace: string;
-			headers: {
-				name: string;
-				value: string;
-			}[];
+			headers: {name: string, value: string;}[];
 			replaceBody: {
 				type: RequestBodyType;
-				value: string;
+				textValue: string;
+				formValue: {key: string, value: string;}[];
 			};
 		};
 		mutateResponse: {
 			enabled: boolean;
 			responseLocally: '0' | '1';
 			statusCode: string;
-			headers: {
-				name: string;
-				value: string;
-			}[];
+			headers: {name: string, value: string}[];
 			replaceBody: {
-				type: RequestBodyType;
-				value: string;
+				type: ResponseBodyType;
+				textValue: string;
+				blobValue?: Blob;
 			};
 		};
 		cancelRequest: {
@@ -140,19 +146,17 @@ export class ComposeForm extends React.PureComponent<Props> {
 		},
 		actions: {
 			mutateRequest: {
-				enabled: false,
+				enabled: true,
 				endpointReplace: '',
-				headers: [{
-					name: '',
-					value: '',
-				}],
+				headers: [{name: '', value: ''}],
 				replaceBody: {
-					type: RequestBodyType.Text,
-					value: '',
+					type: RequestBodyType.Original,
+					textValue: '',
+					formValue: [{key: '', value: ''}],
 				},
 			},
 			mutateResponse: {
-				enabled: true,
+				enabled: false,
 				responseLocally: '0',
 				statusCode: '',
 				headers: [{
@@ -160,8 +164,9 @@ export class ComposeForm extends React.PureComponent<Props> {
 					value: '',
 				}],
 				replaceBody: {
-					type: RequestBodyType.Text,
-					value: '',
+					type: ResponseBodyType.Original,
+					textValue: '',
+					blobValue: undefined,
 				},
 			},
 			cancelRequest: {
@@ -189,9 +194,8 @@ export class ComposeForm extends React.PureComponent<Props> {
 	private onSubmit = (rawValues: FormValue, a: FormikActions<FormValue>) => {
 		a.setSubmitting(false);
 
-		// workaround to future "Formik" future fix https://github.com/jaredpalmer/formik/pull/728
+		// workaround to "Formik" future fix https://github.com/jaredpalmer/formik/pull/728
 		const values = formSchema.cast(rawValues);
-
 		this.props.onSave(values);
 	};
 }

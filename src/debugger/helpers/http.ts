@@ -1,32 +1,22 @@
 import {fromByteArray, toByteArray} from 'base64-js';
 import {StatusCode} from '@/debugger/constants/StatusCode';
-import {RequestBodyType} from '@/debugger/constants/RequestBodyType';
 import {RequestHeaders} from '@/debugger/interfaces/chromeInternal';
 
+// Todo separate functions to different files
 
 export function compileRawResponseFromTextBody(statusCode: number, headers: RequestHeaders, bodyValue: string) {
-	const responseString = compileResponseBase(statusCode, headers) + bodyValue;
-	const responseByteArray = new TextEncoder().encode(responseString);
-	return fromByteArray(responseByteArray);
+	const bodyByteArray = new TextEncoder().encode(bodyValue);
+	return compileRawResponseFromTypedArray(statusCode, headers, bodyByteArray);
 }
+
 
 export function compileRawResponseFromBase64Body(statusCode: number, headers: RequestHeaders, bodyValue: string) {
-	const baseString = compileResponseBase(statusCode, headers);
-	const baseByteArray = new TextEncoder().encode(baseString);
-
 	const bodyByteArray = toByteArray(bodyValue);
-
-	const responseByteArray = new Uint8Array(baseByteArray.length + bodyByteArray.length);
-	responseByteArray.set(baseByteArray);
-	responseByteArray.set(bodyByteArray, baseByteArray.length);
-
-	return fromByteArray(responseByteArray);
+	return compileRawResponseFromTypedArray(statusCode, headers, bodyByteArray);
 }
 
-export async function compileRawResponseFromBlobBody(statusCode: number, headers: RequestHeaders, bodyValue: Blob) {
-	const baseString = compileResponseBase(statusCode, headers);
-	const baseByteArray = new TextEncoder().encode(baseString);
 
+export async function compileRawResponseFromBlobBody(statusCode: number, headers: RequestHeaders, bodyValue: Blob) {
 	const reader = new FileReader();
 	reader.readAsArrayBuffer(bodyValue);
 
@@ -41,12 +31,28 @@ export async function compileRawResponseFromBlobBody(statusCode: number, headers
 	});
 
 	const bodyByteArray = new Uint8Array(bodyArrayBuffer);
+
+	return compileRawResponseFromTypedArray(statusCode, headers, bodyByteArray);
+}
+
+
+function compileRawResponseFromTypedArray(statusCode: number, headers: RequestHeaders, bodyByteArray: Uint8Array) {
+	// replace content-length header
+	const finallyHeaders = replaceHeader(headers, 'Content-Length', bodyByteArray.length.toString());
+
+	// build response status line with headers
+	const baseString = compileResponseBase(statusCode, finallyHeaders);
+	const baseByteArray = new TextEncoder().encode(baseString);
+
+	// put together tho part of response to get response raw body as typed array
 	const responseByteArray = new Uint8Array(baseByteArray.length + bodyByteArray.length);
 	responseByteArray.set(baseByteArray);
 	responseByteArray.set(bodyByteArray, baseByteArray.length);
 
+	// transform to base64 and return
 	return fromByteArray(responseByteArray);
 }
+
 
 /** Compiles base response part: status line, headers part and trail empty line*/
 function compileResponseBase(statusCode: number, headers: RequestHeaders) {
@@ -55,31 +61,24 @@ function compileResponseBase(statusCode: number, headers: RequestHeaders) {
 	return statusLine + '\n' + headersPart + '\n\n';
 }
 
-export async function bodyToString(type: RequestBodyType, value: Blob | string): Promise<string> {
-	switch (type) {
-		case RequestBodyType.Text:
-			return value as string;
 
-		case RequestBodyType.Base64:
-			return atob(value as string);
-
-		case RequestBodyType.Blob: {
-			const reader = new FileReader();
-
-			reader.readAsText(value as Blob);
-
-			return await new Promise((resolve, reject) => {
-				reader.onerror = () => {
-					reject(reader.error);
-				};
-
-				reader.onloadend = () => {
-					resolve(reader.result! as string);
-				};
-			});
-		}
-	}
+export function buildRequestBodyFromUrlEncodedForm(form: {key: string, value: string}[]) {
+	return form
+		.map(({key, value}: {key: string, value: string}) => {
+			return encodeURIComponent(key) + '=' + encodeURIComponent(value);
+		})
+		.join('&');
 }
+
+
+export function buildRequestBodyFromMultipartForm(form: {key: string, value: string}[], boundary: string) {
+	return form
+		.map(({key, value}: {key: string, value: string}) => {
+			return `${boundary}\nContent-Disposition: form-data; name="${key}"\n\n${value}`;
+		})
+		.join('\n\n') + '\n' + boundary;
+}
+
 
 export function mutateHeaders(originalHeaders: RequestHeaders, toAdd: RequestHeaders, toRemove: string[]) {
 	const finallyHeaders = {...originalHeaders};
@@ -97,4 +96,14 @@ export function mutateHeaders(originalHeaders: RequestHeaders, toAdd: RequestHea
 	Object.assign(finallyHeaders, toAdd);
 
 	return finallyHeaders;
+}
+
+function replaceHeader(headers: RequestHeaders, name: string, newValue: string) {
+	const lowerCaseName = name.toLowerCase();
+	const keyName = (Reflect.ownKeys(headers) as string[]).find(name => name.toLowerCase() === lowerCaseName);
+
+	return {
+		...headers,
+		[keyName || name]: newValue,
+	}
 }
