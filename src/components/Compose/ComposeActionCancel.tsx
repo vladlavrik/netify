@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {ComposeRow} from '@/components/Compose/ComposeRow';
 import {DropdownPicker} from '@/components/@common/DropdownPicker';
-import {cancelReasonsList} from '@/debugger/constants/CancelReasons';
+import {cancelReasonsList} from '@/constants/CancelReasons';
 import styles from './composeActionCancel.css';
 
 interface Props {}

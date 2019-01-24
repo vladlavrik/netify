@@ -9,7 +9,7 @@ import {ComposeFilter} from './ComposeFilter';
 import {ComposeActionRequest} from './ComposeActionRequest';
 import {ComposeActionResponse} from './ComposeActionResponse';
 import {ComposeActionCancel} from './ComposeActionCancel';
-import {Rule} from '@/debugger/interfaces/Rule';
+import {Rule} from '@/interfaces/Rule';
 import styles from './compose.css';
 
 interface Props {

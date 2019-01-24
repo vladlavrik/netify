@@ -1,6 +1,6 @@
-import {RequestMethod} from '@/debugger/constants/RequestMethod';
-import {ResourceType} from '@/debugger/constants/ResourceType';
-import {CancelReasons} from '@/debugger/constants/CancelReasons';
+import {RequestMethod} from '@/constants/RequestMethod';
+import {ResourceType} from '@/constants/ResourceType';
+import {CancelReasons} from '@/constants/CancelReasons';
 
 interface RequestHeaders {
 	[name: string]: string;

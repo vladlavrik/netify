@@ -1,9 +1,9 @@
-import {RequestMethod} from '@/debugger/constants/RequestMethod';
-import {ResourceType} from '@/debugger/constants/ResourceType';
-import {UrlCompareType} from '@/debugger/constants/UrlCompareType';
-import {CancelReasons} from '@/debugger/constants/CancelReasons';
-import {RequestBodyType} from '@/debugger/constants/RequestBodyType';
-import {ResponseBodyType} from '@/debugger/constants/ResponseBodyType';
+import {RequestMethod} from '@/constants/RequestMethod';
+import {ResourceType} from '@/constants/ResourceType';
+import {UrlCompareType} from '@/constants/UrlCompareType';
+import {CancelReasons} from '@/constants/CancelReasons';
+import {RequestBodyType} from '@/constants/RequestBodyType';
+import {ResponseBodyType} from '@/constants/ResponseBodyType';
 
 export interface Rule {
 	id: string;

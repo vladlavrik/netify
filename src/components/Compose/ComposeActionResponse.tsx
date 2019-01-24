@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ResponseBodyType, responseBodyTypesList} from '@/debugger/constants/ResponseBodyType';
+import {ResponseBodyType, responseBodyTypesList} from '@/constants/ResponseBodyType';
 import {TextField} from '@/components/@common/TextField';
 import {RadioButton} from '@/components/@common/RadioButton';
 import {KeyValueArrayField} from '@/components/@common/KeyValueArrayField';

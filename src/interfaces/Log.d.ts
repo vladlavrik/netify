@@ -1,6 +1,6 @@
 import {Rule} from './Rule';
-import {RequestMethod} from '@/debugger/constants/RequestMethod'
-import {ResourceType} from '@/debugger/constants/ResourceType'
+import {RequestMethod} from '@/constants/RequestMethod'
+import {ResourceType} from '@/constants/ResourceType'
 
 export interface Log {
 	id: string, // uses "interceptorId"

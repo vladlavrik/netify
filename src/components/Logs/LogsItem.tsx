@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {ResourceType} from '@/debugger/constants/ResourceType';
-import {RequestMethod} from '@/debugger/constants/RequestMethod';
+import {ResourceType} from '@/constants/ResourceType';
+import {RequestMethod} from '@/constants/RequestMethod';
 import {IconButton} from '@/components/@common/IconButton';
 import {formatFullTime, formatTime} from '@/helpers/formatter';
 import styles from './logsItem.css';

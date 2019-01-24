@@ -1,12 +1,12 @@
 import {action, autorun, observable, computed, toJS} from 'mobx';
-import {Rule} from '@/debugger/interfaces/Rule';
+import {Rule} from '@/interfaces/Rule';
 import {RootStore} from './RootStore';
 import Debugger, {DebuggerState} from '@/debugger/Debugger';
-import {RequestMethod} from '@/debugger/constants/RequestMethod';
-import {ResourceType} from '@/debugger/constants/ResourceType';
-import {UrlCompareType} from '@/debugger/constants/UrlCompareType';
-import {RulesManager} from '@/debugger/interfaces/RulesManager';
-import {Log} from '@/debugger/interfaces/Log';
+import {RequestMethod} from '@/constants/RequestMethod';
+import {ResourceType} from '@/constants/ResourceType';
+import {UrlCompareType} from '@/constants/UrlCompareType';
+import {RulesManager} from '@/interfaces/RulesManager';
+import {Log} from '@/interfaces/Log';
 
 
 export class RulesStore implements RulesManager {

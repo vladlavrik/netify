@@ -1,7 +1,7 @@
 import * as React from 'react';
-import {Rule} from '@/debugger/interfaces/Rule';
-import {RequestBodyType} from '@/debugger/constants/RequestBodyType';
-import {ResponseBodyType} from '@/debugger/constants/ResponseBodyType';
+import {Rule} from '@/interfaces/Rule';
+import {RequestBodyType} from '@/constants/RequestBodyType';
+import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import styles from './rulesDetails.css';
 
 interface Props {

@@ -1,27 +1,21 @@
-import {
-	buildRequestBodyFromMultipartForm,
-	buildRequestBodyFromUrlEncodedForm,
-	compileRawResponseFromBase64Body,
-	compileRawResponseFromBlobBody,
-	compileRawResponseFromTextBody,
-	mutateHeaders,
-} from './helpers/http';
+import {buildRequestBodyFromMultipartForm, buildRequestBodyFromUrlEncodedForm} from './helpers/forms';
+import {compileRawResponseFromBase64Body, compileRawResponseFromBlobBody, compileRawResponseFromTextBody} from './helpers/response'; // prettier-ignore
+import {mutateHeaders} from './helpers/headers';
 import {compileUrlFromPattern} from './helpers/url';
-import {randomHex} from '@/helpers/random'; // Todo to one helpers dir
-import {RequestBodyType} from './constants/RequestBodyType';
-import {RulesManager} from './interfaces/RulesManager';
-import {ResponseBodyType} from '@/debugger/constants/ResponseBodyType';
-import {Log} from './interfaces/Log';
+import {randomHex} from '@/helpers/random';
+import {RequestBodyType} from '@/constants/RequestBodyType';
+import {RulesManager} from '@/interfaces/RulesManager';
+import {ResponseBodyType} from '@/constants/ResponseBodyType';
+import {Log} from '@/interfaces/Log';
 import {
 	RequestEventParams,
 	CompletedRequestEventParams,
 	ContinueRequestParams,
 	GetInterceptedBodyResponse,
-} from './interfaces/chromeInternal';
+} from './chromeInternal';
 
 
 //TODO work with redirects
-//TODO work with forms (formdata/ multipart)
 
 const interceptPatterns = [{
 	urlPattern: '*',
@@ -216,7 +210,6 @@ export default class Debugger {
 			const {type, textValue, formValue} = mutateRequest.replaceBody;
 			let contentType = 'text/plain;charset=UTF-8';
 
-			//TODO check postData with get/delete methods
 			switch (type) {
 				case RequestBodyType.Text:
 					continueParams.postData = textValue;

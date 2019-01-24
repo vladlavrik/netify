@@ -1,6 +1,6 @@
 import {observable, action} from 'mobx';
 import {RootStore} from './RootStore';
-import {Log} from '@/debugger/interfaces/Log';
+import {Log} from '@/interfaces/Log';
 
 export class LogsStore {
 	constructor(_rootStore: RootStore) {}

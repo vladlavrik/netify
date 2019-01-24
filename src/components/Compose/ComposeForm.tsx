@@ -3,13 +3,13 @@ import {Formik, FormikActions, Form} from 'formik';
 import * as yup from 'yup';
 import {trimString} from '@/helpers/formatter';
 import {randomHex} from '@/helpers/random';
-import {Rule} from '@/debugger/interfaces/Rule';
-import {UrlCompareType, urlCompareTypeList} from '@/debugger/constants/UrlCompareType';
-import {ResourceType, resourceTypesList} from '@/debugger/constants/ResourceType';
-import {RequestMethod, requestMethodsList} from '@/debugger/constants/RequestMethod';
-import {RequestBodyType, requestBodyTypesList} from '@/debugger/constants/RequestBodyType';
-import {ResponseBodyType, responseBodyTypesList} from '@/debugger/constants/ResponseBodyType';
-import {CancelReasons, cancelReasonsList} from '@/debugger/constants/CancelReasons';
+import {Rule} from '@/interfaces/Rule';
+import {UrlCompareType, urlCompareTypeList} from '@/constants/UrlCompareType';
+import {ResourceType, resourceTypesList} from '@/constants/ResourceType';
+import {RequestMethod, requestMethodsList} from '@/constants/RequestMethod';
+import {RequestBodyType, requestBodyTypesList} from '@/constants/RequestBodyType';
+import {ResponseBodyType, responseBodyTypesList} from '@/constants/ResponseBodyType';
+import {CancelReasons, cancelReasonsList} from '@/constants/CancelReasons';
 
 interface Props {
 	className?: string;

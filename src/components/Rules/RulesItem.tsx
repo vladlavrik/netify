@@ -1,10 +1,10 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import {Rule} from '@/debugger/interfaces/Rule';
+import {Rule} from '@/interfaces/Rule';
 import {IconButton} from '@/components/@common/IconButton';
 import styles from './rulesItem.css';
-import {RequestBodyType} from '@/debugger/constants/RequestBodyType';
-import {ResponseBodyType} from '@/debugger/constants/ResponseBodyType';
+import {RequestBodyType} from '@/constants/RequestBodyType';
+import {ResponseBodyType} from '@/constants/ResponseBodyType';
 
 interface Props {
 	data: Rule;

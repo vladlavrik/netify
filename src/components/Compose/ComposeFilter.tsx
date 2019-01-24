@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {TextField} from '@/components/@common/TextField';
 import {DropdownPicker} from '@/components/@common/DropdownPicker';
-import {urlCompareTypeList} from '@/debugger/constants/UrlCompareType';
-import {resourceTypesList} from '@/debugger/constants/ResourceType';
-import {requestMethodsList} from '@/debugger/constants/RequestMethod';
+import {urlCompareTypeList} from '@/constants/UrlCompareType';
+import {resourceTypesList} from '@/constants/ResourceType';
+import {requestMethodsList} from '@/constants/RequestMethod';
 import styles from './composeFilter.css';
 
 export class ComposeFilter extends React.PureComponent {

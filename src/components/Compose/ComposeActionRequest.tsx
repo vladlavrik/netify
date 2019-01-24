@@ -2,7 +2,7 @@ import * as React from 'react';
 import {ComposeRow} from './ComposeRow';
 import {TextField} from '@/components/@common/TextField';
 import {RadioTabs} from '@/components/@common/RadioTabs';
-import {RequestBodyType, requestBodyTypesList} from '@/debugger/constants/RequestBodyType';
+import {RequestBodyType, requestBodyTypesList} from '@/constants/RequestBodyType';
 import {TextareaField} from '@/components/@common/TextaredField';
 import {KeyValueArrayField} from '@/components/@common/KeyValueArrayField';
 import styles from './composeActionRequest.css';
