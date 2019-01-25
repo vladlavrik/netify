@@ -1,6 +1,6 @@
 .root {
     display: flex;
-    margin: 8px 0 16px 0;
+    margin: 6px 0 12px 0;
 }
 .title {
     flex-basis: 128px;

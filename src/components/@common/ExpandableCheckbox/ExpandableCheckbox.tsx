@@ -27,7 +27,7 @@ export class ExpandableCheckbox extends React.PureComponent<Props> {
 				name={name}
 				render={({field}: FieldRenderProps) => (
 					<div className={classNames(styles.root, className)}>
-						<label className={styles.labelWrapper}>
+						<label className={styles.label}>
 							<input
 								className={styles.input}
 								name={name}
@@ -37,10 +37,12 @@ export class ExpandableCheckbox extends React.PureComponent<Props> {
 								onChange={field.onChange}
 								onBlur={field.onBlur}
 							/>
-							<p className={styles.label}>{label}</p>
+							<p className={styles.imitator}>{label}</p>
 						</label>
 
-						{field.value && <div className={styles.content}>{children}</div>}
+						<div className={styles.content}>
+							{field.value && children}
+						</div>
 					</div>
 				)}
 			/>

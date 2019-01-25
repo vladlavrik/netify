@@ -24,10 +24,6 @@ interface State {
 	highlightedIndex: number;
 }
 
-const preventDefault = (event: any) => {
-	event.preventDefault();
-};
-
 class DropdownPickerField extends React.PureComponent<PropsFormikPart & Props, State> {
 	static getDerivedStateFromProps(props: PropsFormikPart & Props) {
 		let values = getIn(props.formik.values, props.name);
@@ -43,6 +39,8 @@ class DropdownPickerField extends React.PureComponent<PropsFormikPart & Props, S
 
 	private labelRef = React.createRef<HTMLButtonElement>();
 	private contentRef = React.createRef<HTMLUListElement>();
+
+	private disabledCollapseBuyBlue = false; // prevent collapse content block by "blur" event after click on an option
 
 	state: State = {
 		values: [],
@@ -83,7 +81,7 @@ class DropdownPickerField extends React.PureComponent<PropsFormikPart & Props, S
 								key={option}
 								data-index={index}
 								onClick={this.onOptionSelect}
-								onPointerDown={preventDefault}>
+								onPointerDown={this.onRegisterPreventBlur}>
 								{option}
 							</li>
 						))}
@@ -104,7 +102,18 @@ class DropdownPickerField extends React.PureComponent<PropsFormikPart & Props, S
 		);
 	};
 
-	private onCollapse = () => this.collapse();
+	private onCollapse = () => {
+		if (this.disabledCollapseBuyBlue) {
+			this.disabledCollapseBuyBlue = false;
+			this.labelRef.current!.focus();
+		} else {
+			this.collapse();
+		}
+	};
+
+	private onRegisterPreventBlur = () => {
+		this.disabledCollapseBuyBlue = true;
+	};
 
 	private onOptionSelect = (event: React.MouseEvent<HTMLLIElement>) => {
 		const {multiple} = this.props;
@@ -129,6 +138,7 @@ class DropdownPickerField extends React.PureComponent<PropsFormikPart & Props, S
 		switch (code) {
 			case 'Escape':
 				// Collapse only
+				event.preventDefault();
 				this.collapse();
 				break;
 

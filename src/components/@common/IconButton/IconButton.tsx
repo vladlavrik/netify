@@ -16,7 +16,7 @@ export class IconButton extends React.PureComponent<Props> {
 		return (
 			<WithTooltip disabled={disabled} tooltip={tooltip}>
 				<button
-					className={classNames(className, styles.root)}
+					className={classNames(styles.root, className)}
 					type='button'
 					disabled={disabled}
 					onClick={onClick}
