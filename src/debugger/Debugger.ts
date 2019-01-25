@@ -15,8 +15,6 @@ import {
 } from './chromeInternal';
 
 
-//TODO work with redirects
-
 const interceptPatterns = [{
 	urlPattern: '*',
 	interceptionStage: 'Request',
@@ -42,7 +40,6 @@ export interface DebuggerConfig {
 }
 
 
-//TODO replace request method
 export default class Debugger {
 	private readonly debuggerVersion = '1.3';
 
@@ -226,7 +223,7 @@ export default class Debugger {
 					break;
 
 				case RequestBodyType.MultipartFromData:
-					const boundary = '----NetifyBoundary' + randomHex(24);
+					const boundary = '----NetifyFormBoundary' + randomHex(24);
 					continueParams.postData = buildRequestBodyFromMultipartForm(formValue, boundary);
 					contentType = 'multipart/form-data; boundary=' + boundary;
 					break;

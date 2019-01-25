@@ -10,8 +10,8 @@ export function buildRequestBodyFromUrlEncodedForm(form: {key: string, value: st
 export function buildRequestBodyFromMultipartForm(form: {key: string, value: string}[], boundary: string) {
 	return form
 		.map(({key, value}: {key: string, value: string}) => {
-			return `${boundary}\nContent-Disposition: form-data; name="${key}"\n\n${value}`;
+			return `--${boundary}\r\nContent-Disposition: form-data; name="${key}"\r\n\r\n${value}\r\n`;
 		})
-		.join('\n\n') + '\n' + boundary;
+		.join('') + `--${boundary}--\r\n`;
 }
 
