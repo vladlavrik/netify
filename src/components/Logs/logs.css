@@ -1,25 +1,25 @@
 .root {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: auto;
-    font-size: 12px;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: auto;
+	font-size: 12px;
 }
 .list {
-    height: 100%;
-    min-width: 500px;
+	height: 100%;
+	min-width: 500px;
 }
 .item {
-    display: block;
+	display: block;
 }
 .item:nth-child(odd) {
-    background: #2f2f2f;
+	background: #2f2f2f;
 }
 .placeholder {
-    position: relative;
-    margin: 0;
-    top: calc(50% - 8px);
-    font-size: 12px;
-    text-align: center;
-    color: #7E7E7E;
+	position: relative;
+	margin: 0;
+	top: calc(50% - 8px);
+	font-size: 12px;
+	text-align: center;
+	color: #7e7e7e;
 }

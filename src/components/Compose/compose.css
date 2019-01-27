@@ -1,21 +1,21 @@
 .root {
-    height: 100%;
-    box-sizing: border-box;
-    overflow: auto;
+	height: 100%;
+	box-sizing: border-box;
+	overflow: auto;
 }
 .form {
-    min-width: 500px;
-    padding: 0 8px 16px 8px;
+	min-width: 500px;
+	padding: 0 8px 16px 8px;
 }
 .title {
-    font-size: 12px;
-    margin: 16px 0 6px 0;
-    color: #A5A5A5;
+	font-size: 12px;
+	margin: 16px 0 6px 0;
+	color: #a5a5a5;
 }
 .controls {
-    display: flex;
-    margin-top: 16px;
+	display: flex;
+	margin-top: 16px;
 }
 .saveButton {
-    margin-right: 8px;
+	margin-right: 8px;
 }

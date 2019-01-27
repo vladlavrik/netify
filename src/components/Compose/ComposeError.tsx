@@ -10,7 +10,7 @@ export class ComposeError extends React.PureComponent<Props> {
 	render() {
 		return (
 			<p className={styles.root}>
-				<ErrorMessage name={this.props.name}/>
+				<ErrorMessage name={this.props.name} />
 			</p>
 		);
 	}

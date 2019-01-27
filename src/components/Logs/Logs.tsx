@@ -36,7 +36,8 @@ export class Logs extends React.Component<Props> {
 								resourceType={item.resourceType}
 								method={item.method}
 								loaded={item.loaded}
-								onFollowRule={this.onFollowRule}/>
+								onFollowRule={this.onFollowRule}
+							/>
 						</li>
 					))}
 				</ul>
@@ -47,5 +48,5 @@ export class Logs extends React.Component<Props> {
 	onFollowRule = (ruleId: string) => {
 		// TODO notify user if no the rule yet
 		this.props.rulesStore!.setHighlighted(ruleId);
-	}
+	};
 }

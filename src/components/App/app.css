@@ -1,57 +1,57 @@
 .root {
-    position: relative;
-    height: 100vh;
+	position: relative;
+	height: 100vh;
 }
 .headerControl {
-    margin: 0 1px 0 9px;
+	margin: 0 1px 0 9px;
 }
 .headerControl.typeAdd,
 .headerControl.typeClose {
-    --icon-button-bg: url('./icons/add.svg');
+	--icon-button-bg: url('./icons/add.svg');
 }
 .headerControl.typeClose {
-    --icon-button-rotate: 45deg;
+	--icon-button-rotate: 45deg;
 }
 .headerControl.typeClear {
-    --icon-button-bg: url('./icons/clear.svg');
+	--icon-button-bg: url('./icons/clear.svg');
 }
 .headerControl.typeCollapse {
-    --icon-button-bg: url('./icons/panel-collapse.svg');
+	--icon-button-bg: url('./icons/panel-collapse.svg');
 }
 .headerControl.typeExpand {
-    --icon-button-bg: url('./icons/panel-expand.svg');
+	--icon-button-bg: url('./icons/panel-expand.svg');
 }
 .headerControl.typeStartListen {
-    --icon-button-bg: #CCCCCC;
-    --icon-button-clip: circle(34%);
+	--icon-button-bg: #cccccc;
+	--icon-button-clip: circle(34%);
 }
 .headerControl.typeStopListen {
-    --icon-button-bg: #EB3941;
-    --icon-button-clip: circle(34%);
+	--icon-button-bg: #eb3941;
+	--icon-button-clip: circle(34%);
 }
 .sectionContent {
-    height: calc(100% - 30px);
+	height: calc(100% - 30px);
 }
 .compose {
-    position: absolute;
-    width: 100%;
-    height: calc(100% - 29px);
-    top: 29px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-top: #555555 1px solid;
-    background: #383838;
-    z-index: 10;
+	position: absolute;
+	width: 100%;
+	height: calc(100% - 29px);
+	top: 29px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border-top: #555555 1px solid;
+	background: #383838;
+	z-index: 10;
 }
 .compose::before {
-    content: '';
-    display: block;
-    position: absolute;
-    width: 10px;
-    height: 6px;
-    right: 67px;
-    top: -6px;
-    clip-path: polygon(0 100%, 50% 0, 100% 100%);
-    background: #555555;
+	content: '';
+	display: block;
+	position: absolute;
+	width: 10px;
+	height: 6px;
+	right: 67px;
+	top: -6px;
+	clip-path: polygon(0 100%, 50% 0, 100% 100%);
+	background: #555555;
 }

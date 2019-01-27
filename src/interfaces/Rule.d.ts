@@ -21,13 +21,13 @@ export interface Rule {
 			endpointReplace: string;
 			methodReplace: RequestMethod;
 			headers: {
-				add: {[s: string]: string;},
+				add: {[s: string]: string};
 				remove: string[];
-			},
+			};
 			bodyReplace: {
 				type: RequestBodyType;
 				textValue: string;
-				formValue: {key: string, value: string}[];
+				formValue: {key: string; value: string}[];
 			};
 		};
 		mutateResponse: {
@@ -35,9 +35,9 @@ export interface Rule {
 			responseLocally: boolean;
 			statusCode: number | null;
 			headers: {
-				add: {[s: string]: string;},
+				add: {[s: string]: string};
 				remove: string[];
-			},
+			};
 			bodyReplace: {
 				type: ResponseBodyType;
 				textValue: string;
@@ -48,5 +48,5 @@ export interface Rule {
 			enabled: boolean;
 			reason: CancelReasons;
 		};
-	}
+	};
 }

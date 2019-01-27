@@ -7,12 +7,12 @@ import styles from './logsItem.css';
 import {WithTooltip} from '@/components/@common/WithTooltip';
 
 interface Props {
-	ruleId: string,
-	date: Date,
-	url: string,
-	resourceType: ResourceType,
-	method: RequestMethod,
-	loaded: boolean,
+	ruleId: string;
+	date: Date;
+	url: string;
+	resourceType: ResourceType;
+	method: RequestMethod;
+	loaded: boolean;
 	onFollowRule: (ruleId: string) => any;
 }
 
@@ -35,7 +35,7 @@ export class LogsItem extends React.PureComponent<Props> {
 				</span>
 				{!loaded && (
 					<WithTooltip tooltip='Request wait to response'>
-						<div className={styles.loading}/>
+						<div className={styles.loading} />
 					</WithTooltip>
 				)}
 				<IconButton className={styles.followButton} tooltip='Highlight rule' onClick={this.followRule} />

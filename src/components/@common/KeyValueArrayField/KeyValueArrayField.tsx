@@ -7,12 +7,12 @@ import styles from './keyValueArrayField.css';
 
 interface Props {
 	name: string;
-	keyNameSuffix: string,
-	valueNameSuffix: string,
-	keyPlaceholder?: string,
-	valuePlaceholder?: string,
-	addControlTitle?: string,
-	removeControlTitle?: string,
+	keyNameSuffix: string;
+	valueNameSuffix: string;
+	keyPlaceholder?: string;
+	valuePlaceholder?: string;
+	addControlTitle?: string;
+	removeControlTitle?: string;
 }
 
 export class KeyValueArrayField extends React.PureComponent<Props> {
@@ -29,7 +29,7 @@ export class KeyValueArrayField extends React.PureComponent<Props> {
 			keyPlaceholder,
 			valuePlaceholder,
 			addControlTitle,
-			removeControlTitle
+			removeControlTitle,
 		} = this.props;
 
 		return (

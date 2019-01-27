@@ -1,16 +1,16 @@
 .root {
-    display: flex;
-    position: relative;
-    height: 100%;
-    flex-direction: column;
+	display: flex;
+	position: relative;
+	height: 100%;
+	flex-direction: column;
 }
 .sectionSeparator {
-    padding: 2px 0;
-    cursor: row-resize;
+	padding: 2px 0;
+	cursor: row-resize;
 }
 .sectionSeparator::before {
-    display: block;
-    content: '';
-    height: 2px;
-    background: #777;
+	display: block;
+	content: '';
+	height: 2px;
+	background: #777;
 }

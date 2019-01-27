@@ -8,20 +8,18 @@ import {UrlCompareType} from '@/constants/UrlCompareType';
 import {RulesManager} from '@/interfaces/RulesManager';
 import {Log} from '@/interfaces/Log';
 
-
 export class RulesStore implements RulesManager {
 	private debugger = new Debugger({
 		tabId: chrome.devtools.inspectedWindow.tabId as number,
 		rulesManager: this,
 		onRequestStart: (log: Log) => this.rootStore.logsStore.add(log),
 		onRequestEnd: (id: string) => this.rootStore.logsStore.makeLoaded(id),
-		onUserDetach: () => this.debuggerDisabled = true,
+		onUserDetach: () => (this.debuggerDisabled = true),
 	});
 
 	constructor(private rootStore: RootStore) {
 		autorun(this.manageDebuggerActive);
 	}
-
 
 	@observable
 	debuggerDisabled = false;
@@ -32,7 +30,7 @@ export class RulesStore implements RulesManager {
 	@computed
 	get hasRules() {
 		return this.list.length > 0;
-	};
+	}
 
 	@observable
 	highlightedId: string | null = null;
@@ -86,9 +84,11 @@ export class RulesStore implements RulesManager {
 		this.debuggerDisabled = !this.debuggerDisabled;
 	}
 
-	selectOne(select: {url: string, method: RequestMethod, resourceType: ResourceType}) {
-		// first double slash is the end of schema, third slash is the path part start
-		const selectUrlOrigin = select.url.split('/').slice(0, 3).join('/');
+	selectOne(select: {url: string; method: RequestMethod; resourceType: ResourceType}) {
+		const selectUrlOrigin = select.url
+			.split('/')
+			.slice(0, 3) // first double slash is the end of schema, third slash is the path part start
+			.join('/');
 
 		const rule = this.list.find(({filter}) => {
 			if (filter.resourceTypes.length && !filter.resourceTypes.includes(select.resourceType)) {

@@ -3,7 +3,7 @@
 	height: 20px;
 	align-items: center;
 	font-size: 12px;
-	color: #A5A5A5;
+	color: #a5a5a5;
 }
 .input {
 	width: 0;
@@ -17,7 +17,7 @@
 	height: 10px;
 	margin: 1px 0;
 	border-radius: 6px;
-	border: #A5A5A5 1px solid;
+	border: #a5a5a5 1px solid;
 }
 .input:focus + .imitator {
 	outline: none;
@@ -31,9 +31,9 @@
 	width: 4px;
 	height: 4px;
 	border-radius: 5px;
-	background: #A5A5A5;
+	background: #a5a5a5;
 	opacity: 0;
-	transition: opacity .1s ease-out;
+	transition: opacity 0.1s ease-out;
 }
 .input:checked + .imitator::before {
 	opacity: 1;

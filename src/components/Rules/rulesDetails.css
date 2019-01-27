@@ -1,26 +1,26 @@
 .root {
-    background: #383838;
-    border-bottom: #555555 1px solid;
+	background: #383838;
+	border-bottom: #555555 1px solid;
 }
 .dataSection {
-    width: 100%;
-    padding: 8px 8px 8px 24px;
-    border-top: #555555 1px solid;
+	width: 100%;
+	padding: 8px 8px 8px 24px;
+	border-top: #555555 1px solid;
 }
 .dataSectionTitle {
-    padding: 4px 0;
-    font-weight: 700;
-    color: #A5A5A5;
+	padding: 4px 0;
+	font-weight: 700;
+	color: #a5a5a5;
 }
 .dataTitle {
-    width: 140px;
-    height: 18px;
-    color: #717171;
-    padding: 0 16px 0 0;
-    vertical-align: top;
+	width: 140px;
+	height: 18px;
+	color: #717171;
+	padding: 0 16px 0 0;
+	vertical-align: top;
 }
 .dataValue {
-    padding: 0;
-    vertical-align: top;
-    color: #B1B9C0;
+	padding: 0;
+	vertical-align: top;
+	color: #b1b9c0;
 }

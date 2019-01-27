@@ -1,49 +1,49 @@
 .root {
-    padding: 0;
-    margin-top: 2px;
+	padding: 0;
+	margin-top: 2px;
 }
 .label {
-    float: left;
+	float: left;
 }
 .input {
-    float: left;
-    width: 0;
-    height: 0;
-    margin: 0;
-    opacity: 0;
+	float: left;
+	width: 0;
+	height: 0;
+	margin: 0;
+	opacity: 0;
 }
 .imitator {
-    line-height: 20px;
-    font-size: 12px;
-    color: #A5A5A5;
-    cursor: pointer;
-    user-select: none;
+	line-height: 20px;
+	font-size: 12px;
+	color: #a5a5a5;
+	cursor: pointer;
+	user-select: none;
 }
 .imitator::before {
-    content: '';
-    float: left;
-    width: 18px;
-    height: 18px;
-    border: transparent 1px solid;
-    border-radius: 50%;
-    margin-right: 4px;
-    background: url("./icons/check-inactive.svg") no-repeat center;
+	content: '';
+	float: left;
+	width: 18px;
+	height: 18px;
+	border: transparent 1px solid;
+	border-radius: 50%;
+	margin-right: 4px;
+	background: url('./icons/check-inactive.svg') no-repeat center;
 }
 .input:focus + .imitator {
-    outline: none;
+	outline: none;
 }
 .input:focus + .imitator::before {
-    border-color: #356A9E;
+	border-color: #356a9e;
 }
 .input:checked + .imitator::before {
-    background: url("./icons/check-active.svg") no-repeat center;
+	background: url('./icons/check-active.svg') no-repeat center;
 }
 .input:disabled + .imitator {
-    opacity: .5;
-    cursor: default;
+	opacity: 0.5;
+	cursor: default;
 }
 
 .content {
-    padding-top: 4px;
-    clear: both;
+	padding-top: 4px;
+	clear: both;
 }

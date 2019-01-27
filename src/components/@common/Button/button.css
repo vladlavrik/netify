@@ -9,15 +9,15 @@
 
 .root.style-main {
 	background: #242424;
-	color: #A5A5A5;
+	color: #a5a5a5;
 }
 
 .root.style-secondary {
 	background: #313131;
-	color: #A5A5A5;
+	color: #a5a5a5;
 }
 
-.root:focus, .root:focus {
+.root:focus {
 	outline: none;
-	border-color: #356A9E;
+	border-color: #356a9e;
 }

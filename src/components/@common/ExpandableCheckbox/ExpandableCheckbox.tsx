@@ -40,9 +40,7 @@ export class ExpandableCheckbox extends React.PureComponent<Props> {
 							<p className={styles.imitator}>{label}</p>
 						</label>
 
-						<div className={styles.content}>
-							{field.value && children}
-						</div>
+						<div className={styles.content}>{field.value && children}</div>
 					</div>
 				)}
 			/>

@@ -34,7 +34,8 @@ export class ComposeActionRequest extends React.PureComponent {
 						keyNameSuffix='name'
 						valueNameSuffix='value'
 						keyPlaceholder='Header name'
-						valuePlaceholder='Header value (leave empty for delete)'/>
+						valuePlaceholder='Header value (leave empty for delete)'
+					/>
 				</ComposeRow>
 				<ComposeRow title='Body:'>
 					<RadioTabs
@@ -43,7 +44,8 @@ export class ComposeActionRequest extends React.PureComponent {
 							value: type,
 							title: type,
 						}))}
-						render={this.renderBodyReplacer}/>
+						render={this.renderBodyReplacer}
+					/>
 				</ComposeRow>
 			</div>
 		);
@@ -55,7 +57,8 @@ export class ComposeActionRequest extends React.PureComponent {
 				return (
 					<TextareaField
 						className={styles.bodyTextField}
-						name={'actions.mutateRequest.bodyReplace.textValue'} />
+						name={'actions.mutateRequest.bodyReplace.textValue'}
+					/>
 				);
 
 			case RequestBodyType.UrlEncodedForm:
@@ -66,10 +69,11 @@ export class ComposeActionRequest extends React.PureComponent {
 						keyNameSuffix='key'
 						valueNameSuffix='value'
 						keyPlaceholder='Field key'
-						valuePlaceholder='Field value'/>
+						valuePlaceholder='Field value'
+					/>
 				);
 		}
 
 		return null;
-	}
+	};
 }

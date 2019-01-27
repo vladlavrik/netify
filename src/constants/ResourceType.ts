@@ -18,7 +18,6 @@ export enum ResourceType {
 	//TODO check is it all
 }
 
-
 export const resourceTypesList = [
 	ResourceType.XHR,
 	ResourceType.Fetch,

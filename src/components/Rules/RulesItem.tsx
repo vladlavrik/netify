@@ -8,7 +8,7 @@ import {ResponseBodyType} from '@/constants/ResponseBodyType';
 
 interface Props {
 	data: Rule;
-	onRemove: (id: string) => void
+	onRemove: (id: string) => void;
 }
 
 interface State {
@@ -24,9 +24,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 		const {filter} = this.props.data;
 		const {expanded} = this.state;
 		const {methods, resourceTypes} = filter;
-		const url = filter.url.value
-			? filter.url.value.toString()
-			: undefined;
+		const url = filter.url.value ? filter.url.value.toString() : undefined;
 
 		return (
 			<div className={styles.root}>
@@ -53,7 +51,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 								)}
 							</span>
 							<span className={classNames(styles.value, styles.url)} title={url && url.toString()}>
-								{!url ? (
+								{!url ? ( // prettier-ignore
 									<span className={styles.placeholder}>All urls</span>
 								) : (
 									url.toString()
@@ -63,10 +61,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 						<p className={styles.actionsInfo}>{this.parseActionsArray()}</p>
 					</div>
 
-					<IconButton
-						className={styles.removeButton}
-						tooltip='Remove the rule'
-						onClick={this.onRemove} />
+					<IconButton className={styles.removeButton} tooltip='Remove the rule' onClick={this.onRemove} />
 				</div>
 
 				{expanded && <div>{this.props.children}</div>}

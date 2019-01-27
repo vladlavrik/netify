@@ -21,9 +21,9 @@ interface RequestEventParams {
 	//..TODO
 }
 interface CompletedRequestEventParams extends RequestEventParams {
-	responseHeaders: RequestHeaders,
-	responseErrorReason: CancelReasons,
-	responseStatusCode: number
+	responseHeaders: RequestHeaders;
+	responseErrorReason: CancelReasons;
+	responseStatusCode: number;
 	//..TODO
 }
 
@@ -37,9 +37,7 @@ interface ContinueRequestParams {
 	headers?: RequestHeaders;
 }
 
-
 interface GetInterceptedBodyResponse {
-	body: string,
-	base64Encoded: boolean
+	body: string;
+	base64Encoded: boolean;
 }
-

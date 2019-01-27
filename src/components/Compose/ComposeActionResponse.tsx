@@ -37,7 +37,7 @@ export class ComposeActionResponse extends React.PureComponent {
 							maxlength={3}
 							placeholder='Default - from server or 200'
 						/>
-						<ComposeError name='actions.mutateResponse.statusCode'/>
+						<ComposeError name='actions.mutateResponse.statusCode' />
 					</div>
 				</ComposeRow>
 				<ComposeRow title='Headers:'>
@@ -46,7 +46,8 @@ export class ComposeActionResponse extends React.PureComponent {
 						keyNameSuffix='name'
 						valueNameSuffix='value'
 						keyPlaceholder='Header name'
-						valuePlaceholder='Header value (leave empty for delete)'/>
+						valuePlaceholder='Header value (leave empty for delete)'
+					/>
 				</ComposeRow>
 				<ComposeRow title='Body:'>
 					<RadioTabs
@@ -55,7 +56,8 @@ export class ComposeActionResponse extends React.PureComponent {
 							value: type,
 							title: type,
 						}))}
-						render={this.renderBodyReplacer}/>
+						render={this.renderBodyReplacer}
+					/>
 				</ComposeRow>
 			</div>
 		);
@@ -68,15 +70,14 @@ export class ComposeActionResponse extends React.PureComponent {
 				return (
 					<TextareaField
 						className={styles.bodyTextField}
-						name={'actions.mutateResponse.bodyReplace.textValue'} />
+						name={'actions.mutateResponse.bodyReplace.textValue'}
+					/>
 				);
 
 			case ResponseBodyType.Blob:
-				return (
-					<b>TODO: implement file upload</b>
-				);
+				return <b>TODO: implement file upload</b>;
 		}
 
 		return null;
-	}
+	};
 }

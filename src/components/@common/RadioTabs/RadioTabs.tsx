@@ -3,20 +3,18 @@ import {connect, FormikContext, getIn} from 'formik';
 import styles from './radioTabs.css';
 import {RadioButton} from '@/components/@common/RadioButton';
 
-
 interface Props {
-	radioName: string
+	radioName: string;
 	tabs: {
-		title: string,
-		value: string,
+		title: string;
+		value: string;
 	}[];
-	render: (tab: string) => React.ReactNode
+	render: (tab: string) => React.ReactNode;
 }
 
 interface FormikProps {
-	formik: FormikContext<any>
+	formik: FormikContext<any>;
 }
-
 
 class RadioTabsComponent extends React.PureComponent<Props & FormikProps> {
 	render() {
@@ -27,11 +25,7 @@ class RadioTabsComponent extends React.PureComponent<Props & FormikProps> {
 			<div className={styles.root}>
 				<div className={styles.radioWrapper}>
 					{tabs.map(tab => (
-						<RadioButton
-							key={tab.value}
-							className={styles.radioItem}
-							name={radioName}
-							value={tab.value}>
+						<RadioButton key={tab.value} className={styles.radioItem} name={radioName} value={tab.value}>
 							{tab.title}
 						</RadioButton>
 					))}

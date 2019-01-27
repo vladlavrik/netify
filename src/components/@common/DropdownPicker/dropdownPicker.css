@@ -2,7 +2,7 @@
 	position: relative;
 	width: 80px;
 	font-size: 12px;
-	color: #A5A5A5;
+	color: #a5a5a5;
 }
 .label {
 	position: relative;
@@ -36,7 +36,7 @@
 }
 .label:focus {
 	outline: none;
-	border-color: #356A9E;
+	border-color: #356a9e;
 }
 .content {
 	position: absolute;
@@ -47,7 +47,7 @@
 	overflow: overlay;
 	overscroll-behavior: contain;
 	border: #1a1a1a 1px solid;
-	color: #A5A5A5;
+	color: #a5a5a5;
 	background: #303030;
 	user-select: none;
 	z-index: 2;
@@ -68,7 +68,7 @@
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
-	color: #A5A5A5;
+	color: #a5a5a5;
 	cursor: pointer;
 }
 .option.selected {
@@ -76,6 +76,5 @@
 }
 .option:hover,
 .option.highlighted {
-	background: #356A9E;
+	background: #356a9e;
 }
-

@@ -18,7 +18,6 @@ interface Props {
 @inject('appStore')
 @observer
 export class Rules extends React.Component<Props> {
-
 	private highlightedItemRef = React.createRef<HTMLLIElement>();
 	private shouldScrollToHighlighted = false;
 
@@ -30,9 +29,9 @@ export class Rules extends React.Component<Props> {
 				<div className={styles.root}>
 					<p className={styles.placeholder}>
 						No rules yet
-						<Button
-							className={styles.composeButton}
-							onClick={this.onShowCompose}>Compose a first rule</Button>
+						<Button className={styles.composeButton} onClick={this.onShowCompose}>
+							Compose a first rule
+						</Button>
 					</p>
 				</div>
 			);
@@ -47,9 +46,7 @@ export class Rules extends React.Component<Props> {
 							ref={item.id === highlightedId ? this.highlightedItemRef : null}
 							className={classNames(styles.item, item.id === highlightedId && styles.highlighted)}
 							onAnimationEnd={this.onFinishHighlighting}>
-							<RulesItem
-								data={item}
-								onRemove={this.onRemove}>
+							<RulesItem data={item} onRemove={this.onRemove}>
 								<RulesDetails data={item} />
 							</RulesItem>
 						</li>
@@ -60,11 +57,14 @@ export class Rules extends React.Component<Props> {
 	}
 
 	componentWillMount() {
-		reaction(() => this.props.rulesStore!.highlightedId, (highlightedId: string | null) => {
-			if (highlightedId) {
-				this.shouldScrollToHighlighted = true;
-			}
-		})
+		reaction(
+			() => this.props.rulesStore!.highlightedId,
+			(highlightedId: string | null) => {
+				if (highlightedId) {
+					this.shouldScrollToHighlighted = true;
+				}
+			},
+		);
 	}
 	componentDidUpdate() {
 		if (this.shouldScrollToHighlighted && this.highlightedItemRef.current) {

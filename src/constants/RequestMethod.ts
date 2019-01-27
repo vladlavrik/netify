@@ -4,7 +4,7 @@ export enum RequestMethod {
 	PUT = 'PUT',
 	DELETE = 'DELETE',
 	HEAD = 'HEAD',
-	PATCH = 'PATCH'
+	PATCH = 'PATCH',
 }
 
 export const requestMethodsList = [

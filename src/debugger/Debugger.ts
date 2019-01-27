@@ -14,7 +14,7 @@ import {
 	GetInterceptedBodyResponse,
 } from './chromeInternal';
 
-
+// prettier-ignore
 const interceptPatterns = [{
 	urlPattern: '*',
 	interceptionStage: 'Request',
@@ -22,7 +22,6 @@ const interceptPatterns = [{
 	urlPattern: '*',
 	interceptionStage: 'HeadersReceived',
 }];
-
 
 export enum DebuggerState {
 	Active,
@@ -32,13 +31,12 @@ export enum DebuggerState {
 }
 
 export interface DebuggerConfig {
-	tabId: number,
-	rulesManager: RulesManager,
+	tabId: number;
+	rulesManager: RulesManager;
 	onRequestStart: (data: Log) => any;
 	onRequestEnd: (id: Log['id']) => any;
 	onUserDetach: () => any; // When user manually destroy debugger by Chrome warning-panel
 }
-
 
 export default class Debugger {
 	private readonly debuggerVersion = '1.3';
@@ -111,7 +109,7 @@ export default class Debugger {
 	};
 
 	private messageHandler = async (_source: any, method: string, params: any) => {
-		if(method === 'Network.requestIntercepted') {
+		if (method === 'Network.requestIntercepted') {
 			if (params.hasOwnProperty('responseStatusCode')) {
 				await this.handleServerResponse(params);
 			} else {
@@ -142,14 +140,12 @@ export default class Debugger {
 
 		const {mutateRequest, mutateResponse, cancelRequest} = rule.actions;
 
-
 		// is defined response error and required local response, return error reason on the request stage
 		if (cancelRequest.enabled) {
 			await this.continueIntercepted({interceptionId, errorReason: cancelRequest.reason});
 			this.onRequestEnd(interceptionId);
 			return;
 		}
-
 
 		// if required local response, combine the response form defined status, headers and body
 		if (mutateResponse.enabled && mutateResponse.responseLocally) {
@@ -181,7 +177,6 @@ export default class Debugger {
 			this.onRequestEnd(interceptionId);
 			return;
 		}
-
 
 		const continueParams: ContinueRequestParams = {interceptionId};
 
@@ -232,12 +227,15 @@ export default class Debugger {
 			// calculate post data length in octets (bytes)
 			const contentLength = new TextEncoder().encode(continueParams.postData).length.toString();
 
-			continueParams.headers = mutateHeaders(continueParams.headers || request.headers, {
-				'Content-Type': contentType,
-				'Content-Length': contentLength,
-			}, []);
+			continueParams.headers = mutateHeaders(
+				continueParams.headers || request.headers,
+				{
+					'Content-Type': contentType,
+					'Content-Length': contentLength,
+				},
+				[],
+			);
 		}
-
 
 		await this.continueIntercepted(continueParams);
 	}
@@ -253,10 +251,11 @@ export default class Debugger {
 		}
 
 		const {mutateResponse} = rule.actions;
-		const skipHandler = mutateResponse.statusCode === null
-			&& Reflect.ownKeys(mutateResponse.headers.add).length === 0
-			&& mutateResponse.headers.remove.length === 0
-			&& mutateResponse.bodyReplace.type === ResponseBodyType.Original;
+		const skipHandler =
+			mutateResponse.statusCode === null &&
+			Reflect.ownKeys(mutateResponse.headers.add).length === 0 &&
+			mutateResponse.headers.remove.length === 0 &&
+			mutateResponse.bodyReplace.type === ResponseBodyType.Original;
 
 		if (!mutateResponse.enabled || skipHandler) {
 			await this.continueIntercepted({interceptionId});
@@ -265,17 +264,10 @@ export default class Debugger {
 		}
 
 		// define status code
-		let newStatusCode = mutateResponse.statusCode === null
-			? responseStatusCode
-			: mutateResponse.statusCode;
-
+		let newStatusCode = mutateResponse.statusCode === null ? responseStatusCode : mutateResponse.statusCode;
 
 		// defined mutated headers
-		const newHeaders = mutateHeaders(
-			responseHeaders,
-			mutateResponse.headers.add,
-			mutateResponse.headers.remove,
-		);
+		const newHeaders = mutateHeaders(responseHeaders, mutateResponse.headers.add, mutateResponse.headers.remove);
 
 		// TODO maybe handle response without full rebuild if body not changed
 
@@ -290,11 +282,9 @@ export default class Debugger {
 		} else {
 			const {body, base64Encoded} = await this.sendCommand<GetInterceptedBodyResponse>(
 				'Network.getResponseBodyForInterception',
-				{interceptionId}
+				{interceptionId},
 			);
-			newBodyType = base64Encoded
-				? ResponseBodyType.Base64
-				: ResponseBodyType.Text;
+			newBodyType = base64Encoded ? ResponseBodyType.Base64 : ResponseBodyType.Text;
 			newBodyTextValue = await body;
 		}
 
@@ -322,7 +312,7 @@ export default class Debugger {
 
 	private async continueIntercepted(params: ContinueRequestParams, waitTime?: number) {
 		const continueCommand = () => {
-			return this.sendCommand('Network.continueInterceptedRequest', params).then( /* TODO check response */);
+			return this.sendCommand('Network.continueInterceptedRequest', params).then(/* TODO check response */);
 		};
 
 		if (waitTime) {

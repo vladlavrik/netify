@@ -1,6 +1,10 @@
 @keyframes showTooltip {
-	from {opacity: 0;}
-	to {opacity: 1;}
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
 .root {
 	position: relative;
@@ -12,9 +16,9 @@
 	padding: 2px 4px;
 	border: #1a1a1a 1px solid;
 	white-space: nowrap;
-	color: #A5A5A5;
+	color: #a5a5a5;
 	background: #424242;
-	animation: showTooltip .1s ease-out .6s; /*delay to show*/
+	animation: showTooltip 0.1s ease-out 0.6s; /*delay to show*/
 	animation-fill-mode: backwards;
 	z-index: 100;
 	font-size: 12px;

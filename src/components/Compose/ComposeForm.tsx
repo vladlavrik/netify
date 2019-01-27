@@ -16,7 +16,7 @@ interface Props {
 	onSave: (rule: Rule) => void;
 }
 
-const headersSchema = yup.mixed().transform((value: {name: string, value: string}[]) => {
+const headersSchema = yup.mixed().transform((value: {name: string; value: string}[]) => {
 	const add: {[name: string]: string} = {};
 	const remove: string[] = [];
 
@@ -47,26 +47,33 @@ const formSchema = yup.object<Rule>({
 		mutateRequest: yup.object({
 			enabled: yup.boolean(),
 			endpointReplace: yup.string(),
-			methodReplace: yup.mixed().oneOf(requestMethodsList).nullable(true),
+			methodReplace: yup
+				.mixed()
+				.oneOf(requestMethodsList)
+				.nullable(true),
 			headers: headersSchema,
 			bodyReplace: yup.object({
 				type: yup.mixed().oneOf(requestBodyTypesList),
 				textValue: yup.string(),
 				formValue: yup
-					.array().of(yup.object({
-						key: yup.string(),
-						value: yup.string(),
-					}))
-					.transform((values: {key: string, value: string}[]) => {
+					.array()
+					.of(
+						yup.object({
+							key: yup.string(),
+							value: yup.string(),
+						}),
+					)
+					.transform((values: {key: string; value: string}[]) => {
 						// clean empty items
-						return values.filter(({key}) => trimString(key).length > 0)
+						return values.filter(({key}) => trimString(key).length > 0);
 					}),
 			}),
 		}),
 		mutateResponse: yup.object({
 			enabled: yup.boolean(),
 			responseLocally: yup.mixed().transform((value: '0' | '1') => value === '1'),
-			statusCode: yup.mixed()
+			statusCode: yup
+				.mixed()
 				.transform((value: string) => {
 					if (value === '') {
 						return null;
@@ -79,8 +86,8 @@ const formSchema = yup.object<Rule>({
 				.test(
 					'typeError',
 					'Status code must be a number value in range 100 - 599',
-					(value: null | number| string) => {
-						return value === null || typeof value === 'number' && value >=100 && value < 600;
+					(value: null | number | string) => {
+						return value === null || (typeof value === 'number' && value >= 100 && value < 600);
 					},
 				),
 			headers: headersSchema,
@@ -100,7 +107,7 @@ const formSchema = yup.object<Rule>({
 interface FormValue {
 	filter: {
 		url: {
-			value: string
+			value: string;
 			compareType: UrlCompareType;
 		};
 		resourceTypes: ResourceType[];
@@ -111,18 +118,18 @@ interface FormValue {
 			enabled: boolean;
 			endpointReplace: string;
 			methodReplace?: RequestMethod;
-			headers: {name: string, value: string;}[];
+			headers: {name: string; value: string}[];
 			bodyReplace: {
 				type: RequestBodyType;
 				textValue: string;
-				formValue: {key: string, value: string;}[];
+				formValue: {key: string; value: string}[];
 			};
 		};
 		mutateResponse: {
 			enabled: boolean;
 			responseLocally: '0' | '1';
 			statusCode: string;
-			headers: {name: string, value: string}[];
+			headers: {name: string; value: string}[];
 			bodyReplace: {
 				type: ResponseBodyType;
 				textValue: string;
@@ -133,7 +140,7 @@ interface FormValue {
 			enabled: boolean;
 			reason: CancelReasons;
 		};
-	}
+	};
 }
 
 export class ComposeForm extends React.PureComponent<Props> {
@@ -162,10 +169,7 @@ export class ComposeForm extends React.PureComponent<Props> {
 				enabled: false,
 				responseLocally: '0',
 				statusCode: '',
-				headers: [{
-					name: '',
-					value: '',
-				}],
+				headers: [{name: '', value: ''}],
 				bodyReplace: {
 					type: ResponseBodyType.Original,
 					textValue: '',
@@ -187,9 +191,7 @@ export class ComposeForm extends React.PureComponent<Props> {
 				initialValues={this.formInitialValue}
 				validationSchema={formSchema}
 				onSubmit={this.onSubmit}>
-				<Form className={this.props.className}>
-					{this.props.children}
-				</Form>
+				<Form className={this.props.className}>{this.props.children}</Form>
 			</Formik>
 		);
 	}

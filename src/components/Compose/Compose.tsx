@@ -23,23 +23,21 @@ export class Compose extends React.PureComponent<Props> {
 	render() {
 		return (
 			<div className={styles.root}>
-				<ComposeForm
-					className={styles.form}
-					onSave={this.onSubmit}>
+				<ComposeForm className={styles.form} onSave={this.onSubmit}>
 					<h3 className={styles.title}>Filter requests:</h3>
-					<ComposeFilter/>
+					<ComposeFilter />
 
 					<h3 className={styles.title}>Actions:</h3>
 					<ExpandableCheckbox name='actions.mutateRequest.enabled' label='Mutate request'>
-						<ComposeActionRequest/>
+						<ComposeActionRequest />
 					</ExpandableCheckbox>
 
 					<ExpandableCheckbox name='actions.mutateResponse.enabled' label='Mutate Response'>
-						<ComposeActionResponse/>
+						<ComposeActionResponse />
 					</ExpandableCheckbox>
 
 					<ExpandableCheckbox name='actions.cancelRequest.enabled' label='Cancel'>
-						<ComposeActionCancel/>
+						<ComposeActionCancel />
 					</ExpandableCheckbox>
 
 					<div className={styles.controls}>
@@ -62,5 +60,4 @@ export class Compose extends React.PureComponent<Props> {
 	private onCancel = () => {
 		this.props.appStore!.toggleComposeShow();
 	};
-
 }
