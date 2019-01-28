@@ -94,7 +94,7 @@ const formSchema = yup.object<Rule>({
 			bodyReplace: yup.object({
 				type: yup.mixed().oneOf(responseBodyTypesList),
 				textValue: yup.string(),
-				blobValue: yup.mixed().nullable(false),
+				fileValue: yup.mixed().nullable(false),
 			}),
 		}),
 		cancelRequest: yup.object({
@@ -133,7 +133,7 @@ interface FormValue {
 			bodyReplace: {
 				type: ResponseBodyType;
 				textValue: string;
-				blobValue?: Blob;
+				fileValue?: File;
 			};
 		};
 		cancelRequest: {
@@ -155,7 +155,7 @@ export class ComposeForm extends React.PureComponent<Props> {
 		},
 		actions: {
 			mutateRequest: {
-				enabled: true,
+				enabled: false,
 				endpointReplace: '',
 				methodReplace: undefined,
 				headers: [{name: '', value: ''}],
@@ -166,14 +166,14 @@ export class ComposeForm extends React.PureComponent<Props> {
 				},
 			},
 			mutateResponse: {
-				enabled: false,
+				enabled: true,
 				responseLocally: '0',
 				statusCode: '',
 				headers: [{name: '', value: ''}],
 				bodyReplace: {
 					type: ResponseBodyType.Original,
 					textValue: '',
-					blobValue: undefined,
+					fileValue: undefined,
 				},
 			},
 			cancelRequest: {

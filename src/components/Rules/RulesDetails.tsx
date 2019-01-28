@@ -209,8 +209,14 @@ export class RulesDetails extends React.PureComponent<Props> {
 											Base 64: {mutateResponse.bodyReplace.textValue.substr(0, 128)}
 										</td>
 									)}
-									{mutateResponse.bodyReplace.type === ResponseBodyType.Blob && (
-										<td className={styles.dataValue}>&lt;Blob value&gt;</td>
+									{mutateResponse.bodyReplace.type === ResponseBodyType.File && (
+										<td className={styles.dataValue}>
+											File:&nbsp;
+											{mutateResponse.bodyReplace.fileValue
+												? mutateResponse.bodyReplace.fileValue.name +
+												  ` (${mutateResponse.bodyReplace.fileValue.size} bytes)`
+												: '(not specified)'}
+										</td>
 									)}
 								</tr>
 							)}

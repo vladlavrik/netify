@@ -5,6 +5,7 @@ import {RadioButton} from '@/components/@common/RadioButton';
 import {KeyValueArrayField} from '@/components/@common/KeyValueArrayField';
 import {RadioTabs} from '@/components/@common/RadioTabs';
 import {TextareaField} from '@/components/@common/TextaredField';
+import {FileField} from '@/components/@common/FileField';
 import {ComposeRow} from './ComposeRow';
 import {ComposeError} from './ComposeError';
 import styles from './composeActionResponse.css';
@@ -74,8 +75,8 @@ export class ComposeActionResponse extends React.PureComponent {
 					/>
 				);
 
-			case ResponseBodyType.Blob:
-				return <b>TODO: implement file upload</b>;
+			case ResponseBodyType.File:
+				return <FileField name='actions.mutateResponse.bodyReplace.fileValue' />;
 		}
 
 		return null;

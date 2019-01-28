@@ -41,7 +41,7 @@ export interface Rule {
 			bodyReplace: {
 				type: ResponseBodyType;
 				textValue: string;
-				blobValue?: Blob;
+				fileValue?: File;
 			};
 		};
 		cancelRequest: {

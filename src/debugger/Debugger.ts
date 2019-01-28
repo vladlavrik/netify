@@ -1,5 +1,5 @@
 import {buildRequestBodyFromMultipartForm, buildRequestBodyFromUrlEncodedForm} from './helpers/forms';
-import {compileRawResponseFromBase64Body, compileRawResponseFromBlobBody, compileRawResponseFromTextBody} from './helpers/response'; // prettier-ignore
+import {compileRawResponseFromBase64Body, compileRawResponseFromFileBody, compileRawResponseFromTextBody} from './helpers/response'; // prettier-ignore
 import {mutateHeaders} from './helpers/headers';
 import {compileUrlFromPattern} from './helpers/url';
 import {randomHex} from '@/helpers/random';
@@ -166,10 +166,10 @@ export default class Debugger {
 					rawResponse = compileRawResponseFromBase64Body(statusCode, headers.add, bodyReplace.textValue);
 					break;
 
-				case ResponseBodyType.Blob:
-					rawResponse = bodyReplace.blobValue
-						? await compileRawResponseFromBlobBody(statusCode, headers.add, bodyReplace.blobValue)
-						: compileRawResponseFromTextBody(statusCode, headers.add, ''); // not defined blob is equal ro an empty body
+				case ResponseBodyType.File:
+					rawResponse = bodyReplace.fileValue
+						? await compileRawResponseFromFileBody(statusCode, headers.add, bodyReplace.fileValue)
+						: compileRawResponseFromTextBody(statusCode, headers.add, ''); // not defined file is equal ro an empty body
 					break;
 			}
 
@@ -274,11 +274,11 @@ export default class Debugger {
 		// define response body from the rules or extract from the server response
 		let newBodyType;
 		let newBodyTextValue;
-		let newBodyBlobValue: Blob | undefined;
+		let newBodyFileValue: File | undefined;
 		if (mutateResponse.bodyReplace.type !== ResponseBodyType.Original) {
 			newBodyType = mutateResponse.bodyReplace.type;
 			newBodyTextValue = mutateResponse.bodyReplace.textValue;
-			newBodyBlobValue = mutateResponse.bodyReplace.blobValue;
+			newBodyFileValue = mutateResponse.bodyReplace.fileValue;
 		} else {
 			const {body, base64Encoded} = await this.sendCommand<GetInterceptedBodyResponse>(
 				'Network.getResponseBodyForInterception',
@@ -299,10 +299,10 @@ export default class Debugger {
 				rawResponse = compileRawResponseFromBase64Body(newStatusCode, newHeaders, newBodyTextValue);
 				break;
 
-			case ResponseBodyType.Blob:
-				rawResponse = newBodyBlobValue
-					? await compileRawResponseFromBlobBody(newStatusCode, newHeaders, newBodyBlobValue)
-					: compileRawResponseFromTextBody(newStatusCode, newHeaders, ''); // not defined blob is equal to an empty body
+			case ResponseBodyType.File:
+				rawResponse = newBodyFileValue
+					? await compileRawResponseFromFileBody(newStatusCode, newHeaders, newBodyFileValue)
+					: compileRawResponseFromTextBody(newStatusCode, newHeaders, ''); // not defined file is equal to an empty body
 				break;
 		}
 
