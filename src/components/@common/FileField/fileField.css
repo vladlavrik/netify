@@ -1,0 +1,42 @@
+.root {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	box-sizing: border-box;
+	height: 62px;
+	padding: 12px 16px;
+	border: 1px dashed #777;
+	cursor: pointer;
+	user-select: none;
+}
+
+.input {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	opacity: 0;
+	width: 100%;
+	z-index: 1;
+}
+
+.title {
+	line-height: 18px;
+	color: #656565;
+}
+
+.value {
+	max-width: 300px;
+	line-height: 18px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: #a5a5a5;
+}
+
+.note {
+	line-height: 18px;
+	font-size: 11px;
+	color: #656565;
+}
