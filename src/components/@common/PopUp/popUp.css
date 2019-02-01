@@ -1,0 +1,16 @@
+.root {
+	top: 50vh;
+	transform: translateY(-50%);
+	max-height: calc(100vh - 50px);
+	min-width: 220px;
+	padding: 0;
+	border: #55555577 1px solid;
+	border-radius: 3px;
+	overflow: auto;
+	box-shadow: 0 0 6px 2px #00000055;
+	background: #242424;
+}
+
+.root::backdrop {
+	background: #00000033;
+}

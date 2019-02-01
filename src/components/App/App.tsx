@@ -17,6 +17,7 @@ export class App extends React.Component {
 	render() {
 		const {composeShown, sectionRatio, logsCollapsed} = this.rootStore.appStore;
 		const {debuggerDisabled, hasRules} = this.rootStore.rulesStore;
+		const {hasLogs} = this.rootStore.logsStore;
 
 		return (
 			<Provider
@@ -52,7 +53,7 @@ export class App extends React.Component {
 									/>
 									<IconButton
 										className={classNames(styles.headerControl, styles.typeClear)}
-										disabled={composeShown}
+										disabled={composeShown || !hasRules}
 										tooltip='Clear all rules'
 										onClick={this.onClearRules}
 									/>
@@ -68,6 +69,7 @@ export class App extends React.Component {
 									<IconButton
 										className={classNames(styles.headerControl, styles.typeClear)}
 										tooltip='Clear log'
+										disabled={!hasLogs}
 										onClick={this.onClearLogs}
 									/>
 									<IconButton

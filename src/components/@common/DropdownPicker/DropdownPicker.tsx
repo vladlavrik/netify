@@ -24,6 +24,8 @@ interface State {
 	highlightedIndex: number;
 }
 
+//TODO use portal to attach dropdown content in the DOM root
+
 class DropdownPickerField extends React.PureComponent<PropsFormikPart & Props, State> {
 	static getDerivedStateFromProps(props: PropsFormikPart & Props) {
 		let values = getIn(props.formik.values, props.name);

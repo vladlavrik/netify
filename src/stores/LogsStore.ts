@@ -1,4 +1,4 @@
-import {observable, action} from 'mobx';
+import {observable, action, computed} from 'mobx';
 import {RootStore} from './RootStore';
 import {Log} from '@/interfaces/Log';
 
@@ -7,6 +7,11 @@ export class LogsStore {
 
 	@observable
 	readonly list: Log[] = [];
+
+	@computed
+	get hasLogs() {
+		return this.list.length > 0;
+	}
 
 	@action
 	add(item: Log) {

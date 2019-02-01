@@ -1,0 +1,18 @@
+.root {
+	padding: 12px 8px;
+}
+
+.content {
+	padding-bottom: 12px;
+	text-align: center;
+	color: #a5a5a5;
+}
+
+.buttons {
+	display: flex;
+	justify-content: center;
+}
+
+.button {
+	margin: 0 8px;
+}
