@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Netify",
-	"description": "Netify - progressive network debugger for developers",
+	"description": "Debugging proxy that will allow you to intercept and mutate requests from a web page",
 	"author": "Vlad Lavrik <vladlavrik95@gmail.com>",
 	"version": "0.0.3",
 	"icons": {
