@@ -1,11 +1,12 @@
 import * as React from 'react';
-import styles from './appSectionHeader.css';
+import styles from './sectionHeader.css';
 
 interface Props {
 	title: string;
+	children?: React.ReactNode;
 }
 
-export class AppSectionHeader extends React.PureComponent<Props> {
+export class SectionHeader extends React.PureComponent<Props> {
 	render() {
 		const {title, children} = this.props;
 

@@ -9,9 +9,12 @@ export class LogsStore {
 	readonly list: Log[] = [];
 
 	@computed
-	get hasLogs() {
-		return this.list.length > 0;
+	get listIsEmpty() {
+		return this.list.length === 0;
 	}
+
+	@observable
+	clearAllConfirmation = false;
 
 	@action
 	add(item: Log) {
@@ -24,7 +27,18 @@ export class LogsStore {
 	}
 
 	@action
-	clearAll() {
+	askToClearAll() {
+		this.clearAllConfirmation = true;
+	}
+
+	@action
+	cancelClearAll() {
+		this.clearAllConfirmation = false;
+	}
+
+	@action
+	confirmClearAll() {
 		this.list.splice(0, this.list.length);
+		this.clearAllConfirmation = false;
 	}
 }

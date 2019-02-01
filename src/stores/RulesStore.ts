@@ -28,12 +28,18 @@ export class RulesStore implements RulesManager {
 	readonly list: Rule[] = [];
 
 	@computed
-	get hasRules() {
-		return this.list.length > 0;
+	get listIsEmpty() {
+		return this.list.length === 0;
 	}
 
 	@observable
 	highlightedId: string | null = null;
+
+	@observable
+	removeConfirmationId: string | null = null;
+
+	@observable
+	clearAllConfirmation = false;
 
 	private manageDebuggerActive = async () => {
 		// TODO disallow switch state when previous operation during
@@ -47,15 +53,19 @@ export class RulesStore implements RulesManager {
 		}
 	};
 
-	async initializeDebugger() {
+	private async initializeDebugger() {
 		await this.debugger.initialize();
 		self.addEventListener('beforeunload', this.destroyDebugger);
 	}
 
-	destroyDebugger = () => {
+	private destroyDebugger = () => {
 		self.removeEventListener('beforeunload', this.destroyDebugger);
 		return this.debugger.destroy();
 	};
+
+	checkItemExists(id: string) {
+		return this.list.some(item => item.id === id);
+	}
 
 	@action
 	save(...rules: Rule[]) {
@@ -64,14 +74,8 @@ export class RulesStore implements RulesManager {
 	}
 
 	@action
-	removeById(id: string) {
-		const index = this.list.findIndex(item => item.id === id);
-		this.list.splice(index, 1);
-	}
-
-	@action
-	clearAll() {
-		this.list.splice(0, this.list.length);
+	toggleDebuggerDisabled() {
+		this.debuggerDisabled = !this.debuggerDisabled;
 	}
 
 	@action
@@ -80,8 +84,36 @@ export class RulesStore implements RulesManager {
 	}
 
 	@action
-	toggleDebuggerDisabled() {
-		this.debuggerDisabled = !this.debuggerDisabled;
+	askToRemoveItem(id: string) {
+		this.removeConfirmationId = id;
+	}
+
+	@action
+	cancelRemove() {
+		this.removeConfirmationId = null;
+	}
+
+	@action
+	confirmRemove() {
+		const index = this.list.findIndex(item => item.id === this.removeConfirmationId);
+		this.list.splice(index, 1);
+		this.removeConfirmationId = null;
+	}
+
+	@action
+	askToClearAll() {
+		this.clearAllConfirmation = true;
+	}
+
+	@action
+	cancelClearAll() {
+		this.clearAllConfirmation = false;
+	}
+
+	@action
+	confirmClearAll() {
+		this.list.splice(0, this.list.length);
+		this.clearAllConfirmation = false;
 	}
 
 	selectOne(select: {url: string; method: RequestMethod; resourceType: ResourceType}) {

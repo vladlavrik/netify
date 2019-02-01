@@ -13,6 +13,9 @@ export class AppStore {
 	@observable
 	logsCollapsed = false;
 
+	@observable
+	displayedError: string | null = null;
+
 	@action
 	showCompose() {
 		this.composeShown = true;
@@ -43,5 +46,15 @@ export class AppStore {
 	@action
 	toggleComposeShow() {
 		this.composeShown = !this.composeShown;
+	}
+
+	@action
+	setDisplayedError(error: string) {
+		this.displayedError = error;
+	}
+
+	@action
+	resetDisplayedError() {
+		this.displayedError = null;
 	}
 }

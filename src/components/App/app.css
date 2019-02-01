@@ -2,36 +2,6 @@
 	position: relative;
 	height: 100vh;
 }
-.headerControl {
-	margin: 0 1px 0 9px;
-}
-.headerControl.typeAdd,
-.headerControl.typeClose {
-	--icon-button-bg: url('./icons/add.svg');
-}
-.headerControl.typeClose {
-	--icon-button-rotate: 45deg;
-}
-.headerControl.typeClear {
-	--icon-button-bg: url('./icons/clear.svg');
-}
-.headerControl.typeCollapse {
-	--icon-button-bg: url('./icons/panel-collapse.svg');
-}
-.headerControl.typeExpand {
-	--icon-button-bg: url('./icons/panel-expand.svg');
-}
-.headerControl.typeStartListen {
-	--icon-button-bg: #cccccc;
-	--icon-button-clip: circle(34%);
-}
-.headerControl.typeStopListen {
-	--icon-button-bg: #eb3941;
-	--icon-button-clip: circle(34%);
-}
-.sectionContent {
-	height: calc(100% - 30px);
-}
 .compose {
 	position: absolute;
 	width: 100%;

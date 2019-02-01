@@ -2,7 +2,6 @@ import * as React from 'react';
 import classNames from 'classnames';
 import {Rule} from '@/interfaces/Rule';
 import {IconButton} from '@/components/@common/IconButton';
-import {PopUpConfirm} from '@/components/@common/PopUpConfirm';
 import {RequestBodyType} from '@/constants/RequestBodyType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import styles from './rulesItem.css';
@@ -14,18 +13,16 @@ interface Props {
 
 interface State {
 	expanded: boolean;
-	removeConfirmShow: boolean;
 }
 
 export class RulesItem extends React.PureComponent<Props, State> {
 	state = {
 		expanded: false,
-		removeConfirmShow: false,
 	};
 
 	render() {
 		const {filter} = this.props.data;
-		const {expanded, removeConfirmShow} = this.state;
+		const {expanded} = this.state;
 		const {methods, resourceTypes} = filter;
 		const url = filter.url.value ? filter.url.value.toString() : undefined;
 
@@ -64,16 +61,10 @@ export class RulesItem extends React.PureComponent<Props, State> {
 						<p className={styles.actionsInfo}>{this.parseActionsArray()}</p>
 					</div>
 
-					<IconButton className={styles.removeButton} tooltip='Remove the rule' onClick={this.onRemoveInit} />
+					<IconButton className={styles.removeButton} tooltip='Remove the rule' onClick={this.onRemove} />
 				</div>
 
 				{expanded && <div>{this.props.children}</div>}
-
-				{removeConfirmShow && (
-					<PopUpConfirm onConfirm={this.onRemoveConfirm} onCancel={this.onRemoveCancel}>
-						Remove the rule forever?
-					</PopUpConfirm>
-				)}
 			</div>
 		);
 	}
@@ -126,15 +117,5 @@ export class RulesItem extends React.PureComponent<Props, State> {
 		this.setState(state => ({expanded: !state.expanded}));
 	};
 
-	private onRemoveInit = () => {
-		this.setState({removeConfirmShow: true});
-	};
-
-	private onRemoveCancel = () => {
-		this.setState({removeConfirmShow: false});
-	};
-
-	private onRemoveConfirm = () => {
-		this.props.onRemove(this.props.data.id);
-	};
+	private onRemove = () => this.props.onRemove(this.props.data.id);
 }
