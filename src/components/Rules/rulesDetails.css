@@ -4,23 +4,27 @@
 }
 .dataSection {
 	width: 100%;
-	padding: 8px 8px 8px 24px;
 	border-top: #555555 1px solid;
+	border-collapse: collapse;
 }
 .dataSectionTitle {
-	padding: 4px 0;
+	padding: 6px 0 6px 26px;
 	font-weight: 700;
 	color: #a5a5a5;
 }
 .dataTitle {
 	width: 140px;
-	height: 18px;
-	color: #717171;
-	padding: 0 16px 0 0;
+	height: 14px;
+	padding: 0 16px 6px 26px;
 	vertical-align: top;
+	color: #717171;
 }
 .dataValue {
-	padding: 0;
+	padding: 0 8px 6px 0;
 	vertical-align: top;
+	color: #b1b9c0;
+}
+.dataPlaceholder {
+	padding: 8px 0 8px 26px;
 	color: #b1b9c0;
 }

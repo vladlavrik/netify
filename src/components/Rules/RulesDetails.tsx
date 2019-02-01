@@ -58,6 +58,9 @@ export class RulesDetails extends React.PureComponent<Props> {
 			cancelRequest: mutateResponse.enabled && existsRows.cancelRequest,
 		};
 
+		const hasActions =
+			existsSections.mutateRequest || existsSections.mutateResponse || existsSections.cancelRequest;
+
 		return (
 			<div className={styles.root}>
 				{existsSections.filter && (
@@ -93,6 +96,8 @@ export class RulesDetails extends React.PureComponent<Props> {
 						</tbody>
 					</table>
 				)}
+
+				{!hasActions && <p className={styles.dataPlaceholder}>No actions</p>}
 
 				{existsSections.mutateRequest && (
 					<table className={styles.dataSection}>
