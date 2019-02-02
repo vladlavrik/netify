@@ -35,7 +35,11 @@ export class App extends React.Component {
 						</div>
 					)}
 
-					{displayedError && <PopUpAlert onClose={this.onCloseErrorAlert}>{displayedError}</PopUpAlert>}
+					{displayedError && (
+						<PopUpAlert onClose={this.onCloseErrorAlert}>
+							<p className={styles.errorDisplay}>{displayedError}</p>
+						</PopUpAlert>
+					)}
 				</div>
 			</Provider>
 		);

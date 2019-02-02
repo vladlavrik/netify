@@ -38,7 +38,7 @@ export interface DebuggerConfig {
 	onUserDetach: () => any; // When user manually destroy debugger by Chrome warning-panel
 }
 
-export default class Debugger {
+export class Debugger {
 	private readonly debuggerVersion = '1.3';
 
 	private readonly debugTarget: {tabId: number};
@@ -46,6 +46,10 @@ export default class Debugger {
 	private readonly onRequestStart: DebuggerConfig['onRequestStart'];
 	private readonly onRequestEnd: DebuggerConfig['onRequestEnd'];
 	private readonly onUserDetach: DebuggerConfig['onUserDetach'];
+
+	get currentTabId() {
+		return this.debugTarget.tabId;
+	}
 
 	state = DebuggerState.Inactive;
 

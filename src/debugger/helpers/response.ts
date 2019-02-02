@@ -1,6 +1,6 @@
 import {fromByteArray, toByteArray} from 'base64-js';
 import {StatusCode} from '@/constants/StatusCode';
-import {RequestHeaders} from '@/debugger/chromeInternal';
+import {RequestHeaders} from '../chromeInternal';
 import {replaceHeader} from './headers';
 
 export function compileRawResponseFromTextBody(statusCode: number, headers: RequestHeaders, bodyValue: string) {

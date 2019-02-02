@@ -1,7 +1,8 @@
 import {action, autorun, observable, computed, toJS} from 'mobx';
 import {Rule} from '@/interfaces/Rule';
 import {RootStore} from './RootStore';
-import Debugger, {DebuggerState} from '@/debugger/Debugger';
+import {Debugger, DebuggerState} from '@/debugger';
+import {openIDB, getOpenedIDB, RulesMapper} from '@/indexedDB';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {UrlCompareType} from '@/constants/UrlCompareType';
@@ -9,15 +10,23 @@ import {RulesManager} from '@/interfaces/RulesManager';
 import {Log} from '@/interfaces/Log';
 
 export class RulesStore implements RulesManager {
-	private debugger = new Debugger({
-		tabId: chrome.devtools.inspectedWindow.tabId as number,
-		rulesManager: this,
-		onRequestStart: (log: Log) => this.rootStore.logsStore.add(log),
-		onRequestEnd: (id: string) => this.rootStore.logsStore.makeLoaded(id),
-		onUserDetach: () => (this.debuggerDisabled = true),
-	});
+	private readonly debugger: Debugger;
+	private IDBMapper?: RulesMapper;
 
 	constructor(private rootStore: RootStore) {
+		this.debugger = new Debugger({
+			tabId: chrome.devtools.inspectedWindow.tabId as number,
+			rulesManager: this,
+			onRequestStart: (log: Log) => this.rootStore.logsStore.add(log),
+			onRequestEnd: (id: string) => this.rootStore.logsStore.makeLoaded(id),
+			onUserDetach: () => (this.debuggerDisabled = true),
+		});
+
+		this.connectIDB().then(() => {
+			this.IDBMapper = new RulesMapper(getOpenedIDB(), this.debugger.currentTabId);
+			return this.getListFromDb();
+		});
+
 		autorun(this.manageDebuggerActive);
 	}
 
@@ -63,14 +72,42 @@ export class RulesStore implements RulesManager {
 		return this.debugger.destroy();
 	};
 
+	private connectIDB() {
+		return openIDB().catch(error => {
+			this.reportException(`Exception on open IndexedDB:\n${error.message}`);
+			throw error;
+		});
+	}
+
+	private async getListFromDb() {
+		let rules: Rule[];
+		try {
+			rules = await this.IDBMapper!.getList();
+		} catch (error) {
+			this.reportException(`Exception on get rules lift from IndexedDB:\n${error.message}`);
+			throw error;
+		}
+
+		this.list.push(...rules);
+	}
+
+	private reportException(error: string) {
+		this.rootStore.appStore.setDisplayedError(error);
+	}
+
 	checkItemExists(id: string) {
 		return this.list.some(item => item.id === id);
 	}
 
 	@action
-	save(...rules: Rule[]) {
-		this.list.push(...rules);
+	save(rule: Rule) {
+		this.list.push(rule);
 		this.rootStore.appStore.hideCompose();
+
+		this.IDBMapper!.saveItem(rule).catch(error => {
+			this.reportException(`Exception on save rule to IndexedDB:\n${error.message}`);
+			throw error;
+		});
 	}
 
 	@action
@@ -96,8 +133,14 @@ export class RulesStore implements RulesManager {
 	@action
 	confirmRemove() {
 		const index = this.list.findIndex(item => item.id === this.removeConfirmationId);
+		const id = this.removeConfirmationId!;
 		this.list.splice(index, 1);
 		this.removeConfirmationId = null;
+
+		this.IDBMapper!.removeItem(id).catch(error => {
+			this.reportException(`Exception on remove rule from IndexedDB:\n${error.message}`);
+			throw error;
+		});
 	}
 
 	@action
@@ -114,6 +157,11 @@ export class RulesStore implements RulesManager {
 	confirmClearAll() {
 		this.list.splice(0, this.list.length);
 		this.clearAllConfirmation = false;
+
+		this.IDBMapper!.removeAll().catch(error => {
+			this.reportException(`Exception on remove all rule from IndexedDB:\n${error.message}`);
+			throw error;
+		});
 	}
 
 	selectOne(select: {url: string; method: RequestMethod; resourceType: ResourceType}) {

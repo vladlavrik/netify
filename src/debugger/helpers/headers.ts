@@ -1,9 +1,9 @@
-import {RequestHeaders} from '@/debugger/chromeInternal';
+import {RequestHeaders} from '../chromeInternal';
 
 export function mutateHeaders(originalHeaders: RequestHeaders, toAdd: RequestHeaders, toRemove: string[]) {
 	const finallyHeaders = {...originalHeaders};
 
-	const toRemoveSet = new Set([...toRemove, ...Reflect.ownKeys(toAdd)].map((item => (item as string).toLowerCase())));
+	const toRemoveSet = new Set([...toRemove, ...Reflect.ownKeys(toAdd)].map(item => (item as string).toLowerCase()));
 
 	// first clean headers to remove it and rewritable (remove addable to avoid the same headers with different cases)
 	for (const key of Reflect.ownKeys(finallyHeaders) as string[]) {
@@ -25,5 +25,5 @@ export function replaceHeader(headers: RequestHeaders, name: string, newValue: s
 	return {
 		...headers,
 		[keyName || name]: newValue,
-	}
+	};
 }
