@@ -2,13 +2,13 @@ import {promisifyIDBRequest, generitiryIDBRequest} from './helper';
 import {Rule} from '@/interfaces/Rule';
 
 interface RuleItem {
-	tabId: number;
+	hostname: string;
 	timestamp: number;
 	rule: Rule;
 }
 
 export class RulesMapper {
-	constructor(private db: IDBDatabase, private tabId: number) {}
+	constructor(private db: IDBDatabase, private hostname: string) {}
 
 	async saveItem(rule: Rule) {
 		await promisifyIDBRequest(
@@ -16,7 +16,7 @@ export class RulesMapper {
 				.transaction(['rules'], 'readwrite')
 				.objectStore('rules')
 				.add({
-					tabId: this.tabId,
+					hostname: this.hostname,
 					timestamp: Date.now(),
 					rule,
 				}),
@@ -35,7 +35,7 @@ export class RulesMapper {
 	async removeAll() {
 		const store = this.db.transaction(['rules'], 'readwrite').objectStore('rules');
 
-		const cursorRequest = store.index('tabId').openKeyCursor(IDBKeyRange.only(this.tabId));
+		const cursorRequest = store.index('hostname').openKeyCursor(IDBKeyRange.only(this.hostname));
 		const cursorGenerator = generitiryIDBRequest(cursorRequest);
 
 		const deleteRequestsPromises: Promise<IDBRequest>[] = [];
@@ -52,8 +52,8 @@ export class RulesMapper {
 			this.db
 				.transaction(['rules'], 'readonly')
 				.objectStore('rules')
-				.index('tabId')
-				.getAll(this.tabId),
+				.index('hostname')
+				.getAll(this.hostname),
 		);
 
 		return items

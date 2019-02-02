@@ -3,6 +3,7 @@ import {Rule} from '@/interfaces/Rule';
 import {RootStore} from './RootStore';
 import {Debugger, DebuggerState} from '@/debugger';
 import {openIDB, getOpenedIDB, RulesMapper} from '@/indexedDB';
+import {getTargetTabUrl} from '@/helpers/chrome';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {UrlCompareType} from '@/constants/UrlCompareType';
@@ -22,8 +23,13 @@ export class RulesStore implements RulesManager {
 			onUserDetach: () => (this.debuggerDisabled = true),
 		});
 
-		this.connectIDB().then(() => {
-			this.IDBMapper = new RulesMapper(getOpenedIDB(), this.debugger.currentTabId);
+		Promise.all([getTargetTabUrl(), this.connectIDB()]).then(([tabUrl]) => {
+			const hostname = tabUrl
+				.split('/')
+				.slice(0, 3)
+				.join('/');
+
+			this.IDBMapper = new RulesMapper(getOpenedIDB(), hostname);
 			return this.getListFromDb();
 		});
 

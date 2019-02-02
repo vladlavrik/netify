@@ -25,7 +25,7 @@ export function openIDB() {
 
 			if (event.oldVersion === 0) {
 				const rulesStore = db.createObjectStore('rules', {keyPath: 'rule.id'});
-				rulesStore.createIndex('tabId', 'tabId', {unique: false});
+				rulesStore.createIndex('hostname', 'hostname', {unique: false});
 			}
 		};
 	});

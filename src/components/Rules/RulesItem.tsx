@@ -97,7 +97,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
 				actions.push('Modifying response headers');
 			}
-			if (bodyReplace.textValue !== ResponseBodyType.Original) {
+			if (bodyReplace.type !== ResponseBodyType.Original) {
 				actions.push('Replacing response body');
 			}
 		}
