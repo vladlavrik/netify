@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {inject} from 'mobx-react';
-import {AppStore} from '@/stores/AppStore';
 import {RulesStore} from '@/stores/RulesStore';
 import {Button} from '@/components/@common/Button';
 import {ExpandableCheckbox} from '@/components/@common/ExpandableCheckbox';
@@ -13,11 +12,9 @@ import {Rule} from '@/interfaces/Rule';
 import styles from './compose.css';
 
 interface Props {
-	appStore?: AppStore;
 	rulesStore?: RulesStore;
 }
 
-@inject('appStore')
 @inject('rulesStore')
 export class Compose extends React.PureComponent<Props> {
 	render() {
@@ -58,6 +55,6 @@ export class Compose extends React.PureComponent<Props> {
 	};
 
 	private onCancel = () => {
-		this.props.appStore!.toggleComposeShow();
+		this.props.rulesStore!.toggleComposeShow();
 	};
 }

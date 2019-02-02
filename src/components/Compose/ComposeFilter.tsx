@@ -13,7 +13,7 @@ export class ComposeFilter extends React.PureComponent {
 				<TextField
 					className={styles.urlField}
 					name='filter.url.value'
-					placeholder='Url (include origin or only path when starts with "/")'
+					placeholder='Url (includes hostname or only path when starts with "/")'
 				/>
 
 				<DropdownPicker

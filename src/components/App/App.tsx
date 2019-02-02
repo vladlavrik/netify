@@ -4,7 +4,6 @@ import {RootStore} from '@/stores/RootStore';
 import {PopUpAlert} from '@/components/@common/PopUpAlert';
 import {Logs} from '@/components/Logs';
 import {Rules} from '@/components/Rules';
-import {Compose} from '@/components/Compose';
 import {AppSeparatedSections} from './AppSeparatedSections';
 import styles from './app.css';
 
@@ -13,7 +12,7 @@ export class App extends React.Component {
 	private readonly rootStore = new RootStore();
 
 	render() {
-		const {composeShown, sectionRatio, displayedError} = this.rootStore.appStore;
+		const {sectionRatio, displayedError} = this.rootStore.appStore;
 
 		return (
 			<Provider
@@ -28,12 +27,6 @@ export class App extends React.Component {
 						topSection={<Rules />}
 						bottomSection={<Logs />}
 					/>
-
-					{composeShown && (
-						<div className={styles.compose}>
-							<Compose />
-						</div>
-					)}
 
 					{displayedError && (
 						<PopUpAlert onClose={this.onCloseErrorAlert}>

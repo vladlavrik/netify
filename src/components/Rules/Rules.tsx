@@ -1,12 +1,13 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import {reaction} from 'mobx';
 import {observer, inject} from 'mobx-react';
 import * as classNames from 'classnames';
 import {RulesStore} from '@/stores/RulesStore';
-import {AppStore} from '@/stores/AppStore';
 import {SectionHeader} from '@/components/@common/SectionHeader';
 import {Button} from '@/components/@common/Button';
 import {IconButton} from '@/components/@common/IconButton';
+import {Compose} from '@/components/Compose';
 import {RulesItem} from './RulesItem';
 import {RulesDetails} from './RulesDetails';
 import styles from './rules.css';
@@ -14,23 +15,22 @@ import {PopUpConfirm} from '@/components/@common/PopUpConfirm';
 
 interface Props {
 	rulesStore?: RulesStore;
-	appStore?: AppStore;
 }
 
 @inject('rulesStore')
-@inject('appStore')
 @observer
 export class Rules extends React.Component<Props> {
-	private highlightedItemRef = React.createRef<HTMLLIElement>();
+	private readonly highlightedItemRef = React.createRef<HTMLLIElement>();
+	private readonly composeModalTarget = document.getElementById('modal-root')!;
 	private shouldScrollToHighlighted = false;
 
 	render() {
-		const {composeShown} = this.props.appStore!;
 		const {
 			list,
 			highlightedId,
 			debuggerDisabled,
 			listIsEmpty,
+			composeShown,
 			removeConfirmationId,
 			clearAllConfirmation,
 		} = this.props.rulesStore!;
@@ -39,8 +39,8 @@ export class Rules extends React.Component<Props> {
 			<div className={styles.root}>
 				<SectionHeader title='Rules'>
 					<IconButton
-						className={classNames(styles.control, composeShown ? styles.typeClose : styles.typeAdd)}
-						tooltip={composeShown ? 'Cancel add' : 'Add rule'}
+						className={classNames(styles.control, styles.typeAdd)}
+						tooltip='Add a new rule'
 						onClick={this.onToggleComposeShow}
 					/>
 					<IconButton
@@ -59,6 +59,7 @@ export class Rules extends React.Component<Props> {
 						onClick={this.onClearAllAsk}
 					/>
 				</SectionHeader>
+
 				<div className={styles.content}>
 					{list.length === 0 ? (
 						<p className={styles.placeholder}>
@@ -83,6 +84,8 @@ export class Rules extends React.Component<Props> {
 						</ul>
 					)}
 				</div>
+
+				{composeShown && ReactDOM.createPortal(<Compose />, this.composeModalTarget)}
 
 				{removeConfirmationId && (
 					<PopUpConfirm onConfirm={this.onRemoveConfirm} onCancel={this.onRemoveCancel}>
@@ -123,7 +126,7 @@ export class Rules extends React.Component<Props> {
 
 	private onFinishHighlighting = () => this.props.rulesStore!.setHighlighted(null);
 
-	private onToggleComposeShow = () => this.props.appStore!.toggleComposeShow();
+	private onToggleComposeShow = () => this.props.rulesStore!.toggleComposeShow();
 
 	private onToggleDebuggerEnabled = () => this.props.rulesStore!.toggleDebuggerDisabled();
 

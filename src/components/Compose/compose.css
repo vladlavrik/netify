@@ -1,7 +1,14 @@
 .root {
-	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 	box-sizing: border-box;
+	border-top: #555555 1px solid;
+	background: #383838;
 	overflow: auto;
+	z-index: 10;
 }
 .form {
 	min-width: 500px;

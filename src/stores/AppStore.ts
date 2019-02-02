@@ -5,9 +5,6 @@ export class AppStore {
 	constructor(_rootStore: RootStore) {}
 
 	@observable
-	composeShown = false;
-
-	@observable
 	sectionRatio = 50;
 
 	@observable
@@ -15,16 +12,6 @@ export class AppStore {
 
 	@observable
 	displayedError: string | null = null;
-
-	@action
-	showCompose() {
-		this.composeShown = true;
-	}
-
-	@action
-	hideCompose() {
-		this.composeShown = false;
-	}
 
 	@action
 	setSectionRatio(ratio: number, logsCollapsed: boolean) {
@@ -41,11 +28,6 @@ export class AppStore {
 			this.sectionRatio = 100;
 			this.logsCollapsed = true;
 		}
-	}
-
-	@action
-	toggleComposeShow() {
-		this.composeShown = !this.composeShown;
 	}
 
 	@action

@@ -40,6 +40,9 @@ export class RulesStore implements RulesManager {
 	debuggerDisabled = false;
 
 	@observable
+	composeShown = false;
+
+	@observable
 	readonly list: Rule[] = [];
 
 	@computed
@@ -106,9 +109,24 @@ export class RulesStore implements RulesManager {
 	}
 
 	@action
+	showCompose() {
+		this.composeShown = true;
+	}
+
+	@action
+	hideCompose() {
+		this.composeShown = false;
+	}
+
+	@action
+	toggleComposeShow() {
+		this.composeShown = !this.composeShown;
+	}
+
+	@action
 	save(rule: Rule) {
 		this.list.push(rule);
-		this.rootStore.appStore.hideCompose();
+		this.hideCompose();
 
 		this.IDBMapper!.saveItem(rule).catch(error => {
 			this.reportException(`Exception on save rule to IndexedDB:\n${error.message}`);
