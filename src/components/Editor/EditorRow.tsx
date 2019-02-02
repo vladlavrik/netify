@@ -1,11 +1,11 @@
 import * as React from 'react';
-import styles from './composeRow.css';
+import styles from './editorRow.css';
 
 interface Props {
 	title: string;
 }
 
-export class ComposeRow extends React.PureComponent<Props> {
+export class EditorRow extends React.PureComponent<Props> {
 	render() {
 		const {title, children} = this.props;
 

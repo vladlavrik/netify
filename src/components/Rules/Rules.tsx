@@ -4,14 +4,15 @@ import {reaction} from 'mobx';
 import {observer, inject} from 'mobx-react';
 import * as classNames from 'classnames';
 import {RulesStore} from '@/stores/RulesStore';
+import {Rule} from '@/interfaces/Rule';
 import {SectionHeader} from '@/components/@common/SectionHeader';
 import {Button} from '@/components/@common/Button';
 import {IconButton} from '@/components/@common/IconButton';
-import {Compose} from '@/components/Compose';
+import {PopUpConfirm} from '@/components/@common/PopUpConfirm';
+import {Editor} from '@/components/Editor';
 import {RulesItem} from './RulesItem';
 import {RulesDetails} from './RulesDetails';
 import styles from './rules.css';
-import {PopUpConfirm} from '@/components/@common/PopUpConfirm';
 
 interface Props {
 	rulesStore?: RulesStore;
@@ -41,20 +42,20 @@ export class Rules extends React.Component<Props> {
 					<IconButton
 						className={classNames(styles.control, styles.typeAdd)}
 						tooltip='Add a new rule'
-						onClick={this.onToggleComposeShow}
+						onClick={this.onShowCompose}
 					/>
 					<IconButton
 						className={classNames(
 							styles.control,
 							listIsEmpty || debuggerDisabled ? styles.typeStartListen : styles.typeStopListen,
 						)}
-						disabled={composeShown || listIsEmpty}
+						disabled={listIsEmpty}
 						tooltip={debuggerDisabled ? 'Enable debugger' : 'Disable debugger'}
 						onClick={this.onToggleDebuggerEnabled}
 					/>
 					<IconButton
 						className={classNames(styles.control, styles.typeClear)}
-						disabled={composeShown || listIsEmpty}
+						disabled={listIsEmpty}
 						tooltip='Clear all rules'
 						onClick={this.onClearAllAsk}
 					/>
@@ -64,7 +65,7 @@ export class Rules extends React.Component<Props> {
 					{list.length === 0 ? (
 						<p className={styles.placeholder}>
 							No rules yet
-							<Button className={styles.composeButton} onClick={this.onToggleComposeShow}>
+							<Button className={styles.composeButton} onClick={this.onShowCompose}>
 								Compose a first rule
 							</Button>
 						</p>
@@ -85,7 +86,11 @@ export class Rules extends React.Component<Props> {
 					)}
 				</div>
 
-				{composeShown && ReactDOM.createPortal(<Compose />, this.composeModalTarget)}
+				{composeShown &&
+					ReactDOM.createPortal(
+						<Editor onSave={this.onSaveComposed} onCancel={this.onHideCompose} />,
+						this.composeModalTarget,
+					)}
 
 				{removeConfirmationId && (
 					<PopUpConfirm onConfirm={this.onRemoveConfirm} onCancel={this.onRemoveCancel}>
@@ -126,7 +131,11 @@ export class Rules extends React.Component<Props> {
 
 	private onFinishHighlighting = () => this.props.rulesStore!.setHighlighted(null);
 
-	private onToggleComposeShow = () => this.props.rulesStore!.toggleComposeShow();
+	private onShowCompose = () => this.props.rulesStore!.showCompose();
+
+	private onHideCompose = () => this.props.rulesStore!.hideCompose();
+
+	private onSaveComposed = (rule: Rule) => this.props.rulesStore!.create(rule);
 
 	private onToggleDebuggerEnabled = () => this.props.rulesStore!.toggleDebuggerDisabled();
 

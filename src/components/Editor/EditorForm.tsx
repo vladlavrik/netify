@@ -13,7 +13,7 @@ import {CancelReasons, cancelReasonsList} from '@/constants/CancelReasons';
 
 interface Props {
 	className?: string;
-	onSave: (rule: Rule) => void;
+	onSave: (rule: Rule) => any;
 }
 
 const headersSchema = yup.mixed().transform((value: {name: string; value: string}[]) => {
@@ -143,7 +143,7 @@ interface FormValue {
 	};
 }
 
-export class ComposeForm extends React.PureComponent<Props> {
+export class EditorForm extends React.PureComponent<Props> {
 	formInitialValue: FormValue = {
 		filter: {
 			url: {

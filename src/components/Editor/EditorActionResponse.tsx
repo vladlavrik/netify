@@ -6,15 +6,15 @@ import {KeyValueArrayField} from '@/components/@common/KeyValueArrayField';
 import {RadioTabs} from '@/components/@common/RadioTabs';
 import {TextareaField} from '@/components/@common/TextaredField';
 import {FileField} from '@/components/@common/FileField';
-import {ComposeRow} from './ComposeRow';
-import {ComposeError} from './ComposeError';
-import styles from './composeActionResponse.css';
+import {EditorRow} from './EditorRow';
+import {EditorError} from './EditorError';
+import styles from './editorActionResponse.css';
 
-export class ComposeActionResponse extends React.PureComponent {
+export class EditorActionResponse extends React.PureComponent {
 	render() {
 		return (
 			<div className={styles.root}>
-				<ComposeRow title='Response mode:'>
+				<EditorRow title='Response mode:'>
 					<div className={styles.modeFieldset}>
 						<RadioButton
 							className={styles.modeField}
@@ -29,8 +29,8 @@ export class ComposeActionResponse extends React.PureComponent {
 							Response locally
 						</RadioButton>
 					</div>
-				</ComposeRow>
-				<ComposeRow title='Status code:'>
+				</EditorRow>
+				<EditorRow title='Status code:'>
 					<div>
 						<TextField
 							className={styles.statusCode}
@@ -38,10 +38,10 @@ export class ComposeActionResponse extends React.PureComponent {
 							maxlength={3}
 							placeholder='Default - from server or 200'
 						/>
-						<ComposeError name='actions.mutateResponse.statusCode' />
+						<EditorError name='actions.mutateResponse.statusCode' />
 					</div>
-				</ComposeRow>
-				<ComposeRow title='Headers:'>
+				</EditorRow>
+				<EditorRow title='Headers:'>
 					<KeyValueArrayField
 						name='actions.mutateResponse.headers'
 						keyNameSuffix='name'
@@ -49,8 +49,8 @@ export class ComposeActionResponse extends React.PureComponent {
 						keyPlaceholder='Header name'
 						valuePlaceholder='Header value (leave empty for delete)'
 					/>
-				</ComposeRow>
-				<ComposeRow title='Body:'>
+				</EditorRow>
+				<EditorRow title='Body:'>
 					<RadioTabs
 						radioName='actions.mutateResponse.bodyReplace.type'
 						tabs={responseBodyTypesList.map(type => ({
@@ -59,7 +59,7 @@ export class ComposeActionResponse extends React.PureComponent {
 						}))}
 						render={this.renderBodyReplacer}
 					/>
-				</ComposeRow>
+				</EditorRow>
 			</div>
 		);
 	}

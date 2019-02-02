@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ComposeRow} from './ComposeRow';
+import {EditorRow} from './EditorRow';
 import {TextField} from '@/components/@common/TextField';
 import {DropdownPicker} from '@/components/@common/DropdownPicker';
 import {RadioTabs} from '@/components/@common/RadioTabs';
@@ -7,28 +7,28 @@ import {TextareaField} from '@/components/@common/TextaredField';
 import {KeyValueArrayField} from '@/components/@common/KeyValueArrayField';
 import {RequestBodyType, requestBodyTypesList} from '@/constants/RequestBodyType';
 import {requestMethodsList} from '@/constants/RequestMethod';
-import styles from './composeActionRequest.css';
+import styles from './editorActionRequest.css';
 
-export class ComposeActionRequest extends React.PureComponent {
+export class EditorActionRequest extends React.PureComponent {
 	render() {
 		return (
 			<div className={styles.root}>
-				<ComposeRow title='Replace endpoint:'>
+				<EditorRow title='Replace endpoint:'>
 					<TextField
 						className={styles.endpointField}
 						name='actions.mutateRequest.endpointReplace'
 						placeholder='%protocol%//%hostname%:%port%%path%%query%'
 					/>
-				</ComposeRow>
-				<ComposeRow title='Replace method:'>
+				</EditorRow>
+				<EditorRow title='Replace method:'>
 					<DropdownPicker
 						className={styles.methodField}
 						name='actions.mutateRequest.methodReplace'
 						placeholder='Method'
 						options={requestMethodsList}
 					/>
-				</ComposeRow>
-				<ComposeRow title='Headers:'>
+				</EditorRow>
+				<EditorRow title='Headers:'>
 					<KeyValueArrayField
 						name='actions.mutateRequest.headers'
 						keyNameSuffix='name'
@@ -36,8 +36,8 @@ export class ComposeActionRequest extends React.PureComponent {
 						keyPlaceholder='Header name'
 						valuePlaceholder='Header value (leave empty for delete)'
 					/>
-				</ComposeRow>
-				<ComposeRow title='Body:'>
+				</EditorRow>
+				<EditorRow title='Body:'>
 					<RadioTabs
 						radioName='actions.mutateRequest.bodyReplace.type'
 						tabs={requestBodyTypesList.map(type => ({
@@ -46,7 +46,7 @@ export class ComposeActionRequest extends React.PureComponent {
 						}))}
 						render={this.renderBodyReplacer}
 					/>
-				</ComposeRow>
+				</EditorRow>
 			</div>
 		);
 	}

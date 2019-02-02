@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {ErrorMessage} from 'formik';
-import styles from './composeError.css';
+import styles from './editorError.css';
 
 interface Props {
 	name: string;
 }
 
-export class ComposeError extends React.PureComponent<Props> {
+export class EditorError extends React.PureComponent<Props> {
 	render() {
 		return (
 			<p className={styles.root}>

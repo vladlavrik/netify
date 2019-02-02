@@ -119,12 +119,7 @@ export class RulesStore implements RulesManager {
 	}
 
 	@action
-	toggleComposeShow() {
-		this.composeShown = !this.composeShown;
-	}
-
-	@action
-	save(rule: Rule) {
+	create(rule: Rule) {
 		this.list.push(rule);
 		this.hideCompose();
 

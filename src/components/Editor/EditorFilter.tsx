@@ -4,9 +4,9 @@ import {DropdownPicker} from '@/components/@common/DropdownPicker';
 import {urlCompareTypeList} from '@/constants/UrlCompareType';
 import {resourceTypesList} from '@/constants/ResourceType';
 import {requestMethodsList} from '@/constants/RequestMethod';
-import styles from './composeFilter.css';
+import styles from './editorFilter.css';
 
-export class ComposeFilter extends React.PureComponent {
+export class EditorFilter extends React.PureComponent {
 	render() {
 		return (
 			<div className={styles.root}>
