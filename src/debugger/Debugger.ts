@@ -65,10 +65,16 @@ export class Debugger {
 
 	async initialize() {
 		this.state = DebuggerState.Starting;
+
 		await this.attach();
 		await this.sendCommand('Network.setRequestInterception', {patterns: interceptPatterns});
 		chrome.debugger.onEvent.addListener(this.messageHandler);
+
 		this.state = DebuggerState.Active;
+
+		const {tabId} = this.debugTarget;
+		chrome.pageAction.show(tabId);
+		chrome.pageAction.setTitle({tabId, title: 'Netify (active)'});
 	}
 
 	private attach() {
@@ -83,10 +89,10 @@ export class Debugger {
 		});
 	}
 
-	destroy() {
+	async destroy() {
 		this.state = DebuggerState.Stopping;
 
-		return new Promise((resolve, reject) => {
+		await new Promise((resolve, reject) => {
 			chrome.debugger.detach(this.debugTarget, () => {
 				if (chrome.runtime.lastError) {
 					reject(chrome.runtime.lastError);
@@ -96,6 +102,10 @@ export class Debugger {
 				this.state = DebuggerState.Inactive;
 			});
 		});
+
+		const {tabId} = this.debugTarget;
+		chrome.pageAction.hide(tabId);
+		chrome.pageAction.setTitle({tabId, title: 'Netify (inactive)'});
 	}
 
 	private sendCommand<TResult = any>(command: string, params: object): Promise<TResult> {
