@@ -85,11 +85,15 @@ export class EditorForm extends React.PureComponent<Props, State> {
 									([name, value]: [string, string]) => ({name, value}),
 								),
 								...actions.mutateRequest.headers.remove.map(name => ({name, value: ''})),
+								{name: '', value: ''},
 							],
 							bodyReplace: {
 								type: actions.mutateRequest.bodyReplace.type,
 								textValue: actions.mutateRequest.bodyReplace.textValue,
-								formValue: actions.mutateRequest.bodyReplace.formValue,
+								formValue:
+									actions.mutateRequest.bodyReplace.formValue.length > 0
+										? actions.mutateRequest.bodyReplace.formValue
+										: [{key: '', value: ''}],
 							},
 						},
 						mutateResponse: {
@@ -101,6 +105,7 @@ export class EditorForm extends React.PureComponent<Props, State> {
 									([name, value]: [string, string]) => ({name, value}),
 								),
 								...actions.mutateResponse.headers.remove.map(name => ({name, value: ''})),
+								{name: '', value: ''},
 							],
 							bodyReplace: {
 								type: actions.mutateResponse.bodyReplace.type,
@@ -133,8 +138,8 @@ export class EditorForm extends React.PureComponent<Props, State> {
 		);
 	}
 
-	private onSubmit = (rawValues: FormValue, a: FormikActions<FormValue>) => {
-		a.setSubmitting(false);
+	private onSubmit = (rawValues: FormValue, form: FormikActions<FormValue>) => {
+		form.setSubmitting(false);
 
 		// workaround to "Formik" future fix https://github.com/jaredpalmer/formik/pull/728
 		const values = formSchema.cast(rawValues);
