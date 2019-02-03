@@ -10,7 +10,7 @@ interface RuleItem {
 export class RulesMapper {
 	constructor(private db: IDBDatabase, private hostname: string) {}
 
-	async saveItem(rule: Rule) {
+	async saveNewItem(rule: Rule) {
 		await promisifyIDBRequest(
 			this.db
 				.transaction(['rules'], 'readwrite')
@@ -21,6 +21,12 @@ export class RulesMapper {
 					rule,
 				}),
 		);
+	}
+	async updateItem(rule: Rule) {
+		const store = this.db.transaction(['rules'], 'readwrite').objectStore('rules');
+		const item = await promisifyIDBRequest(store.get(rule.id));
+		item.rule = rule;
+		await promisifyIDBRequest(store.put(item));
 	}
 
 	async removeItem(ruleId: string) {

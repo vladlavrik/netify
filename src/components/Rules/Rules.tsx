@@ -32,6 +32,7 @@ export class Rules extends React.Component<Props> {
 			debuggerDisabled,
 			listIsEmpty,
 			composeShown,
+			editingItem,
 			removeConfirmationId,
 			clearAllConfirmation,
 		} = this.props.rulesStore!;
@@ -77,7 +78,7 @@ export class Rules extends React.Component<Props> {
 									ref={item.id === highlightedId ? this.highlightedItemRef : null}
 									className={classNames(styles.item, item.id === highlightedId && styles.highlighted)}
 									onAnimationEnd={this.onFinishHighlighting}>
-									<RulesItem data={item} onRemove={this.onRemoveAsk}>
+									<RulesItem data={item} onRemove={this.onRemoveAsk} onEdit={this.onItemEdit}>
 										<RulesDetails data={item} />
 									</RulesItem>
 								</li>
@@ -89,6 +90,16 @@ export class Rules extends React.Component<Props> {
 				{composeShown &&
 					ReactDOM.createPortal(
 						<Editor onSave={this.onSaveComposed} onCancel={this.onHideCompose} />,
+						this.composeModalTarget,
+					)}
+
+				{editingItem &&
+					ReactDOM.createPortal(
+						<Editor
+							initialValues={editingItem}
+							onSave={this.onSaveEdited}
+							onCancel={this.onCancelItemEdit}
+						/>,
 						this.composeModalTarget,
 					)}
 
@@ -129,6 +140,8 @@ export class Rules extends React.Component<Props> {
 		}
 	}
 
+	private onToggleDebuggerEnabled = () => this.props.rulesStore!.toggleDebuggerDisabled();
+
 	private onFinishHighlighting = () => this.props.rulesStore!.setHighlighted(null);
 
 	private onShowCompose = () => this.props.rulesStore!.showCompose();
@@ -137,7 +150,11 @@ export class Rules extends React.Component<Props> {
 
 	private onSaveComposed = (rule: Rule) => this.props.rulesStore!.create(rule);
 
-	private onToggleDebuggerEnabled = () => this.props.rulesStore!.toggleDebuggerDisabled();
+	private onItemEdit = (id: string) => this.props.rulesStore!.showItemEditor(id);
+
+	private onSaveEdited = (rule: Rule) => this.props.rulesStore!.save(rule);
+
+	private onCancelItemEdit = () => this.props.rulesStore!.hideItemEditor();
 
 	private onRemoveAsk = (id: string) => this.props.rulesStore!.askToRemoveItem(id);
 

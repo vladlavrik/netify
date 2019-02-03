@@ -3,16 +3,17 @@ import {inject} from 'mobx-react';
 import {RulesStore} from '@/stores/RulesStore';
 import {Button} from '@/components/@common/Button';
 import {ExpandableCheckbox} from '@/components/@common/ExpandableCheckbox';
+import {Rule} from '@/interfaces/Rule';
 import {EditorForm} from './EditorForm';
 import {EditorFilter} from './EditorFilter';
 import {EditorActionRequest} from './EditorActionRequest';
 import {EditorActionResponse} from './EditorActionResponse';
 import {EditorActionCancel} from './EditorActionCancel';
-import {Rule} from '@/interfaces/Rule';
 import styles from './editor.css';
 
 interface Props {
 	rulesStore?: RulesStore;
+	initialValues?: Rule;
 	onSave: (rule: Rule) => any;
 	onCancel: () => any;
 }
@@ -20,9 +21,11 @@ interface Props {
 @inject('rulesStore')
 export class Editor extends React.PureComponent<Props> {
 	render() {
+		const {initialValues, onSave, onCancel} = this.props;
+
 		return (
 			<div className={styles.root}>
-				<EditorForm className={styles.form} onSave={this.props.onSave}>
+				<EditorForm className={styles.form} initialValues={initialValues} onSave={onSave}>
 					<h3 className={styles.title}>Filter requests:</h3>
 					<EditorFilter />
 
@@ -43,7 +46,7 @@ export class Editor extends React.PureComponent<Props> {
 						<Button className={styles.saveButton} type='submit'>
 							Save
 						</Button>
-						<Button styleType='secondary' onClick={this.props.onCancel}>
+						<Button styleType='secondary' onClick={onCancel}>
 							Cancel
 						</Button>
 					</div>

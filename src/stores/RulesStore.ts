@@ -37,18 +37,16 @@ export class RulesStore implements RulesManager {
 	}
 
 	@observable
+	readonly list: Rule[] = [];
+
+	@observable
 	debuggerDisabled = false;
 
 	@observable
 	composeShown = false;
 
 	@observable
-	readonly list: Rule[] = [];
-
-	@computed
-	get listIsEmpty() {
-		return this.list.length === 0;
-	}
+	editingItemId: string | null = null;
 
 	@observable
 	highlightedId: string | null = null;
@@ -58,6 +56,16 @@ export class RulesStore implements RulesManager {
 
 	@observable
 	clearAllConfirmation = false;
+
+	@computed
+	get listIsEmpty() {
+		return this.list.length === 0;
+	}
+
+	@computed
+	get editingItem() {
+		return toJS(this.list.find(item => item.id === this.editingItemId));
+	}
 
 	private manageDebuggerActive = async () => {
 		// TODO disallow switch state when previous operation during
@@ -119,12 +127,35 @@ export class RulesStore implements RulesManager {
 	}
 
 	@action
+	showItemEditor(ruleId: string) {
+		this.editingItemId = ruleId;
+	}
+
+	@action
+	hideItemEditor() {
+		this.editingItemId = null;
+	}
+
+	@action
 	create(rule: Rule) {
 		this.list.push(rule);
 		this.hideCompose();
 
-		this.IDBMapper!.saveItem(rule).catch(error => {
-			this.reportException(`Exception on save rule to IndexedDB:\n${error.message}`);
+		this.IDBMapper!.saveNewItem(rule).catch(error => {
+			this.reportException(`Exception on save a new rule to IndexedDB:\n${error.message}`);
+			throw error;
+		});
+	}
+
+	@action
+	save(rule: Rule) {
+		const index = this.list.findIndex(item => item.id === rule.id);
+		this.list.splice(index, 1, rule);
+
+		this.hideItemEditor();
+
+		this.IDBMapper!.updateItem(rule).catch(error => {
+			this.reportException(`Exception on update a rule to IndexedDB:\n${error.message}`);
 			throw error;
 		});
 	}

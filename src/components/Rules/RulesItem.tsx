@@ -8,6 +8,7 @@ import styles from './rulesItem.css';
 
 interface Props {
 	data: Rule;
+	onEdit: (id: string) => void;
 	onRemove: (id: string) => void;
 }
 
@@ -61,7 +62,18 @@ export class RulesItem extends React.PureComponent<Props, State> {
 						<p className={styles.actionsInfo}>{this.parseActionsArray()}</p>
 					</div>
 
-					<IconButton className={styles.removeButton} tooltip='Remove the rule' onClick={this.onRemove} />
+					<div className={styles.controlsPlaceholder} />
+
+					<IconButton
+						className={classNames(styles.control, styles.typeEdit)}
+						tooltip='Edit the rule'
+						onClick={this.onEdit}
+					/>
+					<IconButton
+						className={classNames(styles.control, styles.typeRemove)}
+						tooltip='Remove the rule'
+						onClick={this.onRemove}
+					/>
 				</div>
 
 				{expanded && <div>{this.props.children}</div>}
@@ -116,6 +128,8 @@ export class RulesItem extends React.PureComponent<Props, State> {
 	private onToggleExpand = () => {
 		this.setState(state => ({expanded: !state.expanded}));
 	};
+
+	private onEdit = () => this.props.onEdit(this.props.data.id);
 
 	private onRemove = () => this.props.onRemove(this.props.data.id);
 }

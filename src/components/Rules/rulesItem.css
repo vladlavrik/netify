@@ -19,6 +19,7 @@
 }
 .summary {
 	flex-grow: 1;
+	padding-right: 8px;
 	overflow: hidden;
 }
 .filterInfo {
@@ -42,12 +43,31 @@
 	margin: 4px 0 8px 0;
 	color: #7e7e7e;
 }
-.removeButton {
-	flex-shrink: 0;
-	margin: 0 6px 0 12px;
-	--icon-button-bg: url('./icons/remove.svg');
+
+.controlsPlaceholder {
+	margin: 0 6px;
+	width: 18px;
+	height: 18px;
+	background: url('./icons/more.svg');
+}
+.control {
+	display: none;
+	margin: 0 6px;
 	cursor: pointer;
 }
+.control.typeEdit {
+	--icon-button-bg: url('./icons/edit.svg');
+}
+.control.typeRemove {
+	--icon-button-bg: url('./icons/remove.svg');
+}
+.entry:hover .control {
+	display: block;
+}
+.entry:hover .controlsPlaceholder {
+	display: none;
+}
+
 .placeholder {
 	color: #616161;
 }

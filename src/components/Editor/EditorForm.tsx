@@ -1,194 +1,131 @@
 import * as React from 'react';
 import {Formik, FormikActions, Form} from 'formik';
-import * as yup from 'yup';
-import {trimString} from '@/helpers/formatter';
-import {randomHex} from '@/helpers/random';
 import {Rule} from '@/interfaces/Rule';
-import {UrlCompareType, urlCompareTypeList} from '@/constants/UrlCompareType';
-import {ResourceType, resourceTypesList} from '@/constants/ResourceType';
-import {RequestMethod, requestMethodsList} from '@/constants/RequestMethod';
-import {RequestBodyType, requestBodyTypesList} from '@/constants/RequestBodyType';
-import {ResponseBodyType, responseBodyTypesList} from '@/constants/ResponseBodyType';
-import {CancelReasons, cancelReasonsList} from '@/constants/CancelReasons';
+import {FormValue} from './FormValue';
+import {formSchema} from './formSchema';
+import {UrlCompareType} from '@/constants/UrlCompareType';
+import {RequestBodyType} from '@/constants/RequestBodyType';
+import {ResponseBodyType} from '@/constants/ResponseBodyType';
+import {CancelReasons} from '@/constants/CancelReasons';
 
 interface Props {
 	className?: string;
+	initialValues?: Rule;
 	onSave: (rule: Rule) => any;
 }
 
-const headersSchema = yup.mixed().transform((value: {name: string; value: string}[]) => {
-	const add: {[name: string]: string} = {};
-	const remove: string[] = [];
-
-	for (const item of value) {
-		const name = trimString(item.name);
-		const value = trimString(item.value);
-
-		if (name && value) {
-			add[name] = value;
-		} else if (name) {
-			remove.push(name);
-		}
-	}
-	return {add, remove};
-});
-
-const formSchema = yup.object<Rule>({
-	id: yup.string().default(() => randomHex(16)),
-	filter: yup.object({
-		url: yup.object({
-			value: yup.string(),
-			compareType: yup.mixed().oneOf(urlCompareTypeList),
-		}),
-		resourceTypes: yup.array().of(yup.mixed().oneOf(resourceTypesList)),
-		methods: yup.array().of(yup.mixed().oneOf(requestMethodsList)),
-	}),
-	actions: yup.object({
-		mutateRequest: yup.object({
-			enabled: yup.boolean(),
-			endpointReplace: yup.string(),
-			methodReplace: yup
-				.mixed()
-				.oneOf(requestMethodsList)
-				.nullable(true),
-			headers: headersSchema,
-			bodyReplace: yup.object({
-				type: yup.mixed().oneOf(requestBodyTypesList),
-				textValue: yup.string(),
-				formValue: yup
-					.array()
-					.of(
-						yup.object({
-							key: yup.string(),
-							value: yup.string(),
-						}),
-					)
-					.transform((values: {key: string; value: string}[]) => {
-						// clean empty items
-						return values.filter(({key}) => trimString(key).length > 0);
-					}),
-			}),
-		}),
-		mutateResponse: yup.object({
-			enabled: yup.boolean(),
-			responseLocally: yup.mixed().transform((value: '0' | '1') => value === '1'),
-			statusCode: yup
-				.mixed()
-				.transform((value: string) => {
-					if (value === '') {
-						return null;
-					}
-					if (!isNaN(+value)) {
-						return +value;
-					}
-					return value;
-				})
-				.test(
-					'typeError',
-					'Status code must be a number value in range 100 - 599',
-					(value: null | number | string) => {
-						return value === null || (typeof value === 'number' && value >= 100 && value < 600);
-					},
-				),
-			headers: headersSchema,
-			bodyReplace: yup.object({
-				type: yup.mixed().oneOf(responseBodyTypesList),
-				textValue: yup.string(),
-				fileValue: yup.mixed().nullable(false),
-			}),
-		}),
-		cancelRequest: yup.object({
-			enabled: yup.boolean(),
-			reason: yup.mixed().oneOf(cancelReasonsList),
-		}),
-	}),
-});
-
-interface FormValue {
-	filter: {
-		url: {
-			value: string;
-			compareType: UrlCompareType;
-		};
-		resourceTypes: ResourceType[];
-		methods: RequestMethod[];
-	};
-	actions: {
-		mutateRequest: {
-			enabled: boolean;
-			endpointReplace: string;
-			methodReplace?: RequestMethod;
-			headers: {name: string; value: string}[];
-			bodyReplace: {
-				type: RequestBodyType;
-				textValue: string;
-				formValue: {key: string; value: string}[];
-			};
-		};
-		mutateResponse: {
-			enabled: boolean;
-			responseLocally: '0' | '1';
-			statusCode: string;
-			headers: {name: string; value: string}[];
-			bodyReplace: {
-				type: ResponseBodyType;
-				textValue: string;
-				fileValue?: File;
-			};
-		};
-		cancelRequest: {
-			enabled: boolean;
-			reason: CancelReasons;
-		};
-	};
+interface State {
+	formInitialValue: FormValue;
 }
 
-export class EditorForm extends React.PureComponent<Props> {
-	formInitialValue: FormValue = {
-		filter: {
-			url: {
-				value: '',
-				compareType: UrlCompareType.StartsWith,
-			},
-			resourceTypes: [],
-			methods: [],
-		},
-		actions: {
-			mutateRequest: {
-				enabled: false,
-				endpointReplace: '',
-				methodReplace: undefined,
-				headers: [{name: '', value: ''}],
-				bodyReplace: {
-					type: RequestBodyType.Original,
-					textValue: '',
-					formValue: [{key: '', value: ''}],
+export class EditorForm extends React.PureComponent<Props, State> {
+	state: State = {
+		formInitialValue: {
+			filter: {
+				url: {
+					value: '',
+					compareType: UrlCompareType.StartsWith,
 				},
+				resourceTypes: [],
+				methods: [],
 			},
-			mutateResponse: {
-				enabled: true,
-				responseLocally: '0',
-				statusCode: '',
-				headers: [{name: '', value: ''}],
-				bodyReplace: {
-					type: ResponseBodyType.Original,
-					textValue: '',
-					fileValue: undefined,
+			actions: {
+				mutateRequest: {
+					enabled: false,
+					endpointReplace: '',
+					methodReplace: undefined,
+					headers: [{name: '', value: ''}],
+					bodyReplace: {
+						type: RequestBodyType.Original,
+						textValue: '',
+						formValue: [{key: '', value: ''}],
+					},
 				},
-			},
-			cancelRequest: {
-				enabled: false,
-				reason: CancelReasons.Failed,
+				mutateResponse: {
+					enabled: true,
+					responseLocally: '0',
+					statusCode: '',
+					headers: [{name: '', value: ''}],
+					bodyReplace: {
+						type: ResponseBodyType.Original,
+						textValue: '',
+						fileValue: undefined,
+					},
+				},
+				cancelRequest: {
+					enabled: false,
+					reason: CancelReasons.Failed,
+				},
 			},
 		},
 	};
+
+	static getDerivedStateFromProps(props: Props) {
+		if (props.initialValues) {
+			const {id, filter, actions} = props.initialValues;
+
+			return {
+				formInitialValue: {
+					id,
+					filter: {
+						url: {
+							value: filter.url.value,
+							compareType: filter.url.compareType,
+						},
+						resourceTypes: filter.resourceTypes,
+						methods: filter.methods,
+					},
+					actions: {
+						mutateRequest: {
+							enabled: actions.mutateRequest.enabled,
+							endpointReplace: actions.mutateRequest.endpointReplace,
+							methodReplace: actions.mutateRequest.methodReplace,
+							headers: [
+								...Object.entries(actions.mutateRequest.headers.add).map(
+									([name, value]: [string, string]) => ({name, value}),
+								),
+								...actions.mutateRequest.headers.remove.map(name => ({name, value: ''})),
+							],
+							bodyReplace: {
+								type: actions.mutateRequest.bodyReplace.type,
+								textValue: actions.mutateRequest.bodyReplace.textValue,
+								formValue: actions.mutateRequest.bodyReplace.formValue,
+							},
+						},
+						mutateResponse: {
+							enabled: actions.mutateResponse.enabled,
+							responseLocally: actions.mutateResponse.responseLocally ? '1' : '0',
+							statusCode: actions.mutateResponse.statusCode || '',
+							headers: [
+								...Object.entries(actions.mutateResponse.headers.add).map(
+									([name, value]: [string, string]) => ({name, value}),
+								),
+								...actions.mutateResponse.headers.remove.map(name => ({name, value: ''})),
+							],
+							bodyReplace: {
+								type: actions.mutateResponse.bodyReplace.type,
+								textValue: actions.mutateResponse.bodyReplace.textValue,
+								fileValue: actions.mutateResponse.bodyReplace.fileValue,
+							},
+						},
+						cancelRequest: {
+							enabled: actions.cancelRequest.enabled,
+							reason: actions.cancelRequest.reason,
+						},
+					},
+				},
+			};
+		}
+
+		return null;
+	}
 
 	render() {
 		return (
 			<Formik
 				validateOnBlur={true}
 				validateOnChange={false}
-				initialValues={this.formInitialValue}
+				initialValues={this.state.formInitialValue}
 				validationSchema={formSchema}
 				onSubmit={this.onSubmit}>
 				<Form className={this.props.className}>{this.props.children}</Form>
@@ -201,6 +138,7 @@ export class EditorForm extends React.PureComponent<Props> {
 
 		// workaround to "Formik" future fix https://github.com/jaredpalmer/formik/pull/728
 		const values = formSchema.cast(rawValues);
+
 		this.props.onSave(values);
 	};
 }
