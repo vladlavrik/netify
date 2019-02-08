@@ -6,7 +6,6 @@ import {RulesStore} from '@/stores/RulesStore';
 import {AppStore} from '@/stores/AppStore';
 import {SectionHeader} from '@/components/@common/SectionHeader';
 import {IconButton} from '@/components/@common/IconButton';
-import {PopUpConfirm} from '@/components/@common/PopUpConfirm';
 import {LogsItem} from './LogsItem';
 import styles from './logs.css';
 
@@ -22,7 +21,7 @@ interface Props {
 @observer
 export class Logs extends React.Component<Props> {
 	render() {
-		const {list, listIsEmpty, clearAllConfirmation} = this.props.logsStore!;
+		const {list, listIsEmpty} = this.props.logsStore!;
 		const {logsCollapsed: collapsed} = this.props.appStore!;
 
 		return (
@@ -32,7 +31,7 @@ export class Logs extends React.Component<Props> {
 						className={classNames(styles.control, styles.typeClear)}
 						tooltip='Clear log'
 						disabled={listIsEmpty}
-						onClick={this.onClearAllAsk}
+						onClick={this.onClearList}
 					/>
 					<IconButton
 						className={classNames(styles.control, collapsed ? styles.typeExpand : styles.typeCollapse)}
@@ -61,12 +60,6 @@ export class Logs extends React.Component<Props> {
 						</ul>
 					)}
 				</div>
-
-				{clearAllConfirmation && (
-					<PopUpConfirm onConfirm={this.onClearAllConfirm} onCancel={this.onClearAllCancel}>
-						Clear logs list?
-					</PopUpConfirm>
-				)}
 			</div>
 		);
 	}
@@ -81,9 +74,5 @@ export class Logs extends React.Component<Props> {
 
 	private onToggleLogsCollapse = () => this.props.appStore!.toggleLogsCollapse();
 
-	private onClearAllAsk = () => this.props.logsStore!.askToClearAll();
-
-	private onClearAllCancel = () => this.props.logsStore!.cancelClearAll();
-
-	private onClearAllConfirm = () => this.props.logsStore!.confirmClearAll();
+	private onClearList = () => this.props.logsStore!.clearList();
 }

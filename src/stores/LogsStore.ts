@@ -13,9 +13,6 @@ export class LogsStore {
 		return this.list.length === 0;
 	}
 
-	@observable
-	clearAllConfirmation = false;
-
 	@action
 	add(item: Log) {
 		this.list.push(item);
@@ -25,20 +22,8 @@ export class LogsStore {
 	makeLoaded(id: string) {
 		this.list.find(item => item.id === id)!.loaded = true;
 	}
-
 	@action
-	askToClearAll() {
-		this.clearAllConfirmation = true;
-	}
-
-	@action
-	cancelClearAll() {
-		this.clearAllConfirmation = false;
-	}
-
-	@action
-	confirmClearAll() {
+	clearList() {
 		this.list.splice(0, this.list.length);
-		this.clearAllConfirmation = false;
 	}
 }
