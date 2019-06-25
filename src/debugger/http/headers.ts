@@ -1,6 +1,6 @@
-import {RequestHeaders} from '../chromeInternal';
+import {HeadersMap} from '../chrome/interfaces';
 
-export function mutateHeaders(originalHeaders: RequestHeaders, toAdd: RequestHeaders, toRemove: string[]) {
+export function mutateHeaders(originalHeaders: HeadersMap, toAdd: HeadersMap, toRemove: string[]) {
 	const finallyHeaders = {...originalHeaders};
 
 	const toRemoveSet = new Set([...toRemove, ...Reflect.ownKeys(toAdd)].map(item => (item as string).toLowerCase()));
@@ -18,7 +18,7 @@ export function mutateHeaders(originalHeaders: RequestHeaders, toAdd: RequestHea
 	return finallyHeaders;
 }
 
-export function replaceHeader(headers: RequestHeaders, name: string, newValue: string) {
+export function replaceHeader(headers: HeadersMap, name: string, newValue: string) {
 	const lowerCaseName = name.toLowerCase();
 	const keyName = (Reflect.ownKeys(headers) as string[]).find(name => name.toLowerCase() === lowerCaseName);
 

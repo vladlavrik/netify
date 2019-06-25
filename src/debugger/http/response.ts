@@ -1,19 +1,19 @@
 import {fromByteArray, toByteArray} from 'base64-js';
 import {StatusCode} from '@/constants/StatusCode';
-import {RequestHeaders} from '../chromeInternal';
+import {HeadersMap} from '../chrome/interfaces';
 import {replaceHeader} from './headers';
 
-export function compileRawResponseFromTextBody(statusCode: number, headers: RequestHeaders, bodyValue: string) {
+export function compileRawResponseFromTextBody(statusCode: number, headers: HeadersMap, bodyValue: string) {
 	const bodyByteArray = new TextEncoder().encode(bodyValue);
 	return compileRawResponseFromTypedArray(statusCode, headers, bodyByteArray);
 }
 
-export function compileRawResponseFromBase64Body(statusCode: number, headers: RequestHeaders, bodyValue: string) {
+export function compileRawResponseFromBase64Body(statusCode: number, headers: HeadersMap, bodyValue: string) {
 	const bodyByteArray = toByteArray(bodyValue);
 	return compileRawResponseFromTypedArray(statusCode, headers, bodyByteArray);
 }
 
-export async function compileRawResponseFromFileBody(statusCode: number, headers: RequestHeaders, bodyValue: File) {
+export async function compileRawResponseFromFileBody(statusCode: number, headers: HeadersMap, bodyValue: File) {
 	const reader = new FileReader();
 	reader.readAsArrayBuffer(bodyValue);
 
@@ -37,7 +37,7 @@ export async function compileRawResponseFromFileBody(statusCode: number, headers
 	return compileRawResponseFromTypedArray(statusCode, updatedHeaders, bodyByteArray);
 }
 
-function compileRawResponseFromTypedArray(statusCode: number, headers: RequestHeaders, bodyByteArray: Uint8Array) {
+function compileRawResponseFromTypedArray(statusCode: number, headers: HeadersMap, bodyByteArray: Uint8Array) {
 	// replace content-length header
 	const finallyHeaders = replaceHeader(headers, 'Content-Length', bodyByteArray.length.toString());
 
@@ -55,7 +55,7 @@ function compileRawResponseFromTypedArray(statusCode: number, headers: RequestHe
 }
 
 /** Compiles base response part: status line, headers part and trail empty line*/
-function compileResponseBase(statusCode: number, headers: RequestHeaders) {
+function compileResponseBase(statusCode: number, headers: HeadersMap) {
 	const statusLine = `HTTP/1.1 ${statusCode} ${StatusCode[statusCode]}`;
 	const headersPart = Object.entries(headers)
 		.map(([key, value]) => key + ': ' + value)

@@ -15,8 +15,11 @@ module.exports = (env, {mode} = {}) => ({
 	module: {
 		rules: [{
 			test: /\.tsx?$/,
-			use: 'ts-loader',
+			loader: 'ts-loader',
 			exclude: /node_modules/,
+			options: {
+				onlyCompileBundledFiles: true,
+			},
 		}, {
 			test: /\.css$/,
 			use: [{

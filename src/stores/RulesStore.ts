@@ -69,7 +69,7 @@ export class RulesStore implements RulesManager {
 
 	private manageDebuggerActive = async () => {
 		// TODO disallow switch state when previous operation during
-		const debuggerActive = [DebuggerState.Active, DebuggerState.Starting].includes(this.debugger.state);
+		const debuggerActive = [DebuggerState.Active, DebuggerState.Starting].includes(this.debugger.currentState);
 
 		if (this.list.length > 0 && !debuggerActive && !this.debuggerDisabled) {
 			await this.initializeDebugger();

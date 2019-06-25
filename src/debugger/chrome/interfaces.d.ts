@@ -2,29 +2,31 @@ import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {CancelReasons} from '@/constants/CancelReasons';
 
-interface RequestHeaders {
+interface HeadersMap {
 	[name: string]: string;
 }
 
-interface DebuggerRequest {
+interface Request {
 	url: string;
 	method: RequestMethod;
 	resourceType: ResourceType;
 	urlFragment?: string;
-	headers: RequestHeaders;
+	headers: HeadersMap;
 }
 
 interface RequestEventParams {
 	interceptionId: string;
-	request: DebuggerRequest;
+	request: Request;
 	resourceType: ResourceType;
-	//..TODO
+	requestId: string;
+	// ... has mote
 }
+
 interface CompletedRequestEventParams extends RequestEventParams {
-	responseHeaders: RequestHeaders;
+	responseHeaders: HeadersMap;
 	responseErrorReason: CancelReasons;
 	responseStatusCode: number;
-	//..TODO
+	// ... has mote
 }
 
 interface ContinueRequestParams {
@@ -34,7 +36,7 @@ interface ContinueRequestParams {
 	url?: string;
 	method?: RequestMethod;
 	postData?: string;
-	headers?: RequestHeaders;
+	headers?: HeadersMap;
 }
 
 interface GetInterceptedBodyResponse {

@@ -1,18 +1,14 @@
-import {buildRequestBodyFromMultipartForm, buildRequestBodyFromUrlEncodedForm} from './helpers/forms';
-import {compileRawResponseFromBase64Body, compileRawResponseFromFileBody, compileRawResponseFromTextBody} from './helpers/response'; // prettier-ignore
-import {mutateHeaders} from './helpers/headers';
-import {compileUrlFromPattern} from './helpers/url';
+import {buildRequestBodyFromMultipartForm, buildRequestBodyFromUrlEncodedForm} from './http/forms';
+import {compileRawResponseFromBase64Body, compileRawResponseFromFileBody, compileRawResponseFromTextBody} from './http/response'; // prettier-ignore
+import {mutateHeaders} from './http/headers';
+import {compileUrlFromPattern} from './http/url';
+import {attachDebugger, detachDebugger, listenDebuggerEvent, listenDebuggerDetach, sendDebuggerCommand, setExtensionIcon} from './chrome/chromeAPI'; // prettier-ignore
+import {RequestEventParams, CompletedRequestEventParams, ContinueRequestParams, GetInterceptedBodyResponse} from './chrome/interfaces'; // prettier-ignore
 import {randomHex} from '@/helpers/random';
 import {RequestBodyType} from '@/constants/RequestBodyType';
 import {RulesManager} from '@/interfaces/RulesManager';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {Log} from '@/interfaces/Log';
-import {
-	RequestEventParams,
-	CompletedRequestEventParams,
-	ContinueRequestParams,
-	GetInterceptedBodyResponse,
-} from './chromeInternal';
 
 // prettier-ignore
 const interceptPatterns = [{
@@ -47,11 +43,15 @@ export class Debugger {
 	private readonly onRequestEnd: DebuggerConfig['onRequestEnd'];
 	private readonly onUserDetach: DebuggerConfig['onUserDetach'];
 
+	private state = DebuggerState.Inactive;
+
 	get currentTabId() {
 		return this.debugTarget.tabId;
 	}
 
-	state = DebuggerState.Inactive;
+	get currentState() {
+		return this.state;
+	}
 
 	constructor({tabId, rulesManager, onRequestStart, onRequestEnd, onUserDetach}: DebuggerConfig) {
 		this.debugTarget = {tabId};
@@ -60,69 +60,44 @@ export class Debugger {
 		this.onRequestEnd = onRequestEnd;
 		this.onUserDetach = onUserDetach;
 
-		chrome.debugger.onDetach.addListener(this.detachHandler);
+		listenDebuggerDetach(this.detachHandler);
 	}
 
 	async initialize() {
 		this.state = DebuggerState.Starting;
 
-		await this.attach();
-		await this.sendCommand('Network.setRequestInterception', {patterns: interceptPatterns});
-		chrome.debugger.onEvent.addListener(this.messageHandler);
+		await attachDebugger(this.debugTarget, this.debuggerVersion);
+		await sendDebuggerCommand(this.debugTarget, 'Network.setRequestInterception', {patterns: interceptPatterns});
+		listenDebuggerEvent(this.messageHandler);
 
 		this.state = DebuggerState.Active;
 
 		const {tabId} = this.debugTarget;
-		chrome.pageAction.show(tabId);
-		chrome.pageAction.setTitle({tabId, title: 'Netify (active)'});
-	}
-
-	private attach() {
-		return new Promise((resolve, reject) => {
-			chrome.debugger.attach(this.debugTarget, this.debuggerVersion, () => {
-				if (chrome.runtime.lastError) {
-					reject(chrome.runtime.lastError);
-				} else {
-					resolve();
-				}
-			});
-		});
+		setExtensionIcon(tabId, true, 'Netify (active)');
 	}
 
 	async destroy() {
 		this.state = DebuggerState.Stopping;
 
-		await new Promise((resolve, reject) => {
-			chrome.debugger.detach(this.debugTarget, () => {
-				if (chrome.runtime.lastError) {
-					reject(chrome.runtime.lastError);
-				} else {
-					resolve();
-				}
-				this.state = DebuggerState.Inactive;
-			});
-		});
+		try {
+			await detachDebugger(this.debugTarget);
+		} catch (error) {
+			throw error;
+		} finally {
+			this.state = DebuggerState.Inactive;
 
-		const {tabId} = this.debugTarget;
-		chrome.pageAction.hide(tabId);
-		chrome.pageAction.setTitle({tabId, title: 'Netify (inactive)'});
+			const {tabId} = this.debugTarget;
+			setExtensionIcon(tabId, false, 'Netify (inactive)');
+		}
 	}
 
-	private sendCommand<TResult = any>(command: string, params: object): Promise<TResult> {
-		return new Promise(resolve => {
-			return chrome.debugger.sendCommand(this.debugTarget, command, params, (result: any) => {
-				resolve(result as TResult);
-			});
-		});
-	}
-
-	private detachHandler = ({tabId}: {tabId?: number}) => {
+	private detachHandler = (tabId: number | null) => {
 		if (tabId === this.debugTarget.tabId && [DebuggerState.Active, DebuggerState.Starting].includes(this.state)) {
 			this.onUserDetach();
 		}
 	};
 
-	private messageHandler = async (_source: any, method: string, params: any) => {
+	private messageHandler = async (method: string, params: any) => {
 		if (method === 'Network.requestIntercepted') {
 			if (params.hasOwnProperty('responseStatusCode')) {
 				await this.handleServerResponse(params);
@@ -294,7 +269,8 @@ export class Debugger {
 			newBodyTextValue = mutateResponse.bodyReplace.textValue;
 			newBodyFileValue = mutateResponse.bodyReplace.fileValue;
 		} else {
-			const {body, base64Encoded} = await this.sendCommand<GetInterceptedBodyResponse>(
+			const {body, base64Encoded} = await sendDebuggerCommand<GetInterceptedBodyResponse>(
+				this.debugTarget,
 				'Network.getResponseBodyForInterception',
 				{interceptionId},
 			);
@@ -325,8 +301,8 @@ export class Debugger {
 	}
 
 	private async continueIntercepted(params: ContinueRequestParams, waitTime?: number) {
-		const continueCommand = () => {
-			return this.sendCommand('Network.continueInterceptedRequest', params).then(/* TODO check response */);
+		const continueCommand = async () => {
+			return sendDebuggerCommand(this.debugTarget, 'Network.continueInterceptedRequest', params);
 		};
 
 		if (waitTime) {
