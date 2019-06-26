@@ -2,7 +2,7 @@
 	position: relative;
 	width: 80px;
 	font-size: 12px;
-	color: #a5a5a5;
+	color: var(--color-main);
 }
 .label {
 	position: relative;
@@ -17,7 +17,7 @@
 	font-size: 11px;
 	text-overflow: ellipsis;
 	user-select: none;
-	background: #242424;
+	background: var(--color-bg-main);
 	color: inherit;
 }
 .label::after {
@@ -32,11 +32,11 @@
 	clip-path: polygon(0 0, 100% 0, 50% 100%);
 }
 .label.empty {
-	color: #656565;
+	color: var(--color-placeholder);
 }
 .label:focus {
 	outline: none;
-	border-color: #356a9e;
+	border-color: var(--color-focus);
 }
 .content {
 	position: absolute;
@@ -46,9 +46,9 @@
 	padding: 2px 0;
 	overflow: overlay;
 	overscroll-behavior: contain;
-	border: #1a1a1a 1px solid;
-	color: #a5a5a5;
-	background: #303030;
+	border: #61616160 1px solid;
+	color: var(--color-main);
+	background: var(--color-bg-main);
 	user-select: none;
 	z-index: 2;
 }
@@ -68,13 +68,13 @@
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
-	color: #a5a5a5;
+	color: var(--color-main);
 	cursor: pointer;
 }
 .option.selected {
-	background: #424242;
+	background: var(--color-bg-active);
 }
 .option:hover,
 .option.highlighted {
-	background: #356a9e;
+	background: var(--color-focus);
 }

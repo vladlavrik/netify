@@ -7,7 +7,7 @@
 	box-sizing: border-box;
 	height: 62px;
 	padding: 12px 16px;
-	border: 1px dashed #777;
+	border: 1px dashed var(--color-brd-lightest);
 	cursor: pointer;
 	user-select: none;
 }
@@ -23,7 +23,7 @@
 
 .title {
 	line-height: 18px;
-	color: #656565;
+	color: var(--color-dark);
 }
 
 .value {
@@ -32,11 +32,11 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	color: #a5a5a5;
+	color: var(--color-main);
 }
 
 .note {
 	line-height: 18px;
 	font-size: 11px;
-	color: #656565;
+	color: var(--color-dark);
 }

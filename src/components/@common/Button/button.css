@@ -2,22 +2,22 @@
 	height: 24px;
 	padding: 0 16px;
 	border-radius: 3px;
-	border: #555555 1px solid;
-	font-size: 11px;
+	border: var(--color-brd-main) 1px solid;
+	font-weight: 700;
 	cursor: pointer;
 }
 
 .root.style-main {
-	background: #242424;
-	color: #a5a5a5;
+	background: var(--color-bg-main);
+	color: var(--color-main);
 }
 
 .root.style-secondary {
-	background: #313131;
-	color: #a5a5a5;
+	background: var(--color-bg-light);
+	color: var(--color-main);
 }
 
 .root:focus {
 	outline: none;
-	border-color: #356a9e;
+	border-color: var(--color-focus);
 }

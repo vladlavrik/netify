@@ -3,11 +3,11 @@
 	height: 28px;
 	align-items: center;
 	padding: 1px 6px 0 8px;
-	border-bottom: #555555 1px solid;
+	border-bottom: var(--color-brd-main) 1px solid;
 }
 
 .title {
-	color: #a5a5a5;
+	color: var(--color-main);
 	flex-grow: 1;
 	flex-shrink: 1;
 	overflow: hidden;

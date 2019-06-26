@@ -54,7 +54,7 @@ module.exports = (env, {mode} = {}) => ({
 			'src/manifest.json',
 			'src/devtool.html',
 			'src/devtool.js',
-			{from: 'src/icons', to: 'icons'},
+			{from: 'src/style/icons', to: 'icons'},
 		]),
 		...(isDevServer ? [
 			new webpack.HotModuleReplacementPlugin()

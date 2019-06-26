@@ -5,5 +5,5 @@
 
 .content {
 	padding-bottom: 16px;
-	color: #a5a5a5;
+	color: var(--color-main);
 }

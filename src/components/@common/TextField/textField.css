@@ -2,8 +2,8 @@
 	display: flex;
 	position: relative;
 	width: 300px;
-	background: #242424;
-	color: #a5a5a5;
+	background: var(--color-bg-main);
+	color: var(--color-light);
 }
 .prefix,
 .suffix {
@@ -16,7 +16,7 @@
 	flex-grow: 1;
 	padding: 0 8px;
 	border: none;
-	line-height: 18px;
+	line-height: 20px;
 	font-size: 11px;
 	color: inherit;
 	background: transparent;
@@ -34,12 +34,12 @@
 	outline: none;
 }
 .input:focus + .border {
-	border-color: #356a9e;
+	border-color: var(--color-focus);
 }
 .input[disabled] {
 	border-color: transparent;
-	background: #292929;
-	color: #515151;
+	background: var(--color-bg-main);
+	color: var(--color-main);
 }
 .input[disabled] + .border {
 	border-color: transparent;

@@ -13,7 +13,7 @@
 	width: 1px;
 	height: 20px;
 	margin: 0 8px;
-	background: #616161;
+	background: var(--color-brd-main);
 }
 .resourceTypesField {
 	flex-shrink: 0;

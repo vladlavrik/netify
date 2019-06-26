@@ -7,18 +7,18 @@
 	box-sizing: border-box;
 	line-height: 14px;
 	border: transparent 1px solid;
-	background: #242424;
+	background: var(--color-bg-main);
 	font-family: inherit;
 	font-size: 11px;
-	color: #a5a5a5;
+	color: var(--color-light);
 	resize: vertical;
 }
 .root:focus {
-	outline: #356a9e solid 1px;
+	outline: var(--color-focus) solid 1px;
 	outline-offset: 0;
 }
 .root:disabled {
 	border-color: transparent;
-	background: #292929;
-	color: #cfcfcf;
+	background: var(--color-bg-main);
+	color: var(--color-main);
 }

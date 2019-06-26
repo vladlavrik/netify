@@ -5,8 +5,8 @@
 	right: 0;
 	bottom: 0;
 	box-sizing: border-box;
-	border-top: #555555 1px solid;
-	background: #383838;
+	border-top: var(--color-brd-main) 1px solid;
+	background: var(--color-bg-light);
 	overflow: auto;
 	z-index: 10;
 }
@@ -17,7 +17,7 @@
 .title {
 	font-size: 12px;
 	margin: 16px 0 6px 0;
-	color: #a5a5a5;
+	color: var(--color-main);
 }
 .controls {
 	display: flex;

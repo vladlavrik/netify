@@ -1,0 +1,16 @@
+:root {
+	--color-bg-main: #242424;
+	--color-bg-light: #333333;
+	--color-bg-odd-item: #292929;
+	--color-bg-active: #474747;
+
+	--color-brd-main: #525252;
+	--color-brd-light: #333333;
+	--color-brd-lightest: #777777;
+
+	--color-main: #a5a5a5;
+	--color-light: #b1b9c0;
+	--color-dark: #8a8a8a;
+	--color-focus: #0e639c;
+	--color-placeholder: #7f7f7f;
+}

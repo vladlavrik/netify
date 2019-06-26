@@ -12,5 +12,5 @@
 	display: block;
 	content: '';
 	height: 2px;
-	background: #777;
+	background: var(--color-brd-lightest);
 }

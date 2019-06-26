@@ -18,7 +18,7 @@
 	clip-path: var(--icon-button-clip, none);
 }
 .root:focus {
-	outline: #356a9e solid 1px;
+	outline: var(--color-focus) solid 1px;
 }
 .root:hover::before {
 	opacity: 1;
