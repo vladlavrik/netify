@@ -27,8 +27,10 @@ module.exports = (env, {mode} = {}) => ({
 			}, {
 				loader: 'css-loader',
 				options: {
-					modules: true,
-					localIdentName: '[name]__[local]-[hash:base64:5]',
+					modules: {
+						mode: 'local',
+						localIdentName: '[name]__[local]-[hash:base64:5]',
+					},
 				},
 			}],
 		}, {

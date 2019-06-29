@@ -23,7 +23,7 @@ export class Button extends React.PureComponent<Props> {
 					withIcon && styles.withIcon,
 					className,
 				)}
-				type={type}
+				type={type as any /*TS workaround*/}
 				disabled={disabled}
 				onClick={onClick}>
 				{children}
