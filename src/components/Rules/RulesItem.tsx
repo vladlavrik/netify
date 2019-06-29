@@ -8,8 +8,8 @@ import styles from './rulesItem.css';
 
 interface Props {
 	data: Rule;
-	onEdit: (id: string) => void;
-	onRemove: (id: string) => void;
+	onEdit(id: string): void;
+	onRemove(id: string): void;
 }
 
 interface State {

@@ -1,5 +1,10 @@
 .root {
 }
+
+.endpointBlock {
+	flex-grow: 1;
+}
+
 .endpointField {
 	width: 100%;
 }

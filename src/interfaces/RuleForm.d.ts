@@ -5,7 +5,7 @@ import {RequestBodyType} from '@/constants/RequestBodyType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {CancelReasons} from '@/constants/CancelReasons';
 
-export interface FormValue {
+export interface RuleForm {
 	filter: {
 		url: {
 			value: string;

@@ -5,9 +5,6 @@ export enum ResponseBodyType {
 	File = 'File',
 }
 
-export const responseBodyTypesList = [
-	ResponseBodyType.Original,
-	ResponseBodyType.Text,
-	ResponseBodyType.Base64,
-	ResponseBodyType.File,
-];
+export const responseBodyRealTypesList = [ResponseBodyType.Text, ResponseBodyType.Base64, ResponseBodyType.File];
+
+export const responseBodyTypesList = [ResponseBodyType.Original, ...responseBodyRealTypesList];

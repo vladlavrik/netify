@@ -12,8 +12,8 @@ interface Props {
 
 interface FieldRenderProps {
 	field: {
-		onChange: (e: React.ChangeEvent<any>) => void;
-		onBlur: (e: any) => void;
+		onChange(e: React.ChangeEvent<any>): void;
+		onBlur(e: any): void;
 		value: any;
 	};
 }

@@ -1,12 +1,13 @@
 import * as React from 'react';
-import {EditorRow} from './EditorRow';
+import {RequestBodyType, requestBodyTypesList} from '@/constants/RequestBodyType';
+import {requestMethodsList} from '@/constants/RequestMethod';
 import {TextField} from '@/components/@common/TextField';
 import {DropdownPicker} from '@/components/@common/DropdownPicker';
 import {RadioTabs} from '@/components/@common/RadioTabs';
 import {TextareaField} from '@/components/@common/TextaredField';
 import {KeyValueArrayField} from '@/components/@common/KeyValueArrayField';
-import {RequestBodyType, requestBodyTypesList} from '@/constants/RequestBodyType';
-import {requestMethodsList} from '@/constants/RequestMethod';
+import {FieldError} from '@/components/@common/FieldError';
+import {EditorRow} from './EditorRow';
 import styles from './editorActionRequest.css';
 
 export class EditorActionRequest extends React.PureComponent {
@@ -14,11 +15,15 @@ export class EditorActionRequest extends React.PureComponent {
 		return (
 			<div className={styles.root}>
 				<EditorRow title='Replace endpoint:'>
-					<TextField
-						className={styles.endpointField}
-						name='actions.mutateRequest.endpointReplace'
-						placeholder='%protocol%//%hostname%:%port%%path%%query%'
-					/>
+					<div className={styles.endpointBlock}>
+						<TextField
+							className={styles.endpointField}
+							name='actions.mutateRequest.endpointReplace'
+							placeholder='%protocol%//%hostname%:%port%%path%%query%'
+						/>
+						<FieldError name='actions.mutateRequest.endpointReplace' />
+						{/*TODO Add info block*/}
+					</div>
 				</EditorRow>
 				<EditorRow title='Replace method:'>
 					<DropdownPicker
@@ -51,7 +56,7 @@ export class EditorActionRequest extends React.PureComponent {
 		);
 	}
 
-	renderBodyReplacer = (tabName: string) => {
+	private renderBodyReplacer = (tabName: string) => {
 		switch (tabName) {
 			case RequestBodyType.Text:
 				return (

@@ -1,8 +1,10 @@
+/*TODO fix resize angle*/
+
 .root {
 	display: block;
 	padding: 3px 8px;
 	width: 100%;
-	min-height: 62px;
+	min-height: 64px;
 	max-height: 300px;
 	box-sizing: border-box;
 	line-height: 14px;

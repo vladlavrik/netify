@@ -4,8 +4,8 @@ import {PopUp} from '@/components/@common/PopUp';
 import styles from './popUpConfirm.css';
 
 interface Props {
-	onConfirm: () => any;
-	onCancel: () => any;
+	onConfirm(): void;
+	onCancel(): void;
 }
 
 export class PopUpConfirm extends React.PureComponent<Props> {
@@ -15,10 +15,10 @@ export class PopUpConfirm extends React.PureComponent<Props> {
 			<PopUp className={styles.root}>
 				<div className={styles.content}>{children}</div>
 				<div className={styles.buttons}>
-					<Button className={styles.button} styleType='main' onClick={onConfirm}>
+					<Button className={styles.button} onClick={onConfirm}>
 						Confirm
 					</Button>
-					<Button className={styles.button} styleType='secondary' onClick={onCancel}>
+					<Button className={styles.button} styleType='light' onClick={onCancel}>
 						Cancel
 					</Button>
 				</div>

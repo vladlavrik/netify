@@ -6,8 +6,8 @@ import {KeyValueArrayField} from '@/components/@common/KeyValueArrayField';
 import {RadioTabs} from '@/components/@common/RadioTabs';
 import {TextareaField} from '@/components/@common/TextaredField';
 import {FileField} from '@/components/@common/FileField';
+import {FieldError} from '@/components/@common/FieldError';
 import {EditorRow} from './EditorRow';
-import {EditorError} from './EditorError';
 import styles from './editorActionResponse.css';
 
 export class EditorActionResponse extends React.PureComponent {
@@ -38,7 +38,7 @@ export class EditorActionResponse extends React.PureComponent {
 							maxlength={3}
 							placeholder='Default - from server or 200'
 						/>
-						<EditorError name='actions.mutateResponse.statusCode' />
+						<FieldError name='actions.mutateResponse.statusCode' />
 					</div>
 				</EditorRow>
 				<EditorRow title='Headers:'>
@@ -64,7 +64,7 @@ export class EditorActionResponse extends React.PureComponent {
 		);
 	}
 
-	renderBodyReplacer = (tabName: string) => {
+	private renderBodyReplacer = (tabName: string) => {
 		switch (tabName) {
 			case ResponseBodyType.Text:
 			case ResponseBodyType.Base64:

@@ -21,7 +21,7 @@ export interface Rule {
 			endpointReplace: string;
 			methodReplace: RequestMethod;
 			headers: {
-				add: {[s: string]: string};
+				add: {[s: string]: string}; //TODO maybe use array to save sequence
 				remove: string[];
 			};
 			bodyReplace: {

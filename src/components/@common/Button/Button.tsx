@@ -5,18 +5,24 @@ import styles from './button.css';
 interface Props {
 	className?: string;
 	type?: string;
-	styleType?: 'main' | 'secondary';
+	styleType?: 'unfilled' | 'light' | 'dark';
+	withIcon?: boolean;
 	disabled?: boolean;
-	onClick?: (event: React.MouseEvent<HTMLButtonElement>) => any;
+	onClick?(event: React.MouseEvent<HTMLButtonElement>): void;
 }
 
 export class Button extends React.PureComponent<Props> {
 	render() {
-		const {className, type = 'button', styleType = 'main', disabled, onClick, children} = this.props;
+		const {className, type = 'button', styleType = 'unfilled', withIcon, disabled, onClick, children} = this.props;
 
 		return (
 			<button
-				className={classNames(styles.root, styles['style-' + styleType], className)}
+				className={classNames(
+					styles.root,
+					styles['style-' + styleType],
+					withIcon && styles.withIcon,
+					className,
+				)}
 				type={type}
 				disabled={disabled}
 				onClick={onClick}>

@@ -4,7 +4,7 @@ import {PopUp} from '@/components/@common/PopUp';
 import styles from './popUpAlert.css';
 
 interface Props {
-	onClose: () => any;
+	onClose(): void;
 }
 
 export class PopUpAlert extends React.PureComponent<Props> {
@@ -13,9 +13,7 @@ export class PopUpAlert extends React.PureComponent<Props> {
 		return (
 			<PopUp className={styles.root}>
 				<div className={styles.content}>{children}</div>
-				<Button styleType='main' onClick={onClose}>
-					Close
-				</Button>
+				<Button onClick={onClose}>Close</Button>
 			</PopUp>
 		);
 	}

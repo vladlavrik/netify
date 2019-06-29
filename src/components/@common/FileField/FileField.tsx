@@ -10,12 +10,12 @@ interface Props {
 
 interface FieldRenderProps {
 	field: {
-		onChange: (e: React.ChangeEvent<any>) => void;
-		onBlur: (e: any) => void;
+		onChange(e: React.ChangeEvent<any>): void;
+		onBlur(e: any): void;
 		value?: File;
 	};
 	form: {
-		setFieldValue: (name: string, value: File) => void;
+		setFieldValue(name: string, value: File): void;
 	};
 }
 export class FileField extends React.PureComponent<Props> {

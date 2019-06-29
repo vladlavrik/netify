@@ -6,7 +6,7 @@ interface Props {
 	minHeight: number;
 	topSection: JSX.Element;
 	bottomSection: JSX.Element;
-	onRatioChange: (ratio: number, topEdgeReached: boolean, bottomEdgeReached: boolean) => void;
+	onRatioChange(ratio: number, topEdgeReached: boolean, bottomEdgeReached: boolean): void;
 }
 
 export class AppSeparatedSections extends React.PureComponent<Props> {

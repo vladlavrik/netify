@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {Formik, FormikActions, Form} from 'formik';
 import {Rule} from '@/interfaces/Rule';
-import {FormValue} from './FormValue';
-import {formSchema} from './formSchema';
+import {RuleForm} from '@/interfaces/RuleForm';
+import {formSchema} from '@/validation/ruleForm';
 import {UrlCompareType} from '@/constants/UrlCompareType';
 import {RequestBodyType} from '@/constants/RequestBodyType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
@@ -11,11 +11,11 @@ import {CancelReasons} from '@/constants/CancelReasons';
 interface Props {
 	className?: string;
 	initialValues?: Rule;
-	onSave: (rule: Rule) => any;
+	onSave(rule: Rule): void;
 }
 
 interface State {
-	formInitialValue: FormValue;
+	formInitialValue: RuleForm;
 }
 
 export class EditorForm extends React.PureComponent<Props, State> {
@@ -138,7 +138,7 @@ export class EditorForm extends React.PureComponent<Props, State> {
 		);
 	}
 
-	private onSubmit = (rawValues: FormValue, form: FormikActions<FormValue>) => {
+	private onSubmit = (rawValues: RuleForm, form: FormikActions<RuleForm>) => {
 		form.setSubmitting(false);
 
 		// workaround to "Formik" future fix https://github.com/jaredpalmer/formik/pull/728

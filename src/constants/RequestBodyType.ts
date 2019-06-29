@@ -5,9 +5,10 @@ export enum RequestBodyType {
 	MultipartFromData = 'MultipartFromData',
 }
 
-export const requestBodyTypesList = [
-	RequestBodyType.Original,
+export const requestBodyRealTypesList = [
 	RequestBodyType.Text,
 	RequestBodyType.UrlEncodedForm,
 	RequestBodyType.MultipartFromData,
 ];
+
+export const requestBodyTypesList = [RequestBodyType.Original, ...requestBodyRealTypesList];

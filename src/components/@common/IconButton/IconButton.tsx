@@ -7,7 +7,7 @@ interface Props {
 	className?: string;
 	tooltip?: string;
 	disabled?: boolean;
-	onClick?: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => any;
+	onClick?(event?: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
 }
 
 export class IconButton extends React.PureComponent<Props> {

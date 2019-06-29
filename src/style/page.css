@@ -7,17 +7,15 @@ body {
 	background: var(--color-bg-main);
 	font-size: 12px;
 	-webkit-user-select: none;
+	color: var(--color-main);
 }
-
 
 :global body.platform-linux {
 	font-family: Roboto, Ubuntu, Arial, sans-serif;
-	/*color: rgb(48, 57, 66);*/
 }
 
 :global body.platform-mac {
 	font-family: '.SFNSDisplay-Regular', 'Helvetica Neue', 'Lucida Grande', sans-serif;
-	/*color: rgb(48, 57, 66);*/
 }
 
 :global body.platform-windows {

@@ -13,7 +13,7 @@ interface Props {
 	resourceType: ResourceType;
 	method: RequestMethod;
 	loaded: boolean;
-	onFollowRule: (ruleId: string) => any;
+	onFollowRule(ruleId: string): void;
 }
 
 export class LogsItem extends React.PureComponent<Props> {

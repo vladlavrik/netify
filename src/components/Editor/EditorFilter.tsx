@@ -15,7 +15,6 @@ export class EditorFilter extends React.PureComponent {
 					name='filter.url.value'
 					placeholder='Url (includes hostname or only path when starts with "/")'
 				/>
-
 				<DropdownPicker
 					className={styles.urlTypeField}
 					name='filter.url.compareType'

@@ -7,21 +7,22 @@ interface Props {
 	className?: string;
 	name: string;
 	placeholder?: string;
+	rows?: number;
 	maxlength?: number;
 	disabled?: boolean;
 }
 
 interface FieldRenderProps {
 	field: {
-		onChange: (e: React.ChangeEvent<any>) => void;
-		onBlur: (e: any) => void;
+		onChange(e: React.ChangeEvent<any>): void;
+		onBlur(e: any): void;
 		value: any;
 	};
 }
 
 export class TextareaField extends React.PureComponent<Props> {
 	render() {
-		const {className, name, placeholder, maxlength, disabled} = this.props;
+		const {className, name, placeholder, rows = 4, maxlength, disabled} = this.props;
 
 		return (
 			<Field
@@ -33,6 +34,7 @@ export class TextareaField extends React.PureComponent<Props> {
 						disabled={disabled}
 						placeholder={placeholder}
 						maxLength={maxlength}
+						rows={rows}
 						spellCheck={false}
 						onChange={field.onChange}
 						onBlur={field.onBlur}

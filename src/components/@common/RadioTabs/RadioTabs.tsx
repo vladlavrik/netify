@@ -9,7 +9,7 @@ interface Props {
 		title: string;
 		value: string;
 	}[];
-	render: (tab: string) => React.ReactNode;
+	render(tab: string): React.ReactNode;
 }
 
 interface FormikProps {

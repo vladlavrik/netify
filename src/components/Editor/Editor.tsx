@@ -1,6 +1,4 @@
 import * as React from 'react';
-import {inject} from 'mobx-react';
-import {RulesStore} from '@/stores/RulesStore';
 import {Button} from '@/components/@common/Button';
 import {ExpandableCheckbox} from '@/components/@common/ExpandableCheckbox';
 import {Rule} from '@/interfaces/Rule';
@@ -12,13 +10,11 @@ import {EditorActionCancel} from './EditorActionCancel';
 import styles from './editor.css';
 
 interface Props {
-	rulesStore?: RulesStore;
 	initialValues?: Rule;
-	onSave: (rule: Rule) => any;
-	onCancel: () => any;
+	onSave(rule: Rule): void;
+	onCancel(): void;
 }
 
-@inject('rulesStore')
 export class Editor extends React.PureComponent<Props> {
 	render() {
 		const {initialValues, onSave, onCancel} = this.props;
@@ -43,12 +39,10 @@ export class Editor extends React.PureComponent<Props> {
 					</ExpandableCheckbox>
 
 					<div className={styles.controls}>
-						<Button className={styles.saveButton} type='submit'>
+						<Button className={styles.saveButton} styleType='dark' type='submit'>
 							Save
 						</Button>
-						<Button styleType='secondary' onClick={onCancel}>
-							Cancel
-						</Button>
+						<Button onClick={onCancel}>Cancel</Button>
 					</div>
 				</EditorForm>
 			</div>
