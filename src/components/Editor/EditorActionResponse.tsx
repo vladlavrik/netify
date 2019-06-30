@@ -14,16 +14,10 @@ export const EditorActionResponse = React.memo(() => (
 	<div className={styles.root}>
 		<EditorRow title='Response mode:'>
 			<div className={styles.modeFieldset}>
-				<RadioButton
-					className={styles.modeField}
-					name='actions.mutateResponse.responseLocally'
-					value='0'>
+				<RadioButton className={styles.modeField} name='actions.mutateResponse.responseLocally' value='0'>
 					After server response
 				</RadioButton>
-				<RadioButton
-					className={styles.modeField}
-					name='actions.mutateResponse.responseLocally'
-					value='1'>
+				<RadioButton className={styles.modeField} name='actions.mutateResponse.responseLocally' value='1'>
 					Response locally
 				</RadioButton>
 			</div>
@@ -36,7 +30,7 @@ export const EditorActionResponse = React.memo(() => (
 					maxlength={3}
 					placeholder='Default - from server or 200'
 				/>
-				<FieldError name='actions.mutateResponse.statusCode'/>
+				<FieldError name='actions.mutateResponse.statusCode' />
 			</div>
 		</EditorRow>
 		<EditorRow title='Headers:'>
@@ -67,7 +61,7 @@ export const EditorActionResponse = React.memo(() => (
 							);
 
 						case ResponseBodyType.File:
-							return <FileField name='actions.mutateResponse.bodyReplace.fileValue'/>;
+							return <FileField name='actions.mutateResponse.bodyReplace.fileValue' />;
 
 						default:
 							return null;

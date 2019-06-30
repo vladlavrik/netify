@@ -19,7 +19,7 @@ export const EditorActionRequest = React.memo(() => (
 					name='actions.mutateRequest.endpointReplace'
 					placeholder='%protocol%//%hostname%:%port%%path%%query%'
 				/>
-				<FieldError name='actions.mutateRequest.endpointReplace'/>
+				<FieldError name='actions.mutateRequest.endpointReplace' />
 				{/*TODO Add info block*/}
 			</div>
 		</EditorRow>

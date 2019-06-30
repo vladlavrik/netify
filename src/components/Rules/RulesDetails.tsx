@@ -8,6 +8,7 @@ interface Props {
 	data: Rule;
 }
 
+// TODO show interceptions
 export class RulesDetails extends React.PureComponent<Props> {
 	render() {
 		const {filter} = this.props.data;

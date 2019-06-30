@@ -15,6 +15,10 @@ export interface Rule {
 		resourceTypes: ResourceType[];
 		methods: RequestMethod[];
 	};
+	intercept: {
+		request: boolean;
+		response: boolean;
+	};
 	actions: {
 		mutateRequest: {
 			enabled: boolean;

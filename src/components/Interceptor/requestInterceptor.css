@@ -1,0 +1,20 @@
+.buttonExecute,
+.buttonResponse {
+	margin-right: 16px;
+}
+
+.buttonExecute {
+	--button-icon: url('icons/execute.svg');
+}
+
+.buttonResponse {
+	--button-icon: url('./icons/response.svg');
+}
+
+.buttonAbort {
+	--button-icon: url('./icons/abort.svg');
+}
+
+.endpointField {
+	flex-grow: 1;
+}

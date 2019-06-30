@@ -23,5 +23,5 @@ export const ExpandableCheckbox = React.memo(({className, name, label, disabled,
 
 			<div className={styles.content}>{value && children}</div>
 		</div>
-	)
+	);
 });

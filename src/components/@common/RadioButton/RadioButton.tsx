@@ -26,7 +26,7 @@ export const RadioButton = React.memo(({className, name, value, disabled, childr
 				onBlur={onBlur}
 				checked={value === currentValue}
 			/>
-			<div className={styles.imitator}/>
+			<div className={styles.imitator} />
 			<p className={styles.label}>{children}</p>
 		</label>
 	);

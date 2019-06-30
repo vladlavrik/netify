@@ -23,6 +23,10 @@ export const formSchema = yup.object<Rule>({
 		resourceTypes: yup.array().of(yup.mixed().oneOf(resourceTypesList)),
 		methods: yup.array().of(yup.mixed().oneOf(requestMethodsList)),
 	}),
+	intercept: yup.object({
+		request: yup.bool(),
+		response: yup.bool(),
+	}),
 	actions: yup.object({
 		mutateRequest: yup.object({
 			enabled: yup.boolean(),

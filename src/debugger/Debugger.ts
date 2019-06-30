@@ -28,17 +28,17 @@ export enum DebuggerState {
 
 export interface DebuggerConfig {
 	tabId: number;
-	rulesManager: RulesManager;
-	onRequestStart: (data: Log) => any;
-	onRequestEnd: (id: Log['id']) => any;
-	onUserDetach: () => any; // When user manually destroy debugger by Chrome warning-panel
+	rulesSelector: RulesManager;
+	onRequestStart(data: Log): void; // TODO to listeners.onRequestStart
+	onRequestEnd(id: Log['id']): void;
+	onUserDetach(): void; // When user manually destroy debugger by Chrome warning-panel
 }
 
 export class Debugger {
 	private readonly debuggerVersion = '1.3';
 
 	private readonly debugTarget: {tabId: number};
-	private rulesManager: RulesManager;
+	private rulesSelector: RulesManager;
 	private readonly onRequestStart: DebuggerConfig['onRequestStart'];
 	private readonly onRequestEnd: DebuggerConfig['onRequestEnd'];
 	private readonly onUserDetach: DebuggerConfig['onUserDetach'];
@@ -53,9 +53,9 @@ export class Debugger {
 		return this.state;
 	}
 
-	constructor({tabId, rulesManager, onRequestStart, onRequestEnd, onUserDetach}: DebuggerConfig) {
+	constructor({tabId, rulesSelector, onRequestStart, onRequestEnd, onUserDetach}: DebuggerConfig) {
 		this.debugTarget = {tabId};
-		this.rulesManager = rulesManager;
+		this.rulesSelector = rulesSelector;
 		this.onRequestStart = onRequestStart;
 		this.onRequestEnd = onRequestEnd;
 		this.onUserDetach = onUserDetach;
@@ -108,7 +108,7 @@ export class Debugger {
 	};
 
 	private async handleClientRequest({interceptionId, request, resourceType}: RequestEventParams) {
-		const rule = this.rulesManager.selectOne({...request, resourceType});
+		const rule = this.rulesSelector.selectOne({...request, resourceType});
 
 		// skip if none rule for the request
 		if (!rule) {
@@ -231,7 +231,7 @@ export class Debugger {
 
 	private async handleServerResponse(params: CompletedRequestEventParams) {
 		const {interceptionId, request, resourceType, responseHeaders, responseStatusCode} = params;
-		const rule = this.rulesManager.selectOne({...request, resourceType});
+		const rule = this.rulesSelector.selectOne({...request, resourceType});
 
 		// skip if none rule for the request
 		if (!rule) {

@@ -82,8 +82,17 @@ export class RulesItem extends React.PureComponent<Props, State> {
 	}
 
 	private parseActionsArray() {
+		const {intercept} = this.props.data;
 		const {mutateRequest, mutateResponse, cancelRequest} = this.props.data.actions;
 		const actions = [];
+
+		if (intercept.request) {
+			actions.push('Intercept on request');
+		}
+
+		if (intercept.response) {
+			actions.push('Intercept on response');
+		}
 
 		if (mutateRequest.enabled) {
 			const {endpointReplace, methodReplace, headers, bodyReplace} = mutateRequest;

@@ -1,52 +1,19 @@
-import {action, autorun, observable, computed, toJS} from 'mobx';
-import {Rule} from '@/interfaces/Rule';
-import {RootStore} from './RootStore';
-import {Debugger, DebuggerState} from '@/debugger';
+import {action, observable, computed, toJS} from 'mobx';
 import {openIDB, getOpenedIDB, RulesMapper} from '@/indexedDB';
-import {getTargetTabUrl} from '@/helpers/chrome';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {UrlCompareType} from '@/constants/UrlCompareType';
 import {RulesManager} from '@/interfaces/RulesManager';
-import {Log} from '@/interfaces/Log';
+import {Rule} from '@/interfaces/Rule';
+import {RootStore} from './RootStore';
 
 export class RulesStore implements RulesManager {
-	private readonly debugger: Debugger;
 	private IDBMapper?: RulesMapper;
 
-	constructor(private rootStore: RootStore) {
-		this.debugger = new Debugger({
-			tabId: chrome.devtools.inspectedWindow.tabId as number,
-			rulesManager: this,
-			onRequestStart: (log: Log) => this.rootStore.logsStore.add(log),
-			onRequestEnd: (id: string) => this.rootStore.logsStore.makeLoaded(id),
-			onUserDetach: () => (this.debuggerDisabled = true),
-		});
-
-		Promise.all([getTargetTabUrl(), this.connectIDB()]).then(([tabUrl]) => {
-			const hostname = tabUrl
-				.split('/')
-				.slice(0, 3)
-				.join('/');
-
-			this.IDBMapper = new RulesMapper(getOpenedIDB(), hostname);
-			return this.getListFromDb();
-		});
-
-		autorun(this.manageDebuggerActive);
-	}
+	constructor(private rootStore: RootStore) {}
 
 	@observable
 	readonly list: Rule[] = [];
-
-	@observable
-	debuggerDisabled = false;
-
-	@observable
-	composeShown = false;
-
-	@observable
-	editingItemId: string | null = null;
 
 	@observable
 	highlightedId: string | null = null;
@@ -62,41 +29,32 @@ export class RulesStore implements RulesManager {
 		return this.list.length === 0;
 	}
 
-	@computed
-	get editingItem() {
-		return toJS(this.list.find(item => item.id === this.editingItemId));
+	checkItemExists(id: string) {
+		return this.list.some(item => item.id === id);
 	}
 
-	private manageDebuggerActive = async () => {
-		// TODO disallow switch state when previous operation during
-		const debuggerActive = [DebuggerState.Active, DebuggerState.Starting].includes(this.debugger.currentState);
-
-		if (this.list.length > 0 && !debuggerActive && !this.debuggerDisabled) {
-			await this.initializeDebugger();
-		}
-		if ((this.list.length === 0 || this.debuggerDisabled) && debuggerActive) {
-			await this.destroyDebugger();
-		}
-	};
-
-	private async initializeDebugger() {
-		await this.debugger.initialize();
-		self.addEventListener('beforeunload', this.destroyDebugger);
+	async initialize(tabUrl: string) {
+		await this.connectIDB(tabUrl);
+		await this.readFromDatabase();
 	}
 
-	private destroyDebugger = () => {
-		self.removeEventListener('beforeunload', this.destroyDebugger);
-		return this.debugger.destroy();
-	};
-
-	private connectIDB() {
-		return openIDB().catch(error => {
+	private async connectIDB(tabUrl: string) {
+		try {
+			await openIDB();
+		} catch (error) {
 			this.reportException(`Exception on open IndexedDB:\n${error.message}`);
 			throw error;
-		});
+		}
+
+		const hostname = tabUrl
+			.split('/')
+			.slice(0, 3)
+			.join('/');
+
+		this.IDBMapper = new RulesMapper(getOpenedIDB(), hostname);
 	}
 
-	private async getListFromDb() {
+	private async readFromDatabase() {
 		let rules: Rule[];
 		try {
 			rules = await this.IDBMapper!.getList();
@@ -112,34 +70,10 @@ export class RulesStore implements RulesManager {
 		this.rootStore.appStore.setDisplayedError(error);
 	}
 
-	checkItemExists(id: string) {
-		return this.list.some(item => item.id === id);
-	}
-
-	@action
-	showCompose() {
-		this.composeShown = true;
-	}
-
-	@action
-	hideCompose() {
-		this.composeShown = false;
-	}
-
-	@action
-	showItemEditor(ruleId: string) {
-		this.editingItemId = ruleId;
-	}
-
-	@action
-	hideItemEditor() {
-		this.editingItemId = null;
-	}
-
 	@action
 	create(rule: Rule) {
 		this.list.push(rule);
-		this.hideCompose();
+		this.rootStore.appStore.hideCompose();
 
 		this.IDBMapper!.saveNewItem(rule).catch(error => {
 			this.reportException(`Exception on save a new rule to IndexedDB:\n${error.message}`);
@@ -152,7 +86,7 @@ export class RulesStore implements RulesManager {
 		const index = this.list.findIndex(item => item.id === rule.id);
 		this.list.splice(index, 1, rule);
 
-		this.hideItemEditor();
+		this.rootStore.appStore.hideRuleEditor();
 
 		this.IDBMapper!.updateItem(rule).catch(error => {
 			this.reportException(`Exception on update a rule to IndexedDB:\n${error.message}`);
@@ -161,12 +95,8 @@ export class RulesStore implements RulesManager {
 	}
 
 	@action
-	toggleDebuggerDisabled() {
-		this.debuggerDisabled = !this.debuggerDisabled;
-	}
-
-	@action
 	setHighlighted(id: string | null = null) {
+		// todo add "item"
 		this.highlightedId = id;
 	}
 
@@ -215,6 +145,7 @@ export class RulesStore implements RulesManager {
 	}
 
 	selectOne(select: {url: string; method: RequestMethod; resourceType: ResourceType}) {
+		// TODO to debugger dir
 		const selectUrlOrigin = select.url
 			.split('/')
 			.slice(0, 3) // first double slash is the end of schema, third slash is the path part start

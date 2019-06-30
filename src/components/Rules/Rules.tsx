@@ -1,41 +1,31 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import {reaction} from 'mobx';
 import {observer, inject} from 'mobx-react';
 import * as classNames from 'classnames';
 import {RulesStore} from '@/stores/RulesStore';
-import {Rule} from '@/interfaces/Rule';
+import {AppStore} from '@/stores/AppStore';
 import {SectionHeader} from '@/components/@common/SectionHeader';
 import {Button} from '@/components/@common/Button';
 import {IconButton} from '@/components/@common/IconButton';
 import {PopUpConfirm} from '@/components/@common/PopUpConfirm';
-import {Editor} from '@/components/Editor';
 import {RulesItem} from './RulesItem';
 import {RulesDetails} from './RulesDetails';
 import styles from './rules.css';
 
 interface Props {
+	appStore?: AppStore;
 	rulesStore?: RulesStore;
 }
 
-@inject('rulesStore')
+@inject('appStore', 'rulesStore')
 @observer
 export class Rules extends React.Component<Props> {
 	private readonly highlightedItemRef = React.createRef<HTMLLIElement>();
-	private readonly composeModalTarget = document.getElementById('modal-root')!;
 	private shouldScrollToHighlighted = false;
 
 	render() {
-		const {
-			list,
-			highlightedId,
-			debuggerDisabled,
-			listIsEmpty,
-			composeShown,
-			editingItem,
-			removeConfirmationId,
-			clearAllConfirmation,
-		} = this.props.rulesStore!;
+		const {debuggerAllowed} = this.props.appStore!;
+		const {list, highlightedId, listIsEmpty, removeConfirmationId, clearAllConfirmation} = this.props.rulesStore!;
 
 		return (
 			<div className={styles.root}>
@@ -48,11 +38,11 @@ export class Rules extends React.Component<Props> {
 					<IconButton
 						className={classNames(
 							styles.control,
-							listIsEmpty || debuggerDisabled ? styles.typeStartListen : styles.typeStopListen,
+							listIsEmpty || !debuggerAllowed ? styles.typeStartListen : styles.typeStopListen,
 						)}
 						disabled={listIsEmpty}
-						tooltip={debuggerDisabled ? 'Enable debugger' : 'Disable debugger'}
-						onClick={this.onToggleDebuggerEnabled}
+						tooltip={debuggerAllowed ? 'Disable debugger' : 'Enable debugger'}
+						onClick={this.toggleDebuggerAllowed}
 					/>
 					<IconButton
 						className={classNames(styles.control, styles.typeClear)}
@@ -87,22 +77,6 @@ export class Rules extends React.Component<Props> {
 					)}
 				</div>
 
-				{composeShown &&
-					ReactDOM.createPortal(
-						<Editor onSave={this.onSaveComposed} onCancel={this.onHideCompose} />,
-						this.composeModalTarget,
-					)}
-
-				{editingItem &&
-					ReactDOM.createPortal(
-						<Editor
-							initialValues={editingItem}
-							onSave={this.onSaveEdited}
-							onCancel={this.onCancelItemEdit}
-						/>,
-						this.composeModalTarget,
-					)}
-
 				{removeConfirmationId && (
 					<PopUpConfirm onConfirm={this.onRemoveConfirm} onCancel={this.onRemoveCancel}>
 						Remove the rule forever?
@@ -120,6 +94,7 @@ export class Rules extends React.Component<Props> {
 
 	componentWillMount() {
 		reaction(
+			//TODO unset listener
 			() => this.props.rulesStore!.highlightedId,
 			(highlightedId: string | null) => {
 				if (highlightedId) {
@@ -140,21 +115,13 @@ export class Rules extends React.Component<Props> {
 		}
 	}
 
-	private onToggleDebuggerEnabled = () => this.props.rulesStore!.toggleDebuggerDisabled();
+	private toggleDebuggerAllowed = () => this.props.appStore!.toggleDebuggerAllowed();
 
 	private onFinishHighlighting = () => this.props.rulesStore!.setHighlighted(null);
 
-	private onShowCompose = () => this.props.rulesStore!.showCompose();
+	private onShowCompose = () => this.props.appStore!.showCompose();
 
-	private onHideCompose = () => this.props.rulesStore!.hideCompose();
-
-	private onSaveComposed = (rule: Rule) => this.props.rulesStore!.create(rule);
-
-	private onItemEdit = (id: string) => this.props.rulesStore!.showItemEditor(id);
-
-	private onSaveEdited = (rule: Rule) => this.props.rulesStore!.save(rule);
-
-	private onCancelItemEdit = () => this.props.rulesStore!.hideItemEditor();
+	private onItemEdit = (id: string) => this.props.appStore!.showRuleEditor(id);
 
 	private onRemoveAsk = (id: string) => this.props.rulesStore!.askToRemoveItem(id);
 

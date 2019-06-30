@@ -57,3 +57,12 @@ export function setExtensionIcon(tabId: number, isActive: boolean | null, title:
 		chrome.pageAction.setTitle({tabId, title});
 	}
 }
+
+export async function getTargetTabUrl() {
+	const {tabId} = chrome.devtools.inspectedWindow;
+	const {url}: {url?: string} = await new Promise(resolve => chrome.tabs.get(tabId, resolve));
+	if (!url) {
+		throw new Error("Can't get target tab url");
+	}
+	return url;
+}

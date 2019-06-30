@@ -30,7 +30,7 @@ export const TextField = React.memo((props: Props) => {
 				disabled={disabled}
 			/>
 
-			<div className={styles.border}/>
+			<div className={styles.border} />
 
 			{suffix && <div className={styles.suffix}>{suffix}</div>}
 		</div>

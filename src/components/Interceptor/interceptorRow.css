@@ -1,0 +1,13 @@
+.root {
+	display: flex;
+	margin: 6px 0 12px 0;
+}
+
+.title {
+	flex-basis: 72px;
+	flex-shrink: 0;
+	margin-right: 8px;
+	font-size: 12px;
+	line-height: 20px;
+	color: var(--color-main);
+}
