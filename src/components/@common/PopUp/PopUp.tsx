@@ -5,24 +5,21 @@ import styles from './popUp.css';
 
 interface Props {
 	className?: string;
+	children?: React.ReactNode;
 }
 
-export class PopUp extends React.PureComponent<Props> {
-	private readonly attachTarget = document.getElementById('modal-root')!;
+export const PopUp = React.memo(({className, children}: Props) => {
+	const modalRef = React.useRef<HTMLDialogElement>(null);
+	const attachTargetRef = React.useRef<HTMLElement>(document.getElementById('modal-root')!);
 
-	private readonly modalRef = React.createRef<HTMLDialogElement>();
+	React.useEffect(() => {
+		modalRef.current!.showModal();
+	}, []);
 
-	render() {
-		const {className, children} = this.props;
-		return ReactDOM.createPortal(
-			<dialog ref={this.modalRef} className={classNames(styles.root, className)}>
-				{children}
-			</dialog>,
-			this.attachTarget,
-		);
-	}
-
-	componentDidMount() {
-		this.modalRef.current!.showModal();
-	}
-}
+	return ReactDOM.createPortal(
+		<dialog ref={modalRef} className={classNames(styles.root, className)}>
+			{children}
+		</dialog>,
+		attachTargetRef.current,
+	);
+});

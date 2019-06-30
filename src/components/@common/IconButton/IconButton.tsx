@@ -10,18 +10,8 @@ interface Props {
 	onClick?(event?: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
 }
 
-export class IconButton extends React.PureComponent<Props> {
-	render() {
-		const {className, tooltip, disabled, onClick} = this.props;
-		return (
-			<WithTooltip disabled={disabled} tooltip={tooltip}>
-				<button
-					className={classNames(styles.root, className)}
-					type='button'
-					disabled={disabled}
-					onClick={onClick}
-				/>
-			</WithTooltip>
-		);
-	}
-}
+export const IconButton = React.memo(({className, tooltip, disabled, onClick}: Props) => (
+	<WithTooltip disabled={disabled} tooltip={tooltip}>
+		<button className={classNames(styles.root, className)} type='button' disabled={disabled} onClick={onClick} />
+	</WithTooltip>
+));

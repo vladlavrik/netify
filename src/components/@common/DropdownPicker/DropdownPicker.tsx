@@ -25,6 +25,7 @@ interface State {
 }
 
 //TODO use portal to attach dropdown content in the DOM root
+//TODO rewrite with React Hooks
 
 class DropdownPickerField extends React.PureComponent<PropsFormikPart & Props, State> {
 	static getDerivedStateFromProps(props: PropsFormikPart & Props) {

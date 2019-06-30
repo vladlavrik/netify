@@ -1,33 +1,31 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import {useField} from 'formik';
-import styles from './radioButton.css';
+import styles from './checkbox.css';
 
 interface Props {
 	className?: string;
 	name: string;
-	value: string;
 	disabled?: boolean;
 	children?: React.ReactNode;
 }
 
-export const RadioButton = React.memo(({className, name, value, disabled, children}: Props) => {
-	const [{value: currentValue, onChange, onBlur}] = useField<string>(name);
+export const Checkbox = React.memo(({className, name, disabled, children}: Props) => {
+	const [{value, onChange, onBlur}] = useField<boolean>(name);
 
 	return (
 		<label className={classNames(styles.root, className)}>
 			<input
 				className={styles.input}
 				name={name}
-				type='radio'
+				type='checkbox'
+				checked={value}
 				value={value}
 				disabled={disabled}
 				onChange={onChange}
 				onBlur={onBlur}
-				checked={value === currentValue}
 			/>
-			<div className={styles.imitator}/>
-			<p className={styles.label}>{children}</p>
+			<p className={styles.imitator}>{children}</p>
 		</label>
 	);
 });

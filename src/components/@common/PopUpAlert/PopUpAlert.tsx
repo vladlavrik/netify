@@ -5,16 +5,12 @@ import styles from './popUpAlert.css';
 
 interface Props {
 	onClose(): void;
+	children: React.ReactNode;
 }
 
-export class PopUpAlert extends React.PureComponent<Props> {
-	render() {
-		const {children, onClose} = this.props;
-		return (
-			<PopUp className={styles.root}>
-				<div className={styles.content}>{children}</div>
-				<Button onClick={onClose}>Close</Button>
-			</PopUp>
-		);
-	}
-}
+export const PopUpAlert = React.memo(({onClose, children}: Props) => (
+	<PopUp className={styles.root}>
+		<div className={styles.content}>{children}</div>
+		<Button onClick={onClose}>Close</Button>
+	</PopUp>
+));

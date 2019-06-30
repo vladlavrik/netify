@@ -6,12 +6,6 @@ interface Props {
 	name: string;
 }
 
-export class FieldError extends React.PureComponent<Props> {
-	render() {
-		return (
-			<p className={styles.root}>
-				<ErrorMessage name={this.props.name} />
-			</p>
-		);
-	}
-}
+export const FieldError = React.memo(({name}: Props) => (
+	<ErrorMessage component='p' className={styles.root} name={name} />
+));

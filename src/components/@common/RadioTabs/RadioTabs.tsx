@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {connect, FormikContext, getIn} from 'formik';
+import {useFormikContext, getIn} from 'formik';
 import styles from './radioTabs.css';
 import {RadioButton} from '@/components/@common/RadioButton';
 
@@ -9,32 +9,24 @@ interface Props {
 		title: string;
 		value: string;
 	}[];
-	render(tab: string): React.ReactNode;
+	children?(tab: string): React.ReactNode;
 }
 
-interface FormikProps {
-	formik: FormikContext<any>;
-}
+export const RadioTabs = React.memo(({tabs, radioName, children}: Props) => {
+	const {values} = useFormikContext();
+	const activeTabName = getIn(values, radioName);
 
-class RadioTabsComponent extends React.PureComponent<Props & FormikProps> {
-	render() {
-		const {tabs, radioName, render, formik} = this.props;
-		const activeTabName = getIn(formik.values, radioName);
-
-		return (
-			<div className={styles.root}>
-				<div className={styles.radioWrapper}>
-					{tabs.map(tab => (
-						<RadioButton key={tab.value} className={styles.radioItem} name={radioName} value={tab.value}>
-							{tab.title}
-						</RadioButton>
-					))}
-				</div>
-
-				{render(activeTabName)}
+	return (
+		<div className={styles.root}>
+			<div className={styles.radioWrapper}>
+				{tabs.map(tab => (
+					<RadioButton key={tab.value} className={styles.radioItem} name={radioName} value={tab.value}>
+						{tab.title}
+					</RadioButton>
+				))}
 			</div>
-		);
-	}
-}
 
-export const RadioTabs = connect<Props>(RadioTabsComponent);
+			{children && children(activeTabName)}
+		</div>
+	);
+});

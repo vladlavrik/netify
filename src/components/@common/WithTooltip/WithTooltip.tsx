@@ -13,6 +13,8 @@ interface State {
 	expandInverted: boolean;
 }
 
+//TODO rewrite with React Hooks
+
 export class WithTooltip extends React.PureComponent<Props, State> {
 	private tooltipRef = React.createRef<HTMLParagraphElement>();
 	private rootRef = React.createRef<HTMLDivElement>();

@@ -5,7 +5,7 @@
 	justify-content: center;
 	position: relative;
 	box-sizing: border-box;
-	height: 62px;
+	height: 64px;
 	padding: 12px 16px;
 	border: 1px dashed var(--color-brd-lightest);
 	cursor: pointer;

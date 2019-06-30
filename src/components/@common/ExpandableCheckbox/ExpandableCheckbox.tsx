@@ -1,49 +1,27 @@
 import * as React from 'react';
 import classNames from 'classnames';
+import {Checkbox} from '@/components/@common/Checkbox';
 import styles from './expandableCheckbox.css';
-import {Field} from 'formik';
+import {useField} from 'formik';
 
 interface Props {
 	className?: string;
 	name: string;
 	label?: string;
 	disabled?: boolean;
+	children: React.ReactNode;
 }
 
-interface FieldRenderProps {
-	field: {
-		onChange(e: React.ChangeEvent<any>): void;
-		onBlur(e: any): void;
-		value: boolean;
-	};
-}
+export const ExpandableCheckbox = React.memo(({className, name, label, disabled, children}: Props) => {
+	const [{value}] = useField<boolean>(name);
 
-export class ExpandableCheckbox extends React.PureComponent<Props> {
-	render() {
-		const {className, name, label, disabled, children} = this.props;
+	return (
+		<div className={classNames(styles.root, className)}>
+			<Checkbox className={styles.checkbox} name={name} disabled={disabled}>
+				{label}
+			</Checkbox>
 
-		return (
-			<Field
-				name={name}
-				render={({field}: FieldRenderProps) => (
-					<div className={classNames(styles.root, className)}>
-						<label className={styles.label}>
-							<input
-								className={styles.input}
-								name={name}
-								type='checkbox'
-								checked={field.value}
-								disabled={disabled}
-								onChange={field.onChange}
-								onBlur={field.onBlur}
-							/>
-							<p className={styles.imitator}>{label}</p>
-						</label>
-
-						<div className={styles.content}>{field.value && children}</div>
-					</div>
-				)}
-			/>
-		);
-	}
-}
+			<div className={styles.content}>{value && children}</div>
+		</div>
+	)
+});

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Formik, FormikActions, Form} from 'formik';
+import {Formik, FormikHelpers} from 'formik';
 import {Rule} from '@/interfaces/Rule';
 import {RuleForm} from '@/interfaces/RuleForm';
 import {formSchema} from '@/validation/ruleForm';
@@ -12,138 +12,134 @@ interface Props {
 	className?: string;
 	initialValues?: Rule;
 	onSave(rule: Rule): void;
+	children: React.ReactNode;
 }
 
-interface State {
-	formInitialValue: RuleForm;
-}
-
-export class EditorForm extends React.PureComponent<Props, State> {
-	state: State = {
-		formInitialValue: {
-			filter: {
-				url: {
-					value: '',
-					compareType: UrlCompareType.StartsWith,
-				},
-				resourceTypes: [],
-				methods: [],
-			},
-			actions: {
-				mutateRequest: {
-					enabled: false,
-					endpointReplace: '',
-					methodReplace: undefined,
-					headers: [{name: '', value: ''}],
-					bodyReplace: {
-						type: RequestBodyType.Original,
-						textValue: '',
-						formValue: [{key: '', value: ''}],
-					},
-				},
-				mutateResponse: {
-					enabled: true,
-					responseLocally: '0',
-					statusCode: '',
-					headers: [{name: '', value: ''}],
-					bodyReplace: {
-						type: ResponseBodyType.Original,
-						textValue: '',
-						fileValue: undefined,
-					},
-				},
-				cancelRequest: {
-					enabled: false,
-					reason: CancelReasons.Failed,
-				},
-			},
-		},
-	};
-
-	static getDerivedStateFromProps(props: Props) {
-		if (props.initialValues) {
-			const {id, filter, actions} = props.initialValues;
-
-			return {
-				formInitialValue: {
-					id,
+export const EditorForm = React.memo((props: Props) => {
+	// Transform a Rule object to form value is it is passed into props or return empty form value
+	const initialValue = React.useMemo(
+		() => {
+			if (!props.initialValues) {
+				return {
 					filter: {
 						url: {
-							value: filter.url.value,
-							compareType: filter.url.compareType,
+							value: '',
+							compareType: UrlCompareType.StartsWith,
 						},
-						resourceTypes: filter.resourceTypes,
-						methods: filter.methods,
+						resourceTypes: [],
+						methods: [],
 					},
 					actions: {
 						mutateRequest: {
-							enabled: actions.mutateRequest.enabled,
-							endpointReplace: actions.mutateRequest.endpointReplace,
-							methodReplace: actions.mutateRequest.methodReplace,
-							headers: [
-								...Object.entries(actions.mutateRequest.headers.add).map(
-									([name, value]: [string, string]) => ({name, value}),
-								),
-								...actions.mutateRequest.headers.remove.map(name => ({name, value: ''})),
-								{name: '', value: ''},
-							],
+							enabled: false,
+							endpointReplace: '',
+							methodReplace: undefined,
+							headers: [{name: '', value: ''}],
 							bodyReplace: {
-								type: actions.mutateRequest.bodyReplace.type,
-								textValue: actions.mutateRequest.bodyReplace.textValue,
-								formValue:
-									actions.mutateRequest.bodyReplace.formValue.length > 0
-										? actions.mutateRequest.bodyReplace.formValue
-										: [{key: '', value: ''}],
+								type: RequestBodyType.Original,
+								textValue: '',
+								formValue: [{key: '', value: ''}],
 							},
 						},
 						mutateResponse: {
-							enabled: actions.mutateResponse.enabled,
-							responseLocally: actions.mutateResponse.responseLocally ? '1' : '0',
-							statusCode: actions.mutateResponse.statusCode || '',
-							headers: [
-								...Object.entries(actions.mutateResponse.headers.add).map(
-									([name, value]: [string, string]) => ({name, value}),
-								),
-								...actions.mutateResponse.headers.remove.map(name => ({name, value: ''})),
-								{name: '', value: ''},
-							],
+							enabled: true,
+							responseLocally: '0',
+							statusCode: '',
+							headers: [{name: '', value: ''}],
 							bodyReplace: {
-								type: actions.mutateResponse.bodyReplace.type,
-								textValue: actions.mutateResponse.bodyReplace.textValue,
-								fileValue: actions.mutateResponse.bodyReplace.fileValue,
+								type: ResponseBodyType.Original,
+								textValue: '',
+								fileValue: undefined,
 							},
 						},
 						cancelRequest: {
-							enabled: actions.cancelRequest.enabled,
-							reason: actions.cancelRequest.reason,
+							enabled: false,
+							reason: CancelReasons.Failed,
 						},
 					},
+				} as RuleForm;
+			}
+
+			const {id, filter, actions} = props.initialValues;
+			return {
+				id,
+				filter: {
+					url: {
+						value: filter.url.value,
+						compareType: filter.url.compareType,
+					},
+					resourceTypes: filter.resourceTypes,
+					methods: filter.methods,
 				},
-			};
-		}
+				actions: {
+					mutateRequest: {
+						enabled: actions.mutateRequest.enabled,
+						endpointReplace: actions.mutateRequest.endpointReplace,
+						methodReplace: actions.mutateRequest.methodReplace,
+						headers: [
+							...Object.entries(actions.mutateRequest.headers.add).map(
+								([name, value]: [string, string]) => ({name, value}),
+							),
+							...actions.mutateRequest.headers.remove.map(name => ({name, value: ''})),
+							{name: '', value: ''},
+						],
+						bodyReplace: {
+							type: actions.mutateRequest.bodyReplace.type,
+							textValue: actions.mutateRequest.bodyReplace.textValue,
+							formValue:
+								actions.mutateRequest.bodyReplace.formValue.length > 0
+									? actions.mutateRequest.bodyReplace.formValue
+									: [{key: '', value: ''}],
+						},
+					},
+					mutateResponse: {
+						enabled: actions.mutateResponse.enabled,
+						responseLocally: actions.mutateResponse.responseLocally ? '1' : '0',
+						statusCode: actions.mutateResponse.statusCode || '',
+						headers: [
+							...Object.entries(actions.mutateResponse.headers.add).map(
+								([name, value]: [string, string]) => ({name, value}),
+							),
+							...actions.mutateResponse.headers.remove.map(name => ({name, value: ''})),
+							{name: '', value: ''},
+						],
+						bodyReplace: {
+							type: actions.mutateResponse.bodyReplace.type,
+							textValue: actions.mutateResponse.bodyReplace.textValue,
+							fileValue: actions.mutateResponse.bodyReplace.fileValue,
+						},
+					},
+					cancelRequest: {
+						enabled: actions.cancelRequest.enabled,
+						reason: actions.cancelRequest.reason,
+					},
+				},
+			} as RuleForm;
+		},
+		[props.initialValues],
+	);
 
-		return null;
-	}
+	const onSubmit = React.useCallback(
+		(rawValues: RuleForm, form: FormikHelpers<RuleForm>) => {
+			form.setSubmitting(false);
+			const values = formSchema.cast(rawValues); // workaround to "Formik" future fix https://github.com/jaredpalmer/formik/pull/728
+			props.onSave(values);
+		},
+		[props.onSave],
+	);
 
-	render() {
-		return (
-			<Formik
-				validateOnBlur={true}
-				validateOnChange={false}
-				initialValues={this.state.formInitialValue}
-				validationSchema={formSchema}
-				onSubmit={this.onSubmit}>
-				<Form className={this.props.className}>{this.props.children}</Form>
-			</Formik>
-		);
-	}
-
-	private onSubmit = (rawValues: RuleForm, form: FormikActions<RuleForm>) => {
-		form.setSubmitting(false);
-
-		// workaround to "Formik" future fix https://github.com/jaredpalmer/formik/pull/728
-		const values = formSchema.cast(rawValues);
-
-		this.props.onSave(values);
-	};
-}
+	return (
+		<Formik<RuleForm>
+			validateOnBlur={true}
+			validateOnChange={false}
+			initialValues={initialValue}
+			validationSchema={formSchema}
+			onSubmit={onSubmit}>
+			{({handleSubmit}) => (
+				<form className={props.className} onSubmit={handleSubmit}>
+					{props.children}
+				</form>
+			)}
+		</Formik>
+	);
+});

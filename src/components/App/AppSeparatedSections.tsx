@@ -4,8 +4,8 @@ import styles from './appSeparatedSections.css';
 interface Props {
 	ratio: number;
 	minHeight: number;
-	topSection: JSX.Element;
-	bottomSection: JSX.Element;
+	topSection: React.ReactNode;
+	bottomSection: React.ReactNode;
 	onRatioChange(ratio: number, topEdgeReached: boolean, bottomEdgeReached: boolean): void;
 }
 
