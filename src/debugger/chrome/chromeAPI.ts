@@ -2,7 +2,7 @@ export async function attachDebugger({tabId}: {tabId: number}, debuggerVersion: 
 	await new Promise((resolve, reject) => {
 		chrome.debugger.attach({tabId}, debuggerVersion, () => {
 			if (chrome.runtime.lastError) {
-				reject(chrome.runtime.lastError);
+				reject(new Error(chrome.runtime.lastError.message)); //TODO RuntimeError instance
 			} else {
 				resolve();
 			}
@@ -14,7 +14,7 @@ export async function detachDebugger({tabId}: {tabId: number}) {
 	await new Promise((resolve, reject) => {
 		chrome.debugger.detach({tabId}, () => {
 			if (chrome.runtime.lastError) {
-				reject(chrome.runtime.lastError);
+				reject(new Error(chrome.runtime.lastError.message));
 			} else {
 				resolve();
 			}
@@ -27,9 +27,13 @@ export async function sendDebuggerCommand<TResult = any>(
 	command: string,
 	params: object,
 ): Promise<TResult> {
-	return await new Promise(resolve => {
+	return await new Promise((resolve, reject) => {
 		return chrome.debugger.sendCommand({tabId}, command, params, (result: any) => {
-			resolve(result as TResult);
+			if (chrome.runtime.lastError) {
+				reject(new Error(chrome.runtime.lastError.message));
+			} else {
+				resolve(result as TResult);
+			}
 		});
 	});
 }

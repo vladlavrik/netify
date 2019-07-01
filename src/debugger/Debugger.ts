@@ -45,10 +45,6 @@ export class Debugger {
 
 	private state = DebuggerState.Inactive;
 
-	get currentTabId() {
-		return this.debugTarget.tabId;
-	}
-
 	get currentState() {
 		return this.state;
 	}
@@ -71,9 +67,7 @@ export class Debugger {
 		listenDebuggerEvent(this.messageHandler);
 
 		this.state = DebuggerState.Active;
-
-		const {tabId} = this.debugTarget;
-		setExtensionIcon(tabId, true, 'Netify (active)');
+		setExtensionIcon(this.debugTarget.tabId, true, 'Netify (active)');
 	}
 
 	async destroy() {
@@ -84,18 +78,21 @@ export class Debugger {
 		} catch (error) {
 			throw error;
 		} finally {
-			this.state = DebuggerState.Inactive;
-
-			const {tabId} = this.debugTarget;
-			setExtensionIcon(tabId, false, 'Netify (inactive)');
+			this.makeInactive();
 		}
 	}
 
 	private detachHandler = (tabId: number | null) => {
 		if (tabId === this.debugTarget.tabId && [DebuggerState.Active, DebuggerState.Starting].includes(this.state)) {
+			this.makeInactive();
 			this.onUserDetach();
 		}
 	};
+
+	private makeInactive() {
+		this.state = DebuggerState.Inactive;
+		setExtensionIcon(this.debugTarget.tabId, false, 'Netify (inactive)');
+	}
 
 	private messageHandler = async (method: string, params: any) => {
 		if (method === 'Network.requestIntercepted') {
