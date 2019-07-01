@@ -37,7 +37,7 @@ export interface DebuggerConfig {
 export class Debugger {
 	private readonly debuggerVersion = '1.3';
 
-	private readonly debugTarget: {tabId: number};
+	private readonly debugTarget: chrome.debugger.Debuggee & {tabId: number};
 	private rulesSelector: RulesManager;
 	private readonly onRequestStart: DebuggerConfig['onRequestStart'];
 	private readonly onRequestEnd: DebuggerConfig['onRequestEnd'];
@@ -94,7 +94,7 @@ export class Debugger {
 		setExtensionIcon(this.debugTarget.tabId, false, 'Netify (inactive)');
 	}
 
-	private messageHandler = async (method: string, params: any) => {
+	private messageHandler = async (_source: any, method: string, params: any) => {
 		if (method === 'Network.requestIntercepted') {
 			if (params.hasOwnProperty('responseStatusCode')) {
 				await this.handleServerResponse(params);

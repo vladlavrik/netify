@@ -1,6 +1,6 @@
-export async function attachDebugger({tabId}: {tabId: number}, debuggerVersion: string) {
+export async function attachDebugger(target: chrome.debugger.Debuggee, debuggerVersion: string) {
 	await new Promise((resolve, reject) => {
-		chrome.debugger.attach({tabId}, debuggerVersion, () => {
+		chrome.debugger.attach(target, debuggerVersion, () => {
 			if (chrome.runtime.lastError) {
 				reject(new Error(chrome.runtime.lastError.message)); //TODO RuntimeError instance
 			} else {
@@ -10,9 +10,9 @@ export async function attachDebugger({tabId}: {tabId: number}, debuggerVersion: 
 	});
 }
 
-export async function detachDebugger({tabId}: {tabId: number}) {
+export async function detachDebugger(target: chrome.debugger.Debuggee) {
 	await new Promise((resolve, reject) => {
-		chrome.debugger.detach({tabId}, () => {
+		chrome.debugger.detach(target, () => {
 			if (chrome.runtime.lastError) {
 				reject(new Error(chrome.runtime.lastError.message));
 			} else {
@@ -23,12 +23,12 @@ export async function detachDebugger({tabId}: {tabId: number}) {
 }
 
 export async function sendDebuggerCommand<TResult = any>(
-	{tabId}: {tabId: number},
+	target: chrome.debugger.Debuggee,
 	command: string,
 	params: object,
 ): Promise<TResult> {
 	return await new Promise((resolve, reject) => {
-		return chrome.debugger.sendCommand({tabId}, command, params, (result: any) => {
+		return chrome.debugger.sendCommand(target, command, params, (result: any) => {
 			if (chrome.runtime.lastError) {
 				reject(new Error(chrome.runtime.lastError.message));
 			} else {
@@ -38,14 +38,12 @@ export async function sendDebuggerCommand<TResult = any>(
 	});
 }
 
-export function listenDebuggerEvent(handler: (method: string, params: any) => void) {
-	chrome.debugger.onEvent.addListener((_source: any, method: string, params: any) => {
-		return handler(method, params);
-	});
+export function listenDebuggerEvent(handler: (source: chrome.debugger.Debuggee, method: string, params: any) => void) {
+	chrome.debugger.onEvent.addListener(handler);
 }
 
 export function listenDebuggerDetach(handler: (tabId: number | null) => void) {
-	chrome.debugger.onDetach.addListener((source: {tabId?: number}) => {
+	chrome.debugger.onDetach.addListener((source: chrome.debugger.Debuggee) => {
 		return handler(source.tabId || null);
 	});
 }
