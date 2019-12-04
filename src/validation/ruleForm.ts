@@ -5,13 +5,7 @@ import {urlCompareTypeList} from '@/constants/UrlCompareType';
 import {resourceTypesList} from '@/constants/ResourceType';
 import {requestMethodsList} from '@/constants/RequestMethod';
 import {cancelReasonsList} from '@/constants/CancelReasons';
-import {
-	headersUpdateSchema,
-	optionalStatusCodeSchema,
-	methodSchema,
-	requestBodySchema,
-	responseBodySchema,
-} from './common';
+import {headersUpdateSchema, optionalStatusCodeSchema, methodSchema, requestBodySchema, responseBodySchema} from './common'; // prettier-ignore
 
 export const formSchema = yup.object<Rule>({
 	id: yup.string().default(() => randomHex(16)),
@@ -23,26 +17,28 @@ export const formSchema = yup.object<Rule>({
 		resourceTypes: yup.array().of(yup.mixed().oneOf(resourceTypesList)),
 		methods: yup.array().of(yup.mixed().oneOf(requestMethodsList)),
 	}),
-	intercept: yup.object({
-		request: yup.bool(),
-		response: yup.bool(),
-	}),
 	actions: yup.object({
-		mutateRequest: yup.object({
-			enabled: yup.boolean(),
-			endpointReplace: yup.string(), // TODO validate url or patterns
-			methodReplace: methodSchema,
-			headers: headersUpdateSchema,
-			bodyReplace: requestBodySchema,
+		breakpoint: yup.object({
+			request: yup.bool(),
+			response: yup.bool(),
 		}),
-		mutateResponse: yup.object({
-			enabled: yup.boolean(),
-			responseLocally: yup.mixed().transform((value: '0' | '1') => value === '1'),
-			statusCode: optionalStatusCodeSchema,
-			headers: headersUpdateSchema,
-			bodyReplace: responseBodySchema,
+		mutate: yup.object({
+			request: yup.object({
+				enabled: yup.boolean(),
+				endpoint: yup.string(), // TODO validate url or patterns
+				method: methodSchema,
+				headers: headersUpdateSchema,
+				body: requestBodySchema,
+			}),
+			response: yup.object({
+				enabled: yup.boolean(),
+				responseLocally: yup.mixed().transform((value: '0' | '1') => value === '1'),
+				statusCode: optionalStatusCodeSchema,
+				headers: headersUpdateSchema,
+				body: responseBodySchema,
+			}),
 		}),
-		cancelRequest: yup.object({
+		cancel: yup.object({
 			enabled: yup.boolean(),
 			reason: yup.mixed().oneOf(cancelReasonsList),
 		}),

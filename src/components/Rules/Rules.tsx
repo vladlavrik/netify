@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {reaction} from 'mobx';
 import {observer, inject} from 'mobx-react';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import {RulesStore} from '@/stores/RulesStore';
 import {AppStore} from '@/stores/AppStore';
 import {SectionHeader} from '@/components/@common/SectionHeader';

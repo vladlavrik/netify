@@ -1,10 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "devUI": "webpack-dev-server --mode=development",
     "dev": "webpack --mode=development",
     "build": "webpack --mode=production",
-    "prettier": "prettier --write ./src/**/*.{js,ts,tsx,css,html}"
+    "prettier": "prettier --write ./src/**/*.{js,ts,tsx,css,html}",
+    "test": "jest"
   },
   "dependencies": {
     "@types/base64-js": "^1.2.5",
@@ -18,7 +18,7 @@
     "copy-webpack-plugin": "^5.0.3",
     "css-loader": "^3.0.0",
     "file-loader": "^4.0.0",
-    "formik": "^2.0.1-rc.8",
+    "formik": "^2.0.3",
     "html-webpack-plugin": "^3.2.0",
     "mobx": "^5.10.1",
     "mobx-react": "^6.1.1",
@@ -26,13 +26,15 @@
     "react-dom": "^16.8.6",
     "style-loader": "^0.23.1",
     "ts-loader": "^6.0.4",
-    "typescript": "^3.4.5",
+    "typescript": "^3.5.3",
     "webpack": "^4.35.0",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2",
     "yup": "^0.27.0"
   },
   "devDependencies": {
+    "node-static": "^0.7.11",
     "prettier": "^1.18.2"
   }
+}
 }

@@ -1,10 +1,12 @@
 export enum ResponseBodyType {
-	Original = 'Original',
 	Text = 'Text',
 	Base64 = 'Base64',
-	File = 'File',
+	File = 'File', // TODO to BLOB
 }
 
-export const responseBodyRealTypesList = [ResponseBodyType.Text, ResponseBodyType.Base64, ResponseBodyType.File];
-
-export const responseBodyTypesList = [ResponseBodyType.Original, ...responseBodyRealTypesList];
+export const responseBodyTypesList = [
+	//
+	ResponseBodyType.Text,
+	ResponseBodyType.Base64,
+	ResponseBodyType.File,
+];

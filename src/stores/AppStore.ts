@@ -5,6 +5,9 @@ export class AppStore {
 	constructor(private rootStore: RootStore) {}
 
 	@observable
+	panelShown = true;
+
+	@observable
 	debuggerAllowed = true;
 
 	@observable
@@ -26,6 +29,11 @@ export class AppStore {
 
 	@observable
 	displayedError: string | null = null;
+
+	@action
+	setPanelShown(shown: boolean) {
+		this.panelShown = shown;
+	}
 
 	@action
 	disableDebugger() {

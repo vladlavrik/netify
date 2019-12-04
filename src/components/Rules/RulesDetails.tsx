@@ -8,11 +8,12 @@ interface Props {
 	data: Rule;
 }
 
-// TODO show interceptions
+// TODO show breakpoints
 export class RulesDetails extends React.PureComponent<Props> {
 	render() {
 		const {filter} = this.props.data;
-		const {mutateRequest, mutateResponse, cancelRequest} = this.props.data.actions;
+		const {mutate, cancel} = this.props.data.actions;
+		const {request: mutateRequest, response: mutateResponse} = mutate;
 
 		const existsRows = {
 			filter: {
@@ -21,19 +22,19 @@ export class RulesDetails extends React.PureComponent<Props> {
 				resourceTypes: filter.resourceTypes.length > 0,
 			},
 			mutateRequest: {
-				endpointReplace: mutateRequest.endpointReplace.length > 0,
-				methodReplace: !!mutateRequest.methodReplace,
+				endpointReplace: mutateRequest.endpoint.length > 0,
+				methodReplace: !!mutateRequest.method,
 				headersAdd: Object.keys(mutateRequest.headers.add).length > 0,
 				headersRemove: mutateRequest.headers.remove.length > 0,
-				bodyReplace: mutateRequest.bodyReplace.type !== RequestBodyType.Original,
+				bodyReplace: !!mutateRequest.body.type,
 			},
 			mutateResponse: {
 				statusCode: mutateResponse.statusCode,
 				headersAdd: Object.keys(mutateResponse.headers.add).length > 0,
 				headersRemove: mutateResponse.headers.remove.length > 0,
-				bodyReplace: mutateResponse.bodyReplace.type !== ResponseBodyType.Original,
+				bodyReplace: !!mutateResponse.body.type,
 			},
-			cancelRequest: cancelRequest.enabled,
+			cancelRequest: cancel.enabled,
 		};
 
 		const existsSections = {
@@ -113,13 +114,13 @@ export class RulesDetails extends React.PureComponent<Props> {
 							{existsRows.mutateRequest.endpointReplace && (
 								<tr>
 									<td className={styles.dataTitle}>Redirect to:</td>
-									<td className={styles.dataValue}>{mutateRequest.endpointReplace}</td>
+									<td className={styles.dataValue}>{mutateRequest.endpoint}</td>
 								</tr>
 							)}
 							{existsRows.mutateRequest.methodReplace && (
 								<tr>
 									<td className={styles.dataTitle}>Replacing method:</td>
-									<td className={styles.dataValue}>{mutateRequest.methodReplace.toUpperCase()}</td>
+									<td className={styles.dataValue}>{mutateRequest.method!.toUpperCase()}</td>
 								</tr>
 							)}
 							{existsRows.mutateRequest.headersAdd && (
@@ -141,20 +142,20 @@ export class RulesDetails extends React.PureComponent<Props> {
 							{existsRows.mutateRequest.bodyReplace && (
 								<tr>
 									<td className={styles.dataTitle}>Replacing body:</td>
-									{mutateRequest.bodyReplace.type === RequestBodyType.Text && (
+									{mutateRequest.body.type === RequestBodyType.Text && (
 										<td className={styles.dataValue}>
-											{mutateRequest.bodyReplace.textValue.substr(0, 2400)}
+											{mutateRequest.body.textValue.substr(0, 2400)}
 										</td>
 									)}
-									{(mutateRequest.bodyReplace.type === RequestBodyType.UrlEncodedForm ||
-										mutateRequest.bodyReplace.type === RequestBodyType.MultipartFromData) && (
+									{(mutateRequest.body.type === RequestBodyType.UrlEncodedForm ||
+										mutateRequest.body.type === RequestBodyType.MultipartFromData) && (
 										<td className={styles.dataValue}>
 											Form:&nbsp;
-											{mutateRequest.bodyReplace.type === RequestBodyType.UrlEncodedForm
+											{mutateRequest.body.type === RequestBodyType.UrlEncodedForm
 												? 'application/x-www-form-urlencoded'
 												: 'multipart/form-data?'}
 											<br />
-											{mutateRequest.bodyReplace.formValue.map(({key, value}, index) => (
+											{mutateRequest.body.formValue.map(({key, value}, index) => (
 												<div key={index}>
 													{key}: {value}
 												</div>
@@ -205,22 +206,22 @@ export class RulesDetails extends React.PureComponent<Props> {
 							{existsRows.mutateResponse.bodyReplace && (
 								<tr>
 									<td className={styles.dataTitle}>Replacing body:</td>
-									{mutateResponse.bodyReplace.type === ResponseBodyType.Text && (
+									{mutateResponse.body.type === ResponseBodyType.Text && (
 										<td className={styles.dataValue}>
-											{mutateResponse.bodyReplace.textValue.substr(0, 2400)}
+											{mutateResponse.body.textValue.substr(0, 2400)}
 										</td>
 									)}
-									{mutateResponse.bodyReplace.type === ResponseBodyType.Base64 && (
+									{mutateResponse.body.type === ResponseBodyType.Base64 && (
 										<td className={styles.dataValue}>
-											Base 64: {mutateResponse.bodyReplace.textValue.substr(0, 128)}
+											Base 64: {mutateResponse.body.textValue.substr(0, 128)}
 										</td>
 									)}
-									{mutateResponse.bodyReplace.type === ResponseBodyType.File && (
+									{mutateResponse.body.type === ResponseBodyType.File && (
 										<td className={styles.dataValue}>
 											File:&nbsp;
-											{mutateResponse.bodyReplace.fileValue
-												? mutateResponse.bodyReplace.fileValue.name +
-												  ` (${mutateResponse.bodyReplace.fileValue.size} bytes)`
+											{mutateResponse.body.fileValue
+												? mutateResponse.body.fileValue.name +
+												  ` (${mutateResponse.body.fileValue.size} bytes)`
 												: '(not specified)'}
 										</td>
 									)}
@@ -243,7 +244,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 							{existsRows.cancelRequest && (
 								<tr>
 									<td className={styles.dataTitle}>Reason:</td>
-									<td className={styles.dataValue}>{cancelRequest.reason.toString()}</td>
+									<td className={styles.dataValue}>{cancel.reason.toString()}</td>
 								</tr>
 							)}
 						</tbody>

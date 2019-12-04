@@ -28,7 +28,7 @@ export const FileField = React.memo(({className, name}: Props) => {
 			{value ? (
 				<React.Fragment>
 					<p className={styles.value}>{value.name}</p>
-					<p className={styles.note}>It also will override "Content-Type" header</p>
+					<p className={styles.note}>Body replacing will also rewrites "Content-Type" header</p>
 				</React.Fragment>
 			) : (
 				<p className={styles.title}>Click to choice file or drag-n-drop it here</p>

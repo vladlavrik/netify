@@ -2,8 +2,6 @@ import * as React from 'react';
 import classNames from 'classnames';
 import {Rule} from '@/interfaces/Rule';
 import {IconButton} from '@/components/@common/IconButton';
-import {RequestBodyType} from '@/constants/RequestBodyType';
-import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import styles from './rulesItem.css';
 
 interface Props {
@@ -82,48 +80,48 @@ export class RulesItem extends React.PureComponent<Props, State> {
 	}
 
 	private parseActionsArray() {
-		const {intercept} = this.props.data;
-		const {mutateRequest, mutateResponse, cancelRequest} = this.props.data.actions;
+		const {breakpoint, mutate, cancel} = this.props.data.actions;
+		const {request: mutateRequest, response: mutateResponse} = mutate;
 		const actions = [];
 
-		if (intercept.request) {
-			actions.push('Intercept on request');
+		if (breakpoint.request) {
+			actions.push('Breakpoint on request');
 		}
 
-		if (intercept.response) {
-			actions.push('Intercept on response');
+		if (breakpoint.response) {
+			actions.push('Breakpoint on response');
 		}
 
 		if (mutateRequest.enabled) {
-			const {endpointReplace, methodReplace, headers, bodyReplace} = mutateRequest;
-			if (endpointReplace) {
+			const {endpoint, method, headers, body} = mutateRequest;
+			if (endpoint) {
 				actions.push('Redirect to url');
 			}
-			if (methodReplace) {
+			if (method) {
 				actions.push('Replacing method');
 			}
 			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
 				actions.push('Modifying request headers');
 			}
-			if (bodyReplace.type !== RequestBodyType.Original) {
+			if (body.type) {
 				actions.push('Replacing request body');
 			}
 		}
 
 		if (mutateResponse.enabled) {
-			const {statusCode, headers, bodyReplace} = mutateResponse;
+			const {statusCode, headers, body} = mutateResponse;
 			if (statusCode) {
 				actions.push('Replacing response status');
 			}
 			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
 				actions.push('Modifying response headers');
 			}
-			if (bodyReplace.type !== ResponseBodyType.Original) {
+			if (body.type) {
 				actions.push('Replacing response body');
 			}
 		}
 
-		if (cancelRequest.enabled) {
+		if (cancel.enabled) {
 			actions.push('Returning error');
 		}
 

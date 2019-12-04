@@ -20,7 +20,6 @@ export const Checkbox = React.memo(({className, name, disabled, children}: Props
 				name={name}
 				type='checkbox'
 				checked={value}
-				value={value}
 				disabled={disabled}
 				onChange={onChange}
 				onBlur={onBlur}

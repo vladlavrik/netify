@@ -1,13 +1,13 @@
 import {action, observable, computed, toJS} from 'mobx';
-import {openIDB, getOpenedIDB, RulesMapper} from '@/indexedDB';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {UrlCompareType} from '@/constants/UrlCompareType';
-import {RulesManager} from '@/interfaces/RulesManager';
+import {RulesSelector} from '@/interfaces/rule';
 import {Rule} from '@/interfaces/Rule';
+import {openIDB, getOpenedIDB, RulesMapper} from '@/services/indexedDB';
 import {RootStore} from './RootStore';
 
-export class RulesStore implements RulesManager {
+export class RulesStore implements RulesSelector {
 	private IDBMapper?: RulesMapper;
 
 	constructor(private rootStore: RootStore) {}

@@ -1,10 +1,10 @@
 import * as yup from 'yup';
-import {InterceptedResponse} from '@/interfaces/InterceptedResponse';
+import {ResponseBreakpoint} from '@/interfaces/breakpoint';
 import {headersSchema, statusCodeSchema, responseBodySchema} from './common';
 
-export const formSchema = yup.object<InterceptedResponse>({
-	interceptionId: yup.string(),
-	isResponse: yup.mixed(),
+export const formSchema = yup.object<ResponseBreakpoint>({
+	requestId: yup.string(),
+	url: yup.string(),
 	statusCode: statusCodeSchema,
 	headers: headersSchema,
 	body: responseBodySchema,

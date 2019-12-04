@@ -10,14 +10,22 @@ import {FieldError} from '@/components/@common/FieldError';
 import {EditorRow} from './EditorRow';
 import styles from './editorActionResponse.css';
 
+const bodyTypeOptions = [
+	{value: '', title: 'Original'},
+	...responseBodyTypesList.map(type => ({
+		value: type,
+		title: type,
+	})),
+];
+
 export const EditorActionResponse = React.memo(() => (
 	<div className={styles.root}>
 		<EditorRow title='Response mode:'>
 			<div className={styles.modeFieldset}>
-				<RadioButton className={styles.modeField} name='actions.mutateResponse.responseLocally' value='0'>
+				<RadioButton className={styles.modeField} name='actions.mutate.response.responseLocally' value='0'>
 					After server response
 				</RadioButton>
-				<RadioButton className={styles.modeField} name='actions.mutateResponse.responseLocally' value='1'>
+				<RadioButton className={styles.modeField} name='actions.mutate.response.responseLocally' value='1'>
 					Response locally
 				</RadioButton>
 			</div>
@@ -26,16 +34,16 @@ export const EditorActionResponse = React.memo(() => (
 			<div>
 				<TextField
 					className={styles.statusCode}
-					name='actions.mutateResponse.statusCode'
+					name='actions.mutate.response.statusCode'
 					maxlength={3}
 					placeholder='Default - from server or 200'
 				/>
-				<FieldError name='actions.mutateResponse.statusCode' />
+				<FieldError name='actions.mutate.response.statusCode' />
 			</div>
 		</EditorRow>
 		<EditorRow title='Headers:'>
 			<KeyValueArrayField
-				name='actions.mutateResponse.headers'
+				name='actions.mutate.response.headers'
 				keyNameSuffix='name'
 				valueNameSuffix='value'
 				keyPlaceholder='Header name'
@@ -43,12 +51,7 @@ export const EditorActionResponse = React.memo(() => (
 			/>
 		</EditorRow>
 		<EditorRow title='Body:'>
-			<RadioTabs
-				radioName='actions.mutateResponse.bodyReplace.type'
-				tabs={responseBodyTypesList.map(type => ({
-					value: type,
-					title: type,
-				}))}>
+			<RadioTabs radioName='actions.mutate.response.body.type' tabs={bodyTypeOptions}>
 				{(tabName: string) => {
 					switch (tabName) {
 						case ResponseBodyType.Text:
@@ -56,12 +59,12 @@ export const EditorActionResponse = React.memo(() => (
 							return (
 								<TextareaField
 									className={styles.bodyTextField}
-									name={'actions.mutateResponse.bodyReplace.textValue'}
+									name={'actions.mutate.response.body.textValue'}
 								/>
 							);
 
 						case ResponseBodyType.File:
-							return <FileField name='actions.mutateResponse.bodyReplace.fileValue' />;
+							return <FileField name='actions.mutate.response.body.fileValue' />;
 
 						default:
 							return null;

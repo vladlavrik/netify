@@ -3,14 +3,19 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const isDevServer = process.argv.find(v => v.includes('webpack-dev-server'));
-
 module.exports = (env, {mode} = {}) => ({
 	entry: './src/panel.ts',
 	output: {
 		publicPath: '/',
 		filename: 'panel.js',
 		path: path.resolve(__dirname, 'build'),
+	},
+	stats: {
+		all: false,
+		builtAt: true,
+		errors: true,
+		warnings: true,
+		performance: true,
 	},
 	module: {
 		rules: [{
@@ -34,10 +39,10 @@ module.exports = (env, {mode} = {}) => ({
 				},
 			}],
 		}, {
-			test: /\.svg$/,
+			test: /\.svg|png$/,
 			loader: 'file-loader',
 			options: {
-				name: 'icons/[name]-[hash:hex:8].[ext]',
+				name: 'icons/[hash:hex:8].[ext]',
 			},
 		}],
 	},
@@ -58,9 +63,6 @@ module.exports = (env, {mode} = {}) => ({
 			'src/devtool.js',
 			{from: 'src/style/icons', to: 'icons'},
 		]),
-		...(isDevServer ? [
-			new webpack.HotModuleReplacementPlugin()
-		] : []),
 	],
 	watch: mode === 'development',
 	devtool: mode === 'development' ? 'inline-source-map' : 'source-map',
@@ -68,7 +70,6 @@ module.exports = (env, {mode} = {}) => ({
 		port: 8080,
 		hot: true,
 		inline: true,
-		stats: 'minimal',
 		overlay: true,
 	},
 });

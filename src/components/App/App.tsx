@@ -4,31 +4,30 @@ import {observer, inject} from 'mobx-react';
 import {Rule} from '@/interfaces/Rule';
 import {AppStore} from '@/stores/AppStore';
 import {RulesStore} from '@/stores/RulesStore';
-import {InterceptsStore} from '@/stores/InterceptsStore';
-import {InterceptedRequest} from '@/interfaces/InterceptedRequest';
-import {InterceptedResponse} from '@/interfaces/InterceptedResponse';
+import {BreakpointsStore} from '@/stores/BreakpointsStore';
+import {RequestBreakpoint, ResponseBreakpoint} from '@/interfaces/breakpoint';
 import {PopUpAlert} from '@/components/@common/PopUpAlert';
 import {Logs} from '@/components/Logs';
 import {Rules} from '@/components/Rules';
 import {Editor} from '@/components/Editor';
-import {RequestInterceptor, ResponseInterceptor} from '@/components/Interceptor';
+import {BreakpointOfRequest, BreakpointOfResponse} from '@/components/Breakpoint';
 import {AppSeparatedSections} from './AppSeparatedSections';
 import styles from './app.css';
 
 interface Props {
 	appStore?: AppStore;
 	rulesStore?: RulesStore;
-	interceptsStore?: InterceptsStore;
+	breakpointsStore?: BreakpointsStore;
 }
 
-@inject('appStore', 'rulesStore', 'interceptsStore')
+@inject('appStore', 'rulesStore', 'breakpointsStore')
 @observer
 export class App extends React.Component<Props> {
 	private readonly modalTarget = document.getElementById('modal-root')!;
 
 	render() {
 		const {sectionRatio, composeShown, editingRule, displayedError} = this.props.appStore!;
-		const {activeIntercepted} = this.props.interceptsStore!;
+		const {activeBreakpoint} = this.props.breakpointsStore!;
 
 		return (
 			<div className={styles.root}>
@@ -56,28 +55,25 @@ export class App extends React.Component<Props> {
 						this.modalTarget,
 					)}
 
-				{activeIntercepted &&
-					(activeIntercepted as InterceptedRequest).isRequest &&
+				{activeBreakpoint && (
 					ReactDOM.createPortal(
-						<RequestInterceptor
-							data={activeIntercepted as InterceptedRequest}
-							onExecute={this.onExecuteIntercepted}
-							onLocalResponse={this.onLocalResponseIntercepted}
-							onAbort={this.onAbortIntercepted}
-						/>,
+						!(activeBreakpoint as ResponseBreakpoint).statusCode ? (
+							<BreakpointOfRequest
+								data={activeBreakpoint as RequestBreakpoint}
+								onExecute={this.onBreakpointExecute}
+								onLocalResponse={this.onBreakpointLocalResponse}
+								onAbort={this.onBreakpointAbort}
+							/>
+						) : (
+							<BreakpointOfResponse
+								data={activeBreakpoint as ResponseBreakpoint}
+								onExecute={this.onBreakpointExecute}
+								onAbort={this.onBreakpointAbort}
+							/>
+						),
 						document.getElementById('modal-root')!,
-					)}
-
-				{activeIntercepted &&
-					(activeIntercepted as InterceptedResponse).isResponse &&
-					ReactDOM.createPortal(
-						<ResponseInterceptor
-							data={activeIntercepted as InterceptedResponse}
-							onExecute={this.onExecuteIntercepted}
-							onAbort={this.onAbortIntercepted}
-						/>,
-						document.getElementById('modal-root')!,
-					)}
+					)
+				)}
 
 				{displayedError && (
 					<PopUpAlert onClose={this.onCloseErrorAlert}>
@@ -104,9 +100,9 @@ export class App extends React.Component<Props> {
 
 	private onCancelItemEdit = () => this.props.appStore!.hideRuleEditor();
 
-	private onExecuteIntercepted = this.props.interceptsStore!.execute.bind(this.props.interceptsStore!);
+	private onBreakpointExecute = this.props.breakpointsStore!.execute.bind(this.props.breakpointsStore!);
 
-	private onLocalResponseIntercepted = this.props.interceptsStore!.localResponse.bind(this.props.interceptsStore!);
+	private onBreakpointLocalResponse = this.props.breakpointsStore!.localResponse.bind(this.props.breakpointsStore!);
 
-	private onAbortIntercepted = this.props.interceptsStore!.abort.bind(this.props.interceptsStore!);
+	private onBreakpointAbort = this.props.breakpointsStore!.abort.bind(this.props.breakpointsStore!);
 }

@@ -1,4 +1,4 @@
-export enum CancelReasons {
+export enum CancelReasons { //TODO RequestErrorReason
 	Failed = 'Failed',
 	Aborted = 'Aborted',
 	TimedOut = 'TimedOut',

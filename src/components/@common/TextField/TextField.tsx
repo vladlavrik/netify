@@ -9,12 +9,13 @@ interface Props {
 	placeholder?: string;
 	maxlength?: number;
 	disabled?: boolean;
+	readOnly?: boolean;
 	prefix?: React.ReactNode;
 	suffix?: React.ReactNode;
 }
 
 export const TextField = React.memo((props: Props) => {
-	const {className, name, placeholder, maxlength, disabled, prefix, suffix} = props;
+	const {className, name, placeholder, maxlength, disabled, readOnly, prefix, suffix} = props;
 
 	return (
 		<div className={classNames(styles.root, className)}>
@@ -28,6 +29,7 @@ export const TextField = React.memo((props: Props) => {
 				placeholder={placeholder}
 				maxLength={maxlength}
 				disabled={disabled}
+				readOnly={readOnly}
 			/>
 
 			<div className={styles.border} />

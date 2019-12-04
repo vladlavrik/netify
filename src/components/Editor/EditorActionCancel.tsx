@@ -9,7 +9,7 @@ export const EditorActionCancel = React.memo(() => (
 		<EditorRow title='Reason:'>
 			<DropdownPicker
 				className={styles.reasonField}
-				name='actions.cancelRequest.reason'
+				name='actions.cancel.reason'
 				options={cancelReasonsList}
 			/>
 		</EditorRow>

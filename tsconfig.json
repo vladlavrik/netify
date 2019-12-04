@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "ES2018",
-		"module": "ES2015",
+		"module": "amd",
 		"lib": ["esnext", "dom"],
 		"jsx": "react",
 		"sourceMap": true,
@@ -22,6 +22,7 @@
 		"paths": {
 			"@/*": ["src/*"]
 		},
+		"esModuleInterop": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true
 	}

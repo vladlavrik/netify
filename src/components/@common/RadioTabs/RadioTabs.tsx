@@ -13,6 +13,7 @@ interface Props {
 }
 
 export const RadioTabs = React.memo(({tabs, radioName, children}: Props) => {
+	//TODO use field
 	const {values} = useFormikContext();
 	const activeTabName = getIn(values, radioName);
 

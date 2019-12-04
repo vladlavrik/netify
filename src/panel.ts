@@ -3,76 +3,97 @@ import * as ReactDOM from 'react-dom';
 import {autorun} from 'mobx';
 import {Provider} from 'mobx-react';
 import {RootStore} from '@/stores/RootStore';
-import {Debugger, DebuggerState, getTargetTabUrl} from '@/debugger';
-import {getPlatfom} from '@/helpers/browser';
-import {Log} from '@/interfaces/Log';
+import {ExtensionDevtoolsConnector, ExtensionTab, ExtensionIcon} from '@/services/extension';
+import {FetchDevtools} from '@/services/devtools/fetch';
+import {getPlatform} from '@/helpers/browser';
 import {App} from '@/components/App';
 import '@/style/page.css';
 
 (async () => {
+	const {tabId} = chrome.devtools.inspectedWindow;
+
 	// Get current tab url
-	const tabUrl = await getTargetTabUrl();
+	const tabUrl = await new ExtensionTab(tabId).getUrl();
 
 	// Initialize a store
 	const store = new RootStore();
 
-	// Load saved rules
+	// Load persistence saved rules
 	await store.rulesStore.initialize(tabUrl);
 
-	// Initialize debugger
-	const dbg = new Debugger({
-		tabId: chrome.devtools.inspectedWindow.tabId,
-		rulesSelector: store.rulesStore,
+	// Initialize devtools
+	const devtools = new ExtensionDevtoolsConnector(tabId);
+	const fetchDevtools = new FetchDevtools(store.rulesStore, devtools);
+	const extIcon = new ExtensionIcon(tabId, 'Netify');
 
-		onRequestStart(log: Log) {
-			store.logsStore.add(log);
-		},
+	// Connect devtools and store by events model
+	devtools.userDetachEvent.on(() => store.appStore.disableDebugger());
+	fetchDevtools.events.requestStart.on(log => store.logsStore.add(log));
+	fetchDevtools.events.requestEnd.on(id => store.logsStore.makeLoaded(id));
+	fetchDevtools.events.requestBreakpoint.on(bp => store.breakpointsStore.add(bp));
+	fetchDevtools.events.responseBreakpoint.on(bp => store.breakpointsStore.add(bp));
 
-		onRequestEnd(id: string) {
-			store.logsStore.makeLoaded(id);
-		},
-
-		onUserDetach() {
-			store.appStore.disableDebugger();
-		},
-	});
+	store.breakpointsStore.executeRequestEvent.on(data => fetchDevtools.executeRequestBreakpoint(data));
+	store.breakpointsStore.executeResponseEvent.on(data => fetchDevtools.executeResponseBreakpoint(data));
+	store.breakpointsStore.abortEvent.on(requestId => fetchDevtools.abortBreakpoint(requestId));
 
 	// TODO comment me
+	let debuggerActive = false;
 	autorun(async () => {
 		// TODO disallow switch state when previous operation during
-		const debuggerActive = [DebuggerState.Active, DebuggerState.Starting].includes(dbg.currentState);
 		const {debuggerAllowed} = store.appStore;
 		const hasRules = store.rulesStore.list.length > 0;
 
 		if (hasRules && !debuggerActive && debuggerAllowed) {
-			await dbg.initialize();
+			await devtools.initialize();
+			await fetchDevtools.enable();
+			extIcon.makeActive();
+			debuggerActive = true;
 			return;
 		}
 
 		if (!(hasRules && debuggerAllowed) && debuggerActive) {
-			await dbg.destroy();
+			await fetchDevtools.disable();
+			if (devtools.isAttached) {
+				await devtools.destroy();
+			}
+			extIcon.makeInactive();
+			debuggerActive = false;
 		}
 	});
 
-	// TODO comment me
-	self.addEventListener('beforeunload', async () => {
-		if ([DebuggerState.Active, DebuggerState.Starting].includes(dbg.currentState)) {
-			await dbg.destroy();
+	// Detach debugger on page leave
+	self.addEventListener('beforeunload', () => {
+		if (debuggerActive) {
+			fetchDevtools.disable();
+			devtools.destroy();
+			extIcon.makeInactive();
+		}
+	});
+
+	// Save panes shown state
+	(chrome.extension as any).onMessage.addListener((message: {type: string; shown?: boolean}) => {
+		if (message.type === 'panelShowToggle') {
+			store.appStore.setPanelShown(!!message.shown);
 		}
 	});
 
 	// Define current platform styles
-	const platform = getPlatfom();
+	const platform = getPlatform();
 	document.querySelector('body')!.classList.add('platform-' + platform);
 
-	// Render the application
+	// Render the application UI
 	const appElement = React.createElement(App);
-	const appWithStoreElement = React.createElement(Provider, {
-		appStore: store.appStore,
-		rulesStore: store.rulesStore,
-		logsStore: store.logsStore,
-		interceptsStore: store.interceptsStore,
-	}, appElement);
+	const appWithStoreElement = React.createElement(
+		Provider,
+		{
+			appStore: store.appStore,
+			rulesStore: store.rulesStore,
+			logsStore: store.logsStore,
+			breakpointsStore: store.breakpointsStore,
+		},
+		appElement,
+	);
 
 	ReactDOM.render(appWithStoreElement, document.getElementById('app-root'));
 })();

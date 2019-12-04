@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import {connect, getIn, FormikContext} from 'formik';
+import {connect, getIn} from 'formik';
 import styles from './dropdownPicker.css';
 
 interface PropsFormikPart {

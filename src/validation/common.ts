@@ -2,23 +2,24 @@ import * as yup from 'yup';
 import {requestMethodsList} from '@/constants/RequestMethod';
 import {requestBodyTypesList} from '@/constants/RequestBodyType';
 import {responseBodyTypesList} from '@/constants/ResponseBodyType';
+import {HeadersArray} from '@/interfaces/headers';
 import {trimString} from '@/helpers/formatter';
 
 export const headersSchema = yup
 	.array()
 	.of(yup.object({name: yup.string().trim(), value: yup.string().trim()}))
-	.transform((value: {name: string; value: string}[]) => value.filter(item => item.name && item.value));
+	.transform((list: HeadersArray) => list.filter(item => item.name && item.value));
 
-export const headersUpdateSchema = yup.mixed().transform((value: {name: string; value: string}[]) => {
-	const add: {[name: string]: string} = {};
+export const headersUpdateSchema = yup.mixed().transform((list: HeadersArray) => {
+	const add: HeadersArray = [];
 	const remove: string[] = [];
 
-	for (const item of value) {
+	for (const item of list) {
 		const name = trimString(item.name);
 		const value = trimString(item.value);
 
 		if (name && value) {
-			add[name] = value;
+			add.push({name, value});
 		} else if (name) {
 			remove.push(name);
 		}
@@ -55,7 +56,10 @@ export const methodSchema = yup
 	.nullable(true);
 
 export const requestBodySchema = yup.object({
-	type: yup.mixed().oneOf(requestBodyTypesList),
+	type: yup
+		.mixed()
+		.transform((value: string) => value || undefined)
+		.oneOf(requestBodyTypesList),
 	textValue: yup.string(),
 	formValue: yup
 		.array()
@@ -64,7 +68,10 @@ export const requestBodySchema = yup.object({
 });
 
 export const responseBodySchema = yup.object({
-	type: yup.mixed().oneOf(responseBodyTypesList),
+	type: yup
+		.mixed()
+		.transform((value: string) => value || undefined)
+		.oneOf(responseBodyTypesList),
 	textValue: yup.string(),
 	fileValue: yup.mixed().nullable(false),
 });

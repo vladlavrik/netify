@@ -1,12 +1,15 @@
 import * as React from 'react';
 import {Formik, FormikHelpers} from 'formik';
 import {Rule} from '@/interfaces/Rule';
-import {RuleForm} from '@/interfaces/RuleForm';
-import {formSchema} from '@/validation/ruleForm';
+import {RequestBody, ResponseBody} from '@/interfaces/body';
+import {HeadersArray} from '@/interfaces/headers';
 import {UrlCompareType} from '@/constants/UrlCompareType';
 import {RequestBodyType} from '@/constants/RequestBodyType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {CancelReasons} from '@/constants/CancelReasons';
+import {ResourceType} from '@/constants/ResourceType';
+import {RequestMethod} from '@/constants/RequestMethod';
+import {formSchema} from '@/validation/ruleForm';
 
 interface Props {
 	className?: string;
@@ -15,10 +18,49 @@ interface Props {
 	children: React.ReactNode;
 }
 
+interface RuleForm {
+	filter: {
+		url: {
+			value: string;
+			compareType: UrlCompareType;
+		};
+		resourceTypes: ResourceType[];
+		methods: RequestMethod[];
+	};
+	actions: {
+		breakpoint: {
+			request: boolean;
+			response: boolean;
+		};
+		mutate: {
+			request: {
+				enabled: boolean;
+				endpoint: string;
+				method?: RequestMethod;
+				headers: HeadersArray;
+				body: Omit<RequestBody, 'type'> & {type: RequestBodyType | ''};
+			};
+			response: {
+				enabled: boolean;
+				responseLocally: '0' | '1';
+				statusCode: string;
+				headers: HeadersArray;
+				body: Omit<ResponseBody, 'type'> & {type: ResponseBodyType | ''};
+			};
+		};
+		cancel: {
+			enabled: boolean;
+			reason: CancelReasons;
+		};
+	}
+}
+
+
 export const EditorForm = React.memo((props: Props) => {
 	// Transform a Rule object to form value if it is passed into the props or return empty form value otherwise
 	const initialValue = React.useMemo(() => {
 		if (!props.initialValues) {
+			// return empty form state
 			return {
 				filter: {
 					url: {
@@ -28,34 +70,36 @@ export const EditorForm = React.memo((props: Props) => {
 					resourceTypes: [],
 					methods: [],
 				},
-				intercept: {
-					request: true,
-					response: true,
-				},
 				actions: {
-					mutateRequest: {
-						enabled: false,
-						endpointReplace: '',
-						methodReplace: undefined,
-						headers: [{name: '', value: ''}],
-						bodyReplace: {
-							type: RequestBodyType.Original,
-							textValue: '',
-							formValue: [{key: '', value: ''}],
+					breakpoint: {
+						request: true,
+						response: true,
+					},
+					mutate: {
+						request: {
+							enabled: false,
+							endpoint: '',
+							method: undefined,
+							headers: [{name: '', value: ''}],
+							body: {
+								type: '',
+								textValue: '',
+								formValue: [{key: '', value: ''}],
+							},
+						},
+						response: {
+							enabled: false,
+							responseLocally: '0',
+							statusCode: '',
+							headers: [{name: '', value: ''}],
+							body: {
+								type: '',
+								textValue: '',
+								fileValue: undefined,
+							},
 						},
 					},
-					mutateResponse: {
-						enabled: false,
-						responseLocally: '0',
-						statusCode: '',
-						headers: [{name: '', value: ''}],
-						bodyReplace: {
-							type: ResponseBodyType.Original,
-							textValue: '',
-							fileValue: undefined,
-						},
-					},
-					cancelRequest: {
+					cancel: {
 						enabled: false,
 						reason: CancelReasons.Failed,
 					},
@@ -63,7 +107,10 @@ export const EditorForm = React.memo((props: Props) => {
 			} as RuleForm;
 		}
 
-		const {id, filter, intercept, actions} = props.initialValues;
+		// compile form state form a rule
+		const {id, filter, actions} = props.initialValues;
+		const {breakpoint, mutate, cancel} = actions;
+
 		return {
 			id,
 			filter: {
@@ -74,49 +121,46 @@ export const EditorForm = React.memo((props: Props) => {
 				resourceTypes: filter.resourceTypes,
 				methods: filter.methods,
 			},
-			intercept: {...intercept},
 			actions: {
-				mutateRequest: {
-					enabled: actions.mutateRequest.enabled,
-					endpointReplace: actions.mutateRequest.endpointReplace,
-					methodReplace: actions.mutateRequest.methodReplace,
-					headers: [
-						...Object.entries(actions.mutateRequest.headers.add).map(([name, value]: [string, string]) => ({
-							name,
-							value,
-						})),
-						...actions.mutateRequest.headers.remove.map(name => ({name, value: ''})),
-						{name: '', value: ''},
-					],
-					bodyReplace: {
-						type: actions.mutateRequest.bodyReplace.type,
-						textValue: actions.mutateRequest.bodyReplace.textValue,
-						formValue:
-							actions.mutateRequest.bodyReplace.formValue.length > 0
-								? actions.mutateRequest.bodyReplace.formValue
-								: [{key: '', value: ''}],
+				breakpoint: {...breakpoint},
+				mutate: {
+					request: {
+						enabled: mutate.request.enabled,
+						endpoint: mutate.request.endpoint,
+						method: mutate.request.method,
+						headers: [
+							...mutate.request.headers.add,
+							...mutate.request.headers.remove.map(name => ({name, value: ''})),
+							{name: '', value: ''},
+						],
+						body: {
+							type: mutate.request.body.type || '',
+							textValue: mutate.request.body.textValue,
+							formValue:
+								mutate.request.body.formValue.length > 0
+									? mutate.request.body.formValue
+									: [{key: '', value: ''}],
+						},
 					},
+					response: {
+						enabled: mutate.response.enabled,
+						responseLocally: mutate.response.responseLocally ? '1' : '0',
+						statusCode: mutate.response.statusCode || '',
+						headers: [
+							...mutate.response.headers.add,
+							...mutate.response.headers.remove.map(name => ({name, value: ''})),
+							{name: '', value: ''},
+						],
+						body: {
+							type: mutate.response.body.type || '',
+							textValue: mutate.response.body.textValue,
+							fileValue: mutate.response.body.fileValue,
+						},
+					}
 				},
-				mutateResponse: {
-					enabled: actions.mutateResponse.enabled,
-					responseLocally: actions.mutateResponse.responseLocally ? '1' : '0',
-					statusCode: actions.mutateResponse.statusCode || '',
-					headers: [
-						...Object.entries(actions.mutateResponse.headers.add).map(
-							([name, value]: [string, string]) => ({name, value}),
-						),
-						...actions.mutateResponse.headers.remove.map(name => ({name, value: ''})),
-						{name: '', value: ''},
-					],
-					bodyReplace: {
-						type: actions.mutateResponse.bodyReplace.type,
-						textValue: actions.mutateResponse.bodyReplace.textValue,
-						fileValue: actions.mutateResponse.bodyReplace.fileValue,
-					},
-				},
-				cancelRequest: {
-					enabled: actions.cancelRequest.enabled,
-					reason: actions.cancelRequest.reason,
+				cancel: {
+					enabled: cancel.enabled,
+					reason: cancel.reason,
 				},
 			},
 		} as RuleForm;

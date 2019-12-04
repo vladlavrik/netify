@@ -10,30 +10,38 @@ import {FieldError} from '@/components/@common/FieldError';
 import {EditorRow} from './EditorRow';
 import styles from './editorActionRequest.css';
 
+const bodyTypeOptions = [
+	{value: '', title: 'Original'},
+	...requestBodyTypesList.map(type => ({
+		value: type,
+		title: type,
+	})),
+];
+
 export const EditorActionRequest = React.memo(() => (
 	<div className={styles.root}>
 		<EditorRow title='Replace endpoint:'>
 			<div className={styles.endpointBlock}>
 				<TextField
 					className={styles.endpointField}
-					name='actions.mutateRequest.endpointReplace'
+					name='actions.mutate.request.endpoint'
 					placeholder='%protocol%//%hostname%:%port%%path%%query%'
 				/>
-				<FieldError name='actions.mutateRequest.endpointReplace' />
+				<FieldError name='actions.mutate.request.endpoint' />
 				{/*TODO Add info block*/}
 			</div>
 		</EditorRow>
 		<EditorRow title='Replace method:'>
 			<DropdownPicker
 				className={styles.methodField}
-				name='actions.mutateRequest.methodReplace'
+				name='actions.mutate.request.method'
 				placeholder='Method'
 				options={requestMethodsList}
 			/>
 		</EditorRow>
 		<EditorRow title='Headers:'>
 			<KeyValueArrayField
-				name='actions.mutateRequest.headers'
+				name='actions.mutate.request.headers'
 				keyNameSuffix='name'
 				valueNameSuffix='value'
 				keyPlaceholder='Header name'
@@ -41,19 +49,14 @@ export const EditorActionRequest = React.memo(() => (
 			/>
 		</EditorRow>
 		<EditorRow title='Body:'>
-			<RadioTabs
-				radioName='actions.mutateRequest.bodyReplace.type'
-				tabs={requestBodyTypesList.map(type => ({
-					value: type,
-					title: type,
-				}))}>
+			<RadioTabs radioName='actions.mutate.request.body.type' tabs={bodyTypeOptions}>
 				{(tabName: string) => {
 					switch (tabName) {
 						case RequestBodyType.Text:
 							return (
 								<TextareaField
 									className={styles.bodyTextField}
-									name={'actions.mutateRequest.bodyReplace.textValue'}
+									name={'actions.mutate.request.body.textValue'}
 								/>
 							);
 
@@ -61,7 +64,7 @@ export const EditorActionRequest = React.memo(() => (
 						case RequestBodyType.MultipartFromData:
 							return (
 								<KeyValueArrayField
-									name='actions.mutateRequest.bodyReplace.formValue'
+									name='actions.mutate.request.body.formValue'
 									keyNameSuffix='key'
 									valueNameSuffix='value'
 									keyPlaceholder='Field key'
