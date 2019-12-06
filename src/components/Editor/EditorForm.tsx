@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {Formik, FormikHelpers} from 'formik';
-import {Rule} from '@/interfaces/Rule';
+import {Rule} from '@/interfaces/rule';
 import {RequestBody, ResponseBody} from '@/interfaces/body';
 import {HeadersArray} from '@/interfaces/headers';
 import {UrlCompareType} from '@/constants/UrlCompareType';
 import {RequestBodyType} from '@/constants/RequestBodyType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
-import {CancelReasons} from '@/constants/CancelReasons';
+import {ResponseErrorReason} from '@/constants/ResponseErrorReason';
 import {ResourceType} from '@/constants/ResourceType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {formSchema} from '@/validation/ruleForm';
@@ -50,7 +50,7 @@ interface RuleForm {
 		};
 		cancel: {
 			enabled: boolean;
-			reason: CancelReasons;
+			reason: ResponseErrorReason;
 		};
 	}
 }
@@ -101,7 +101,7 @@ export const EditorForm = React.memo((props: Props) => {
 					},
 					cancel: {
 						enabled: false,
-						reason: CancelReasons.Failed,
+						reason: ResponseErrorReason.Failed,
 					},
 				},
 			} as RuleForm;

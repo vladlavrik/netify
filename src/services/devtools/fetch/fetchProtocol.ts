@@ -1,6 +1,6 @@
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
-import {CancelReasons} from '@/constants/CancelReasons';
+import {ResponseErrorReason} from '@/constants/ResponseErrorReason';
 import {HeadersMap, HeadersArray} from '@/interfaces/headers';
 
 /*
@@ -16,7 +16,7 @@ export interface NetworkRequest {
 	headers: HeadersMap;
 	postData?: string;
 	hasPostData?: boolean;
-	//TODO skip if isLinkPreload
+	// TODO skip if isLinkPreload
 }
 
 export interface PausedRequestEventData {
@@ -29,7 +29,7 @@ export interface PausedRequestEventData {
 
 export interface PausedResponseEventData extends PausedRequestEventData {
 	responseHeaders: HeadersArray;
-	responseErrorReason: CancelReasons; // TODO use it
+	responseErrorReason: ResponseErrorReason;
 	responseStatusCode: number;
 }
 
@@ -51,7 +51,7 @@ export interface FulfillRequestData {
 
 export interface FailRequestData {
 	requestId: string;
-	errorReason: CancelReasons;
+	errorReason: ResponseErrorReason;
 }
 
 export interface GetResponseBodyResult {

@@ -1,13 +1,11 @@
 import {StatusCode} from '@/constants/StatusCode';
-import {CancelReasons} from '@/constants/CancelReasons';
-import {RequestBreakpoint, ResponseBreakpoint} from '@/interfaces/breakpoint';
-import {Rule, RulesSelector} from '@/interfaces/rule';
+import {Rule, RulesSelector, FailureAction, LocalResponseAction, MutationAction} from '@/interfaces/rule';
 import {Log} from '@/interfaces/log';
 import {Event} from '@/helpers/events';
 import {DevtoolsConnector} from '@/services/devtools';
-import {PausedRequestEventData, PausedResponseEventData, GetResponseBodyResult, ContinueRequestData, FulfillRequestData, FailRequestData} from './fetchProtocol'; // prettier-ignore
-import {ResponseProcessor} from './ResponseProcessor';
-import {RequestProcessor} from './RequestProcessor';
+import {ResponseBuilder} from './ResponseBuilder';
+import {RequestBuilder} from './RequestBuilder';
+import {PausedRequestEventData, PausedResponseEventData, ContinueRequestData, FulfillRequestData, FailRequestData} from './fetchProtocol'; // prettier-ignore
 
 // TODO use live pattern
 // prettier-ignore
@@ -20,12 +18,11 @@ const requestPatterns = [{
 }];
 
 type PausedRequestOrResponseEvent = PausedRequestEventData | PausedResponseEventData;
+
 export class FetchDevtools {
 	readonly events = {
 		requestStart: new Event<Log>(),
 		requestEnd: new Event<string /* unique request id*/>(),
-		requestBreakpoint: new Event<RequestBreakpoint>(),
-		responseBreakpoint: new Event<ResponseBreakpoint>(),
 	};
 
 	private unsubscribeDevtoolsEvents?: () => void;
@@ -62,7 +59,7 @@ export class FetchDevtools {
 	private async processRequest(requestInput: PausedRequestEventData, rule: Rule | null) {
 		const {requestId, request} = requestInput;
 
-		if (!rule) {
+		if (!rule || !rule.active) {
 			await this.continueRequest({requestId});
 			return;
 		}
@@ -78,33 +75,44 @@ export class FetchDevtools {
 			resourceType: request.resourceType,
 		});
 
-		const {breakpoint, mutate, cancel} = rule.actions;
+		switch (rule.action.type) {
+			// trigger breakpoint event
+			case 'breakpoint':
+				// TODO
+				break;
 
-		// trigger breakpoint event
-		if (breakpoint.request) {
-			this.triggerRequestBreakpoint(requestInput);
-			return;
+			// failure request
+			case 'failure':
+				this.processRequestFailure(requestId, rule.action);
+				break;
+
+			// response locally without sending request to server
+			case 'localResponse':
+				this.processLocalResponse(requestId, rule.action);
+				break;
+
+			// mutate request by the rule and send it to a server
+			case 'mutation':
+				this.processRequestMutation(requestInput, rule.action);
+				break;
 		}
+	}
 
-		// if response error is defined and local response is required - return the error reason on the request stage
-		if (cancel.enabled) {
-			const errorReason = cancel.reason;
-			await this.failRequest({requestId, errorReason});
-			this.events.requestEnd.emit(requestId);
-			return;
-		}
+	private async processRequestFailure(requestId: string, action: FailureAction) {
+		const errorReason = action.reason;
+		await this.failRequest({requestId, errorReason});
+		this.events.requestEnd.emit(requestId);
+	}
 
-		// if required local response, combine the response form defined in the rule status, headers and body
-		if (mutate.response.enabled && mutate.response.responseLocally) {
-			const processor = ResponseProcessor.asLocalResponse(requestId, rule);
-			const fulfilParams = await processor.build();
-			await this.fulfillRequest(fulfilParams);
-			this.events.requestEnd.emit(requestId);
-			return;
-		}
+	private async processLocalResponse(requestId: string, action: LocalResponseAction) {
+		const processor = ResponseBuilder.asLocalResponse(requestId, action);
+		const fulfilParams = await processor.build();
+		await this.fulfillRequest(fulfilParams);
+		this.events.requestEnd.emit(requestId);
+	}
 
-		// otherwise mutate request by the rule and send it to a server
-		const processor = RequestProcessor.asRequestPatch(requestInput, rule);
+	private async processRequestMutation(requestInput: PausedRequestEventData, action: MutationAction) {
+		const processor = RequestBuilder.asRequestPatch(requestInput, action);
 		const continueParams = processor.build();
 		await this.continueRequest(continueParams);
 	}
@@ -119,21 +127,25 @@ export class FetchDevtools {
 			return;
 		}
 
-		const {breakpoint, mutate} = rule.actions;
+		switch (rule.action.type) {
+			case 'breakpoint':
+				// TODO;
+				break;
 
-		// TODO comment
-		if (breakpoint.response) {
-			await this.triggerResponseBreakpoint(responseInput);
-			return;
+			case 'mutation':
+				this.processResponseMutation(responseInput, rule.action);
+				break;
 		}
-		const skipHandler = // TODO check it
-			mutate.response.statusCode === null &&
-			mutate.response.headers.add.length === 0 &&
-			mutate.response.headers.remove.length === 0 &&
-			!mutate.response.body.type;
+	}
+
+	private async processResponseMutation(responseInput: PausedResponseEventData, action: MutationAction) {
+		const {requestId} = responseInput;
+		const {statusCode, headers, body} = action.response;
+
+		const noChanges = statusCode === null && headers.add.length === 0 && headers.remove.length === 0 && !body;
 
 		// TODO comment
-		if (skipHandler) {
+		if (noChanges) {
 			// TODO describe: not documented but works
 			// TODO check is it saves
 			await this.continueRequest({requestId});
@@ -142,7 +154,7 @@ export class FetchDevtools {
 		}
 
 		// TODO comment
-		const processor = ResponseProcessor.asResponsePatch(responseInput, rule);
+		const processor = ResponseBuilder.asResponsePatch(responseInput, action);
 		const fulfilParams = await processor.build();
 		await this.fulfillRequest(fulfilParams);
 		this.events.requestEnd.emit(requestId);
@@ -150,41 +162,6 @@ export class FetchDevtools {
 
 	private selectRule({request: {url, method}, resourceType}: PausedRequestEventData | PausedResponseEventData) {
 		return this.rulesSelector.selectOne({url, method, resourceType});
-	}
-
-	private triggerRequestBreakpoint(requestData: PausedRequestEventData) {
-		const breakpoint = RequestProcessor.compileBreakpoint(requestData);
-		this.events.requestBreakpoint.emit(breakpoint);
-	}
-
-	private async triggerResponseBreakpoint(responseData: PausedResponseEventData) {
-		await this.getResponseBody(responseData.requestId);
-		const {body, base64Encoded} = await this.getResponseBody(responseData.requestId);
-		const breakpoint = ResponseProcessor.compileBreakpoint(responseData, body, base64Encoded);
-		this.events.responseBreakpoint.emit(breakpoint);
-	}
-
-	async executeRequestBreakpoint(request: RequestBreakpoint) {
-		const processor = RequestProcessor.asBreakpointExecute(request);
-		const continueParams = processor.build();
-		await this.continueRequest(continueParams);
-	}
-
-	async executeResponseBreakpoint(response: ResponseBreakpoint) {
-		const processor = ResponseProcessor.asBreakpointExecute(response);
-		const fulfilParams = await processor.build();
-		await this.fulfillRequest(fulfilParams);
-		this.events.requestEnd.emit(response.requestId);
-	}
-
-	async abortBreakpoint(requestId: string) {
-		const errorReason = CancelReasons.Aborted;
-		await this.failRequest({requestId, errorReason});
-		this.events.requestEnd.emit(requestId);
-	}
-
-	private async getResponseBody(requestId: string) {
-		return await this.devtools.sendCommand<{}, GetResponseBodyResult>('Fetch.getResponseBody', {requestId});
 	}
 
 	private async continueRequest(params: ContinueRequestData) {

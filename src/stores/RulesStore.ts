@@ -3,9 +3,10 @@ import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {UrlCompareType} from '@/constants/UrlCompareType';
 import {RulesSelector} from '@/interfaces/rule';
-import {Rule} from '@/interfaces/Rule';
+import {Rule} from '@/interfaces/rule';
 import {openIDB, getOpenedIDB, RulesMapper} from '@/services/indexedDB';
 import {RootStore} from './RootStore';
+
 
 export class RulesStore implements RulesSelector {
 	private IDBMapper?: RulesMapper;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Rule} from '@/interfaces/Rule';
+import {Rule} from '@/interfaces/rule';
 import {Button} from '@/components/@common/Button';
 import {ExpandableCheckbox} from '@/components/@common/ExpandableCheckbox';
 import {EditorForm} from './EditorForm';

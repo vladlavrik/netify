@@ -1,23 +1,19 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {observer, inject} from 'mobx-react';
-import {Rule} from '@/interfaces/Rule';
+import {Rule} from '@/interfaces/rule';
 import {AppStore} from '@/stores/AppStore';
 import {RulesStore} from '@/stores/RulesStore';
-import {BreakpointsStore} from '@/stores/BreakpointsStore';
-import {RequestBreakpoint, ResponseBreakpoint} from '@/interfaces/breakpoint';
 import {PopUpAlert} from '@/components/@common/PopUpAlert';
 import {Logs} from '@/components/Logs';
 import {Rules} from '@/components/Rules';
 import {Editor} from '@/components/Editor';
-import {BreakpointOfRequest, BreakpointOfResponse} from '@/components/Breakpoint';
 import {AppSeparatedSections} from './AppSeparatedSections';
 import styles from './app.css';
 
 interface Props {
 	appStore?: AppStore;
 	rulesStore?: RulesStore;
-	breakpointsStore?: BreakpointsStore;
 }
 
 @inject('appStore', 'rulesStore', 'breakpointsStore')
@@ -27,7 +23,6 @@ export class App extends React.Component<Props> {
 
 	render() {
 		const {sectionRatio, composeShown, editingRule, displayedError} = this.props.appStore!;
-		const {activeBreakpoint} = this.props.breakpointsStore!;
 
 		return (
 			<div className={styles.root}>
@@ -55,26 +50,6 @@ export class App extends React.Component<Props> {
 						this.modalTarget,
 					)}
 
-				{activeBreakpoint && (
-					ReactDOM.createPortal(
-						!(activeBreakpoint as ResponseBreakpoint).statusCode ? (
-							<BreakpointOfRequest
-								data={activeBreakpoint as RequestBreakpoint}
-								onExecute={this.onBreakpointExecute}
-								onLocalResponse={this.onBreakpointLocalResponse}
-								onAbort={this.onBreakpointAbort}
-							/>
-						) : (
-							<BreakpointOfResponse
-								data={activeBreakpoint as ResponseBreakpoint}
-								onExecute={this.onBreakpointExecute}
-								onAbort={this.onBreakpointAbort}
-							/>
-						),
-						document.getElementById('modal-root')!,
-					)
-				)}
-
 				{displayedError && (
 					<PopUpAlert onClose={this.onCloseErrorAlert}>
 						<p className={styles.errorDisplay}>{displayedError}</p>
@@ -99,10 +74,4 @@ export class App extends React.Component<Props> {
 	private onSaveEdited = (rule: Rule) => this.props.rulesStore!.save(rule);
 
 	private onCancelItemEdit = () => this.props.appStore!.hideRuleEditor();
-
-	private onBreakpointExecute = this.props.breakpointsStore!.execute.bind(this.props.breakpointsStore!);
-
-	private onBreakpointLocalResponse = this.props.breakpointsStore!.localResponse.bind(this.props.breakpointsStore!);
-
-	private onBreakpointAbort = this.props.breakpointsStore!.abort.bind(this.props.breakpointsStore!);
 }

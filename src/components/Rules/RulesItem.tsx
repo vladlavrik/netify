@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import {Rule} from '@/interfaces/Rule';
+import {Rule} from '@/interfaces/rule';
 import {IconButton} from '@/components/@common/IconButton';
 import styles from './rulesItem.css';
 
@@ -80,48 +80,54 @@ export class RulesItem extends React.PureComponent<Props, State> {
 	}
 
 	private parseActionsArray() {
-		const {breakpoint, mutate, cancel} = this.props.data.actions;
-		const {request: mutateRequest, response: mutateResponse} = mutate;
+		//TODO sho is active
+		const {action} = this.props.data;
 		const actions = [];
 
-		if (breakpoint.request) {
-			actions.push('Breakpoint on request');
-		}
-
-		if (breakpoint.response) {
-			actions.push('Breakpoint on response');
-		}
-
-		if (mutateRequest.enabled) {
-			const {endpoint, method, headers, body} = mutateRequest;
-			if (endpoint) {
-				actions.push('Redirect to url');
+		if (action.type === 'breakpoint') {
+			if (action.request) {
+				actions.push('Breakpoint on request');
 			}
-			if (method) {
-				actions.push('Replacing method');
-			}
-			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
-				actions.push('Modifying request headers');
-			}
-			if (body.type) {
-				actions.push('Replacing request body');
+			if (action.response) {
+				actions.push('Breakpoint on response');
 			}
 		}
 
-		if (mutateResponse.enabled) {
-			const {statusCode, headers, body} = mutateResponse;
-			if (statusCode) {
-				actions.push('Replacing response status');
+		if (action.type === 'mutation') {
+			if (action.request) {
+				const {endpoint, method, headers, body} = action.request;
+				if (endpoint) {
+					actions.push('Redirect to url');
+				}
+				if (method) {
+					actions.push('Replacing method');
+				}
+				if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
+					actions.push('Modifying request headers');
+				}
+				if (body) {
+					actions.push('Replacing request body');
+				}
 			}
-			if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
-				actions.push('Modifying response headers');
-			}
-			if (body.type) {
-				actions.push('Replacing response body');
+			if (action.response) {
+				const {statusCode, headers, body} = action.response;
+				if (statusCode) {
+					actions.push('Replacing response status');
+				}
+				if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
+					actions.push('Modifying response headers');
+				}
+				if (body) {
+					actions.push('Replacing response body');
+				}
 			}
 		}
 
-		if (cancel.enabled) {
+		if (action.type === 'localResponse') {
+			actions.push('Local response');
+		}
+
+		if (action.type === 'failure') {
 			actions.push('Returning error');
 		}
 

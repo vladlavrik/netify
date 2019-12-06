@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {EditorRow} from './EditorRow';
 import {DropdownPicker} from '@/components/@common/DropdownPicker';
-import {cancelReasonsList} from '@/constants/CancelReasons';
+import {requestErrorReasonsList} from '@/constants/ResponseErrorReason';
 import styles from './editorActionCancel.css';
 
 export const EditorActionCancel = React.memo(() => (
@@ -10,7 +10,7 @@ export const EditorActionCancel = React.memo(() => (
 			<DropdownPicker
 				className={styles.reasonField}
 				name='actions.cancel.reason'
-				options={cancelReasonsList}
+				options={requestErrorReasonsList}
 			/>
 		</EditorRow>
 	</div>

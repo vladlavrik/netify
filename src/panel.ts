@@ -30,12 +30,7 @@ import '@/style/page.css';
 	devtools.userDetachEvent.on(() => store.appStore.disableDebugger());
 	fetchDevtools.events.requestStart.on(log => store.logsStore.add(log));
 	fetchDevtools.events.requestEnd.on(id => store.logsStore.makeLoaded(id));
-	fetchDevtools.events.requestBreakpoint.on(bp => store.breakpointsStore.add(bp));
-	fetchDevtools.events.responseBreakpoint.on(bp => store.breakpointsStore.add(bp));
 
-	store.breakpointsStore.executeRequestEvent.on(data => fetchDevtools.executeRequestBreakpoint(data));
-	store.breakpointsStore.executeResponseEvent.on(data => fetchDevtools.executeResponseBreakpoint(data));
-	store.breakpointsStore.abortEvent.on(requestId => fetchDevtools.abortBreakpoint(requestId));
 
 	// TODO comment me
 	let debuggerActive = false;
@@ -90,7 +85,6 @@ import '@/style/page.css';
 			appStore: store.appStore,
 			rulesStore: store.rulesStore,
 			logsStore: store.logsStore,
-			breakpointsStore: store.breakpointsStore,
 		},
 		appElement,
 	);

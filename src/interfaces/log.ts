@@ -1,8 +1,8 @@
-import {Rule} from './Rule';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
+import {Rule} from './rule';
 
-interface Log {
+export interface Log {
 	id: string; // is "requestId"
 	ruleId: Rule['id'];
 	loaded: boolean;

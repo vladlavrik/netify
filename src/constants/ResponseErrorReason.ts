@@ -1,0 +1,33 @@
+export enum ResponseErrorReason { //TODO RequestErrorReason
+	Failed = 'Failed',
+	Aborted = 'Aborted',
+	TimedOut = 'TimedOut',
+	AccessDenied = 'AccessDenied',
+	ConnectionClosed = 'ConnectionClosed',
+	ConnectionReset = 'ConnectionReset',
+	ConnectionRefused = 'ConnectionRefused',
+	ConnectionAborted = 'ConnectionAborted',
+	ConnectionFailed = 'ConnectionFailed',
+	NameNotResolved = 'NameNotResolved',
+	InternetDisconnected = 'InternetDisconnected',
+	AddressUnreachable = 'AddressUnreachable',
+	BlockedByClient = 'BlockedByClient',
+	BlockedByResponse = 'BlockedByResponse',
+}
+
+export const responseErrorReasonsList = [
+	ResponseErrorReason.Failed,
+	ResponseErrorReason.Aborted,
+	ResponseErrorReason.TimedOut,
+	ResponseErrorReason.AccessDenied,
+	ResponseErrorReason.ConnectionClosed,
+	ResponseErrorReason.ConnectionReset,
+	ResponseErrorReason.ConnectionRefused,
+	ResponseErrorReason.ConnectionAborted,
+	ResponseErrorReason.ConnectionFailed,
+	ResponseErrorReason.NameNotResolved,
+	ResponseErrorReason.InternetDisconnected,
+	ResponseErrorReason.AddressUnreachable,
+	ResponseErrorReason.BlockedByClient,
+	ResponseErrorReason.BlockedByResponse,
+];

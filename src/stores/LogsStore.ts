@@ -1,6 +1,6 @@
 import {observable, action, computed} from 'mobx';
 import {RootStore} from './RootStore';
-import {Log} from '@/interfaces/Log';
+import {Log} from '@/interfaces/log';
 
 export class LogsStore {
 	constructor(_rootStore: RootStore) {}

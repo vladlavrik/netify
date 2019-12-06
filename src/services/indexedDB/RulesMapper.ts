@@ -1,5 +1,5 @@
 import {promisifyIDBRequest, generitiryIDBRequest} from './helper';
-import {Rule} from '@/interfaces/Rule';
+import {Rule} from '@/interfaces/rule';
 
 interface RuleItem {
 	hostname: string;

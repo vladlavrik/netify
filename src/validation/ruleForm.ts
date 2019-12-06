@@ -1,10 +1,10 @@
 import * as yup from 'yup';
-import {Rule} from '@/interfaces/Rule';
+import {Rule} from '@/interfaces/rule';
 import {randomHex} from '@/helpers/random';
 import {urlCompareTypeList} from '@/constants/UrlCompareType';
 import {resourceTypesList} from '@/constants/ResourceType';
 import {requestMethodsList} from '@/constants/RequestMethod';
-import {cancelReasonsList} from '@/constants/CancelReasons';
+import {requestErrorReasonsList} from '@/constants/ResponseErrorReason';
 import {headersUpdateSchema, optionalStatusCodeSchema, methodSchema, requestBodySchema, responseBodySchema} from './common'; // prettier-ignore
 
 export const formSchema = yup.object<Rule>({
@@ -40,7 +40,7 @@ export const formSchema = yup.object<Rule>({
 		}),
 		cancel: yup.object({
 			enabled: yup.boolean(),
-			reason: yup.mixed().oneOf(cancelReasonsList),
+			reason: yup.mixed().oneOf(requestErrorReasonsList),
 		}),
 	}),
 });
