@@ -11,6 +11,7 @@ const fullDateFormat = {
 	second: '2-digit',
 };
 
+// TODO add comments
 export function formatTime(date: Date) {
 	const time = date.toLocaleString('en-US', timeOnlyDateFormat);
 	const milliseconds = date
@@ -20,10 +21,7 @@ export function formatTime(date: Date) {
 	return `${time}.${milliseconds}`;
 }
 
+// TODO add comments
 export function formatFullTime(date: Date) {
 	return date.toLocaleString('en-US', fullDateFormat);
-}
-
-export function trimString(str: string) {
-	return str.replace(/^ +| +$/g, '');
 }
