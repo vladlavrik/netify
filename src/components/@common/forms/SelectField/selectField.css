@@ -20,24 +20,27 @@
 	user-select: none;
 	background: var(--color-bg-main);
 	color: inherit;
-}
-.label::after {
-	content: '';
-	display: block;
-	position: absolute;
-	right: 6px;
-	top: 7px;
-	width: 7px;
-	height: 6px;
-	background: #616161;
-	clip-path: polygon(0 0, 100% 0, 50% 100%);
-}
-.label.empty {
-	color: var(--color-placeholder);
-}
-.label:focus {
-	outline: none;
-	border-color: var(--color-focus);
+
+	&::after {
+		content: '';
+		display: block;
+		position: absolute;
+		right: 6px;
+		top: 7px;
+		width: 7px;
+		height: 6px;
+		background: #616161;
+		clip-path: polygon(0 0, 100% 0, 50% 100%);
+	}
+
+	&.empty {
+		color: var(--color-placeholder);
+	}
+
+	&:focus {
+		outline: none;
+		border-color: var(--color-focus);
+	}
 }
 
 .content {
@@ -53,16 +56,17 @@
 	background: var(--color-bg-main);
 	user-select: none;
 	z-index: 2;
-}
-.content::-webkit-scrollbar {
-	background-color: transparent;
-	width: 6px;
-}
-.content.expand-to-start {
-	bottom: 100%;
-}
-.content.expand-to-end {
-	top: 100%;
+
+	&::-webkit-scrollbar {
+		background-color: transparent;
+		width: 6px;
+	}
+	&.expand-to-start {
+		bottom: 100%;
+	}
+	&.expand-to-end {
+		top: 100%;
+	}
 }
 
 .option {
@@ -75,11 +79,13 @@
 	overflow: hidden;
 	color: var(--color-main);
 	cursor: pointer;
-}
-.option.selected {
-	background: var(--color-bg-active);
-}
-.option:hover,
-.option.highlighted {
-	background: var(--color-focus);
+
+	&.selected {
+		background: var(--color-bg-active);
+	}
+
+	&:hover,
+	&.highlighted {
+		background: var(--color-focus);
+	}
 }

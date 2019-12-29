@@ -21,20 +21,16 @@
 
 .macrosOption {
 	line-height: 22px;
-}
-
-.macrosOption {
-	line-height: 22px;
 	text-align: left;
 	width: 110px;
 	padding: 0 8px;
 	border-width: 0;
-}
 
-.macrosOption:nth-child(odd) {
-	background: var(--color-bg-odd-item); /* TODO to variables */
-}
+	&:nth-child(odd) {
+		background: var(--color-bg-odd-item); /* TODO to variables */
+	}
 
-.macrosOption:hover {
-	text-decoration: underline;
+	&:hover {
+		text-decoration: underline;
+	}
 }

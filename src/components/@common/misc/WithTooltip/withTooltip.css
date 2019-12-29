@@ -6,9 +6,11 @@
 		opacity: 1;
 	}
 }
+
 .root {
 	position: relative;
 }
+
 .tooltip {
 	position: absolute;
 	top: calc(100% + 4px);
@@ -25,8 +27,9 @@
 	line-height: 14px;
 	box-shadow: 1px 1px 2px #0003;
 	z-index: 100;
-}
-.tooltip.inverted {
-	left: auto;
-	right: 0;
+
+	&.inverted {
+		left: auto;
+		right: 0;
+	}
 }

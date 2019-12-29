@@ -8,9 +8,9 @@
 	color: var(--color-light);
 	font-size: 11px;
 	cursor: pointer;
-}
 
-.root:focus {
-	outline: none;
-	border-bottom-color: var(--color-focus);
+	&:focus {
+		outline: none;
+		border-bottom-color: var(--color-focus);
+	}
 }

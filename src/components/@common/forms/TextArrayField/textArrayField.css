@@ -3,9 +3,10 @@
 }
 .item {
 	margin-bottom: 8px;
-}
-.item:last-child {
-	margin-bottom: 0;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
 }
 
 .entry {
@@ -22,12 +23,12 @@
 
 .control {
 	flex-shrink: 0;
-}
 
-.control.typeAdd {
-	--icon-button-bg: url('icons/add.svg');
-}
+	&.typeAdd {
+		--icon-button-bg: url('icons/add.svg');
+	}
 
-.control.typeRemove {
-	--icon-button-bg: url('icons/remove.svg');
+	&.typeRemove {
+		--icon-button-bg: url('icons/remove.svg');
+	}
 }

@@ -4,39 +4,39 @@
 	border-radius: 3px;
 	border: var(--color-brd-main) 1px solid;
 	cursor: pointer;
-}
 
-.root.style-unfilled {
-	background: transparent;
-	color: var(--color-main);
-}
+	&.style-unfilled {
+		background: transparent;
+		color: var(--color-main);
+	}
 
-.root.style-light {
-	background: var(--color-bg-light);
-	color: var(--color-main);
-}
+	&.style-light {
+		background: var(--color-bg-light);
+		color: var(--color-main);
+	}
 
-.root.style-dark {
-	background: var(--color-bg-main);
-	color: var(--color-main);
-}
+	&.style-dark {
+		background: var(--color-bg-main);
+		color: var(--color-main);
+	}
 
-.root.withIcon {
-	padding-left: 4px;
-	line-height: 16px;
-}
+	&.withIcon {
+		padding-left: 4px;
+		line-height: 16px;
+	}
 
-.root.withIcon::before {
-	content: '';
-	display: inline-block;
-	width: 16px;
-	height: 16px;
-	margin-right: 6px;
-	vertical-align: middle;
-	background: var(--button-icon) no-repeat center;
-}
+	&.withIcon::before {
+		content: '';
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		margin-right: 6px;
+		vertical-align: middle;
+		background: var(--button-icon) no-repeat center;
+	}
 
-.root:focus {
-	outline: none;
-	border-color: var(--color-focus);
+	&:focus {
+		outline: none;
+		border-color: var(--color-focus);
+	}
 }

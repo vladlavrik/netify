@@ -11,8 +11,8 @@
 	border: #4b4b4b /* TODO to variables */ 1px solid;
 	border-radius: 11px;
 	margin-right: 16px;
-}
 
-.entry.current {
-	background: var(--color-bg-main);
+	&.current {
+		background: var(--color-bg-main);
+	}
 }

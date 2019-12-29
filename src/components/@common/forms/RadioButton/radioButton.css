@@ -5,12 +5,14 @@
 	font-size: 12px;
 	color: var(--color-main);
 }
+
 .input {
 	width: 0;
 	height: 0;
 	margin: 0;
 	opacity: 0;
 }
+
 .imitator {
 	flex-shrink: 0;
 	width: 10px;
@@ -18,26 +20,30 @@
 	margin: 1px 0;
 	border-radius: 6px;
 	border: var(--color-main) 1px solid;
+
+	&::before {
+		content: '';
+		display: block;
+		margin: 3px;
+		flex-shrink: 0;
+		width: 4px;
+		height: 4px;
+		border-radius: 5px;
+		background: var(--color-main);
+		opacity: 0;
+		transition: opacity 0.1s ease-out;
+	}
 }
+
 .input:focus + .imitator {
 	outline: none;
 	box-shadow: 0 0 1px 2px #cc7f1c;
 }
-.imitator::before {
-	content: '';
-	display: block;
-	margin: 3px;
-	flex-shrink: 0;
-	width: 4px;
-	height: 4px;
-	border-radius: 5px;
-	background: var(--color-main);
-	opacity: 0;
-	transition: opacity 0.1s ease-out;
-}
+
 .input:checked + .imitator::before {
 	opacity: 1;
 }
+
 .label {
 	margin-left: 8px;
 	padding-right: 8px;

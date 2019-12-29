@@ -20,6 +20,16 @@
 	color: inherit;
 	background: transparent;
 	z-index: 1;
+
+	&:focus {
+		outline: none;
+	}
+
+	&:disabled {
+		border-color: transparent;
+		background: var(--color-bg-main);
+		color: var(--color-main);
+	}
 }
 
 .filler {
@@ -33,17 +43,10 @@
 	background: var(--color-bg-main);
 }
 
-.input:focus {
-	outline: none;
-}
 .input:focus + .filler {
 	border-color: var(--color-focus);
 }
-.input[disabled] {
-	border-color: transparent;
-	background: var(--color-bg-main);
-	color: var(--color-main);
-}
-.input[disabled] + .border {
+
+.input:disabled + .filler {
 	border-color: transparent;
 }
