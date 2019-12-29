@@ -1,0 +1,85 @@
+.root {
+	position: relative;
+	width: 80px;
+	font-size: 12px;
+	color: var(--color-main);
+}
+
+.label {
+	position: relative;
+	width: 100%;
+	padding: 0 18px 0 8px;
+	overflow: hidden;
+	border: transparent 1px solid;
+	border-radius: 3px;
+	line-height: 18px;
+	text-align: left;
+	white-space: nowrap;
+	font-size: 11px;
+	text-overflow: ellipsis;
+	user-select: none;
+	background: var(--color-bg-main);
+	color: inherit;
+}
+.label::after {
+	content: '';
+	display: block;
+	position: absolute;
+	right: 6px;
+	top: 7px;
+	width: 7px;
+	height: 6px;
+	background: #616161;
+	clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.label.empty {
+	color: var(--color-placeholder);
+}
+.label:focus {
+	outline: none;
+	border-color: var(--color-focus);
+}
+
+.content {
+	position: absolute;
+	left: 0;
+	right: 0;
+	padding: 2px 0;
+	box-sizing: border-box;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	border: #61616160 1px solid;
+	color: var(--color-main);
+	background: var(--color-bg-main);
+	user-select: none;
+	z-index: 2;
+}
+.content::-webkit-scrollbar {
+	background-color: transparent;
+	width: 6px;
+}
+.content.expand-to-start {
+	bottom: 100%;
+}
+.content.expand-to-end {
+	top: 100%;
+}
+
+.option {
+	display: block;
+	padding: 0 8px;
+	font-size: 12px;
+	line-height: 20px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	color: var(--color-main);
+	cursor: pointer;
+}
+.option.selected {
+	background: var(--color-bg-active);
+}
+.option:hover,
+.option.highlighted {
+	background: var(--color-focus);
+}

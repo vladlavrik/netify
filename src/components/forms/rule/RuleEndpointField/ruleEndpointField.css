@@ -1,0 +1,40 @@
+.field {
+	width: 100%;
+}
+
+.macros {
+	position: relative;
+}
+
+.macrosButton {
+	margin-right: 8px;
+}
+
+.macrosPicker {
+	position: absolute;
+	right: 0;
+	padding: 2px 0;
+	border: #61616160 1px solid;
+	color: var(--color-main);
+	background: var(--color-bg-main);
+}
+
+.macrosOption {
+	line-height: 22px;
+}
+
+.macrosOption {
+	line-height: 22px;
+	text-align: left;
+	width: 110px;
+	padding: 0 8px;
+	border-width: 0;
+}
+
+.macrosOption:nth-child(odd) {
+	background: var(--color-bg-odd-item); /* TODO to variables */
+}
+
+.macrosOption:hover {
+	text-decoration: underline;
+}

@@ -10,19 +10,22 @@
 	overflow: auto;
 	z-index: 10;
 }
+
 .form {
 	min-width: 500px;
-	padding: 0 8px 16px 8px;
 }
-.title {
-	font-size: 12px;
-	margin: 16px 0 6px 0;
-	color: var(--color-main);
+
+.config {
+	padding-top: 12px;
 }
+
 .controls {
 	display: flex;
-	margin-top: 16px;
+	margin-top: 12px;
+	padding: 12px 8px 24px 118px;
+	border-top: #4b4b4b /* TODO to variables */ 1px solid;
 }
+
 .saveButton {
 	margin-right: 8px;
 }
