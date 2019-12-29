@@ -1,6 +1,6 @@
 import React, {memo} from 'react';
 import classNames from 'classnames';
-import {WithTooltip} from '../WithTooltip';
+import {WithTooltip} from '../../misc/WithTooltip';
 import styles from './iconButton.css';
 
 type NativeButtonProps = React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;

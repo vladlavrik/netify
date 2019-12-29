@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import {LogsStore} from '@/stores/LogsStore';
 import {RulesStore} from '@/stores/RulesStore';
 import {AppStore} from '@/stores/AppStore';
-import {SectionHeader} from '@/components/@common/SectionHeader';
-import {IconButton} from '@/components/@common/IconButton';
+import {SectionHeader} from '@/components/@common/misc/SectionHeader';
+import {IconButton} from '@/components/@common/buttons/IconButton';
 import {LogsItem} from './LogsItem';
 import styles from './logs.css';
 

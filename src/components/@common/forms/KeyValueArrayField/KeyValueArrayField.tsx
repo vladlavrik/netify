@@ -1,9 +1,9 @@
 import React, {memo} from 'react';
 import classNames from 'classnames';
 import {FieldArray, getIn} from 'formik';
-import {IconButton} from '@/components/@common/IconButton';
-import {TextField} from '@/components/@common/TextField';
-import {FieldError} from '@/components/@common/FieldError';
+import {IconButton} from '@/components/@common/buttons/IconButton';
+import {TextField} from '@/components/@common/forms/TextField';
+import {FieldError} from '@/components/@common/forms/FieldError';
 import styles from './keyValueArrayField.css';
 
 interface KeyValueArrayFieldProps {

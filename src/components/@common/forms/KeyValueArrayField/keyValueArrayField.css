@@ -25,9 +25,9 @@
 }
 
 .control.typeAdd {
-	--icon-button-bg: url('./icons/add.svg');
+	--icon-button-bg: url('icons/add.svg');
 }
 
 .control.typeRemove {
-	--icon-button-bg: url('./icons/remove.svg');
+	--icon-button-bg: url('icons/remove.svg');
 }

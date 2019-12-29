@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {Button} from '@/components/@common/Button';
-import {PopUp} from '@/components/@common/PopUp';
+import {Button} from '@/components/@common/buttons/Button';
+import {PopUp} from '@/components/@common/popups/PopUp';
 import styles from './popUpAlert.css';
 
 interface Props {

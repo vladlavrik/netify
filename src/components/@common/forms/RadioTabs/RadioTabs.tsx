@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useFormikContext, getIn} from 'formik';
 import styles from './radioTabs.css';
-import {RadioButton} from '@/components/@common/RadioButton';
+import {RadioButton} from '@/components/@common/forms/RadioButton';
 
 interface Props {
 	radioName: string;

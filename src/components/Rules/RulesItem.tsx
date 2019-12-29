@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import {Rule} from '@/interfaces/rule';
-import {IconButton} from '@/components/@common/IconButton';
+import {IconButton} from '@/components/@common/buttons/IconButton';
 import styles from './rulesItem.css';
 import {ActionsType} from '@/constants/ActionsType';
 

@@ -4,7 +4,7 @@ import {observer, inject} from 'mobx-react';
 import {Rule} from '@/interfaces/rule';
 import {AppStore} from '@/stores/AppStore';
 import {RulesStore} from '@/stores/RulesStore';
-import {PopUpAlert} from '@/components/@common/PopUpAlert';
+import {PopUpAlert} from '@/components/@common/popups/PopUpAlert';
 import {Logs} from '@/components/Logs';
 import {Rules} from '@/components/Rules';
 import {RuleCompose, RuleEditor} from '@/components/forms/rule';
