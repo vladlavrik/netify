@@ -11,6 +11,7 @@ export const RuleActionFailure = memo(() => (
 			className={styles.field}
 			name={`actionConfigs.${ActionsType.Failure}.reason`}
 			options={responseErrorReasonsList}
+			required
 		/>
 	</FieldRow>
 ));

@@ -80,6 +80,10 @@
 	color: var(--color-main);
 	cursor: pointer;
 
+	&.empty {
+		color: var(--color-placeholder);
+	}
+
 	&.selected {
 		background: var(--color-bg-active);
 	}

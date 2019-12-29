@@ -1,12 +1,12 @@
 import React, {useState, useCallback, useEffect} from 'react';
 
 interface UseSelectFieldKeyboardParams {
-	options: string[];
+	options: (string | undefined)[];
 	multiple?: boolean;
 	expanded: boolean;
 	handleExpand(): void;
 	handleCollapse(): void;
-	handleOptionSelect(option: string, allowMultiple: boolean): void;
+	handleOptionSelect(option: string | undefined, allowMultiple: boolean): void;
 }
 
 export function useSelectKeyboard(params: UseSelectFieldKeyboardParams) {

@@ -4,7 +4,7 @@ import {useFormikContext} from 'formik';
 interface UseSelectFieldKeyboardParams {
 	name: string;
 	values: string[];
-	options: string[];
+	options: (string | undefined)[];
 	multiple?: boolean;
 	handleCollapse(): void;
 }
@@ -15,10 +15,12 @@ export function useSelectChange(params: UseSelectFieldKeyboardParams) {
 	const {setFieldValue} = useFormikContext();
 
 	const handleOptionSelect = useCallback(
-		(newValueOption: string, allowMultiple: boolean) => {
+		(newValueOption: string | undefined, allowMultiple: boolean) => {
 			let newValue;
 
-			if (!multiple) {
+			if (newValueOption === undefined) {
+				newValue = multiple ? [] : undefined;
+			} else if (!multiple) {
 				// Single option
 				newValue = newValueOption;
 			} else if (!allowMultiple) {
@@ -30,7 +32,7 @@ export function useSelectChange(params: UseSelectFieldKeyboardParams) {
 					if (newValueOption === itemOption) {
 						return !values.includes(itemOption);
 					}
-					return values.includes(itemOption);
+					return !!itemOption && values.includes(itemOption);
 				});
 			}
 

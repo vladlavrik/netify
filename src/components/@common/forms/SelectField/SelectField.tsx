@@ -13,11 +13,11 @@ interface SelectFieldProps {
 	options: string[];
 	placeholder?: string;
 	multiple?: boolean;
-	required?: boolean; // Disallow to select no one option (TODO use it)
+	required?: boolean; // Disallow to select no one option
 }
 
 export const SelectField = memo<SelectFieldProps>(props => {
-	const {className, name, options, placeholder, multiple} = props;
+	const {className, name, placeholder, multiple, required} = props;
 
 	const targetRef = useRef<HTMLButtonElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
@@ -26,12 +26,15 @@ export const SelectField = memo<SelectFieldProps>(props => {
 
 	const values = useMemo<string[]>(() => {
 		if (!multiple) {
+			// TODO wait to fix (set undefined when passed empty array) https://github.com/jaredpalmer/formik/issues/2151 and update formik
 			return field.value === undefined ? [] : [field.value as string]; // Empty array values if passed value is nullable
 		}
 		return field.value as string[];
 	}, [multiple, field.value]);
 
 	const hasValue = values.length > 0;
+
+	const options = !required && hasValue ? [undefined, ...props.options] : props.options;
 
 	const {
 		expanded,
@@ -84,20 +87,23 @@ export const SelectField = memo<SelectFieldProps>(props => {
 					className={classNames(styles.content, styles[`expand-to-${expandTo}`])}
 					style={{maxHeight: contentMaxHeight}}>
 					<ul>
-						{options.map((option, index) => (
-							<li
-								key={option}
-								className={classNames({
-									[styles.option]: true,
-									[styles.selected]: values.includes(option),
-									[styles.highlighted]: index === focusedOptionIndex,
-								})}
-								data-index={index}
-								onClick={handleOptionClick}
-								onPointerDown={handleRefocusOnBlurRequire}>
-								{option}
-							</li>
-						))}
+						{options.map((option, index) => {
+							const isEmpty = option === undefined;
+							return (
+								<li
+									key={option || 'empty'}
+									className={classNames(styles.option, {
+										[styles.empty]: isEmpty,
+										[styles.selected]: option && values.includes(option),
+										[styles.highlighted]: index === focusedOptionIndex,
+									})}
+									data-index={index}
+									onClick={handleOptionClick}
+									onPointerDown={handleRefocusOnBlurRequire}>
+									{isEmpty ? placeholder || 'None' : option}
+								</li>
+							);
+						})}
 					</ul>
 				</div>
 			)}
