@@ -38,7 +38,7 @@ export class AppSeparatedSections extends React.PureComponent<Props> {
 
 	private onStartSectionsResize = (event: React.PointerEvent<HTMLDivElement>) => {
 		if (event.button & 1) {
-			// only left mouse button
+			// Only left mouse button
 			return;
 		}
 

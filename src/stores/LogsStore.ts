@@ -3,7 +3,7 @@ import {RootStore} from './RootStore';
 import {Log} from '@/interfaces/log';
 
 export class LogsStore {
-	constructor(_rootStore: RootStore) {}
+	constructor(private rootStore: RootStore) {}
 
 	@observable
 	readonly list: Log[] = [];
@@ -22,6 +22,7 @@ export class LogsStore {
 	makeLoaded(id: string) {
 		this.list.find(item => item.id === id)!.loaded = true;
 	}
+
 	@action
 	clearList() {
 		this.list.splice(0, this.list.length);

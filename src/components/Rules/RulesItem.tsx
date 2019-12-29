@@ -80,7 +80,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 	}
 
 	private parseActionsArray() {
-		//TODO sho is active
+		// TODO show is active
 		const {action} = this.props.data;
 		const actions = [];
 

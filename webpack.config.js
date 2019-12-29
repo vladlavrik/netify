@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
+
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, {mode} = {}) => ({
+	mode,
 	entry: './src/panel.ts',
 	output: {
 		publicPath: '/',
@@ -18,33 +20,43 @@ module.exports = (env, {mode} = {}) => ({
 		performance: true,
 	},
 	module: {
-		rules: [{
-			test: /\.tsx?$/,
-			loader: 'ts-loader',
-			exclude: /node_modules/,
-			options: {
-				onlyCompileBundledFiles: true,
-			},
-		}, {
-			test: /\.css$/,
-			use: [{
-				loader: 'style-loader',
-			}, {
-				loader: 'css-loader',
+		rules: [
+			{
+				test: /\.tsx?$/,
+				loader: 'ts-loader',
+				exclude: /node_modules/,
 				options: {
-					modules: {
-						mode: 'local',
-						localIdentName: '[name]__[local]-[hash:base64:5]',
-					},
+					onlyCompileBundledFiles: true,
 				},
-			}],
-		}, {
-			test: /\.svg|png$/,
-			loader: 'file-loader',
-			options: {
-				name: 'icons/[hash:hex:8].[ext]',
 			},
-		}],
+			{
+				test: /\.css$/,
+				use: [
+					{
+						loader: 'style-loader',
+					},
+					{
+						loader: 'css-loader',
+						options: {
+							modules: {
+								mode: 'local',
+								localIdentName: '[name]__[local]-[hash:base64:5]',
+							},
+						},
+					},
+					{
+						loader: 'postcss-loader',
+					},
+				],
+			},
+			{
+				test: /\.svg|png$/,
+				loader: 'file-loader',
+				options: {
+					name: 'icons/[hash:hex:8].[ext]',
+				},
+			},
+		],
 	},
 	resolve: {
 		alias: {
@@ -66,10 +78,4 @@ module.exports = (env, {mode} = {}) => ({
 	],
 	watch: mode === 'development',
 	devtool: mode === 'development' ? 'inline-source-map' : 'source-map',
-	devServer: {
-		port: 8080,
-		hot: true,
-		inline: true,
-		overlay: true,
-	},
 });

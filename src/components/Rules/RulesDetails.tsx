@@ -66,6 +66,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 
 	renderAction() {
 		const {action} = this.props.data;
+
 		switch (action.type) {
 			case ActionsType.Breakpoint:
 				return this.renderBreakpointAction();
@@ -77,6 +78,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 				return this.renderFailureAction();
 		}
 	}
+
 	renderBreakpointAction() {
 		// TODO show breakpoints
 	}
@@ -85,14 +87,14 @@ export class RulesDetails extends React.PureComponent<Props> {
 		const {request, response} = this.props.data.action as MutationAction;
 
 		const shownFields = {
-			// request
+			// Request
 			endpointReplace: !!request.endpoint,
 			methodReplace: !!request.method,
 			requestHeadersAdd: request.setHeaders.length > 0,
 			requestHeadersRemove: request.dropHeaders.length > 0,
 			requestBodyReplace: !!request.body,
 
-			// response
+			// Response
 			statusCode: response.statusCode,
 			responseHeadersAdd: response.setHeaders.length > 0,
 			responseHeadersRemove: response.dropHeaders.length > 0,
@@ -144,7 +146,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 								<tr>
 									<td className={styles.dataTitle}>Adding headers:</td>
 									<td className={styles.dataValue}>
-										{request.setHeaders.map(({name, value}) => name + ': ' + value).join('<br>')}
+										{request.setHeaders.map(({name, value}) => `${name}: ${value}`).join('<br>')}
 									</td>
 								</tr>
 							)}
@@ -170,7 +172,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 													: 'multipart/form-data?'}
 												<br />
 												{request.body.value.map(({key, value}, index) => (
-													<div key={index}>
+													<div key={key + index.toString()}>
 														{key}: {value}
 													</div>
 												))}
@@ -203,9 +205,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 								<tr>
 									<td className={styles.dataTitle}>Adding headers:</td>
 									<td className={styles.dataValue}>
-										{response.setHeaders
-											.map(({name, value}) => name + ': ' + value)
-											.join('<br>')}
+										{response.setHeaders.map(({name, value}) => `${name}: ${value}`).join('<br>')}
 									</td>
 								</tr>
 							)}
@@ -232,8 +232,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 										<td className={styles.dataValue}>
 											File:&nbsp;
 											{response.body.value
-												? response.body.value.name +
-												  ` (${response.body.value.size} bytes)`
+												? `${response.body.value.name} (${response.body.value.size} bytes)`
 												: '(not specified)'}
 										</td>
 									)}
@@ -269,7 +268,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 						<td className={styles.dataTitle}>Headers:</td>
 						<td className={styles.dataValue}>
 							{Object.entries(headers)
-								.map(([name, value]) => name + ': ' + value)
+								.map(([name, value]) => `${name}: ${value}`)
 								.join('<br>')}
 						</td>
 					</tr>
@@ -285,9 +284,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 						{body.type === ResponseBodyType.File && (
 							<td className={styles.dataValue}>
 								File:&nbsp;
-								{body.value
-									? `${body.value.name} (${body.value.size} bytes)`
-									: '(not specified)'}
+								{body.value ? `${body.value.name} (${body.value.size} bytes)` : '(not specified)'}
 							</td>
 						)}
 					</tr>

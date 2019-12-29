@@ -16,7 +16,7 @@ interface SelectFieldProps {
 	required?: boolean; // Disallow to select no one option (TODO use it)
 }
 
-export const SelectField = memo((props: SelectFieldProps) => {
+export const SelectField = memo<SelectFieldProps>(props => {
 	const {className, name, options, placeholder, multiple} = props;
 
 	const targetRef = useRef<HTMLButtonElement>(null);

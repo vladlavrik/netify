@@ -1,18 +1,18 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React, {memo, useRef, useEffect, ReactNode} from 'react';
+import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import styles from './popUp.css';
 
-interface Props {
+interface PopUpProps {
 	className?: string;
-	children?: React.ReactNode;
+	children?: ReactNode;
 }
 
-export const PopUp = React.memo(({className, children}: Props) => {
-	const modalRef = React.useRef<HTMLDialogElement>(null);
-	const attachTargetRef = React.useRef<HTMLElement>(document.getElementById('modal-root')!);
+export const PopUp = memo<PopUpProps>(({className, children}) => {
+	const modalRef = useRef<HTMLDialogElement>(null);
+	const attachTargetRef = useRef<HTMLElement>(document.getElementById('modal-root')!);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		modalRef.current!.showModal();
 	}, []);
 
@@ -23,3 +23,5 @@ export const PopUp = React.memo(({className, children}: Props) => {
 		attachTargetRef.current,
 	);
 });
+
+PopUp.displayName = 'PopUp';

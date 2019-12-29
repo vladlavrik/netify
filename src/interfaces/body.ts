@@ -11,7 +11,7 @@ interface RequestBodyForm {
 	value: {key: string; value: string}[];
 }
 
-export type RequestBody = RequestBodyText | RequestBodyForm
+export type RequestBody = RequestBodyText | RequestBodyForm;
 
 interface ResponseBodyText {
 	type: ResponseBodyType.Text | ResponseBodyType.Base64;
@@ -20,7 +20,7 @@ interface ResponseBodyText {
 
 interface ResponseFileForm {
 	type: ResponseBodyType.File;
-	value?: File
+	value?: File;
 }
 
-export type ResponseBody = ResponseBodyText | ResponseFileForm
+export type ResponseBody = ResponseBodyText | ResponseFileForm;

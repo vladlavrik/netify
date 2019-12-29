@@ -1,4 +1,4 @@
-import {Event} from '@/helpers/events';
+import {Event} from '@/helpers/Events';
 import {DevtoolsConnector} from '@/services/devtools';
 
 type EventParams = Record<string, any>;
@@ -47,7 +47,7 @@ export class ExtensionDevtoolsConnector implements DevtoolsConnector {
 		command: string,
 		params?: TParams,
 	): Promise<TResult> {
-		return await new Promise((resolve, reject) => {
+		return new Promise((resolve, reject) => {
 			chrome.debugger.sendCommand({tabId: this.tabId}, command, params, (result: any) => {
 				if (chrome.runtime.lastError) {
 					reject(new Error(chrome.runtime.lastError.message));

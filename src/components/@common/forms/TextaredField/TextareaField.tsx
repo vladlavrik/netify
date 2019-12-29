@@ -25,9 +25,9 @@ export const TextareaField = memo<TextareaFieldProps>(props => {
 			maxLength={maxlength}
 			rows={rows}
 			spellCheck={false}
+			value={value}
 			onChange={onChange}
 			onBlur={onBlur}
-			value={value}
 		/>
 	);
 });

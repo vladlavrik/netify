@@ -3,7 +3,7 @@ import {ResourceType} from '@/constants/ResourceType';
 import {Rule} from './rule';
 
 export interface Log {
-	id: string; // is "requestId"
+	id: string; // Is "requestId"
 	ruleId: Rule['id'];
 	loaded: boolean;
 	date: Date;

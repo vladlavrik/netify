@@ -1,11 +1,13 @@
-import * as React from 'react';
+import React, {memo} from 'react';
 import {ErrorMessage} from 'formik';
 import styles from './fieldError.css';
 
-interface Props {
+interface FieldErrorProps {
 	name: string;
 }
 
-export const FieldError = React.memo(({name}: Props) => (
+export const FieldError = memo<FieldErrorProps>(({name}) => (
 	<ErrorMessage component='p' className={styles.root} name={name} />
 ));
+
+FieldError.displayName = 'FieldError';

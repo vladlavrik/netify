@@ -22,6 +22,7 @@ export class RulesMapper {
 				}),
 		);
 	}
+
 	async updateItem(rule: Rule) {
 		const store = this.db.transaction(['rules'], 'readwrite').objectStore('rules');
 		const item = await promisifyIDBRequest(store.get(rule.id));

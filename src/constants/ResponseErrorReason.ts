@@ -1,4 +1,4 @@
-export enum ResponseErrorReason { //TODO RequestErrorReason
+export enum ResponseErrorReason { // TODO RequestErrorReason
 	Failed = 'Failed',
 	Aborted = 'Aborted',
 	TimedOut = 'TimedOut',

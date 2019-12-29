@@ -18,7 +18,7 @@ interface RequestMethodFieldProps {
 	allowOrigin?: boolean;
 }
 
-export const RequestBodyField = memo(({name, allowOrigin}: RequestMethodFieldProps) => {
+export const RequestBodyField = memo<RequestMethodFieldProps>(({name, allowOrigin}) => {
 	const options = useMemo(() => (allowOrigin ? [originTypeOption, ...typeOptions] : typeOptions), [allowOrigin]);
 
 	return (

@@ -22,9 +22,9 @@ export const RadioButton = memo<RadioButtonProps>(({className, name, value, disa
 				type='radio'
 				value={value}
 				disabled={disabled}
+				checked={value === currentValue}
 				onChange={onChange}
 				onBlur={onBlur}
-				checked={value === currentValue}
 			/>
 			<div className={styles.imitator} />
 			<p className={styles.label}>{children}</p>

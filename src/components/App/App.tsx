@@ -29,9 +29,9 @@ export class App extends React.Component<Props> {
 				<AppSeparatedSections
 					ratio={sectionRatio}
 					minHeight={30}
-					onRatioChange={this.onSectionsRatioChange}
 					topSection={<Rules />}
 					bottomSection={<Logs />}
+					onRatioChange={this.onSectionsRatioChange}
 				/>
 
 				{composeShown &&

@@ -8,7 +8,7 @@ interface FieldRowProps {
 	children?: ReactNode;
 }
 
-export const FieldRow = memo(({className, title, children}: FieldRowProps) => (
+export const FieldRow = memo<FieldRowProps>(({className, title, children}) => (
 	<div className={classNames(styles.root, className)}>
 		<p className={styles.title}>{title}</p>
 		{children}

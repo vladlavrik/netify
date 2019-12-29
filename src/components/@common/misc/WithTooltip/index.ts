@@ -1,1 +1,1 @@
-export * from './WithTooltip'
+export * from './WithTooltip';

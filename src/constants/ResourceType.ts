@@ -15,7 +15,7 @@ export enum ResourceType {
 	Ping = 'Ping',
 	CSPViolationReport = 'CSPViolationReport',
 	Other = 'Other',
-	//TODO check is it all
+	// TODO check is it all
 }
 
 export const resourceTypesList = [

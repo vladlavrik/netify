@@ -45,7 +45,7 @@ export class Logs extends React.Component<Props> {
 					) : (
 						<ul className={styles.list}>
 							{list.map(item => (
-								<li className={styles.item} key={item.id}>
+								<li key={item.id} className={styles.item}>
 									<LogsItem
 										ruleId={item.ruleId}
 										date={item.date}

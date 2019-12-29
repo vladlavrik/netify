@@ -12,10 +12,11 @@ export const Button = memo<ButtonProps>(props => {
 	const {className, type = 'button', styleType = 'unfilled', withIcon, children, ...nativeProps} = props;
 
 	return (
+		// eslint-disable-next-line react/button-has-type
 		<button
 			{...nativeProps}
-			className={classNames(styles.root, styles['style-' + styleType], withIcon && styles.withIcon, className)}
-			type={type as any /*TS workaround*/}>
+			className={classNames(styles.root, styles[`style-${styleType}`], withIcon && styles.withIcon, className)}
+			type={type as any /* TS workaround*/}>
 			{children}
 		</button>
 	);

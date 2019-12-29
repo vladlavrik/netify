@@ -6,7 +6,7 @@ interface RuleEditorProps {
 	rule: Rule;
 }
 
-export const RuleEditor = memo(({rule}: RuleEditorProps) => {
+export const RuleEditor = memo<RuleEditorProps>(({rule}) => {
 	return <RuleForm initialRule={rule} onCancel={() => {}} onSave={() => {}} />;
 });
 

@@ -1,14 +1,16 @@
-import * as React from 'react';
+import React, {memo, ReactNode} from 'react';
 import styles from './sectionHeader.css';
 
-interface Props {
+interface SectionHeaderProps {
 	title: string;
-	children?: React.ReactNode;
+	children?: ReactNode;
 }
 
-export const SectionHeader = React.memo(({title, children}: Props) => (
+export const SectionHeader = memo<SectionHeaderProps>(({title, children}) => (
 	<div className={styles.root}>
 		<p className={styles.title}>{title}</p>
 		{children}
 	</div>
 ));
+
+SectionHeader.displayName = 'SectionHeader';

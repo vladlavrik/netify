@@ -4,9 +4,9 @@ import {ResponseErrorReason} from '@/constants/ResponseErrorReason';
 import {HeadersMap, HeadersArray} from '@/interfaces/headers';
 
 /*
-* Based on Chrome DevTools Protocol Viewer: Fetch and Network domains
-* https://chromedevtools.github.io/devtools-protocol
-*/
+ * Based on Chrome DevTools Protocol Viewer: Fetch and Network domains
+ * https://chromedevtools.github.io/devtools-protocol
+ */
 
 export interface NetworkRequest {
 	url: string;
@@ -46,7 +46,7 @@ export interface FulfillRequestData {
 	responseCode: number;
 	responsePhrase?: string;
 	responseHeaders: HeadersArray;
-	body?: string; // base64 encoded
+	body?: string; // Base64 encoded
 }
 
 export interface FailRequestData {

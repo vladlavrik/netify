@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "ES2018",
-		"module": "amd",
+		"module": "ES2015",
 		"lib": ["esnext", "dom"],
 		"jsx": "react",
 		"sourceMap": true,
@@ -13,10 +13,9 @@
 		"strictPropertyInitialization": true,
 		"noImplicitThis": true,
 		"alwaysStrict": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
+		"allowSyntheticDefaultImports": true,
 		"moduleResolution": "node",
 		"baseUrl": "./",
 		"paths": {

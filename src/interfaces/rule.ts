@@ -10,37 +10,37 @@ export interface RulesSelector {
 }
 
 export interface BreakpointAction {
-	type: ActionsType.Breakpoint,
+	type: ActionsType.Breakpoint;
 	request: boolean;
 	response: boolean;
 }
 
 export interface MutationAction {
-	type: ActionsType.Mutation,
+	type: ActionsType.Mutation;
 	request: {
 		endpoint?: string;
 		method?: RequestMethod;
-		setHeaders: HeadersArray,
-		dropHeaders: string[],
+		setHeaders: HeadersArray;
+		dropHeaders: string[];
 		body?: RequestBody;
 	};
 	response: {
 		statusCode?: number;
-		setHeaders: HeadersArray,
-		dropHeaders: string[],
+		setHeaders: HeadersArray;
+		dropHeaders: string[];
 		body?: ResponseBody;
 	};
 }
 
 export interface LocalResponseAction {
-	type: ActionsType.LocalResponse,
+	type: ActionsType.LocalResponse;
 	statusCode: number;
 	headers: HeadersArray;
 	body: ResponseBody;
 }
 
 export interface FailureAction {
-	type: ActionsType.Failure,
+	type: ActionsType.Failure;
 	reason: ResponseErrorReason;
 }
 
@@ -48,11 +48,11 @@ export type Action = BreakpointAction | MutationAction | LocalResponseAction | F
 
 export interface Rule {
 	id: string;
-	active: boolean, // TODO use it
+	active: boolean; // TODO use it
 	filter: {
 		url: string;
 		resourceTypes: ResourceType[];
 		methods: RequestMethod[];
 	};
-	action: Action
+	action: Action;
 }

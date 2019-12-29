@@ -1,15 +1,15 @@
-import * as React from 'react';
+import React, {memo, ReactNode} from 'react';
 import {Button} from '@/components/@common/buttons/Button';
 import {PopUp} from '@/components/@common/popups/PopUp';
 import styles from './popUpConfirm.css';
 
-interface Props {
+interface PopUpConfirmProps {
 	onConfirm(): void;
 	onCancel(): void;
-	children: React.ReactNode;
+	children: ReactNode;
 }
 
-export const PopUpConfirm = React.memo(({onConfirm, onCancel, children}: Props) => (
+export const PopUpConfirm = memo<PopUpConfirmProps>(({onConfirm, onCancel, children}) => (
 	<PopUp className={styles.root}>
 		<div className={styles.content}>{children}</div>
 		<div className={styles.buttons}>
@@ -22,3 +22,5 @@ export const PopUpConfirm = React.memo(({onConfirm, onCancel, children}: Props) 
 		</div>
 	</PopUp>
 ));
+
+PopUpConfirm.displayName = 'PopUpConfirm';

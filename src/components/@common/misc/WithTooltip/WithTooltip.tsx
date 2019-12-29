@@ -13,7 +13,7 @@ interface State {
 	expandInverted: boolean;
 }
 
-//TODO rewrite with React Hooks
+// TODO rewrite with React Hooks
 export class WithTooltip extends React.PureComponent<Props, State> {
 	private tooltipRef = React.createRef<HTMLParagraphElement>();
 	private rootRef = React.createRef<HTMLDivElement>();
@@ -63,7 +63,7 @@ export class WithTooltip extends React.PureComponent<Props, State> {
 		const rootOffsetLeft = this.rootRef.current!.offsetLeft;
 
 		if (viewportWidth - rootOffsetLeft - tooltipWidth < minPadding) {
-			// expand to left if at he right is not enough space
+			// Expand to left if at he right is not enough space
 			this.setState({expandInverted: true});
 		}
 	};

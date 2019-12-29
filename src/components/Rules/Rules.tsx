@@ -92,9 +92,9 @@ export class Rules extends React.Component<Props> {
 		);
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		reaction(
-			//TODO unset listener
+			// TODO unset listener
 			() => this.props.rulesStore!.highlightedId,
 			(highlightedId: string | null) => {
 				if (highlightedId) {

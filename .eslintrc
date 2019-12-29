@@ -1,0 +1,175 @@
+{
+	"parser": "@typescript-eslint/parser",
+	"extends": [
+		"plugin:@typescript-eslint/recommended",
+		"eslint:recommended",
+		"plugin:react/recommended",
+		"prettier",
+		"prettier/@typescript-eslint",
+		"plugin:prettier/recommended"
+	],
+	"parserOptions": {
+		"ecmaVersion": 2018,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"project": "./tsconfig.json",
+		"tsconfigRootDir": "."
+	},
+	"settings": {
+		"react": {
+			"version": "detect"
+		}
+	},
+	"env": {
+		"browser": true,
+		"es6": true
+	},
+	"rules": {
+		// Rewrite for eslitnrecommended
+		"no-prototype-builtins": "off",
+
+		// Rewrite for @typescript-eslint/recommended
+		"@typescript-eslint/explicit-function-return-type": "off", // To no write manually return types of React functional components
+		"@typescript-eslint/interface-name-prefix": ["error", "never"],
+		"@typescript-eslint/no-namespace": "off",
+		"@typescript-eslint/no-non-null-assertion": "off",
+		"@typescript-eslint/no-parameter-properties": "off",
+		"@typescript-eslint/no-explicit-any": "off",
+
+		// Rest rules of "@typescript-eslint" except included in the "@typescript-eslint/recommended"
+		"@typescript-eslint/await-thenable": "error",
+		"@typescript-eslint/ban-ts-ignore": "error",
+		"@typescript-eslint/func-call-spacing": "error",
+		"@typescript-eslint/member-ordering": [
+			"error",
+			{
+				"default": ["static-field", "static-method", "constructor", "instance-field", "method"]
+			}
+		],
+		"@typescript-eslint/no-extraneous-class": "error",
+		"@typescript-eslint/no-for-in-array": "error",
+		"@typescript-eslint/no-require-imports": "error",
+		"@typescript-eslint/no-this-alias": ["error", {"allowDestructuring": true}],
+		"@typescript-eslint/no-unnecessary-qualifier": "error", // Insignificantly
+		"@typescript-eslint/no-unnecessary-type-assertion": "off", // Temporary disabled by reason: https://github.com/typescript-eslint/typescript-eslint/issues/532
+		"@typescript-eslint/no-useless-constructor": "error",
+		"@typescript-eslint/prefer-for-of": "error", // Insignificantly
+		"@typescript-eslint/prefer-function-type": "error", // Insignificantly
+		"@typescript-eslint/prefer-includes": "error",
+		"@typescript-eslint/prefer-regexp-exec": "error",
+		"@typescript-eslint/prefer-string-starts-ends-with": "error",
+		"@typescript-eslint/promise-function-async": ["error", {"checkArrowFunctions": false}],
+		"@typescript-eslint/require-array-sort-compare": "error",
+		"@typescript-eslint/restrict-plus-operands": "error",
+		"@typescript-eslint/unbound-method": ["off", {"ignoreStatic": true}], //Temporary disabled because passing an MST action as react callback is incorrect
+		"@typescript-eslint/unified-signatures": "error", // Rewrite for react/recommended
+
+		// Rest rules of "react" except included in the "react/recommended"
+		"react/button-has-type": "error",
+		"react/display-name": "error",
+		"react/no-array-index-key": "error",
+		"react/no-typos": "error",
+		"react/no-this-in-sfc": "error",
+		"react/prop-types": "off",
+		"react/jsx-boolean-value": ["error", "never"],
+
+		"react/jsx-no-bind": ["error", {"allowArrowFunctions": true}],
+		"react/jsx-no-comment-textnodes": "error",
+		"react/jsx-fragments": "error",
+		"react/jsx-pascal-case": "error",
+		"react/jsx-sort-props": ["error", {"callbacksLast": true, "noSortAlphabetically": true, "reservedFirst": true}], // Rewrite for eslint/recommended
+		"no-undef": "off", // Covered by typescript and only hinders
+
+		// Variables section
+		"no-shadow": ["error", {"builtinGlobals": false, "hoist": "functions"}],
+		"no-shadow-restricted-names": "error",
+
+		// Stylistic Issues section
+		"func-name-matching": "error",
+		"capitalized-comments": ["error", "always", {"ignorePattern": "prettier-ignore"}],
+		"lines-around-comment": [
+			"error",
+			{
+				"beforeBlockComment": true,
+				"allowBlockStart": true,
+				"allowObjectStart": true,
+				"allowArrayStart": true,
+				"allowClassStart": true
+			}
+		],
+		"spaced-comment": "error",
+		"lines-between-class-members": [
+			"error",
+			"always",
+			{
+				"exceptAfterSingleLine": true
+			}
+		],
+		"padding-line-between-statements": [
+			"error",
+			{"blankLine": "always", "prev": "*", "next": "class"},
+			{"blankLine": "always", "prev": "*", "next": "export"},
+			{"blankLine": "any", "prev": "export", "next": "export"},
+			{"blankLine": "always", "prev": "*", "next": "switch"},
+			{"blankLine": "always", "prev": "*", "next": "try"},
+			{"blankLine": "any", "prev": "let", "next": "try"},
+			{"blankLine": "always", "prev": "break", "next": "case"}
+		],
+		"no-lonely-if": "error",
+		"no-multi-assign": "error",
+		"no-unneeded-ternary": "error",
+		"one-var-declaration-per-line": ["error", "always"],
+		"operator-assignment": "error",
+		"template-tag-spacing": "error",
+
+		// ECMAScript 6 section
+		"arrow-body-style": "off",
+		"no-duplicate-imports": "error",
+		"no-useless-computed-key": "error",
+		"no-var": "error",
+		"object-shorthand": "error",
+		"prefer-const": ["error", {"destructuring": "any"}],
+		"prefer-rest-params": "error",
+		"prefer-spread": "error",
+		"prefer-template": "error",
+		"symbol-description": "error",
+
+		// Possible Errors section
+		"no-template-curly-in-string": "error",
+		"array-callback-return": "error",
+		"no-empty": ["error", {"allowEmptyCatch": true}],
+
+		// Best Practices section
+		"eqeqeq": "error",
+		"guard-for-in": "error",
+		"no-alert": "error",
+		"no-div-regex": "error",
+		"no-eval": "error",
+		"no-extend-native": "error",
+		"no-extra-bind": "error",
+		"no-implicit-coercion": ["error", {"boolean": false}],
+		"no-implied-eval": "error",
+		"no-lone-blocks": "error",
+		"no-loop-func": "error",
+		"no-multi-str": "error",
+		"no-new-wrappers": "error",
+		"no-param-reassign": ["error", {"props": false}],
+		"no-proto": "error",
+		"no-return-assign": "error",
+		"no-return-await": "error",
+		"no-script-url": "error",
+		"no-self-compare": "error",
+		"no-sequences": "error",
+		"no-throw-literal": "error",
+		"no-unmodified-loop-condition": "error",
+		"no-unused-expressions": ["error", {"allowShortCircuit": true}],
+		"no-useless-return": "error",
+		"no-void": "error",
+		"no-with": "error",
+		"prefer-promise-reject-errors": "error",
+		"radix": "error",
+		"yoda": "error"
+	}
+}

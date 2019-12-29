@@ -1,5 +1,5 @@
-import {Event} from '@/helpers/events';
-const logoIconUrl = require('@/style/icons/logo-128.png');
+import {Event} from '@/helpers/Events';
+import logoIconUrl from '@/style/icons/logo-128.png';
 
 export function pushNotification(id: string, title: string, message: string, buttons: string[] = []) {
 	// TODO check permission before, maybe
@@ -8,7 +8,7 @@ export function pushNotification(id: string, title: string, message: string, but
 		iconUrl: logoIconUrl,
 		title,
 		message,
-		buttons: buttons.map(title => ({title})), // TODO test on windows, maybe need add icon
+		buttons: buttons.map(itemTitle => ({title: itemTitle})), // TODO test on windows, maybe need add icon
 	});
 }
 

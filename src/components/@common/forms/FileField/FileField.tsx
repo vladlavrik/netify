@@ -29,7 +29,7 @@ export const FileField = memo<FileFieldProps>(({className, name}) => {
 			{value ? (
 				<>
 					<p className={styles.value}>{value.name}</p>
-					<p className={styles.note}>Body replacing will also rewrites "Content-Type" header</p>
+					<p className={styles.note}>Body replacing will also rewrites &quot;Content-Type&quot; header</p>
 				</>
 			) : (
 				<p className={styles.title}>Click to choice a file or drag-n-drop it here</p>

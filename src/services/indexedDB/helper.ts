@@ -1,4 +1,4 @@
-export function promisifyIDBRequest<TResult = any>(request: IDBRequest) {
+export async function promisifyIDBRequest<TResult = any>(request: IDBRequest) {
 	return new Promise<TResult>((resolve, reject) => {
 		request.onsuccess = () => {
 			resolve(request.result);

@@ -31,7 +31,6 @@ import '@/style/page.css';
 	fetchDevtools.events.requestStart.on(log => store.logsStore.add(log));
 	fetchDevtools.events.requestEnd.on(id => store.logsStore.makeLoaded(id));
 
-
 	// TODO comment me
 	let debuggerActive = false;
 	autorun(async () => {
@@ -75,7 +74,7 @@ import '@/style/page.css';
 
 	// Define current platform styles
 	const platform = getPlatform();
-	document.querySelector('body')!.classList.add('platform-' + platform);
+	document.querySelector('body')!.classList.add(`platform-${platform}`);
 
 	// Render the application UI
 	const appElement = React.createElement(App);

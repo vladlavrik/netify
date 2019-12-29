@@ -1,21 +1,19 @@
-import * as React from 'react';
-import {useFormikContext, getIn} from 'formik';
-import styles from './radioTabs.css';
+import React, {memo, ReactNode} from 'react';
+import {useField} from 'formik';
 import {RadioButton} from '@/components/@common/forms/RadioButton';
+import styles from './radioTabs.css';
 
-interface Props {
+interface RadioTabsProps {
 	radioName: string;
 	tabs: {
 		title: string;
 		value: string;
 	}[];
-	children?(tab: string): React.ReactNode;
+	children?(tab: string): ReactNode;
 }
 
-export const RadioTabs = React.memo(({tabs, radioName, children}: Props) => {
-	//TODO use field
-	const {values} = useFormikContext();
-	const activeTabName = getIn(values, radioName);
+export const RadioTabs = memo<RadioTabsProps>(({tabs, radioName, children}) => {
+	const [field] = useField(radioName);
 
 	return (
 		<div className={styles.root}>
@@ -27,7 +25,9 @@ export const RadioTabs = React.memo(({tabs, radioName, children}: Props) => {
 				))}
 			</div>
 
-			{children && children(activeTabName)}
+			{children && children(field.value)}
 		</div>
 	);
 });
+
+RadioTabs.displayName = 'RadioTabs';

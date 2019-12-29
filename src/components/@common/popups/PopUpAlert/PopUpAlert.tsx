@@ -1,16 +1,18 @@
-import * as React from 'react';
+import React, {memo, ReactNode} from 'react';
 import {Button} from '@/components/@common/buttons/Button';
 import {PopUp} from '@/components/@common/popups/PopUp';
 import styles from './popUpAlert.css';
 
-interface Props {
+interface PopUpAlertProps {
 	onClose(): void;
-	children: React.ReactNode;
+	children: ReactNode;
 }
 
-export const PopUpAlert = React.memo(({onClose, children}: Props) => (
+export const PopUpAlert = memo<PopUpAlertProps>(({onClose, children}) => (
 	<PopUp className={styles.root}>
 		<div className={styles.content}>{children}</div>
 		<Button onClick={onClose}>Close</Button>
 	</PopUp>
 ));
+
+PopUpAlert.displayName = 'PopUpAlert';

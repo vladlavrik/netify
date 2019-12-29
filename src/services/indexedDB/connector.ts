@@ -7,7 +7,7 @@ export function getOpenedIDB() {
 	return openedDB;
 }
 
-export function openIDB() {
+export async function openIDB() {
 	return new Promise((resolve, reject) => {
 		const request = indexedDB.open(dbName, dbVersion);
 

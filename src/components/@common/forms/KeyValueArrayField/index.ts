@@ -1,1 +1,1 @@
-export * from './KeyValueArrayField'
+export * from './KeyValueArrayField';

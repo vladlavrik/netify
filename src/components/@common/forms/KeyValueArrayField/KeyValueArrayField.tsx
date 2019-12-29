@@ -34,7 +34,8 @@ export const KeyValueArrayField = memo<KeyValueArrayFieldProps>(props => {
 				render={helpers => {
 					const list = getIn(helpers.form.values, name);
 					return list.map((_: any, index: number) => (
-						<li className={styles.item} key={index}>
+						// eslint-disable-next-line react/no-array-index-key
+						<li key={index} className={styles.item}>
 							<div className={styles.entry}>
 								<TextField
 									className={styles.field}
@@ -62,8 +63,8 @@ export const KeyValueArrayField = memo<KeyValueArrayFieldProps>(props => {
 									/>
 								)}
 							</div>
-							<FieldError name={`${name}[${index}].${keyNameSuffix}`}/>
-							<FieldError name={`${name}[${index}].${valueNameSuffix}`}/>
+							<FieldError name={`${name}[${index}].${keyNameSuffix}`} />
+							<FieldError name={`${name}[${index}].${valueNameSuffix}`} />
 						</li>
 					));
 				}}
