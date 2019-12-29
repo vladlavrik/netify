@@ -1,70 +1,58 @@
-import * as React from 'react';
+import React, {memo, useState, useRef, useCallback, ReactNode} from 'react';
 import classNames from 'classnames';
+import {useDropdownAutoPosition} from '@/hooks/useDropdownAutoPosition';
 import styles from './withTooltip.css';
 
-interface Props {
+interface WithTooltipProps {
 	className?: string;
 	tooltip?: any;
 	disabled?: boolean;
+	children: ReactNode;
 }
 
-interface State {
-	expanded: boolean;
-	expandInverted: boolean;
-}
+export const WithTooltip = memo<WithTooltipProps>(props => {
+	const {className, tooltip, disabled, children} = props;
 
-// TODO rewrite with React Hooks
-export class WithTooltip extends React.PureComponent<Props, State> {
-	private tooltipRef = React.createRef<HTMLParagraphElement>();
-	private rootRef = React.createRef<HTMLDivElement>();
+	const [expanded, setExpanded] = useState(false);
 
-	state = {
-		expanded: false,
-		expandInverted: false,
-	};
+	const targetRef = useRef<HTMLDivElement>(null);
+	const contentRef = useRef<HTMLParagraphElement>(null);
 
-	render() {
-		const {className, tooltip, children} = this.props;
-		const {expanded, expandInverted} = this.state;
-
-		return (
-			<div
-				ref={this.rootRef}
-				className={classNames(styles.root, className)}
-				onPointerEnter={this.onExpand}
-				onPointerLeave={this.onCollapse}>
-				{children}
-				{expanded && (
-					<p ref={this.tooltipRef} className={classNames(styles.tooltip, expandInverted && styles.inverted)}>
-						{tooltip}
-					</p>
-				)}
-			</div>
-		);
-	}
-
-	private onExpand = () => {
-		if (this.props.disabled || !this.props.tooltip) {
-			return;
+	const handleExpand = useCallback(() => {
+		if (!disabled && tooltip) {
+			setExpanded(true);
 		}
+	}, [disabled, !!tooltip]);
 
-		this.setState({expanded: true, expandInverted: false}, this.updateTooltipPosition);
-	};
+	const handleCollapse = useCallback(() => setExpanded(false), []);
 
-	private onCollapse = () => {
-		this.setState({expanded: false, expandInverted: false});
-	};
+	const [[expandXTo, expandYTo], [contentMaxWidth, contentMaxHeight]] = useDropdownAutoPosition({
+		targetRef,
+		contentRef,
+		checkByY: true,
+		checkByX: true,
+		expanded,
+	});
 
-	private updateTooltipPosition = () => {
-		// TODO add support of vertical inverse
-		const minPadding = 8;
-		const viewportWidth = document.documentElement!.clientWidth;
-		const tooltipWidth = this.tooltipRef.current!.clientWidth;
-		const rootOffsetLeft = this.rootRef.current!.offsetLeft;
-
-		if (viewportWidth - rootOffsetLeft - tooltipWidth < minPadding) {
-			// Expand to left if at he right is not enough space
-			this.setState({expandInverted: true});
-		}
-	};
-}
+	return (
+		<div
+			ref={targetRef}
+			className={classNames(styles.root, className)}
+			onPointerEnter={handleExpand}
+			onPointerLeave={handleCollapse}>
+			{children}
+			{expanded && (
+				<p
+					ref={contentRef}
+					className={classNames(
+						styles.tooltip,
+						styles[`expand-x-to-${expandXTo}`],
+						styles[`expand-y-to-${expandYTo}`],
+					)}
+					style={{maxWidth: contentMaxWidth, maxHeight: contentMaxHeight}}>
+					{tooltip}
+				</p>
+			)}
+		</div>
+	);
+});

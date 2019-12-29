@@ -13,8 +13,6 @@
 
 .tooltip {
 	position: absolute;
-	top: calc(100% + 4px);
-	left: 0;
 	padding: 2px 6px;
 	border: #3e3d3f 1px solid;
 	border-radius: 3px;
@@ -28,8 +26,16 @@
 	box-shadow: 1px 1px 2px #0003;
 	z-index: 100;
 
-	&.inverted {
-		left: auto;
+	&.expand-x-to-start {
 		right: 0;
+	}
+	&.expand-x-to-end {
+		left: 0;
+	}
+	&.expand-y-to-start {
+		bottom: calc(100% + 4px);
+	}
+	&.expand-y-to-end {
+		top: calc(100% + 4px);
 	}
 }
