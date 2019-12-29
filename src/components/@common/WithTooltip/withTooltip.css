@@ -13,14 +13,17 @@
 	position: absolute;
 	top: calc(100% + 4px);
 	left: 0;
-	padding: 4px 6px;
-	border: #3e3d3f 1px solid; /*prepare colors to the light theme*/
+	padding: 2px 6px;
+	border: #3e3d3f 1px solid;
+	border-radius: 3px;
 	background: var(--color-bg-main);
-	animation: showTooltip 0.1s ease-out 0.6s; /*delay to show*/
+	animation: showTooltip 0.1s ease-out 0.6s;
 	animation-fill-mode: backwards;
 	white-space: nowrap;
 	color: var(--color-main);
 	font-size: 12px;
+	line-height: 14px;
+	box-shadow: 1px 1px 2px #0003;
 	z-index: 100;
 }
 .tooltip.inverted {

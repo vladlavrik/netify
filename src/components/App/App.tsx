@@ -7,7 +7,7 @@ import {RulesStore} from '@/stores/RulesStore';
 import {PopUpAlert} from '@/components/@common/PopUpAlert';
 import {Logs} from '@/components/Logs';
 import {Rules} from '@/components/Rules';
-import {Editor} from '@/components/Editor';
+import {RuleCompose, RuleEditor} from '@/components/forms/rule';
 import {AppSeparatedSections} from './AppSeparatedSections';
 import styles from './app.css';
 
@@ -16,13 +16,13 @@ interface Props {
 	rulesStore?: RulesStore;
 }
 
-@inject('appStore', 'rulesStore', 'breakpointsStore')
+@inject('appStore', 'rulesStore')
 @observer
 export class App extends React.Component<Props> {
 	private readonly modalTarget = document.getElementById('modal-root')!;
 
 	render() {
-		const {sectionRatio, composeShown, editingRule, displayedError} = this.props.appStore!;
+		const {composeShown, sectionRatio, editingRule, displayedError} = this.props.appStore!;
 
 		return (
 			<div className={styles.root}>
@@ -36,19 +36,11 @@ export class App extends React.Component<Props> {
 
 				{composeShown &&
 					ReactDOM.createPortal(
-						<Editor onSave={this.onSaveComposed} onCancel={this.onHideCompose} />,
+						<RuleCompose onSave={this.onSaveComposed} onCancel={this.onHideCompose} />,
 						this.modalTarget,
 					)}
 
-				{editingRule &&
-					ReactDOM.createPortal(
-						<Editor
-							initialValues={editingRule}
-							onSave={this.onSaveEdited}
-							onCancel={this.onCancelItemEdit}
-						/>,
-						this.modalTarget,
-					)}
+				{editingRule && ReactDOM.createPortal(<RuleEditor rule={editingRule} />, this.modalTarget)}
 
 				{displayedError && (
 					<PopUpAlert onClose={this.onCloseErrorAlert}>

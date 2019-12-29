@@ -1,17 +1,21 @@
-import * as React from 'react';
+import React, {memo} from 'react';
 import classNames from 'classnames';
+import {WithTooltip} from '../WithTooltip';
 import styles from './iconButton.css';
-import {WithTooltip} from '@/components/@common/WithTooltip';
 
-interface Props {
-	className?: string;
+type NativeButtonProps = React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
+interface IconButtonProps extends Omit<NativeButtonProps, 'type'> {
 	tooltip?: string;
-	disabled?: boolean;
-	onClick?(event?: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
 }
 
-export const IconButton = React.memo(({className, tooltip, disabled, onClick}: Props) => (
-	<WithTooltip disabled={disabled} tooltip={tooltip}>
-		<button className={classNames(styles.root, className)} type='button' disabled={disabled} onClick={onClick} />
-	</WithTooltip>
-));
+export const IconButton = memo<IconButtonProps>(props => {
+	const {className, tooltip, disabled, ...nativeProps} = props;
+
+	return (
+		<WithTooltip disabled={disabled} tooltip={tooltip}>
+			<button {...nativeProps} className={classNames(styles.root, className)} type='button' disabled={disabled} />
+		</WithTooltip>
+	);
+});
+
+IconButton.displayName = 'IconButton';

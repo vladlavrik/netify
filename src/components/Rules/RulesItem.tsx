@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import {Rule} from '@/interfaces/rule';
 import {IconButton} from '@/components/@common/IconButton';
 import styles from './rulesItem.css';
+import {ActionsType} from '@/constants/ActionsType';
 
 interface Props {
 	data: Rule;
@@ -22,8 +23,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 	render() {
 		const {filter} = this.props.data;
 		const {expanded} = this.state;
-		const {methods, resourceTypes} = filter;
-		const url = filter.url.value ? filter.url.value.toString() : undefined;
+		const {url, methods, resourceTypes} = filter;
 
 		return (
 			<div className={styles.root}>
@@ -53,7 +53,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 								{!url ? ( // prettier-ignore
 									<span className={styles.placeholder}>All urls</span>
 								) : (
-									url.toString()
+									url
 								)}
 							</span>
 						</div>
@@ -84,7 +84,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 		const {action} = this.props.data;
 		const actions = [];
 
-		if (action.type === 'breakpoint') {
+		if (action.type === ActionsType.Breakpoint) {
 			if (action.request) {
 				actions.push('Breakpoint on request');
 			}
@@ -93,16 +93,16 @@ export class RulesItem extends React.PureComponent<Props, State> {
 			}
 		}
 
-		if (action.type === 'mutation') {
+		if (action.type === ActionsType.Mutation) {
 			if (action.request) {
-				const {endpoint, method, headers, body} = action.request;
+				const {endpoint, method, setHeaders, dropHeaders, body} = action.request;
 				if (endpoint) {
 					actions.push('Redirect to url');
 				}
 				if (method) {
 					actions.push('Replacing method');
 				}
-				if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
+				if (setHeaders.length > 0 || dropHeaders.length > 0) {
 					actions.push('Modifying request headers');
 				}
 				if (body) {
@@ -110,11 +110,11 @@ export class RulesItem extends React.PureComponent<Props, State> {
 				}
 			}
 			if (action.response) {
-				const {statusCode, headers, body} = action.response;
+				const {statusCode, setHeaders, dropHeaders, body} = action.response;
 				if (statusCode) {
 					actions.push('Replacing response status');
 				}
-				if (Object.keys(headers.add).length > 0 || headers.remove.length > 0) {
+				if (setHeaders.length > 0 || dropHeaders.length > 0) {
 					actions.push('Modifying response headers');
 				}
 				if (body) {
@@ -123,11 +123,11 @@ export class RulesItem extends React.PureComponent<Props, State> {
 			}
 		}
 
-		if (action.type === 'localResponse') {
+		if (action.type === ActionsType.LocalResponse) {
 			actions.push('Local response');
 		}
 
-		if (action.type === 'failure') {
+		if (action.type === ActionsType.Failure) {
 			actions.push('Returning error');
 		}
 

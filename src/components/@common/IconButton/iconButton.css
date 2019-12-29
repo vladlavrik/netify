@@ -14,7 +14,7 @@
 	opacity: 0.75;
 	background: var(--icon-button-bg, none) center no-repeat;
 	transform: rotate(var(--icon-button-rotate, 0));
-	transition: transform 0.1s ease-out;
+	transition: transform 0.1s ease-out, opacity 0.1s ease-out;
 	clip-path: var(--icon-button-clip, none);
 }
 .root:focus {

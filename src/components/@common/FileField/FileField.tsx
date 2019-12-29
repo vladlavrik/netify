@@ -1,21 +1,22 @@
-import * as React from 'react';
-import classNames from 'classnames';
+import React, {memo, useCallback} from 'react';
 import {useField, useFormikContext} from 'formik';
+import classNames from 'classnames';
 import styles from './fileField.css';
 
-interface Props {
+interface FileFieldProps {
 	className?: string;
 	name: string;
 }
 
-export const FileField = React.memo(({className, name}: Props) => {
+export const FileField = memo<FileFieldProps>(({className, name}) => {
 	const [{value, onBlur}] = useField<File>(name);
 	const {setFieldValue} = useFormikContext<any>();
 
-	const onChange = React.useCallback(
+	const onChange = useCallback(
 		(event: React.ChangeEvent<HTMLInputElement>) => {
 			const file = event.target.files![0];
 			if (file) {
+				// Temporary solution | TODO use field.onChange when it wil be fixed in formik
 				setFieldValue(name, file);
 			}
 		},
@@ -26,13 +27,16 @@ export const FileField = React.memo(({className, name}: Props) => {
 		<label className={classNames(styles.root, className)}>
 			<input className={styles.input} name={name} type='file' onChange={onChange} onBlur={onBlur} />
 			{value ? (
-				<React.Fragment>
+				<>
 					<p className={styles.value}>{value.name}</p>
 					<p className={styles.note}>Body replacing will also rewrites "Content-Type" header</p>
-				</React.Fragment>
+				</>
 			) : (
-				<p className={styles.title}>Click to choice file or drag-n-drop it here</p>
+				<p className={styles.title}>Click to choice a file or drag-n-drop it here</p>
 			)}
+			<div className={styles.filler} />
 		</label>
 	);
 });
+
+FileField.displayName = 'FileField';

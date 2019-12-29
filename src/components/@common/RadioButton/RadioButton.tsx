@@ -1,17 +1,17 @@
-import * as React from 'react';
+import React, {memo, ReactNode} from 'react';
 import classNames from 'classnames';
 import {useField} from 'formik';
 import styles from './radioButton.css';
 
-interface Props {
+interface RadioButtonProps {
 	className?: string;
 	name: string;
 	value: string;
 	disabled?: boolean;
-	children?: React.ReactNode;
+	children?: ReactNode;
 }
 
-export const RadioButton = React.memo(({className, name, value, disabled, children}: Props) => {
+export const RadioButton = memo<RadioButtonProps>(({className, name, value, disabled, children}) => {
 	const [{value: currentValue, onChange, onBlur}] = useField<string>(name);
 
 	return (
@@ -31,3 +31,5 @@ export const RadioButton = React.memo(({className, name, value, disabled, childr
 		</label>
 	);
 });
+
+RadioButton.displayName = 'RadioButton';

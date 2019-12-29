@@ -2,7 +2,6 @@
 	display: flex;
 	position: relative;
 	width: 300px;
-	background: var(--color-bg-main);
 	color: var(--color-light);
 }
 .prefix,
@@ -22,18 +21,22 @@
 	background: transparent;
 	z-index: 1;
 }
-.border {
+
+.filler {
 	position: absolute;
 	left: 0;
 	right: 0;
 	top: 0;
 	bottom: 0;
 	border: transparent 1px solid;
+	border-radius: 3px;
+	background: var(--color-bg-main);
 }
+
 .input:focus {
 	outline: none;
 }
-.input:focus + .border {
+.input:focus + .filler {
 	border-color: var(--color-focus);
 }
 .input[disabled] {

@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React, {memo} from 'react';
 import classNames from 'classnames';
 import {useField} from 'formik';
 import styles from './textareaField.css';
 
-interface Props {
+interface TextareaFieldProps {
 	className?: string;
 	name: string;
 	placeholder?: string;
@@ -12,7 +12,7 @@ interface Props {
 	disabled?: boolean;
 }
 
-export const TextareaField = React.memo((props: Props) => {
+export const TextareaField = memo<TextareaFieldProps>(props => {
 	const {className, name, placeholder, rows = 4, maxlength, disabled} = props;
 	const [{value, onChange, onBlur}] = useField<string>(name);
 
@@ -31,3 +31,5 @@ export const TextareaField = React.memo((props: Props) => {
 		/>
 	);
 });
+
+TextareaField.displayName = 'TextareaField';

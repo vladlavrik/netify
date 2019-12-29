@@ -2,7 +2,7 @@ import * as React from 'react';
 import {ResourceType} from '@/constants/ResourceType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {IconButton} from '@/components/@common/IconButton';
-import {formatFullTime, formatTime} from '@/helpers/formatter';
+import {formatFullTime, formatTime} from '@/helpers/dateFormat';
 import styles from './logsItem.css';
 import {WithTooltip} from '@/components/@common/WithTooltip';
 

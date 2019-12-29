@@ -9,6 +9,7 @@
 	box-sizing: border-box;
 	line-height: 14px;
 	border: transparent 1px solid;
+	border-radius: 3px;
 	background: var(--color-bg-main);
 	font-family: inherit;
 	font-size: 11px;
@@ -16,8 +17,8 @@
 	resize: vertical;
 }
 .root:focus {
-	outline: var(--color-focus) solid 1px;
-	outline-offset: 0;
+	outline: none;
+	border-color: var(--color-focus);
 }
 .root:disabled {
 	border-color: transparent;

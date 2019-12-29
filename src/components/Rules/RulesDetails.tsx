@@ -1,8 +1,9 @@
 import * as React from 'react';
-import {Rule, FailureAction, LocalResponseAction, MutationAction} from '@/interfaces/rule';
+import {FailureAction, LocalResponseAction, MutationAction, Rule} from '@/interfaces/rule';
 import {RequestBodyType} from '@/constants/RequestBodyType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import styles from './rulesDetails.css';
+import {ActionsType} from '@/constants/ActionsType';
 
 interface Props {
 	data: Rule;
@@ -20,7 +21,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 
 	renderFilter() {
 		const {url, methods, resourceTypes} = this.props.data.filter;
-		const showUrl = !!url.value;
+		const showUrl = !!url;
 		const showMethod = methods.length > 0;
 		const showResourceTypes = resourceTypes.length > 0;
 
@@ -43,7 +44,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 					{showUrl && (
 						<tr>
 							<td className={styles.dataTitle}>Url:</td>
-							<td className={styles.dataValue}>{url.value.toString()}</td>
+							<td className={styles.dataValue}>{url.toString()}</td>
 						</tr>
 					)}
 					{showMethod && (
@@ -66,13 +67,13 @@ export class RulesDetails extends React.PureComponent<Props> {
 	renderAction() {
 		const {action} = this.props.data;
 		switch (action.type) {
-			case 'breakpoint':
+			case ActionsType.Breakpoint:
 				return this.renderBreakpointAction();
-			case 'mutation':
+			case ActionsType.Mutation:
 				return this.renderMutationAction();
-			case 'localResponse':
+			case ActionsType.LocalResponse:
 				return this.renderLocalResponseAction();
-			case 'failure':
+			case ActionsType.Failure:
 				return this.renderFailureAction();
 		}
 	}
@@ -87,14 +88,14 @@ export class RulesDetails extends React.PureComponent<Props> {
 			// request
 			endpointReplace: !!request.endpoint,
 			methodReplace: !!request.method,
-			requestHeadersAdd: Object.keys(request.headers.add).length > 0,
-			requestHeadersRemove: request.headers.remove.length > 0,
+			requestHeadersAdd: request.setHeaders.length > 0,
+			requestHeadersRemove: request.dropHeaders.length > 0,
 			requestBodyReplace: !!request.body,
 
 			// response
 			statusCode: response.statusCode,
-			responseHeadersAdd: Object.keys(response.headers.add).length > 0,
-			responseHeadersRemove: response.headers.remove.length > 0,
+			responseHeadersAdd: response.setHeaders.length > 0,
+			responseHeadersRemove: response.dropHeaders.length > 0,
 			responseBodyReplace: !!response.body,
 		};
 
@@ -112,9 +113,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 			shownFields.responseBodyReplace;
 
 		if (!shownRequestSection && !shownResponseSection) {
-			return  (
-				<p className={styles.dataPlaceholder}>No actions</p>
-			);
+			return <p className={styles.dataPlaceholder}>No actions</p>;
 		}
 
 		return (
@@ -145,39 +144,38 @@ export class RulesDetails extends React.PureComponent<Props> {
 								<tr>
 									<td className={styles.dataTitle}>Adding headers:</td>
 									<td className={styles.dataValue}>
-										{Object.entries(request.headers.add)
-											.map(([name, value]) => name + ': ' + value)
-											.join('<br>')}
+										{request.setHeaders.map(({name, value}) => name + ': ' + value).join('<br>')}
 									</td>
 								</tr>
 							)}
 							{shownFields.requestHeadersRemove && (
 								<tr>
 									<td className={styles.dataTitle}>Removing headers:</td>
-									<td className={styles.dataValue}>{request.headers.remove.join('<br>')}</td>
+									<td className={styles.dataValue}>{request.dropHeaders.join('<br>')}</td>
 								</tr>
 							)}
 							{shownFields.requestBodyReplace && (
 								<tr>
 									<td className={styles.dataTitle}>Replacing body:</td>
-									{request.body!.type === RequestBodyType.Text && (
-										<td className={styles.dataValue}>{request.body!.textValue.substr(0, 2400)}</td>
+									{request.body && request.body.type === RequestBodyType.Text && (
+										<td className={styles.dataValue}>{request.body.value.substr(0, 2400)}</td>
 									)}
-									{(request.body!.type === RequestBodyType.UrlEncodedForm ||
-										request.body!.type === RequestBodyType.MultipartFromData) && (
-										<td className={styles.dataValue}>
-											Form:&nbsp;
-											{request.body!.type === RequestBodyType.UrlEncodedForm
-												? 'application/x-www-form-urlencoded'
-												: 'multipart/form-data?'}
-											<br />
-											{request.body!.formValue.map(({key, value}, index) => (
-												<div key={index}>
-													{key}: {value}
-												</div>
-											))}
-										</td>
-									)}
+									{request.body &&
+										(request.body.type === RequestBodyType.UrlEncodedForm ||
+											request.body.type === RequestBodyType.MultipartFromData) && (
+											<td className={styles.dataValue}>
+												Form:&nbsp;
+												{request.body.type === RequestBodyType.UrlEncodedForm
+													? 'application/x-www-form-urlencoded'
+													: 'multipart/form-data?'}
+												<br />
+												{request.body.value.map(({key, value}, index) => (
+													<div key={index}>
+														{key}: {value}
+													</div>
+												))}
+											</td>
+										)}
 								</tr>
 							)}
 						</tbody>
@@ -205,8 +203,8 @@ export class RulesDetails extends React.PureComponent<Props> {
 								<tr>
 									<td className={styles.dataTitle}>Adding headers:</td>
 									<td className={styles.dataValue}>
-										{Object.entries(response.headers.add)
-											.map(([name, value]) => name + ': ' + value)
+										{response.setHeaders
+											.map(({name, value}) => name + ': ' + value)
 											.join('<br>')}
 									</td>
 								</tr>
@@ -215,27 +213,27 @@ export class RulesDetails extends React.PureComponent<Props> {
 							{shownFields.responseHeadersRemove && (
 								<tr>
 									<td className={styles.dataTitle}>Removing headers:</td>
-									<td className={styles.dataValue}>{response.headers.remove.join('<br>')}</td>
+									<td className={styles.dataValue}>{response.dropHeaders.join('<br>')}</td>
 								</tr>
 							)}
 
 							{shownFields.requestBodyReplace && (
 								<tr>
 									<td className={styles.dataTitle}>Replacing body:</td>
-									{response.body!.type === ResponseBodyType.Text && (
-										<td className={styles.dataValue}>{response.body!.textValue.substr(0, 2400)}</td>
+									{response.body && response.body.type === ResponseBodyType.Text && (
+										<td className={styles.dataValue}>{response.body.value.substr(0, 2400)}</td>
 									)}
-									{response.body!.type === ResponseBodyType.Base64 && (
+									{response.body && response.body.type === ResponseBodyType.Base64 && (
 										<td className={styles.dataValue}>
-											Base 64: {response.body!.textValue.substr(0, 128)}
+											Base 64: {response.body.value.substr(0, 128)}
 										</td>
 									)}
-									{response.body!.type === ResponseBodyType.File && (
+									{response.body && response.body.type === ResponseBodyType.File && (
 										<td className={styles.dataValue}>
 											File:&nbsp;
-											{response.body!.fileValue
-												? response.body!.fileValue.name +
-												  ` (${response.body!.fileValue.size} bytes)`
+											{response.body.value
+												? response.body.value.name +
+												  ` (${response.body.value.size} bytes)`
 												: '(not specified)'}
 										</td>
 									)}
@@ -279,16 +277,16 @@ export class RulesDetails extends React.PureComponent<Props> {
 					<tr>
 						<td className={styles.dataTitle}>Body:</td>
 						{body.type === ResponseBodyType.Text && (
-							<td className={styles.dataValue}>{body.textValue.substr(0, 2400)}</td>
+							<td className={styles.dataValue}>{body.value.substr(0, 2400)}</td>
 						)}
 						{body.type === ResponseBodyType.Base64 && (
-							<td className={styles.dataValue}>Base 64: {body.textValue.substr(0, 128)}</td>
+							<td className={styles.dataValue}>Base 64: {body.value.substr(0, 128)}</td>
 						)}
 						{body.type === ResponseBodyType.File && (
 							<td className={styles.dataValue}>
 								File:&nbsp;
-								{body.fileValue
-									? `${body.fileValue.name} (${body.fileValue.size} bytes)`
+								{body.value
+									? `${body.value.name} (${body.value.size} bytes)`
 									: '(not specified)'}
 							</td>
 						)}
