@@ -34,7 +34,7 @@ export function extractRequestContentType(contentType: string) {
 		return RequestBodyType.Text;
 	}
 
-	return;
+	return undefined;
 }
 
 /** Can be detected only text-like type other is unknown */
@@ -48,5 +48,5 @@ export function extractResponseContentType(contentType: string) {
 		return ResponseBodyType.Text;
 	}
 
-	return;
+	return undefined;
 }

@@ -21,7 +21,10 @@ export const ruleFormSchema = object({
 		}),
 		[ActionsType.Mutation]: object({
 			request: object({
-				endpoint: string(), // TODO validate url or patterns
+				endpoint: string().matches(
+					/^https?:\/\/.+/,
+					'Endpoint url should starts with a protocol and have a hostname',
+				), // TODO validate url or patterns
 				method: mixed<RequestMethod>()
 					.oneOf(requestMethodsList)
 					.notRequired(),

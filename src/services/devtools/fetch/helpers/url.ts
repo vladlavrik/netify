@@ -1,11 +1,11 @@
 const urlPartsRegexp = /^(https:|http:)?(\/\/)((.+?)(:(\d+))?)(\/(.+?))?(\?(.+?))?(#.+)?$/i;
 const urlPatterRegexp = {
-	protocol: /%protocol%/gi,
-	host: /%host%/gi,
-	hostname: /%hostname%/gi,
-	port: /%port%/gi,
-	path: /%path%/gi,
-	query: /%query%/gi,
+	protocol: /\[protocol\]/gi,
+	host: /\[host\]/gi,
+	hostname: /\[hostname\]/gi,
+	port: /\[port\]/gi,
+	path: /\[path\]/gi,
+	query: /\[query\]/gi,
 };
 
 function parseUrlParts(url: string) {

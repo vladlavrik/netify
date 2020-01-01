@@ -1,10 +1,12 @@
-import {HeadersArray, HeadersMap} from '@/interfaces/headers';
+import Protocol from 'devtools-protocol';
 
-export function headersMapToArray(headersMap: HeadersMap): HeadersArray {
+type HeaderEntry = Protocol.Fetch.HeaderEntry;
+
+export function headersMapToArray(headersMap: Record<string, string>): HeaderEntry[] {
 	return Object.entries(headersMap).map(([name, value]) => ({name, value}));
 }
 
-export function patchHeaders(initial: HeadersArray, toAdd: HeadersArray, toRemove: string[]) {
+export function patchHeaders(initial: HeaderEntry[], toAdd: HeaderEntry[], toRemove: string[]) {
 	const skipSet = new Set([
 		...toAdd.map(({name}) => name.toLowerCase()),
 		...toRemove.map(name => name.toLowerCase()),

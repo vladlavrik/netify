@@ -5,10 +5,6 @@ import {ResponseErrorReason} from '@/constants/ResponseErrorReason';
 import {HeadersArray} from '@/interfaces/headers';
 import {RequestBody, ResponseBody} from './body';
 
-export interface RulesSelector {
-	selectOne(select: {url: string; method: RequestMethod; resourceType: ResourceType}): Rule | null;
-}
-
 export interface BreakpointAction {
 	type: ActionsType.Breakpoint;
 	request: boolean;

@@ -1,6 +1,6 @@
 export type Listener<T> = (event: T) => any;
 
-export class Event<T> {
+export class Event<T = void> {
 	private listeners: Listener<T>[] = [];
 
 	on(listener: Listener<T>): () => void /* Unsubscribe function*/ {

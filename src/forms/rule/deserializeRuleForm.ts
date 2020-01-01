@@ -40,10 +40,14 @@ function deserializeResponseBody({type, textValue, fileValue}: ResponseBodySchem
 			};
 
 		case ResponseBodyType.File:
-			return {
-				type,
-				value: fileValue,
-			};
+			if (fileValue) {
+				return {
+					type,
+					value: fileValue,
+				};
+			} else {
+				return undefined;
+			}
 	}
 }
 

@@ -58,7 +58,7 @@ export const RuleFilter = memo(() => {
 							<br />
 							<span className={styles.urlInfoMark}>?</span> - matches any single character
 							<br />
-							<span className={styles.urlInfoMark}>*</span> - matches any one or more characters{' '}
+							<span className={styles.urlInfoMark}>*</span> - matches any zero or more characters
 						</p>
 					</PopUpAlert>
 				)}

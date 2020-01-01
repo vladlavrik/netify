@@ -40,7 +40,11 @@ export class App extends React.Component<Props> {
 						this.modalTarget,
 					)}
 
-				{editingRule && ReactDOM.createPortal(<RuleEditor rule={editingRule} />, this.modalTarget)}
+				{editingRule &&
+					ReactDOM.createPortal(
+						<RuleEditor rule={editingRule} onSave={this.onSaveEdited} onCancel={this.onCancelItemEdit} />,
+						this.modalTarget,
+					)}
 
 				{displayedError && (
 					<PopUpAlert onClose={this.onCloseErrorAlert}>

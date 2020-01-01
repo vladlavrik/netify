@@ -15,7 +15,7 @@ export function serializeRuleForm(rule: Rule) {
 			resourceTypes: filter.resourceTypes,
 			methods: filter.methods,
 		},
-		actionType: ActionsType.Mutation,
+		actionType: action.type,
 		actionConfigs: {
 			[ActionsType.Breakpoint]: {
 				stage: BreakpointStage.Both,
@@ -85,6 +85,8 @@ export function serializeRuleForm(rule: Rule) {
 			requestValue.setHeaders.unshift(...request.setHeaders);
 			requestValue.dropHeaders.unshift(...request.dropHeaders);
 			if (request.body) {
+				requestValue.body.type = request.body.type;
+
 				switch (request.body.type) {
 					case RequestBodyType.Text:
 						requestValue.body.textValue = request.body.value || '';
@@ -100,6 +102,8 @@ export function serializeRuleForm(rule: Rule) {
 			responseValue.setHeaders.unshift(...response.setHeaders);
 			responseValue.dropHeaders.unshift(...response.dropHeaders);
 			if (response.body) {
+				responseValue.body.type = response.body.type;
+
 				switch (response.body.type) {
 					case ResponseBodyType.Text:
 					case ResponseBodyType.Base64:
@@ -119,6 +123,8 @@ export function serializeRuleForm(rule: Rule) {
 
 			responseValue.statusCode = statusCode;
 			responseValue.headers = headers;
+
+			responseValue.body.type = body.type;
 
 			switch (body.type) {
 				case ResponseBodyType.Text:

@@ -3,6 +3,7 @@ import {useFormikContext} from 'formik';
 import {FieldRow} from '@/components/forms/common/FieldRow';
 import {TextField} from '@/components/@common/forms/TextField';
 import {TextButton} from '@/components/@common/buttons/TextButton';
+import {FieldError} from '@/components/@common/forms/FieldError';
 import styles from './ruleEndpointField.css';
 
 interface RuleEndpointField {
@@ -36,53 +37,60 @@ export const RuleEndpointField = memo<RuleEndpointField>(({name}) => {
 
 	return (
 		<FieldRow title='Endpoint:'>
-			<TextField
-				ref={endpointFieldRef}
-				className={styles.field}
-				name={name}
-				placeholder='Redirect a request by the new url'
-				suffix={
-					<div className={styles.macros}>
-						<TextButton className={styles.macrosButton} tabIndex={-1} onClick={handleUrlMacrosShownToggle}>
-							{urlMacrosShown ? 'close' : 'add macros'}
-						</TextButton>
-						{urlMacrosShown && (
-							<div className={styles.macrosPicker}>
-								<TextButton
-									className={styles.macrosOption}
-									data-value='%protocol%'
-									onClick={handleMacrosInsert}>
-									Protocol
-								</TextButton>
-								<TextButton
-									className={styles.macrosOption}
-									data-value='%hostname%'
-									onClick={handleMacrosInsert}>
-									Hostname
-								</TextButton>
-								<TextButton
-									className={styles.macrosOption}
-									data-value='%port%'
-									onClick={handleMacrosInsert}>
-									Port
-								</TextButton>
-								<TextButton
-									className={styles.macrosOption}
-									data-value='%path%'
-									onClick={handleMacrosInsert}>
-									Path
-								</TextButton>
-								<TextButton
-									className={styles.macrosOption}
-									data-value='%query%'
-									onClick={handleMacrosInsert}>
-									Query
-								</TextButton>
-							</div>
-						)}
-					</div>
-				}
-			/>
+			<div className={styles.row}>
+				<TextField
+					ref={endpointFieldRef}
+					className={styles.field}
+					name={name}
+					placeholder='Redirect a request by the new url'
+					suffix={
+						<div className={styles.macros}>
+							<TextButton
+								className={styles.macrosButton}
+								tabIndex={-1}
+								onClick={handleUrlMacrosShownToggle}>
+								{urlMacrosShown ? 'close' : 'add macros'}
+							</TextButton>
+							{urlMacrosShown && (
+								<div className={styles.macrosPicker}>
+									<TextButton
+										className={styles.macrosOption}
+										data-value='[protocol]'
+										onClick={handleMacrosInsert}>
+										Protocol
+									</TextButton>
+									<TextButton
+										className={styles.macrosOption}
+										data-value='[hostname]'
+										onClick={handleMacrosInsert}>
+										Hostname
+									</TextButton>
+									<TextButton
+										className={styles.macrosOption}
+										data-value='[port]'
+										onClick={handleMacrosInsert}>
+										Port
+									</TextButton>
+									<TextButton
+										className={styles.macrosOption}
+										data-value='[path]'
+										onClick={handleMacrosInsert}>
+										Path
+									</TextButton>
+									<TextButton
+										className={styles.macrosOption}
+										data-value='[query]'
+										onClick={handleMacrosInsert}>
+										Query
+									</TextButton>
+								</div>
+							)}
+						</div>
+					}
+				/>
+
+				<FieldError name={name} />
+			</div>
 		</FieldRow>
 	);
 });

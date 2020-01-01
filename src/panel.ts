@@ -1,10 +1,10 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import {autorun} from 'mobx';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {autorun, toJS} from 'mobx';
 import {Provider} from 'mobx-react';
 import {RootStore} from '@/stores/RootStore';
 import {ExtensionDevtoolsConnector, ExtensionTab, ExtensionIcon} from '@/services/extension';
-import {FetchDevtools} from '@/services/devtools/fetch';
+import {FetchDevtools, FetchRuleStore} from '@/services/devtools/fetch';
 import {getPlatform} from '@/helpers/browser';
 import {App} from '@/components/App';
 import '@/style/page.css';
@@ -23,8 +23,14 @@ import '@/style/page.css';
 
 	// Initialize devtools
 	const devtools = new ExtensionDevtoolsConnector(tabId);
-	const fetchDevtools = new FetchDevtools(store.rulesStore, devtools);
 	const extIcon = new ExtensionIcon(tabId, 'Netify');
+	const fetchRulesStore = new FetchRuleStore();
+	const fetchDevtools = new FetchDevtools(devtools, fetchRulesStore);
+
+	// TODO comment me
+	autorun(() => {
+		fetchRulesStore.setRulesList(toJS(store.rulesStore.list));
+	});
 
 	// Connect devtools and store by events model
 	devtools.userDetachEvent.on(() => store.appStore.disableDebugger());

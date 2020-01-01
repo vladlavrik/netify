@@ -1,17 +1,12 @@
-import {action, observable, computed, toJS} from 'mobx';
-import {RequestMethod} from '@/constants/RequestMethod';
-import {ResourceType} from '@/constants/ResourceType';
-import {UrlCompareType} from '@/constants/UrlCompareType';
-import {RulesSelector} from '@/interfaces/rule';
+import {action, observable, computed} from 'mobx';
 import {Rule} from '@/interfaces/rule';
 import {openIDB, getOpenedIDB, RulesMapper} from '@/services/indexedDB';
 import {RootStore} from './RootStore';
 
-
-export class RulesStore implements RulesSelector {
-	private IDBMapper?: RulesMapper;
-
+export class RulesStore {
 	constructor(private rootStore: RootStore) {}
+
+	private IDBMapper?: RulesMapper;
 
 	@observable
 	readonly list: Rule[] = [];
@@ -97,7 +92,7 @@ export class RulesStore implements RulesSelector {
 
 	@action
 	setHighlighted(id: string | null = null) {
-		// todo add "item"
+		// Todo add "item"
 		this.highlightedId = id;
 	}
 
@@ -143,48 +138,5 @@ export class RulesStore implements RulesSelector {
 			this.reportException(`Exception on remove all rule from IndexedDB:\n${error.message}`);
 			throw error;
 		});
-	}
-
-	selectOne(select: {url: string; method: RequestMethod; resourceType: ResourceType}) {
-		// TODO to debugger dir
-		const selectUrlOrigin = select.url
-			.split('/')
-			.slice(0, 3) // first double slash is the end of schema, third slash is the path part start
-			.join('/');
-
-		const rule = this.list.find(({filter}) => {
-			if (filter.resourceTypes.length && !filter.resourceTypes.includes(select.resourceType)) {
-				return false;
-			}
-
-			if (filter.methods.length && !filter.methods.includes(select.method)) {
-				return false;
-			}
-
-			// if the filter does not include a schema and host, add it for correct comparison
-			const filterUrlValue = filter.url.value.startsWith('/') // it mean schema and host is not defined
-				? selectUrlOrigin + filter.url.value
-				: filter.url.value;
-
-			if (filter.url.compareType === UrlCompareType.Exact && select.url !== filterUrlValue) {
-				return false;
-			}
-
-			if (filter.url.compareType === UrlCompareType.StartsWith && !select.url.startsWith(filterUrlValue)) {
-				return false;
-			}
-
-			if (filter.url.compareType === UrlCompareType.RegExp && !RegExp(filterUrlValue).test(select.url)) {
-				return false;
-			}
-
-			return true;
-		});
-
-		if (rule) {
-			return toJS(rule);
-		}
-
-		return null;
 	}
 }

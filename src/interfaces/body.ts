@@ -20,7 +20,7 @@ interface ResponseBodyText {
 
 interface ResponseFileForm {
 	type: ResponseBodyType.File;
-	value?: File;
+	value: File;
 }
 
 export type ResponseBody = ResponseBodyText | ResponseFileForm;
