@@ -48,3 +48,5 @@ export const ruleFormSchema = object({
 }).required();
 
 export type RuleFormSchema = InferType<typeof ruleFormSchema>;
+export type RequestBodySchema = InferType<typeof requestBodySchema>;
+export type ResponseBodySchema = InferType<typeof responseBodySchema>;

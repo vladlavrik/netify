@@ -27,7 +27,7 @@ export function serializeRuleForm(rule: Rule) {
 					setHeaders: [{name: '', value: ''}],
 					dropHeaders: [''],
 					body: {
-						type: RequestBodyType.Text,
+						type: 'Original',
 						textValue: '',
 						formValue: [{key: '', value: ''}],
 					},
@@ -37,7 +37,7 @@ export function serializeRuleForm(rule: Rule) {
 					setHeaders: [{name: '', value: ''}],
 					dropHeaders: [''],
 					body: {
-						type: ResponseBodyType.Text,
+						type: 'Original',
 						textValue: '',
 						fileValue: undefined,
 					},

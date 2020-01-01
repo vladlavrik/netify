@@ -5,12 +5,18 @@ import {TextareaField} from '@/components/@common/forms/TextaredField';
 import {FileField} from '@/components/@common/forms/FileField';
 import {FieldRow} from '../FieldRow';
 
-const typeOptions = responseBodyTypesList.map(type => ({
-	value: type,
-	title: type,
-}));
-
-const originTypeOption = {value: '', title: 'Original'};
+function typeTitleGetter(type: 'Original' | ResponseBodyType) {
+	switch (type) {
+		case 'Original':
+			return 'Original';
+		case ResponseBodyType.Text:
+			return 'Text';
+		case ResponseBodyType.Base64:
+			return 'Base 64';
+		case ResponseBodyType.File:
+			return 'File';
+	}
+}
 
 interface ResponseBodyFieldProps {
 	name: string;
@@ -18,11 +24,13 @@ interface ResponseBodyFieldProps {
 }
 
 export const ResponseBodyField = memo<ResponseBodyFieldProps>(({name, allowOrigin}) => {
-	const options = useMemo(() => (allowOrigin ? [originTypeOption, ...typeOptions] : typeOptions), [allowOrigin]);
+	const options = useMemo(() => {
+		return allowOrigin ? ['Original', ...responseBodyTypesList] : responseBodyTypesList;
+	}, [allowOrigin]);
 
 	return (
 		<FieldRow title='Body:'>
-			<RadioTabs radioName={`${name}.type`} tabs={options}>
+			<RadioTabs name={`${name}.type`} options={options} optionTitleGetter={typeTitleGetter}>
 				{tabName => {
 					switch (tabName) {
 						case ResponseBodyType.Text:

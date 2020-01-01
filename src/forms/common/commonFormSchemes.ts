@@ -1,6 +1,6 @@
 import {number, string, array, object, mixed} from 'yup';
-import {requestBodyTypesList} from '@/constants/RequestBodyType';
-import {responseBodyTypesList} from '@/constants/ResponseBodyType';
+import {RequestBodyType, requestBodyTypesList} from '@/constants/RequestBodyType';
+import {ResponseBodyType, responseBodyTypesList} from '@/constants/ResponseBodyType';
 
 export const headersSchema = array().of(
 	object({
@@ -22,9 +22,7 @@ export const statusCodeSchema = number()
 	.max(599, statusCodeInvalidError);
 
 export const requestBodySchema = object({
-	type: string()
-		.oneOf(requestBodyTypesList)
-		.notRequired(),
+	type: mixed<'Original' | RequestBodyType>().oneOf(['Original', ...requestBodyTypesList]),
 	textValue: string(),
 	formValue: array().of(
 		object({
@@ -41,9 +39,7 @@ export const requestBodySchema = object({
 });
 
 export const responseBodySchema = object({
-	type: string()
-		.oneOf(responseBodyTypesList)
-		.notRequired(),
+	type: mixed<'Original' | ResponseBodyType>().oneOf(['Original', ...responseBodyTypesList]),
 	textValue: string(),
 	fileValue: mixed<File>().notRequired(),
 });

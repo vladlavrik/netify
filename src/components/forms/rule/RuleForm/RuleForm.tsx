@@ -1,9 +1,8 @@
-import React, {memo, useMemo} from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
 import {useFormik, Form, FormikProvider} from 'formik';
 import {Rule} from '@/interfaces/rule';
-import {ruleFormSchema, RuleFormSchema} from '@/forms/rule';
+import {ruleFormSchema, serializeRuleForm, deserializeRuleForm, RuleFormSchema} from '@/forms/rule';
 import {Button} from '@/components/@common/buttons/Button';
-import {serializeRuleForm} from '@/forms/rule/serializeRuleForm';
 import {RuleFilter} from '../RuleFilter';
 import {RuleActionSwitcher} from '../RuleActionSwitcher';
 import {RuleActionConfig} from '../RuleActionConfig';
@@ -18,14 +17,20 @@ interface RuleFormProps {
 export const RuleForm = memo<RuleFormProps>(({initialRule, onSave, onCancel}) => {
 	const initialValues = useMemo(() => serializeRuleForm(initialRule), [initialRule]);
 
+	const handleSubmit = useCallback(
+		(rawValue: RuleFormSchema) => {
+			const value = deserializeRuleForm(rawValue, initialRule.id, initialRule.active);
+			console.log('submit', rawValue, value);
+		},
+		[initialRule.id, initialRule.active],
+	);
+
 	const form = useFormik<RuleFormSchema>({
 		initialValues,
 		validateOnBlur: true,
 		validateOnChange: false,
 		validationSchema: ruleFormSchema,
-		onSubmit(values) {
-			console.log('submit', values);
-		},
+		onSubmit: handleSubmit,
 	});
 
 	return (

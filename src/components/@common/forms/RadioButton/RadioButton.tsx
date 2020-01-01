@@ -6,13 +6,13 @@ import styles from './radioButton.css';
 interface RadioButtonProps {
 	className?: string;
 	name: string;
-	value: string;
+	value: string | undefined;
 	disabled?: boolean;
 	children?: ReactNode;
 }
 
 export const RadioButton = memo<RadioButtonProps>(({className, name, value, disabled, children}) => {
-	const [{value: currentValue, onChange, onBlur}] = useField<string>(name);
+	const [{value: currentValue, onChange, onBlur}] = useField<string | undefined>(name);
 
 	return (
 		<label className={classNames(styles.root, className)}>

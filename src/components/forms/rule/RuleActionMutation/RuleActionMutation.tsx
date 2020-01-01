@@ -25,7 +25,7 @@ export const RuleActionMutation = memo(() => {
 			<RequestMethodField name={`${namePrefix}.request.method`} />
 			<SetHeadersField name={`${namePrefix}.request.setHeaders`} />
 			<DropHeadersField name={`${namePrefix}.request.dropHeaders`} />
-			<RequestBodyField name={`${namePrefix}.request.body`} />
+			<RequestBodyField name={`${namePrefix}.request.body`} allowOrigin />
 
 			<div className={styles.separator} />
 
@@ -36,7 +36,7 @@ export const RuleActionMutation = memo(() => {
 			<StatusCodeField name={`${namePrefix}.response.statusCode`} />
 			<SetHeadersField name={`${namePrefix}.response.setHeaders`} />
 			<DropHeadersField name={`${namePrefix}.response.dropHeaders`} />
-			<ResponseBodyField name={`${namePrefix}.response.body`} />
+			<ResponseBodyField name={`${namePrefix}.response.body`} allowOrigin />
 		</div>
 	);
 });

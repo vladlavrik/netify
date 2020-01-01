@@ -5,13 +5,18 @@ import {TextareaField} from '@/components/@common/forms/TextaredField';
 import {KeyValueArrayField} from '@/components/@common/forms/KeyValueArrayField';
 import {FieldRow} from '../FieldRow';
 
-// TODO use display name getter
-const typeOptions = requestBodyTypesList.map(type => ({
-	value: type,
-	title: type,
-}));
-
-const originTypeOption = {value: '', title: 'Original'};
+function typeTitleGetter(type: 'Original' | RequestBodyType) {
+	switch (type) {
+		case 'Original':
+			return 'Original';
+		case RequestBodyType.Text:
+			return 'Text';
+		case RequestBodyType.UrlEncodedForm:
+			return 'Url encoded form';
+		case RequestBodyType.MultipartFromData:
+			return 'Multipart from data';
+	}
+}
 
 interface RequestMethodFieldProps {
 	name: string;
@@ -19,11 +24,13 @@ interface RequestMethodFieldProps {
 }
 
 export const RequestBodyField = memo<RequestMethodFieldProps>(({name, allowOrigin}) => {
-	const options = useMemo(() => (allowOrigin ? [originTypeOption, ...typeOptions] : typeOptions), [allowOrigin]);
+	const options = useMemo(() => {
+		return allowOrigin ? ['Original', ...requestBodyTypesList] : requestBodyTypesList;
+	}, [allowOrigin]);
 
 	return (
 		<FieldRow title='Body:'>
-			<RadioTabs radioName={`${name}.type`} tabs={options}>
+			<RadioTabs name={`${name}.type`} options={options} optionTitleGetter={typeTitleGetter}>
 				{(tabName: string) => {
 					switch (tabName) {
 						case RequestBodyType.Text:

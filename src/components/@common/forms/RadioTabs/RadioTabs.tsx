@@ -4,23 +4,21 @@ import {RadioButton} from '@/components/@common/forms/RadioButton';
 import styles from './radioTabs.css';
 
 interface RadioTabsProps {
-	radioName: string;
-	tabs: {
-		title: string;
-		value: string;
-	}[];
+	name: string;
+	options: string[];
+	optionTitleGetter(value: string): string;
 	children?(tab: string): ReactNode;
 }
 
-export const RadioTabs = memo<RadioTabsProps>(({tabs, radioName, children}) => {
-	const [field] = useField(radioName);
+export const RadioTabs = memo<RadioTabsProps>(({name, options, optionTitleGetter, children}) => {
+	const [field] = useField(name);
 
 	return (
 		<div className={styles.root}>
 			<div className={styles.radioWrapper}>
-				{tabs.map(tab => (
-					<RadioButton key={tab.value} className={styles.radioItem} name={radioName} value={tab.value}>
-						{tab.title}
+				{options.map(option => (
+					<RadioButton key={option || 'empty'} className={styles.radioItem} name={name} value={option}>
+						{optionTitleGetter(option)}
 					</RadioButton>
 				))}
 			</div>
