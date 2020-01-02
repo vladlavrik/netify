@@ -34,8 +34,7 @@ import '@/style/page.css';
 
 	// Connect devtools and store by events model
 	devtools.userDetachEvent.on(() => store.appStore.disableDebugger());
-	fetchDevtools.events.requestStart.on(log => store.logsStore.add(log));
-	fetchDevtools.events.requestEnd.on(id => store.logsStore.makeLoaded(id));
+	fetchDevtools.events.requestProcessed.on(log => store.logsStore.add(log));
 
 	// TODO comment me
 	let debuggerActive = false;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import classNames from 'classnames';
 import {ResourceType} from '@/constants/ResourceType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {formatFullTime, formatTime} from '@/helpers/dateFormat';
@@ -8,17 +9,17 @@ import styles from './logsItem.css';
 
 interface Props {
 	ruleId: string;
+	requestStage: 'Request' | 'Response';
 	date: Date;
 	url: string;
 	resourceType: ResourceType;
 	method: RequestMethod;
-	loaded: boolean;
 	onFollowRule(ruleId: string): void;
 }
 
 export class LogsItem extends React.PureComponent<Props> {
 	render() {
-		const {date, url, resourceType, method, loaded} = this.props;
+		const {date, url, resourceType, method, requestStage} = this.props;
 
 		const fullDate = formatFullTime(date);
 		const formattedTime = formatTime(date);
@@ -28,16 +29,19 @@ export class LogsItem extends React.PureComponent<Props> {
 				<span className={styles.time} title={fullDate}>
 					{formattedTime}
 				</span>
+				<WithTooltip tooltip={requestStage === 'Request' ? 'On request stage' : 'On response stage'}>
+					<div
+						className={classNames(
+							styles.stage,
+							requestStage === 'Request' ? styles.request : styles.response,
+						)}
+					/>
+				</WithTooltip>
 				<span className={styles.method}>{method}</span>
 				<span className={styles.type}>{resourceType}</span>
 				<span className={styles.url} title={url}>
 					{url}
 				</span>
-				{!loaded && (
-					<WithTooltip tooltip='Request wait to response'>
-						<div className={styles.loading} />
-					</WithTooltip>
-				)}
 				<IconButton className={styles.followButton} tooltip='Highlight rule' onClick={this.followRule} />
 			</div>
 		);

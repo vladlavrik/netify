@@ -1,9 +1,10 @@
 import {Protocol} from 'devtools-protocol';
-import {FailureAction, LocalResponseAction, MutationAction, Rule} from '@/interfaces/rule';
+import {Rule, MutationAction, LocalResponseAction, FailureAction} from '@/interfaces/rule';
 import {Log} from '@/interfaces/log';
 import {ActionsType} from '@/constants/ActionsType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
+import {StatusCode} from '@/constants/StatusCode';
 import {Event} from '@/helpers/Events';
 import {DevtoolsConnector} from '@/services/devtools';
 import {ResponseBuilder} from './ResponseBuilder';
@@ -18,8 +19,7 @@ type FailRequestRequest = Protocol.Fetch.FailRequestRequest;
 
 export class FetchDevtools {
 	readonly events = {
-		requestStart: new Event<Log>(),
-		requestEnd: new Event<string /* Unique request id*/>(),
+		requestProcessed: new Event<Log>(),
 	};
 
 	private enabled = false;
@@ -39,6 +39,8 @@ export class FetchDevtools {
 			'Fetch.requestPaused',
 			this.process.bind(this),
 		);
+
+		this.log('enabled with pattern %o', patterns);
 	}
 
 	async disable() {
@@ -50,6 +52,8 @@ export class FetchDevtools {
 		if (this.unsubscribeDevtoolsEvents) {
 			this.unsubscribeDevtoolsEvents();
 		}
+
+		this.log('disabled');
 	}
 
 	async restart() {
@@ -61,11 +65,10 @@ export class FetchDevtools {
 
 	private async process(pausedRequest: RequestPausedEvent) {
 		const rule = this.rulesStore.selectRules(pausedRequest);
-		console.log('pausedRequest', pausedRequest, rule);
+		this.log('intercepted request %o with rule %o', pausedRequest, rule);
 
 		if (!rule || !rule.active) {
-			// TODO describe: not documented but works
-			// TODO check is it works now
+			// "continueRequest" can also be used to send a response, not ony request.
 			await this.continueRequest({requestId: pausedRequest.requestId});
 			return;
 		}
@@ -79,22 +82,6 @@ export class FetchDevtools {
 
 	private async processRequest(pausedRequest: RequestPausedEvent, rule: Rule) {
 		const {requestId, request, resourceType} = pausedRequest;
-
-		if (!rule || !rule.active) {
-			await this.continueRequest({requestId});
-			return;
-		}
-
-		// Notify about new request
-		this.events.requestStart.emit({
-			id: requestId,
-			ruleId: rule.id,
-			loaded: false,
-			date: new Date(),
-			url: request.url,
-			method: request.method as RequestMethod,
-			resourceType: resourceType as ResourceType,
-		});
 
 		switch (rule.action.type) {
 			// Trigger breakpoint event
@@ -117,19 +104,28 @@ export class FetchDevtools {
 				this.processRequestFailure(requestId, rule.action);
 				break;
 		}
+
+		// Report to UI logger about the new handled request
+		this.events.requestProcessed.emit({
+			requestId,
+			requestStage: 'Request',
+			ruleId: rule.id,
+			date: new Date(),
+			url: request.url,
+			method: request.method as RequestMethod,
+			resourceType: resourceType as ResourceType,
+		});
 	}
 
 	private async processRequestFailure(requestId: string, action: FailureAction) {
 		const errorReason = action.reason;
 		await this.failRequest({requestId, errorReason});
-		this.events.requestEnd.emit(requestId);
 	}
 
 	private async processLocalResponse(requestId: string, action: LocalResponseAction) {
 		const builder = ResponseBuilder.asLocalResponse(requestId, action);
 		const fulfilParams = await builder.build();
 		await this.fulfillRequest(fulfilParams);
-		this.events.requestEnd.emit(requestId);
 	}
 
 	private async processRequestMutation(pausedRequest: RequestPausedEvent, action: MutationAction) {
@@ -145,44 +141,62 @@ export class FetchDevtools {
 				break;
 
 			case ActionsType.Mutation:
-				this.processResponseMutation(pausedRequest, rule.action);
+				this.processResponseMutation(pausedRequest, rule.action, rule.id);
 				break;
 		}
 	}
 
-	private async processResponseMutation(pausedRequest: RequestPausedEvent, action: MutationAction) {
-		const {requestId} = pausedRequest;
+	private async processResponseMutation(pausedRequest: RequestPausedEvent, action: MutationAction, ruleId: string) {
+		const {requestId, request, resourceType} = pausedRequest;
 		const {statusCode, setHeaders, dropHeaders, body} = action.response;
 
 		const noChanges = !statusCode && setHeaders.length === 0 && dropHeaders.length === 0 && !body;
 
-		// TODO comment
 		if (noChanges) {
-			// TODO describe: not documented but works
-			// TODO check is it saves
+			// "continueRequest" can also be used to send a response,
+			// This method is more appropriate because it does not require the transmission of a read response (headers, body, ..)
 			await this.continueRequest({requestId});
-			this.events.requestEnd.emit(requestId);
 			return;
 		}
 
-		// TODO comment
+		// Build the response from the original response data and patch from the rule
 		const builder = ResponseBuilder.asResponsePatch(pausedRequest, action);
 		const fulfilParams = await builder.build();
 		await this.fulfillRequest(fulfilParams);
-		this.events.requestEnd.emit(requestId);
+
+		// Report to UI logger about the new handled response
+		this.events.requestProcessed.emit({
+			requestId,
+			requestStage: 'Response',
+			ruleId,
+			date: new Date(),
+			url: request.url,
+			method: request.method as RequestMethod,
+			resourceType: resourceType as ResourceType,
+		});
 	}
 
 	private async continueRequest(params: ContinueRequestRequest) {
-		console.log('continueRequest', params);
+		this.log('continue request with params %o', params);
 		await this.devtools.sendCommand('Fetch.continueRequest', params);
 	}
 
 	private async fulfillRequest(params: FulfillRequestRequest) {
-		console.log('fulfillRequest', params);
+		this.log('fulfill request with params %o', params);
+
+		// Using custom status codes phrase map because build  in dictionary is too poor and throws exception when user pass unknown status code
+		params.responsePhrase = params.responsePhrase || StatusCode[params.responseCode] || 'UNKNOWN';
 		await this.devtools.sendCommand('Fetch.fulfillRequest', params);
 	}
 
 	private async failRequest(params: FailRequestRequest) {
+		this.log('fail request with params %o', params);
 		await this.devtools.sendCommand('Fetch.failRequest', params);
+	}
+
+	private log(message: string, ...data: any[]) {
+		if (process.env.NODE_ENV === 'development') {
+			console.info(`%cFetch devtools: ${message}`, 'color: #3478B1', ...data)
+		}
 	}
 }

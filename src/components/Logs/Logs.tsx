@@ -45,14 +45,14 @@ export class Logs extends React.Component<Props> {
 					) : (
 						<ul className={styles.list}>
 							{list.map(item => (
-								<li key={item.id} className={styles.item}>
+								<li key={item.requestId + item.requestStage} className={styles.item}>
 									<LogsItem
 										ruleId={item.ruleId}
+										requestStage={item.requestStage}
 										date={item.date}
 										url={item.url}
 										resourceType={item.resourceType}
 										method={item.method}
-										loaded={item.loaded}
 										onFollowRule={this.onFollowRule}
 									/>
 								</li>

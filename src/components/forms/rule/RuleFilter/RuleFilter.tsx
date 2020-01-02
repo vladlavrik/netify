@@ -36,7 +36,7 @@ export const RuleFilter = memo(() => {
 					name='filter.resourceTypes'
 					options={resourceTypesList}
 					multiple
-					placeholder='All types'
+					placeholder='All resources'
 				/>
 				<SelectField
 					className={styles.methodsField}

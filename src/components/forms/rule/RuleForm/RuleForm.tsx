@@ -19,10 +19,8 @@ export const RuleForm = memo<RuleFormProps>(({initialRule, onSave, onCancel}) =>
 
 	const handleSubmit = useCallback(
 		(rawValue: RuleFormSchema) => {
-			const castValue = ruleFormSchema.cast(rawValue);
-			const value = deserializeRuleForm(castValue, initialRule.id, initialRule.active);
+			const value = deserializeRuleForm(rawValue, initialRule.id, initialRule.active);
 			onSave(value);
-			console.log('submit', rawValue, value); // TODO remove
 		},
 		[initialRule.id, initialRule.active, onSave],
 	);

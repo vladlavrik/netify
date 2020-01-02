@@ -1,5 +1,5 @@
 import React, {memo, useCallback, useRef, useState} from 'react';
-import {useFormikContext} from 'formik';
+import {useField} from 'formik';
 import {FieldRow} from '@/components/forms/common/FieldRow';
 import {TextField} from '@/components/@common/forms/TextField';
 import {TextButton} from '@/components/@common/buttons/TextButton';
@@ -13,27 +13,29 @@ interface RuleEndpointField {
 export const RuleEndpointField = memo<RuleEndpointField>(({name}) => {
 	const [urlMacrosShown, setUrlMacrosShown] = useState(false);
 
-	const form = useFormikContext();
+	const [, , {setValue}] = useField(name);
 
 	const endpointFieldRef = useRef<HTMLInputElement>(null);
 
 	const handleUrlMacrosShownToggle = useCallback(() => setUrlMacrosShown(!urlMacrosShown), [urlMacrosShown]);
 
-	const handleMacrosInsert = useCallback((event: React.MouseEvent<HTMLElement>) => {
-		const macros = event.currentTarget.dataset.value!;
-		const input = endpointFieldRef.current!;
+	const handleMacrosInsert = useCallback(
+		(event: React.MouseEvent<HTMLElement>) => {
+			const macros = event.currentTarget.dataset.value!;
+			const input = endpointFieldRef.current!;
 
-		input.focus();
+			input.focus();
 
-		const start = input.selectionStart || 0;
-		const end = input.selectionEnd || 0;
+			const start = input.selectionStart || 0;
+			const end = input.selectionEnd || 0;
 
-		const value = input.value.substr(0, start) + macros + input.value.substr(end);
+			const value = input.value.substr(0, start) + macros + input.value.substr(end);
 
-		// Temporary solution | TODO use field.onChange when it wil be fixed in formik
-		form.setFieldValue(name, value);
-		setUrlMacrosShown(false);
-	}, []);
+			setValue(value);
+			setUrlMacrosShown(false);
+		},
+		[setValue],
+	);
 
 	return (
 		<FieldRow title='Endpoint:'>

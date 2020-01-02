@@ -1,6 +1,6 @@
 import {observable, action, computed} from 'mobx';
-import {RootStore} from './RootStore';
 import {Log} from '@/interfaces/log';
+import {RootStore} from './RootStore';
 
 export class LogsStore {
 	constructor(private rootStore: RootStore) {}
@@ -16,11 +16,6 @@ export class LogsStore {
 	@action
 	add(item: Log) {
 		this.list.push(item);
-	}
-
-	@action
-	makeLoaded(id: string) {
-		this.list.find(item => item.id === id)!.loaded = true;
 	}
 
 	@action

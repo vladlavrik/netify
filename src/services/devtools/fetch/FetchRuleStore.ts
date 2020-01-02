@@ -58,9 +58,9 @@ export class FetchRuleStore {
 
 					const hasResponseMutation =
 						!!response.statusCode ||
-						request.setHeaders.length > 0 ||
-						request.dropHeaders.length > 0 ||
-						!!request.body;
+						response.setHeaders.length > 0 ||
+						response.dropHeaders.length > 0 ||
+						!!response.body;
 
 					if (hasRequestMutation) {
 						stages.push('Request');
@@ -93,7 +93,6 @@ export class FetchRuleStore {
 			}
 		}
 
-		console.log(patterns);
 		return patterns;
 	}
 

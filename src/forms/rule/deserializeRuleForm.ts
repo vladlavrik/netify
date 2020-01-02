@@ -92,7 +92,7 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 					body: deserializeRequestBody(request.body),
 				},
 				response: {
-					statusCode: response.statusCode,
+					statusCode: response.statusCode ? Number(response.statusCode) : undefined,
 					setHeaders: deserializeSetHeaders(response.setHeaders),
 					dropHeaders: deserializeDropHeaders(response.dropHeaders),
 					body: deserializeResponseBody(response.body),
@@ -106,7 +106,7 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 
 			action = {
 				type: ActionsType.LocalResponse,
-				statusCode,
+				statusCode: Number(statusCode),
 				headers: deserializeSetHeaders(headers),
 				body: deserializeResponseBody(body)!,
 			} as LocalResponseAction;

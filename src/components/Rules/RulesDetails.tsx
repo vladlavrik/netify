@@ -56,7 +56,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 					{showResourceTypes && (
 						<tr>
 							<td className={styles.dataTitle}>Request types:</td>
-							<td className={styles.dataValue}>{resourceTypes.join(', ') || 'All types'}</td>
+							<td className={styles.dataValue}>{resourceTypes.join(', ') || 'All resources'}</td>
 						</tr>
 					)}
 				</tbody>
@@ -217,7 +217,7 @@ export class RulesDetails extends React.PureComponent<Props> {
 								</tr>
 							)}
 
-							{shownFields.requestBodyReplace && (
+							{shownFields.responseBodyReplace && (
 								<tr>
 									<td className={styles.dataTitle}>Replacing body:</td>
 									{response.body && response.body.type === ResponseBodyType.Text && (

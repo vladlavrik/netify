@@ -1,48 +1,48 @@
-@keyframes showLoading {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
-}
-
 .root {
 	display: flex;
 	align-items: center;
 	color: #b1b9c0;
 	height: 28px;
 }
+
 .time {
 	width: 56px;
 	margin: 0 8px;
 	flex-shrink: 0;
 	opacity: 0.5;
 }
+
+.stage {
+	width: 8px;
+	height: 10px;
+	margin-right: 8px;
+
+	&.request {
+		background: url('./icons/request.svg');
+	}
+	&.response {
+		background: url('./icons/response.svg');
+	}
+}
+
 .method {
 	width: 48px;
 	flex-shrink: 0;
 }
+
 .type {
 	width: 58px;
 	margin: 0 8px;
 	flex-shrink: 0;
 }
+
 .url {
 	flex-grow: 1;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.loading {
-	width: 8px;
-	height: 8px;
-	margin: 0 10px 0 8px;
-	border-radius: 4px;
-	background: #c57420;
-	animation: showLoading 0.1s ease-out 0.2s; /*delay to show*/
-	animation-fill-mode: backwards;
-}
+
 .followButton {
 	flex-shrink: 0;
 	margin: 0 6px;

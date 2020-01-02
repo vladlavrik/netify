@@ -44,7 +44,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 							</span>
 							<span className={classNames(styles.value, styles.type)}>
 								{resourceTypes.length === 0 ? (
-									<span className={styles.placeholder}>All types</span>
+									<span className={styles.placeholder}>All resources</span>
 								) : (
 									resourceTypes.join('/')
 								)}
