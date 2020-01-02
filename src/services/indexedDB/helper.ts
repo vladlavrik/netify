@@ -10,7 +10,7 @@ export async function promisifyIDBRequest<TResult = any>(request: IDBRequest) {
 	});
 }
 
-export function generitiryIDBRequest(request: IDBRequest) {
+export function generetifyIDBRequest(request: IDBRequest) {
 	return {
 		[Symbol.asyncIterator]() {
 			return {

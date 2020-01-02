@@ -1,4 +1,4 @@
-import {promisifyIDBRequest, generitiryIDBRequest} from './helper';
+import {promisifyIDBRequest, generetifyIDBRequest} from './helper';
 import {Rule} from '@/interfaces/rule';
 
 interface RuleItem {
@@ -43,7 +43,7 @@ export class RulesMapper {
 		const store = this.db.transaction(['rules'], 'readwrite').objectStore('rules');
 
 		const cursorRequest = store.index('hostname').openKeyCursor(IDBKeyRange.only(this.hostname));
-		const cursorGenerator = generitiryIDBRequest(cursorRequest);
+		const cursorGenerator = generetifyIDBRequest(cursorRequest);
 
 		const deleteRequestsPromises: Promise<IDBRequest>[] = [];
 		for await (const item of cursorGenerator) {
