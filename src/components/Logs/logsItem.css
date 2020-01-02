@@ -13,15 +13,18 @@
 }
 
 .stage {
-	width: 8px;
+	width: 14px;
 	height: 10px;
 	margin-right: 8px;
 
 	&.request {
-		background: url('./icons/request.svg');
+		background: url('./icons/request.svg') no-repeat center;
 	}
 	&.response {
-		background: url('./icons/response.svg');
+		background: url('./icons/response.svg') no-repeat center;
+	}
+	&.both {
+		background: url('./icons/both.svg');
 	}
 }
 

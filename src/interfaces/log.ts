@@ -4,7 +4,7 @@ import {Rule} from './rule';
 
 export interface Log {
 	requestId: string;
-	requestStage: 'Request' | 'Response';
+	requestStage: 'Request' | 'Response' | 'Both';
 	ruleId: Rule['id'];
 	date: Date;
 	resourceType: ResourceType;

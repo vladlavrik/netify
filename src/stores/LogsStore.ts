@@ -14,8 +14,19 @@ export class LogsStore {
 	}
 
 	@action
-	add(item: Log) {
-		this.list.push(item);
+	add(log: Log) {
+		if (log.requestStage === 'Response') {
+			const existingLog = this.list.find(
+				item => item.requestId === log.requestId && item.requestStage === 'Request',
+			);
+
+			if (existingLog) {
+				Object.assign(existingLog, log);
+				existingLog.requestStage = 'Both';
+				return;
+			}
+		}
+		this.list.push(log);
 	}
 
 	@action
