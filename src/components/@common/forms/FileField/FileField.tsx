@@ -1,5 +1,5 @@
 import React, {memo, useCallback} from 'react';
-import {useField, useFormikContext} from 'formik';
+import {useField} from 'formik';
 import classNames from 'classnames';
 import styles from './fileField.css';
 
@@ -9,18 +9,16 @@ interface FileFieldProps {
 }
 
 export const FileField = memo<FileFieldProps>(({className, name}) => {
-	const [{value, onBlur}] = useField<File>(name);
-	const {setFieldValue} = useFormikContext<any>();
+	const [{value, onBlur}, , {setValue}] = useField<File>(name);
 
 	const onChange = useCallback(
 		(event: React.ChangeEvent<HTMLInputElement>) => {
 			const file = event.target.files![0];
 			if (file) {
-				// Temporary solution | TODO use field.onChange when it wil be fixed in formik
-				setFieldValue(name, file);
+				setValue(file);
 			}
 		},
-		[setFieldValue],
+		[setValue],
 	);
 
 	return (

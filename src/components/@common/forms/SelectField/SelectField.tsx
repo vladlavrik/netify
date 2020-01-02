@@ -22,14 +22,13 @@ export const SelectField = memo<SelectFieldProps>(props => {
 	const targetRef = useRef<HTMLButtonElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
 
-	const [field] = useField<string | string[] | undefined>(name);
+	const [field, , {setValue: handleSetValue}] = useField<string | string[] | undefined>(name);
 
 	const values = useMemo<string[]>(() => {
-		if (!multiple) {
-			// TODO wait to fix (set undefined when passed empty array) https://github.com/jaredpalmer/formik/issues/2151 and update formik
-			return field.value === undefined ? [] : [field.value as string]; // Empty array values if passed value is nullable
+		if (multiple) {
+			return field.value as string[];
 		}
-		return field.value as string[];
+		return field.value === undefined ? [] : [field.value as string]; // Empty array values if passed value is nullable
 	}, [multiple, field.value]);
 
 	const hasValue = values.length > 0;
@@ -50,6 +49,7 @@ export const SelectField = memo<SelectFieldProps>(props => {
 		values,
 		options,
 		multiple,
+		handleSetValue,
 		handleCollapse,
 	});
 

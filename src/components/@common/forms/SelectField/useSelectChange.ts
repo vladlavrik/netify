@@ -1,18 +1,16 @@
 import React, {useCallback} from 'react';
-import {useFormikContext} from 'formik';
 
 interface UseSelectFieldKeyboardParams {
 	name: string;
 	values: string[];
 	options: (string | undefined)[];
 	multiple?: boolean;
+	handleSetValue(value: string | string[] | undefined): void;
 	handleCollapse(): void;
 }
 
 export function useSelectChange(params: UseSelectFieldKeyboardParams) {
-	const {name, values, options, multiple, handleCollapse} = params;
-
-	const {setFieldValue} = useFormikContext();
+	const {name, values, options, multiple, handleSetValue, handleCollapse} = params;
 
 	const handleOptionSelect = useCallback(
 		(newValueOption: string | undefined, allowMultiple: boolean) => {
@@ -33,12 +31,10 @@ export function useSelectChange(params: UseSelectFieldKeyboardParams) {
 						return !values.includes(itemOption);
 					}
 					return !!itemOption && values.includes(itemOption);
-				});
+				}) as string[];
 			}
 
-			// TODO wait to fix (set undefined when passed empty array) https://github.com/jaredpalmer/formik/issues/2151 and update formik
-			// Temporary solution | TODO use field.onChange when it wil be fixed in formik
-			setFieldValue(name, newValue, true);
+			handleSetValue(newValue);
 		},
 		[name, values, options, multiple],
 	);
