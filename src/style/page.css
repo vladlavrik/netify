@@ -6,7 +6,7 @@ body {
 	overflow: hidden;
 	background: var(--color-bg-main);
 	font-size: 12px;
-	-webkit-user-select: none;
+	user-select: none;
 	color: var(--color-main);
 }
 

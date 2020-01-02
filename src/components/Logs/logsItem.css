@@ -3,6 +3,7 @@
 	align-items: center;
 	color: #b1b9c0;
 	height: 28px;
+	user-select: text;
 }
 
 .time {
