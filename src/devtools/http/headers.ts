@@ -10,12 +10,10 @@ export function patchHeaders(initial: HeadersArray, toAdd: HeadersArray, toRemov
 		...toRemove.map(name => name.toLowerCase()),
 	]);
 
-	return initial
-		.filter(({name}) => !skipSet.has(name.toLowerCase()))
-		.concat(toAdd);
+	return initial.filter(({name}) => !skipSet.has(name.toLowerCase())).concat(toAdd);
 }
 
-/*export function mutateHeaders_(originalHeaders: HeadersArray, toAdd: HeadersArray, toRemove: string[]) {
+/* Export function mutateHeaders_(originalHeaders: HeadersArray, toAdd: HeadersArray, toRemove: string[]) {
 	const finallyHeaders = {...originalHeaders};
 
 	const toRemoveSet = new Set([...toRemove, ...Reflect.ownKeys(toAdd)].map(item => (item as string).toLowerCase()));

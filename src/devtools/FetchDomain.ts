@@ -72,7 +72,7 @@ export class FetchDomain {
 			return;
 		}
 
-		// notify about new request
+		// Notify about new request
 		this.listeners.onRequestStart({
 			id: requestId,
 			ruleId: rule.id,
@@ -85,20 +85,20 @@ export class FetchDomain {
 
 		const {breakpoint, mutate, cancel} = rule.actions;
 
-		//  todo comment me
+		//  Todo comment me
 		if (breakpoint.request) {
 			this.triggerRequestBreakpoint(requestInput);
 			return;
 		}
 
-		// if response error is defined and local response is required - return the error reason on the request stage
+		// If response error is defined and local response is required - return the error reason on the request stage
 		if (cancel.enabled) {
 			const errorReason = cancel.reason;
 			await this.failRequest({requestId, errorReason});
 			return;
 		}
 
-		// if required local response, combine the response form defined int the rule status, headers and body
+		// If required local response, combine the response form defined int the rule status, headers and body
 		if (mutate.response.enabled && mutate.response.responseLocally) {
 			const processor = ResponseProcessor.asLocalResponse(requestId, rule);
 			const fulfilParams = await processor.build();
@@ -106,7 +106,7 @@ export class FetchDomain {
 			return;
 		}
 
-		// todo comment me
+		// Todo comment me
 		const processor = RequestProcessor.asRequestPatch(requestInput, rule);
 		const continueParams = processor.build();
 		await this.continueRequest(continueParams);
@@ -115,7 +115,7 @@ export class FetchDomain {
 	private async processResponse(responseInput: PausedResponseEventData, rule: Rule | null) {
 		const {requestId} = responseInput;
 
-		// skip ----- todo comment
+		// Skip ----- todo comment
 		if (!rule) {
 			// TODO describe: not documented but works
 			await this.continueRequest({requestId});
@@ -167,7 +167,7 @@ export class FetchDomain {
 	async executeRequestBreakpoint(request: PausedRequest) {
 		const processor = RequestProcessor.asBreakpointExecute(request);
 		const continueParams = processor.build();
-		await this.continueRequest(continueParams)
+		await this.continueRequest(continueParams);
 	}
 
 	async executeResponseBreakpoint(response: PausedResponse) {

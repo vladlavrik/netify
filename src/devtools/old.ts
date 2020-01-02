@@ -1,32 +1,24 @@
-// import {Rule} from '@/interfaces/Rule';
-// import {ResponseBodyType} from '@/constants/ResponseBodyType';
-// import {ContinueRequestParams, GetInterceptedBodyResponse, CompletedRequestEventParams} from './chrome/interfaces';
-// import {compileRawResponseFromBase64Body, compileRawResponseFromFileBody, compileRawResponseFromTextBody} from './http/response'; // prettier-ignore
-// import {mutateHeaders} from './http/headers';
-// import {sendDebuggerCommand} from './chrome/chromeAPI';
+// Import {Rule} from '@/interfaces/Rule';
+// Import {ResponseBodyType} from '@/constants/ResponseBodyType';
+// Import {ContinueRequestParams, GetInterceptedBodyResponse, CompletedRequestEventParams} from './chrome/interfaces';
+// Import {compileRawResponseFromBase64Body, compileRawResponseFromFileBody, compileRawResponseFromTextBody} from './http/response'; // prettier-ignore
+// Import {mutateHeaders} from './http/headers';
+// Import {sendDebuggerCommand} from './chrome/chromeAPI';
 
-
-
-
-// import {Rule} from '@/interfaces/Rule';
-// import {ResponseBodyType} from '@/constants/ResponseBodyType';
-// import {RequestBodyType} from '@/constants/RequestBodyType';
-// import {randomHex} from '@/helpers/random';
-// import {ContinueRequestParams, RequestEventParams, Request} from './chrome/interfaces';
-// import {compileRawResponseFromBase64Body, compileRawResponseFromFileBody, compileRawResponseFromTextBody} from './http/response'; // prettier-ignore
-// import {buildRequestBodyFromMultipartForm, buildRequestBodyFromUrlEncodedForm} from './http/forms';
-// import {compileUrlFromPattern} from './http/url';
-// import {mutateHeaders} from './http/headers';
-
-
-
-
-
+// Import {Rule} from '@/interfaces/Rule';
+// Import {ResponseBodyType} from '@/constants/ResponseBodyType';
+// Import {RequestBodyType} from '@/constants/RequestBodyType';
+// Import {randomHex} from '@/helpers/random';
+// Import {ContinueRequestParams, RequestEventParams, Request} from './chrome/interfaces';
+// Import {compileRawResponseFromBase64Body, compileRawResponseFromFileBody, compileRawResponseFromTextBody} from './http/response'; // prettier-ignore
+// Import {buildRequestBodyFromMultipartForm, buildRequestBodyFromUrlEncodedForm} from './http/forms';
+// Import {compileUrlFromPattern} from './http/url';
+// Import {mutateHeaders} from './http/headers';
 
 export class ResponseProcessor {
 	constructor(_debugTarget: chrome.debugger.Debuggee & {tabId: number}) {}
 
-	/*async process(interceptEvent: CompletedRequestEventParams, rule: Rule): Promise<ContinueRequestParams> {
+	/* Async process(interceptEvent: CompletedRequestEventParams, rule: Rule): Promise<ContinueRequestParams> {
 		const {interceptionId, responseStatusCode, responseHeaders} = interceptEvent;
 		const {mutateResponse} = rule.actions;
 
@@ -87,14 +79,7 @@ export class ResponseProcessor {
 		return {interceptionId, rawResponse};
 	}*/
 
-
-
-
-
-
-
-
-	/*async process({interceptionId, request}: RequestEventParams, rule: Rule): Promise<ContinueRequestParams> {
+	/* Async process({interceptionId, request}: RequestEventParams, rule: Rule): Promise<ContinueRequestParams> {
 		const {mutateRequest, mutateResponse, cancelRequest} = rule.actions;
 
 		// is defined response error and required local response, return error reason on the request stage

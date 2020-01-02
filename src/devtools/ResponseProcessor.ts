@@ -18,7 +18,7 @@ export class ResponseProcessor {
 			statusCode = mutation.statusCode;
 		}
 
-		let headers = patchHeaders(responseHeaders, mutation.headers.add, mutation.headers.remove);
+		const headers = patchHeaders(responseHeaders, mutation.headers.add, mutation.headers.remove);
 
 		let body;
 		if (mutation.body.type !== 'Original') {
@@ -97,6 +97,7 @@ export class ResponseProcessor {
 		}
 
 		let newBody: {value: string; length: number; type?: string} | null = null;
+
 		switch (this.body.type) {
 			case ResponseBodyType.Text:
 				newBody = buildResponseBodyFromText(this.body.textValue);
@@ -110,7 +111,7 @@ export class ResponseProcessor {
 				if (this.body.fileValue) {
 					newBody = await buildResponseBodyFromFile(this.body.fileValue);
 				}
-				// not defined file is equal to an empty body
+				// Not defined file is equal to an empty body
 				break;
 		}
 

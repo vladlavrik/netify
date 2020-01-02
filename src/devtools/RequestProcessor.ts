@@ -15,19 +15,19 @@ export class RequestProcessor {
 	static asRequestPatch({request, requestId}: PausedRequestEventData, rule: Rule) {
 		const mutation = rule.actions.mutate.request;
 
-		// rewrite request params before send to server
+		// Rewrite request params before send to server
 		let url;
 		if (mutation.endpoint) {
 			url = compileUrlFromPattern(mutation.endpoint, request.url);
 		}
 
-		// then, rewrite request method
+		// Then, rewrite request method
 		let method;
 		if (mutation.method && mutation.method !== request.method) {
 			method = mutation.method;
 		}
 
-		// then, patch headers list
+		// Then, patch headers list
 		let headers;
 		if (mutation.headers.add.length || mutation.headers.remove.length) {
 			const initial = headersMapToArray(request.headers);
@@ -35,7 +35,7 @@ export class RequestProcessor {
 			headers = patchHeaders(initial, add, remove);
 		}
 
-		// todo body desc
+		// Todo body desc
 		let body;
 		if (mutation.body.type !== 'Original') {
 			body = (mutation.body as any) as RequestBody;
@@ -77,7 +77,6 @@ export class RequestProcessor {
 					formValue: [],
 				};
 				return data;
-
 
 			case RequestBodyType.UrlEncodedForm:
 			case RequestBodyType.MultipartFromData:
@@ -137,9 +136,9 @@ export class RequestProcessor {
 				break;
 
 			case RequestBodyType.MultipartFromData:
-				const boundary = '----NetifyFormBoundary' + randomHex(24);
+				const boundary = `----NetifyFormBoundary${randomHex(24)}`;
 				postData = buildRequestBodyFromMultipartForm(this.body.formValue, boundary);
-				postDataType = 'multipart/form-data; boundary=' + boundary;
+				postDataType = `multipart/form-data; boundary=${boundary}`;
 				break;
 		}
 

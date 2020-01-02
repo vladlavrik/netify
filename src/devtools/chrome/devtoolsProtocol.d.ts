@@ -3,7 +3,6 @@ import {ResourceType} from '@/constants/ResourceType';
 import {CancelReasons} from '@/constants/CancelReasons';
 import {HeadersMap, HeadersArray} from '@/interfaces/headers';
 
-
 export interface NetworkRequest {
 	url: string;
 	method: RequestMethod;
@@ -11,7 +10,7 @@ export interface NetworkRequest {
 	urlFragment?: string;
 	headers: HeadersMap;
 	postData?: string;
-	//TODO skip if isLinkPreload
+	// TODO skip if isLinkPreload
 }
 
 export interface PausedRequestEventData {
@@ -41,7 +40,7 @@ export interface FulfillRequestData {
 	responseCode: number;
 	responsePhrase?: string;
 	responseHeaders: HeadersArray;
-	body?: string; // base64 encoded
+	body?: string; // Base64 encoded
 }
 
 export interface FailRequestData {

@@ -1,11 +1,11 @@
 const urlPartsRegexp = /^(https:|http:)?(\/\/)((.+?)(:(\d+))?)(\/(.+?))?(\?(.+?))?(#.+)?$/i;
 const urlPatterRegexp = {
-	protocol: /%protocol%/ig,
-	host: /%host%/ig,
-	hostname: /%hostname%/ig,
-	port: /%port%/ig,
-	path: /%path%/ig,
-	query: /%query%/ig,
+	protocol: /%protocol%/gi,
+	host: /%host%/gi,
+	hostname: /%hostname%/gi,
+	port: /%port%/gi,
+	path: /%path%/gi,
+	query: /%query%/gi,
 };
 
 export function compileUrlFromPattern(replacePattern: string, originalUrl: string) {
@@ -19,7 +19,6 @@ export function compileUrlFromPattern(replacePattern: string, originalUrl: strin
 		.replace(urlPatterRegexp.path, originalUrlParts.path)
 		.replace(urlPatterRegexp.query, originalUrlParts.query);
 }
-
 
 function parseUrlParts(url: string) {
 	const [, protocol, , hostname, host, , port, path = '', , , query = ''] = urlPartsRegexp.exec(url)!;

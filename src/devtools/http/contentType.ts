@@ -32,8 +32,6 @@ export function extractRequestContentType(contentType: string) {
 	if (checkTextLikeContentType(domainType)) {
 		return RequestBodyType.Text;
 	}
-
-	return;
 }
 
 export function extractResponseContentType(contentType: string) {
@@ -45,6 +43,4 @@ export function extractResponseContentType(contentType: string) {
 	if (checkTextLikeContentType(domainType)) {
 		return ResponseBodyType.Text;
 	}
-
-	return;
 }

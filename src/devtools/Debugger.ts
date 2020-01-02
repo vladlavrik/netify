@@ -10,7 +10,7 @@ export enum DebuggerState {
 
 export interface DebuggerConfig {
 	tabId: number;
-	fetchDomain: FetchDomain
+	fetchDomain: FetchDomain;
 	onUserDetach(): void; // When user manually destroy debugger by Chrome warning-panel
 }
 
