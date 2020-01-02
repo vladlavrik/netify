@@ -27,7 +27,7 @@ import '@/style/page.css';
 	const fetchRulesStore = new FetchRuleStore();
 	const fetchDevtools = new FetchDevtools(devtools, fetchRulesStore);
 
-	// TODO comment me
+	// Delivery the rules form the main store to the devtools
 	autorun(() => {
 		fetchRulesStore.setRulesList(toJS(store.rulesStore.list));
 	});
@@ -36,7 +36,7 @@ import '@/style/page.css';
 	devtools.userDetachEvent.on(() => store.appStore.disableDebugger());
 	fetchDevtools.events.requestProcessed.on(log => store.logsStore.add(log));
 
-	// TODO comment me
+	// Synchronize Fetch devtools activity value with the ui state and the extension icon
 	let debuggerActive = false;
 	autorun(async () => {
 		// TODO disallow switch state when previous operation during

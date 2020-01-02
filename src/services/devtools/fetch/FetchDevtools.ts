@@ -17,6 +17,11 @@ type ContinueRequestRequest = Protocol.Fetch.ContinueRequestRequest;
 type FulfillRequestRequest = Protocol.Fetch.FulfillRequestRequest;
 type FailRequestRequest = Protocol.Fetch.FailRequestRequest;
 
+/**
+ * Service to provide interception request by rule filters and:
+ * - patching the by the rules
+ * - triggering breakpoints and continue with the mutated data
+ */
 export class FetchDevtools {
 	readonly events = {
 		requestProcessed: new Event<Log>(),
@@ -86,7 +91,7 @@ export class FetchDevtools {
 		switch (rule.action.type) {
 			// Trigger breakpoint event
 			case ActionsType.Breakpoint:
-				// TODO
+				// TODO FUTURE
 				break;
 
 			// Response locally without sending request to server
@@ -137,7 +142,7 @@ export class FetchDevtools {
 	private async processResponse(pausedRequest: RequestPausedEvent, rule: Rule) {
 		switch (rule.action.type) {
 			case ActionsType.Breakpoint:
-				// TODO;
+				// TODO FUTURE
 				break;
 
 			case ActionsType.Mutation:

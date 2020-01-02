@@ -12,7 +12,11 @@ type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
 type ContinueRequestRequest = Protocol.Fetch.ContinueRequestRequest;
 type HeaderEntry = Protocol.Fetch.HeaderEntry;
 
-// TODO comments all methods and class
+/**
+ * Request handler provides processing the paused request to:
+ *  - apply patch by a rule
+ *  - transform to a breakpoint data and vise-versa - updated breakpoint data to a data for continue the request (FUTURE)
+ */
 export class RequestBuilder {
 	static asRequestPatch({request, requestId}: RequestPausedEvent, action: MutationAction) {
 		const patch = action.request;
@@ -40,11 +44,11 @@ export class RequestBuilder {
 	}
 
 	static asBreakpointExecute() {
-		// TODO
+		// TODO FUTURE
 	}
 
 	static compileBreakpoint() {
-		// TODO
+		// TODO FUTURE
 	}
 
 	private constructor(

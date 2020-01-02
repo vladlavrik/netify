@@ -9,7 +9,13 @@ type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
 type FulfillRequestRequest = Protocol.Fetch.FulfillRequestRequest;
 type HeaderEntry = Protocol.Fetch.HeaderEntry;
 
-// TODO comments all methods and class
+/**
+ * Response handler provides processing the paused response to:
+ *  - apply patch by a rule
+ *  - transform to a breakpoint data and vise-versa - updated breakpoint data to a data for continue the request (FUTURE)
+ *  This service also allows to get a continue request data from a local response data from the rule.
+ */
+
 export class ResponseBuilder {
 	static asResponsePatch(pausedRequest: RequestPausedEvent, action: MutationAction) {
 		const {requestId, responseStatusCode, responseHeaders} = pausedRequest;
@@ -31,11 +37,11 @@ export class ResponseBuilder {
 	}
 
 	static asBreakpointExecute() {
-		// TODO
+		// TODO FUTURE
 	}
 
 	static compileBreakpoint() {
-		// TODO
+		// TODO FUTURE
 	}
 
 	private constructor(

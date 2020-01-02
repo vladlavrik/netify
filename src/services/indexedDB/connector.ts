@@ -23,6 +23,8 @@ export async function openIDB() {
 		request.onupgradeneeded = event => {
 			const db = request.result;
 
+			// TODO UPDATE TO v2
+
 			if (event.oldVersion === 0) {
 				const rulesStore = db.createObjectStore('rules', {keyPath: 'rule.id'});
 				rulesStore.createIndex('hostname', 'hostname', {unique: false});
