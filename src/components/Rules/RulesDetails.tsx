@@ -2,8 +2,8 @@ import * as React from 'react';
 import {FailureAction, LocalResponseAction, MutationAction, Rule} from '@/interfaces/rule';
 import {RequestBodyType} from '@/constants/RequestBodyType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import styles from './rulesDetails.css';
-import {ActionsType} from '@/constants/ActionsType';
 
 interface Props {
 	data: Rule;
@@ -68,13 +68,13 @@ export class RulesDetails extends React.PureComponent<Props> {
 		const {action} = this.props.data;
 
 		switch (action.type) {
-			case ActionsType.Breakpoint:
+			case RuleActionsType.Breakpoint:
 				return this.renderBreakpointAction();
-			case ActionsType.Mutation:
+			case RuleActionsType.Mutation:
 				return this.renderMutationAction();
-			case ActionsType.LocalResponse:
+			case RuleActionsType.LocalResponse:
 				return this.renderLocalResponseAction();
-			case ActionsType.Failure:
+			case RuleActionsType.Failure:
 				return this.renderFailureAction();
 		}
 	}

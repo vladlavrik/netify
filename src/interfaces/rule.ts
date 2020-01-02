@@ -1,4 +1,4 @@
-import {ActionsType} from '@/constants/ActionsType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {ResponseErrorReason} from '@/constants/ResponseErrorReason';
@@ -6,13 +6,13 @@ import {HeadersArray} from '@/interfaces/headers';
 import {RequestBody, ResponseBody} from './body';
 
 export interface BreakpointAction {
-	type: ActionsType.Breakpoint;
+	type: RuleActionsType.Breakpoint;
 	request: boolean;
 	response: boolean;
 }
 
 export interface MutationAction {
-	type: ActionsType.Mutation;
+	type: RuleActionsType.Mutation;
 	request: {
 		endpoint?: string;
 		method?: RequestMethod;
@@ -29,14 +29,14 @@ export interface MutationAction {
 }
 
 export interface LocalResponseAction {
-	type: ActionsType.LocalResponse;
+	type: RuleActionsType.LocalResponse;
 	statusCode: number;
 	headers: HeadersArray;
 	body: ResponseBody;
 }
 
 export interface FailureAction {
-	type: ActionsType.Failure;
+	type: RuleActionsType.Failure;
 	reason: ResponseErrorReason;
 }
 

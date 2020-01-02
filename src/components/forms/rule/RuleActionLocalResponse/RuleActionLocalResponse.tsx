@@ -1,11 +1,11 @@
 import React, {memo} from 'react';
-import {ActionsType} from '@/constants/ActionsType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {StatusCodeField} from '@/components/forms/common/StatusCodeField';
 import {SetHeadersField} from '@/components/forms/common/SetHeadersField';
 import {ResponseBodyField} from '@/components/forms/common/ResponseBodyField';
 
 export const RuleActionLocalResponse = memo(() => {
-	const namePrefix = `actionConfigs.${ActionsType.LocalResponse}`;
+	const namePrefix = `actionConfigs.${RuleActionsType.LocalResponse}`;
 
 	return (
 		<div>

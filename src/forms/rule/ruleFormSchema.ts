@@ -1,7 +1,7 @@
 import {string, array, object, mixed, InferType} from 'yup';
 import {resourceTypesList, ResourceType} from '@/constants/ResourceType';
 import {requestMethodsList, RequestMethod} from '@/constants/RequestMethod';
-import {actionsTypesList, ActionsType} from '@/constants/ActionsType';
+import {ruleActionsTypesList, RuleActionsType} from '@/constants/RuleActionsType';
 import {breakpointStagesList, BreakpointStage} from '@/constants/BreakpointStage';
 import {responseErrorReasonsList, ResponseErrorReason} from '@/constants/ResponseErrorReason';
 import {statusCodeSchema, headersSchema, requestBodySchema, responseBodySchema} from '../common/commonFormSchemes';
@@ -12,14 +12,14 @@ export const ruleFormSchema = object({
 		resourceTypes: array().of(mixed<ResourceType>().oneOf(resourceTypesList)),
 		methods: array().of(mixed<RequestMethod>().oneOf(requestMethodsList)),
 	}),
-	actionType: mixed<ActionsType>().oneOf(actionsTypesList),
+	actionType: mixed<RuleActionsType>().oneOf(ruleActionsTypesList),
 	actionConfigs: object({
-		[ActionsType.Breakpoint]: object({
+		[RuleActionsType.Breakpoint]: object({
 			stage: mixed<BreakpointStage>()
 				.oneOf(breakpointStagesList)
 				.default(BreakpointStage.Both),
 		}),
-		[ActionsType.Mutation]: object({
+		[RuleActionsType.Mutation]: object({
 			request: object({
 				endpoint: string().matches(
 					/^((https?:)|(\[protocol]))\/\/.+/,
@@ -39,12 +39,12 @@ export const ruleFormSchema = object({
 				body: responseBodySchema,
 			}),
 		}).required(),
-		[ActionsType.LocalResponse]: object({
+		[RuleActionsType.LocalResponse]: object({
 			statusCode: statusCodeSchema.required('Status code is required'),
 			headers: headersSchema,
 			body: responseBodySchema,
 		}),
-		[ActionsType.Failure]: object({
+		[RuleActionsType.Failure]: object({
 			reason: mixed<ResponseErrorReason>().oneOf(responseErrorReasonsList),
 		}),
 	}).required(),

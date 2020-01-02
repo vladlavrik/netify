@@ -63,13 +63,13 @@ export class RulesStore {
 	}
 
 	private reportException(error: string) {
-		this.rootStore.appStore.setDisplayedError(error);
+		this.rootStore.uiStore.setDisplayedError(error);
 	}
 
 	@action
 	create(rule: Rule) {
 		this.list.push(rule);
-		this.rootStore.appStore.hideCompose();
+		this.rootStore.uiStore.hideCompose();
 
 		this.IDBMapper!.saveNewItem(rule).catch(error => {
 			this.reportException(`Exception on save a new rule to IndexedDB:\n${error.message}`);
@@ -82,7 +82,7 @@ export class RulesStore {
 		const index = this.list.findIndex(item => item.id === rule.id);
 		this.list.splice(index, 1, rule);
 
-		this.rootStore.appStore.hideRuleEditor();
+		this.rootStore.uiStore.hideRuleEditor();
 
 		this.IDBMapper!.updateItem(rule).catch(error => {
 			this.reportException(`Exception on update a rule to IndexedDB:\n${error.message}`);

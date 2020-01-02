@@ -1,25 +1,25 @@
 import React, {memo} from 'react';
 import {useField} from 'formik';
-import {ActionsType} from '@/constants/ActionsType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {RuleActionBreakpoint} from '../RuleActionBreakpoint';
 import {RuleActionMutation} from '../RuleActionMutation';
 import {RuleActionLocalResponse} from '../RuleActionLocalResponse';
 import {RuleActionFailure} from '../RuleActionFailure';
 
 export const RuleActionConfig = memo(() => {
-	const [field] = useField<ActionsType>('actionType');
+	const [field] = useField<RuleActionsType>('actionType');
 
 	switch (field.value) {
-		case ActionsType.Breakpoint:
+		case RuleActionsType.Breakpoint:
 			return <RuleActionBreakpoint />;
 
-		case ActionsType.Mutation:
+		case RuleActionsType.Mutation:
 			return <RuleActionMutation />;
 
-		case ActionsType.LocalResponse:
+		case RuleActionsType.LocalResponse:
 			return <RuleActionLocalResponse />;
 
-		case ActionsType.Failure:
+		case RuleActionsType.Failure:
 			return <RuleActionFailure />;
 	}
 });

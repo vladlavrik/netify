@@ -1,16 +1,16 @@
 import React, {memo} from 'react';
 import {useField} from 'formik';
 import classNames from 'classnames';
-import {ActionsType} from '@/constants/ActionsType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {RadioButton} from '@/components/@common/forms/RadioButton';
 import {FieldRow} from '@/components/forms/common/FieldRow';
 import styles from './ruleActionSwitcher.css';
 
 const options = {
 	// [ActionsType.Breakpoint]: 'Breakpoint', | TODO future
-	[ActionsType.Mutation]: 'Mutation',
-	[ActionsType.LocalResponse]: 'Local response',
-	[ActionsType.Failure]: 'Failure',
+	[RuleActionsType.Mutation]: 'Mutation',
+	[RuleActionsType.LocalResponse]: 'Local response',
+	[RuleActionsType.Failure]: 'Failure',
 };
 
 export const RuleActionSwitcher = memo(() => {

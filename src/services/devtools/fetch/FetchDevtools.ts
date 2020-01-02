@@ -1,7 +1,7 @@
 import {Protocol} from 'devtools-protocol';
 import {Rule, MutationAction, LocalResponseAction, FailureAction} from '@/interfaces/rule';
 import {Log} from '@/interfaces/log';
-import {ActionsType} from '@/constants/ActionsType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {StatusCode} from '@/constants/StatusCode';
@@ -90,22 +90,22 @@ export class FetchDevtools {
 
 		switch (rule.action.type) {
 			// Trigger breakpoint event
-			case ActionsType.Breakpoint:
+			case RuleActionsType.Breakpoint:
 				// TODO FUTURE
 				break;
 
 			// Response locally without sending request to server
-			case ActionsType.LocalResponse:
+			case RuleActionsType.LocalResponse:
 				this.processLocalResponse(requestId, rule.action);
 				break;
 
 			// Mutate request by the rule and send it to a server
-			case ActionsType.Mutation:
+			case RuleActionsType.Mutation:
 				this.processRequestMutation(pausedRequest, rule.action);
 				break;
 
 			// Failure request
-			case ActionsType.Failure:
+			case RuleActionsType.Failure:
 				this.processRequestFailure(requestId, rule.action);
 				break;
 		}
@@ -141,11 +141,11 @@ export class FetchDevtools {
 
 	private async processResponse(pausedRequest: RequestPausedEvent, rule: Rule) {
 		switch (rule.action.type) {
-			case ActionsType.Breakpoint:
+			case RuleActionsType.Breakpoint:
 				// TODO FUTURE
 				break;
 
-			case ActionsType.Mutation:
+			case RuleActionsType.Mutation:
 				this.processResponseMutation(pausedRequest, rule.action, rule.id);
 				break;
 		}

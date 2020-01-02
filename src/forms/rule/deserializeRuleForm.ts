@@ -1,7 +1,7 @@
 import {HeadersArray} from '@/interfaces/headers';
 import {RequestBody, ResponseBody} from '@/interfaces/body';
 import {Action, BreakpointAction, FailureAction, LocalResponseAction, MutationAction, Rule} from '@/interfaces/Rule';
-import {ActionsType} from '@/constants/ActionsType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {BreakpointStage} from '@/constants/BreakpointStage';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {RequestBodyType} from '@/constants/RequestBodyType';
@@ -70,20 +70,20 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 	let action: Action;
 
 	switch (actionType) {
-		case ActionsType.Breakpoint: {
-			const {stage} = actionConfigs[ActionsType.Breakpoint];
+		case RuleActionsType.Breakpoint: {
+			const {stage} = actionConfigs[RuleActionsType.Breakpoint];
 			action = {
-				type: ActionsType.Breakpoint,
+				type: RuleActionsType.Breakpoint,
 				request: [BreakpointStage.Both, BreakpointStage.Request].includes(stage),
 				response: [BreakpointStage.Both, BreakpointStage.Response].includes(stage),
 			} as BreakpointAction;
 			break;
 		}
 
-		case ActionsType.Mutation: {
-			const {request, response} = actionConfigs[ActionsType.Mutation];
+		case RuleActionsType.Mutation: {
+			const {request, response} = actionConfigs[RuleActionsType.Mutation];
 			action = {
-				type: ActionsType.Mutation,
+				type: RuleActionsType.Mutation,
 				request: {
 					endpoint: request.endpoint || undefined,
 					method: request.method,
@@ -101,11 +101,11 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 			break;
 		}
 
-		case ActionsType.LocalResponse: {
-			const {statusCode, headers, body} = actionConfigs[ActionsType.LocalResponse];
+		case RuleActionsType.LocalResponse: {
+			const {statusCode, headers, body} = actionConfigs[RuleActionsType.LocalResponse];
 
 			action = {
-				type: ActionsType.LocalResponse,
+				type: RuleActionsType.LocalResponse,
 				statusCode: Number(statusCode),
 				headers: deserializeSetHeaders(headers),
 				body: deserializeResponseBody(body)!,
@@ -113,10 +113,10 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 			break;
 		}
 
-		case ActionsType.Failure:
+		case RuleActionsType.Failure:
 			action = {
-				type: ActionsType.Failure,
-				reason: actionConfigs[ActionsType.Failure].reason,
+				type: RuleActionsType.Failure,
+				reason: actionConfigs[RuleActionsType.Failure].reason,
 			} as FailureAction;
 			break;
 	}

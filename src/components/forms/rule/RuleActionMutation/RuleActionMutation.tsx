@@ -1,6 +1,6 @@
 import React, {memo} from 'react';
 import classNames from 'classnames';
-import {ActionsType} from '@/constants/ActionsType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {FieldRow} from '@/components/forms/common/FieldRow';
 import {RequestMethodField} from '@/components/forms/common/RequestMethodField';
 import {SetHeadersField} from '@/components/forms/common/SetHeadersField';
@@ -12,7 +12,7 @@ import {RuleEndpointField} from '../RuleEndpointField';
 import styles from './ruleActionMutation.css';
 
 export const RuleActionMutation = memo(() => {
-	const namePrefix = `actionConfigs.${ActionsType.Mutation}`;
+	const namePrefix = `actionConfigs.${RuleActionsType.Mutation}`;
 
 	return (
 		<div>

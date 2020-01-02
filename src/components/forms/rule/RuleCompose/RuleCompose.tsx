@@ -1,6 +1,6 @@
 import React, {memo, useMemo} from 'react';
 import {Rule} from '@/interfaces/Rule';
-import {ActionsType} from '@/constants/ActionsType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {randomHex} from '@/helpers/random';
 import {RuleForm} from '../RuleForm';
 
@@ -22,7 +22,7 @@ export const RuleCompose = memo<RuleComposeProps>(props => {
 				methods: [],
 			},
 			action: {
-				type: ActionsType.Mutation,
+				type: RuleActionsType.Mutation,
 				request: {
 					setHeaders: [],
 					dropHeaders: [],

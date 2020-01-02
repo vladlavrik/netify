@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {observer, inject} from 'mobx-react';
 import {Rule} from '@/interfaces/rule';
-import {AppStore} from '@/stores/AppStore';
+import {UIStore} from '@/stores/UIStore';
 import {RulesStore} from '@/stores/RulesStore';
 import {PopUpAlert} from '@/components/@common/popups/PopUpAlert';
 import {Logs} from '@/components/Logs';
@@ -12,17 +12,17 @@ import {AppSeparatedSections} from './AppSeparatedSections';
 import styles from './app.css';
 
 interface Props {
-	appStore?: AppStore;
+	uiStore?: UIStore;
 	rulesStore?: RulesStore;
 }
 
-@inject('appStore', 'rulesStore')
+@inject('uiStore', 'rulesStore')
 @observer
 export class App extends React.Component<Props> {
 	private readonly modalTarget = document.getElementById('modal-root')!;
 
 	render() {
-		const {composeShown, sectionRatio, editingRule, displayedError} = this.props.appStore!;
+		const {composeShown, sectionRatio, editingRule, displayedError} = this.props.uiStore!;
 
 		return (
 			<div className={styles.root}>
@@ -56,18 +56,18 @@ export class App extends React.Component<Props> {
 	}
 
 	private onSectionsRatioChange = (ratio: number, _: boolean, bottomEdgeReached: boolean) => {
-		this.props.appStore!.setSectionRatio(ratio, bottomEdgeReached);
+		this.props.uiStore!.setSectionRatio(ratio, bottomEdgeReached);
 	};
 
 	private onCloseErrorAlert = () => {
-		this.props.appStore!.resetDisplayedError();
+		this.props.uiStore!.resetDisplayedError();
 	};
 
 	private onSaveComposed = (rule: Rule) => this.props.rulesStore!.create(rule);
 
-	private onHideCompose = () => this.props.appStore!.hideCompose();
+	private onHideCompose = () => this.props.uiStore!.hideCompose();
 
 	private onSaveEdited = (rule: Rule) => this.props.rulesStore!.save(rule);
 
-	private onCancelItemEdit = () => this.props.appStore!.hideRuleEditor();
+	private onCancelItemEdit = () => this.props.uiStore!.hideRuleEditor();
 }

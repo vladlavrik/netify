@@ -33,14 +33,14 @@ import '@/style/page.css';
 	});
 
 	// Connect devtools and store by events model
-	devtools.userDetachEvent.on(() => store.appStore.disableDebugger());
+	devtools.userDetachEvent.on(() => store.uiStore.disableDebugger());
 	fetchDevtools.events.requestProcessed.on(log => store.logsStore.add(log));
 
 	// Synchronize Fetch devtools activity value with the ui state and the extension icon
 	let debuggerActive = false;
 	autorun(async () => {
 		// TODO disallow switch state when previous operation during
-		const {debuggerAllowed} = store.appStore;
+		const {debuggerAllowed} = store.uiStore;
 		const hasRules = store.rulesStore.list.length > 0;
 
 		if (hasRules && !debuggerActive && debuggerAllowed) {
@@ -73,7 +73,7 @@ import '@/style/page.css';
 	// Save panes shown state
 	(chrome.extension as any).onMessage.addListener((message: {type: string; shown?: boolean}) => {
 		if (message.type === 'panelShowToggle') {
-			store.appStore.setPanelShown(!!message.shown);
+			store.uiStore.setPanelShown(!!message.shown);
 		}
 	});
 
@@ -86,7 +86,7 @@ import '@/style/page.css';
 	const appWithStoreElement = React.createElement(
 		Provider,
 		{
-			appStore: store.appStore,
+			uiStore: store.uiStore,
 			rulesStore: store.rulesStore,
 			logsStore: store.logsStore,
 		},

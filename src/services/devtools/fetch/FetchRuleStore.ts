@@ -1,6 +1,6 @@
 import {Protocol} from 'devtools-protocol';
 import {Rule} from '@/interfaces/Rule';
-import {ActionsType} from '@/constants/ActionsType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {ResourceType} from '@/constants/ResourceType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {Event} from '@/helpers/Events';
@@ -38,7 +38,7 @@ export class FetchRuleStore {
 			const stages: RequestStage[] = [];
 
 			switch (action.type) {
-				case ActionsType.Breakpoint:
+				case RuleActionsType.Breakpoint:
 					if (action.request) {
 						stages.push('Request');
 					}
@@ -47,7 +47,7 @@ export class FetchRuleStore {
 					}
 					break;
 
-				case ActionsType.Mutation:
+				case RuleActionsType.Mutation:
 					const {request, response} = action;
 					const hasRequestMutation =
 						!!request.endpoint ||
@@ -71,8 +71,8 @@ export class FetchRuleStore {
 
 					break;
 
-				case ActionsType.LocalResponse:
-				case ActionsType.Failure:
+				case RuleActionsType.LocalResponse:
+				case RuleActionsType.Failure:
 					stages.push('Request');
 					break;
 			}

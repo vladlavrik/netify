@@ -3,7 +3,7 @@ import {reaction} from 'mobx';
 import {observer, inject} from 'mobx-react';
 import classNames from 'classnames';
 import {RulesStore} from '@/stores/RulesStore';
-import {AppStore} from '@/stores/AppStore';
+import {UIStore} from '@/stores/UIStore';
 import {SectionHeader} from '@/components/@common/misc/SectionHeader';
 import {Button} from '@/components/@common/buttons/Button';
 import {IconButton} from '@/components/@common/buttons/IconButton';
@@ -13,18 +13,18 @@ import {RulesDetails} from './RulesDetails';
 import styles from './rules.css';
 
 interface Props {
-	appStore?: AppStore;
+	uiStore?: UIStore;
 	rulesStore?: RulesStore;
 }
 
-@inject('appStore', 'rulesStore')
+@inject('uiStore', 'rulesStore')
 @observer
 export class Rules extends React.Component<Props> {
 	private readonly highlightedItemRef = React.createRef<HTMLLIElement>();
 	private shouldScrollToHighlighted = false;
 
 	render() {
-		const {debuggerAllowed} = this.props.appStore!;
+		const {debuggerAllowed} = this.props.uiStore!;
 		const {list, highlightedId, listIsEmpty, removeConfirmationId, clearAllConfirmation} = this.props.rulesStore!;
 
 		return (
@@ -115,13 +115,13 @@ export class Rules extends React.Component<Props> {
 		}
 	}
 
-	private toggleDebuggerAllowed = () => this.props.appStore!.toggleDebuggerAllowed();
+	private toggleDebuggerAllowed = () => this.props.uiStore!.toggleDebuggerAllowed();
 
 	private onFinishHighlighting = () => this.props.rulesStore!.setHighlighted(null);
 
-	private onShowCompose = () => this.props.appStore!.showCompose();
+	private onShowCompose = () => this.props.uiStore!.showCompose();
 
-	private onItemEdit = (id: string) => this.props.appStore!.showRuleEditor(id);
+	private onItemEdit = (id: string) => this.props.uiStore!.showRuleEditor(id);
 
 	private onRemoveAsk = (id: string) => this.props.rulesStore!.askToRemoveItem(id);
 

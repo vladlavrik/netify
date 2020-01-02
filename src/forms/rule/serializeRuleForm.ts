@@ -1,6 +1,6 @@
 import {RuleFormSchema} from './ruleFormSchema';
 import {Rule} from '@/interfaces/Rule';
-import {ActionsType} from '@/constants/ActionsType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {BreakpointStage} from '@/constants/BreakpointStage';
 import {RequestBodyType} from '@/constants/RequestBodyType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
@@ -17,10 +17,10 @@ export function serializeRuleForm(rule: Rule) {
 		},
 		actionType: action.type,
 		actionConfigs: {
-			[ActionsType.Breakpoint]: {
+			[RuleActionsType.Breakpoint]: {
 				stage: BreakpointStage.Both,
 			},
-			[ActionsType.Mutation]: {
+			[RuleActionsType.Mutation]: {
 				request: {
 					endpoint: '',
 					method: undefined,
@@ -43,7 +43,7 @@ export function serializeRuleForm(rule: Rule) {
 					},
 				},
 			},
-			[ActionsType.LocalResponse]: {
+			[RuleActionsType.LocalResponse]: {
 				statusCode: 200,
 				headers: [{name: '', value: ''}],
 				body: {
@@ -52,14 +52,14 @@ export function serializeRuleForm(rule: Rule) {
 					fileValue: undefined,
 				},
 			},
-			[ActionsType.Failure]: {
+			[RuleActionsType.Failure]: {
 				reason: ResponseErrorReason.Failed,
 			},
 		},
 	};
 
 	switch (action.type) {
-		case ActionsType.Breakpoint: {
+		case RuleActionsType.Breakpoint: {
 			const {request, response} = action;
 			let stage;
 			if (request && response) {
@@ -70,15 +70,15 @@ export function serializeRuleForm(rule: Rule) {
 				stage = BreakpointStage.Response;
 			}
 
-			value.actionConfigs[ActionsType.Breakpoint].stage = stage;
+			value.actionConfigs[RuleActionsType.Breakpoint].stage = stage;
 			break;
 		}
 
-		case ActionsType.Mutation: {
+		case RuleActionsType.Mutation: {
 			const {request, response} = action;
 
-			const requestValue = value.actionConfigs[ActionsType.Mutation].request;
-			const responseValue = value.actionConfigs[ActionsType.Mutation].response;
+			const requestValue = value.actionConfigs[RuleActionsType.Mutation].request;
+			const responseValue = value.actionConfigs[RuleActionsType.Mutation].response;
 
 			requestValue.endpoint = request.endpoint || '';
 			requestValue.method = request.method;
@@ -117,9 +117,9 @@ export function serializeRuleForm(rule: Rule) {
 			break;
 		}
 
-		case ActionsType.LocalResponse: {
+		case RuleActionsType.LocalResponse: {
 			const {statusCode, headers, body} = action;
-			const responseValue = value.actionConfigs[ActionsType.LocalResponse];
+			const responseValue = value.actionConfigs[RuleActionsType.LocalResponse];
 
 			responseValue.statusCode = statusCode;
 			responseValue.headers = headers;
@@ -138,8 +138,8 @@ export function serializeRuleForm(rule: Rule) {
 			break;
 		}
 
-		case ActionsType.Failure: {
-			value.actionConfigs[ActionsType.Failure].reason = action.reason;
+		case RuleActionsType.Failure: {
+			value.actionConfigs[RuleActionsType.Failure].reason = action.reason;
 			break;
 		}
 	}

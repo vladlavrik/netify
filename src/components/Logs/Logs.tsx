@@ -3,7 +3,7 @@ import {observer, inject} from 'mobx-react';
 import classNames from 'classnames';
 import {LogsStore} from '@/stores/LogsStore';
 import {RulesStore} from '@/stores/RulesStore';
-import {AppStore} from '@/stores/AppStore';
+import {UIStore} from '@/stores/UIStore';
 import {SectionHeader} from '@/components/@common/misc/SectionHeader';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {LogsItem} from './LogsItem';
@@ -12,17 +12,17 @@ import styles from './logs.css';
 interface Props {
 	logsStore?: LogsStore;
 	rulesStore?: RulesStore;
-	appStore?: AppStore;
+	uiStore?: UIStore;
 }
 
 @inject('logsStore')
 @inject('rulesStore')
-@inject('appStore')
+@inject('uiStore')
 @observer
 export class Logs extends React.Component<Props> {
 	render() {
 		const {list, listIsEmpty} = this.props.logsStore!;
-		const {logsCollapsed: collapsed} = this.props.appStore!;
+		const {logsCollapsed: collapsed} = this.props.uiStore!;
 
 		return (
 			<div className={styles.root}>
@@ -68,11 +68,11 @@ export class Logs extends React.Component<Props> {
 		if (this.props.rulesStore!.checkItemExists(ruleId)) {
 			this.props.rulesStore!.setHighlighted(ruleId);
 		} else {
-			this.props.appStore!.setDisplayedError('The rule is not exist (maybe it was removed).');
+			this.props.uiStore!.setDisplayedError('The rule is not exist (maybe it was removed).');
 		}
 	};
 
-	private onToggleLogsCollapse = () => this.props.appStore!.toggleLogsCollapse();
+	private onToggleLogsCollapse = () => this.props.uiStore!.toggleLogsCollapse();
 
 	private onClearList = () => this.props.logsStore!.clearList();
 }

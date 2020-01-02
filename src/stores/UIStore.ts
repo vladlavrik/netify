@@ -1,7 +1,7 @@
 import {action, computed, observable, toJS} from 'mobx';
 import {RootStore} from './RootStore';
 
-export class AppStore {
+export class UIStore {
 	constructor(private rootStore: RootStore) {}
 
 	@observable

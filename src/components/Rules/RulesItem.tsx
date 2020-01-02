@@ -1,9 +1,9 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import {Rule} from '@/interfaces/rule';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import styles from './rulesItem.css';
-import {ActionsType} from '@/constants/ActionsType';
 
 interface Props {
 	data: Rule;
@@ -84,7 +84,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 		const {action} = this.props.data;
 		const actions = [];
 
-		if (action.type === ActionsType.Breakpoint) {
+		if (action.type === RuleActionsType.Breakpoint) {
 			if (action.request) {
 				actions.push('Breakpoint on request');
 			}
@@ -93,7 +93,7 @@ export class RulesItem extends React.PureComponent<Props, State> {
 			}
 		}
 
-		if (action.type === ActionsType.Mutation) {
+		if (action.type === RuleActionsType.Mutation) {
 			if (action.request) {
 				const {endpoint, method, setHeaders, dropHeaders, body} = action.request;
 				if (endpoint) {
@@ -123,11 +123,11 @@ export class RulesItem extends React.PureComponent<Props, State> {
 			}
 		}
 
-		if (action.type === ActionsType.LocalResponse) {
+		if (action.type === RuleActionsType.LocalResponse) {
 			actions.push('Local response');
 		}
 
-		if (action.type === ActionsType.Failure) {
+		if (action.type === RuleActionsType.Failure) {
 			actions.push('Returning error');
 		}
 
