@@ -8,7 +8,7 @@
 .label {
 	position: relative;
 	width: 100%;
-	padding: 0 18px 0 8px;
+	padding: 0 18px 0 6px;
 	overflow: hidden;
 	border: transparent 1px solid;
 	border-radius: 3px;
@@ -71,7 +71,7 @@
 
 .option {
 	display: block;
-	padding: 0 8px;
+	padding: 0 6px;
 	font-size: 12px;
 	line-height: 20px;
 	white-space: nowrap;
