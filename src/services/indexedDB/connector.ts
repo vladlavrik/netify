@@ -19,7 +19,7 @@ export async function openIDB() {
 			const db = request.result;
 
 			for (let itemVersion = event.oldVersion; itemVersion < dbVersion; itemVersion++) {
-				await migrations[itemVersion](db);
+				await migrations[itemVersion + 1](db);
 			}
 		};
 	});
