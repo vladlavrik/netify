@@ -1,25 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {autorun, toJS} from 'mobx';
-import {Provider} from 'mobx-react';
-import {RootStore} from '@/stores/RootStore';
+import {createStoreObject} from 'effector';
+import {DbContext} from '@/contexts/dbContext';
+import {addLogEntry} from '@/stores/logsStore';
+import {$rules, $hasRules, fetchRules} from '@/stores/rulesStore';
+import {$debuggerEnabled, $debuggerActive, setDebuggerEnabled, setDebuggerActive, setPanelShown} from '@/stores/uiStore'; // prettier-ignore
+import {openIDB, RulesMapper} from '@/services/indexedDB';
 import {ExtensionDevtoolsConnector, ExtensionTab, ExtensionIcon} from '@/services/extension';
 import {FetchDevtools, FetchRuleStore} from '@/services/devtools/fetch';
 import {getPlatform} from '@/helpers/browser';
-import {App} from '@/components/App';
+import {App} from '@/components/app';
 import '@/style/page.css';
 
 (async () => {
+	// Get the current tab id, url and hostname
 	const {tabId} = chrome.devtools.inspectedWindow;
-
-	// Get current tab url
 	const tabUrl = await new ExtensionTab(tabId).getUrl();
+	const tabHost = new URL(tabUrl).hostname; // TODO TEMPORARY, use hostname in future
 
-	// Initialize a store
-	const store = new RootStore();
+	// Open indexed db connection
+	let dbConnection = await openIDB();
 
-	// Load persistence saved rules
-	await store.rulesStore.initialize(tabUrl);
+	try {
+		dbConnection = await openIDB();
+	} catch (error) {
+		// TODO test working after exception
+		console.error('Exception on open IndexedDB', error);
+	}
+
+	// Initialize db data mappers
+	const dbRulesMapper = new RulesMapper(dbConnection, tabHost);
 
 	// Initialize devtools
 	const devtools = new ExtensionDevtoolsConnector(tabId);
@@ -28,42 +38,48 @@ import '@/style/page.css';
 	const fetchDevtools = new FetchDevtools(devtools, fetchRulesStore);
 
 	// Delivery the rules form the main store to the devtools
-	autorun(() => {
-		fetchRulesStore.setRulesList(toJS(store.rulesStore.list));
-	});
+	$rules.watch(rules => fetchRulesStore.setRulesList(rules));
+
+	// Load rules from database
+	await fetchRules({dbRulesMapper});
 
 	// Connect devtools and store by events model
-	devtools.userDetachEvent.on(() => store.uiStore.disableDebugger());
-	fetchDevtools.events.requestProcessed.on(log => store.logsStore.add(log));
+	devtools.userDetachEvent.on(() => {
+		setDebuggerEnabled(false);
+		setDebuggerActive(false);
+	});
+	fetchDevtools.events.requestProcessed.on(addLogEntry);
 
 	// Synchronize Fetch devtools activity value with the ui state and the extension icon
-	let debuggerActive = false;
-	autorun(async () => {
-		// TODO disallow switch state when previous operation during
-		const {debuggerAllowed} = store.uiStore;
-		const hasRules = store.rulesStore.list.length > 0;
-
-		if (hasRules && !debuggerActive && debuggerAllowed) {
-			await devtools.initialize();
-			await fetchDevtools.enable();
-			extIcon.makeActive();
-			debuggerActive = true;
-			return;
-		}
-
-		if (!(hasRules && debuggerAllowed) && debuggerActive) {
-			await fetchDevtools.disable();
-			if (devtools.isAttached) {
-				await devtools.destroy();
+	createStoreObject([$hasRules, $debuggerEnabled])
+		// Debugger is allowed if there is at least one rule and its enabled by an user
+		.map(conditions => conditions.every(Boolean))
+		.watch(async function manageDebuggerActive(isAllowed: boolean) {
+			// TODO disallow switch state when previous operation during
+			const debuggerActive = $debuggerActive.getState();
+			if (isAllowed && !debuggerActive) {
+				console.log('on', isAllowed, debuggerActive);
+				await devtools.initialize();
+				await fetchDevtools.enable();
+				extIcon.makeActive();
+				setDebuggerActive(true);
+				return;
 			}
-			extIcon.makeInactive();
-			debuggerActive = false;
-		}
-	});
+
+			if (!isAllowed && debuggerActive) {
+				console.log('off', isAllowed, debuggerActive);
+				await fetchDevtools.disable();
+				if (devtools.isAttached) {
+					await devtools.destroy();
+				}
+				extIcon.makeInactive();
+				setDebuggerActive(false);
+			}
+		});
 
 	// Detach debugger on page leave
 	self.addEventListener('beforeunload', () => {
-		if (debuggerActive) {
+		if ($debuggerActive.getState()) {
 			fetchDevtools.disable();
 			devtools.destroy();
 			extIcon.makeInactive();
@@ -73,7 +89,7 @@ import '@/style/page.css';
 	// Save panes shown state
 	(chrome.extension as any).onMessage.addListener((message: {type: string; shown?: boolean}) => {
 		if (message.type === 'panelShowToggle') {
-			store.uiStore.setPanelShown(!!message.shown);
+			setPanelShown(!!message.shown);
 		}
 	});
 
@@ -83,15 +99,6 @@ import '@/style/page.css';
 
 	// Render the application UI
 	const appElement = React.createElement(App);
-	const appWithStoreElement = React.createElement(
-		Provider,
-		{
-			uiStore: store.uiStore,
-			rulesStore: store.rulesStore,
-			logsStore: store.logsStore,
-		},
-		appElement,
-	);
-
-	ReactDOM.render(appWithStoreElement, document.getElementById('app-root'));
+	const appWithStore = React.createElement(DbContext.Provider, {value: {dbRulesMapper}}, appElement);
+	ReactDOM.render(appWithStore, document.getElementById('app-root'));
 })();

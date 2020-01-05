@@ -1,0 +1,48 @@
+@keyframes highlight {
+	0% {
+		background: #ff901900;
+	}
+	50% {
+		background: #7a401088;
+	}
+	100% {
+		background: #ff901900;
+	}
+}
+
+.list {
+	min-width: 500px;
+}
+
+.item {
+	display: block;
+	position: relative;
+
+	&:nth-child(odd) {
+		background: #2f2f2f;
+	}
+	&.highlighted::before {
+		content: '';
+		display: block;
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		animation: highlight 0.6s ease-in;
+	}
+}
+
+.placeholder {
+	position: relative;
+	top: calc(50% - 30px);
+	margin: 0;
+	font-size: 12px;
+	text-align: center;
+	color: #7e7e7e;
+}
+
+.composeButton {
+	display: block;
+	margin: 20px auto 0;
+}

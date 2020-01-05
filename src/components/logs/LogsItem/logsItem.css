@@ -19,13 +19,13 @@
 	margin-right: 8px;
 
 	&.request {
-		background: url('./icons/request.svg') no-repeat center;
+		background: url('icons/request.svg') no-repeat center;
 	}
 	&.response {
-		background: url('./icons/response.svg') no-repeat center;
+		background: url('icons/response.svg') no-repeat center;
 	}
 	&.both {
-		background: url('./icons/both.svg');
+		background: url('icons/both.svg');
 	}
 }
 
@@ -50,6 +50,6 @@
 .followButton {
 	flex-shrink: 0;
 	margin: 0 6px;
-	--icon-button-bg: url('./icons/follow.svg');
+	--icon-button-bg: url('icons/follow.svg');
 	cursor: pointer;
 }

@@ -1,0 +1,28 @@
+.root {
+	height: 100%;
+}
+
+.content {
+	height: calc(100% - 30px); /* deduct header height */
+	overflow: auto;
+	font-size: 12px;
+}
+
+.control {
+	margin: 0 1px 0 9px;
+
+	&.typeAdd {
+		--icon-button-bg: url('./icons/add.svg');
+	}
+	&.typeClear {
+		--icon-button-bg: url('./icons/clear.svg');
+	}
+	&.typeStartListen {
+		--icon-button-bg: #cccccc;
+		--icon-button-clip: circle(34%);
+	}
+	&.typeStopListen {
+		--icon-button-bg: #eb3941;
+		--icon-button-clip: circle(34%);
+	}
+}

@@ -1,0 +1,22 @@
+.root {
+	display: flex;
+	position: relative;
+	height: 100%;
+	flex-direction: column;
+}
+
+.section {
+	min-height: 30px;
+}
+
+.separator {
+	padding: 2px 0;
+	cursor: row-resize;
+
+	&::before {
+		display: block;
+		content: '';
+		height: 2px;
+		background: var(--color-brd-lightest);
+	}
+}

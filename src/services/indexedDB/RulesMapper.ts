@@ -54,7 +54,7 @@ export class RulesMapper {
 		await Promise.all(deleteRequestsPromises);
 	}
 
-	async getList(): Promise<Rule[]> {
+	async getList() {
 		const items = await promisifyIDBRequest<RuleItem[]>(
 			this.db
 				.transaction(['rules'], 'readonly')

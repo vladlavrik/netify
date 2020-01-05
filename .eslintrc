@@ -45,7 +45,7 @@
 		"@typescript-eslint/member-ordering": [
 			"error",
 			{
-				"default": ["static-field", "static-method", "constructor", "instance-field", "method"]
+				"default": ["static-field", "static-method", "instance-field", "constructor", "method"]
 			}
 		],
 		"@typescript-eslint/no-extraneous-class": "error",

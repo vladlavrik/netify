@@ -1,14 +1,10 @@
+import {migrations} from './migrations';
+
 export const dbName = 'Netify';
 export const dbVersion = 1;
 
-let openedDB: IDBDatabase;
-
-export function getOpenedIDB() {
-	return openedDB;
-}
-
 export async function openIDB() {
-	return new Promise((resolve, reject) => {
+	return new Promise<IDBDatabase>((resolve, reject) => {
 		const request = indexedDB.open(dbName, dbVersion);
 
 		request.onerror = () => {
@@ -16,18 +12,14 @@ export async function openIDB() {
 		};
 
 		request.onsuccess = () => {
-			openedDB = request.result;
-			resolve();
+			resolve(request.result);
 		};
 
-		request.onupgradeneeded = event => {
+		request.onupgradeneeded = async event => {
 			const db = request.result;
 
-			// TODO UPDATE TO v2
-
-			if (event.oldVersion === 0) {
-				const rulesStore = db.createObjectStore('rules', {keyPath: 'rule.id'});
-				rulesStore.createIndex('hostname', 'hostname', {unique: false});
+			for (let itemVersion = event.oldVersion; itemVersion < dbVersion; itemVersion++) {
+				await migrations[itemVersion](db);
 			}
 		};
 	});
