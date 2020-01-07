@@ -16,7 +16,7 @@ import '@/style/page.css';
 	// Get the current tab id, url and hostname
 	const {tabId} = chrome.devtools.inspectedWindow;
 	const tabUrl = await new ExtensionTab(tabId).getUrl();
-	const tabHost = new URL(tabUrl).hostname; // TODO TEMPORARY, use hostname in future
+	const tabHost = new URL(tabUrl).hostname;
 
 	// Open indexed db connection
 	let dbConnection = await openIDB();

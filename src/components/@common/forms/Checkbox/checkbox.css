@@ -1,0 +1,14 @@
+.root {
+	display: flex;
+	height: 18px;
+	align-items: center;
+}
+
+.input {
+	filter: invert(80%);
+}
+
+.label {
+	margin-left: 4px;
+	user-select: none;
+}

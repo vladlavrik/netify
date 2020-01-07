@@ -1,24 +1,25 @@
-import React, {memo, useState, useRef, useCallback, useEffect, ReactNode} from 'react';
+import React, {memo, useState, useCallback, useEffect, ReactNode} from 'react';
 import {useStore} from 'effector-react';
+import cn from 'classnames';
 import {$secondarySectionCollapsed} from '@/stores/uiStore';
+import {useCompactModeCondition} from '@/hooks/useCompactModeCondition';
 import styles from './appSections.css';
 
 interface AppSectionsProps {
 	mainSection: ReactNode;
 	secondarySection: ReactNode;
+	floatingSection?: ReactNode;
 }
 
 export const AppSections = memo<AppSectionsProps>(props => {
-	const {mainSection, secondarySection} = props;
+	const {mainSection, secondarySection, floatingSection} = props;
 
-	const secondarySectionCollapsed = useStore($secondarySectionCollapsed);
-	const [sectionsRatio, setSectionsRatio] = useState(50);
+	const [secondarySectionWidth, setSecondarySectionWidth] = useState(() => window.innerWidth / 2);
 
-	const finalSectionRatio = secondarySectionCollapsed ? 100 : sectionsRatio;
+	const isCompactsMode = useCompactModeCondition();
+	const showSecondarySection = !useStore($secondarySectionCollapsed) && !isCompactsMode;
 
-	const isRatioMoving = useRef(false);
-
-	// TODO fix callback dependencies
+	/* eslint-disable @typescript-eslint/no-use-before-define */
 	const handleStartSectionsResize = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
 		if (event.button & 1) {
 			// Only left mouse button
@@ -39,38 +40,31 @@ export const AppSections = memo<AppSectionsProps>(props => {
 	}, []);
 
 	const handleUpdateSectionsResize = useCallback((event: PointerEvent) => {
-		const docHeight = document.documentElement!.clientHeight;
-		const rawRatio = event.pageY / docHeight;
-
-		setSectionsRatio(Math.round(rawRatio * 10000) / 100);
+		setSecondarySectionWidth(window.innerWidth - event.pageX);
 	}, []);
+	/* eslint-enable @typescript-eslint/no-use-before-define */
 
-	useEffect(() => {
-		if (isRatioMoving.current) {
-			return handleStopSectionsResize;
-		}
-		return undefined;
-	}, []);
+	useEffect(() => handleStopSectionsResize, []);
 
 	return (
 		<div className={styles.root}>
-			<section
-				className={styles.section}
-				style={{
-					height: `calc(${finalSectionRatio}% - 1px)`,
-				}}>
-				{mainSection}
-			</section>
+			<section className={cn(styles.section, styles.main)}>{mainSection}</section>
 
-			<div className={styles.separator} onPointerDown={handleStartSectionsResize} />
+			{showSecondarySection && <div className={styles.separator} onPointerDown={handleStartSectionsResize} />}
 
-			<section
-				className={styles.section}
-				style={{
-					height: `calc(${100 - finalSectionRatio}% + 1px)`,
-				}}>
-				{secondarySection}
-			</section>
+			{showSecondarySection && (
+				<section className={cn(styles.section, styles.secondary)} style={{width: secondarySectionWidth}}>
+					{showSecondarySection && secondarySection}
+				</section>
+			)}
+
+			{floatingSection && (
+				<section
+					className={cn(styles.floatingSection, !showSecondarySection && styles.overlay)}
+					style={{width: secondarySectionWidth}}>
+					{floatingSection}
+				</section>
+			)}
 		</div>
 	);
 });

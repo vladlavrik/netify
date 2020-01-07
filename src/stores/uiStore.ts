@@ -9,8 +9,12 @@ export const showCompose = createEvent('show compose');
 export const hideCompose = createEvent('hide compose');
 export const showRuleEditor = createEvent<string>('show rule editor');
 export const hideRuleEditor = createEvent('hide rule editor');
-export const highlightRule = createEvent<string>('highlight rule');
-export const resetHighlightedRule = createEvent('reset highlighted rule');
+export const showRuleDetails = createEvent<string>('show rule details');
+export const hideRuleDetails = createEvent('hide rule rule details');
+export const highlightRule = createEvent<string>('highlight rule'); // TODO remove
+export const resetHighlightedRule = createEvent('reset highlighted rule'); // TODO remove
+
+(window as any).showRuleDetails = showRuleDetails; // TODO
 
 /** TODO for future */
 export const $panelShown = restore(setPanelShown, true); //
@@ -27,10 +31,10 @@ export const $ruleComposeShown = createStore(false);
 
 export const $ruleEditorShownFor = createStore<null | string>(null);
 
-export const $ruleEditorShown = $ruleEditorShownFor.map(id => !!id);
+export const $ruleDetailsShownFor = createStore<null | string>(null); // TODO scroll to row in UI if not intersected
 
 /** Highlighted rule by follow form the logs list */
-export const $highlightedRuleId = createStore<null | string>(null);
+export const $highlightedRuleId = createStore<null | string>(null); // TODO remove
 
 const setFromInput = <T>(_: any, value: T) => value;
 const toggle = (value: boolean) => !value;
@@ -44,5 +48,7 @@ $ruleComposeShown.on(showCompose, switchOn);
 $ruleComposeShown.on(hideCompose, switchOff);
 $ruleEditorShownFor.on(showRuleEditor, setFromInput);
 $ruleEditorShownFor.on(hideRuleEditor, toNull);
-$highlightedRuleId.on(highlightRule, setFromInput);
-$highlightedRuleId.on(resetHighlightedRule, toNull);
+$ruleDetailsShownFor.on(showRuleDetails, setFromInput);
+$ruleDetailsShownFor.on(hideRuleDetails, toNull);
+$highlightedRuleId.on(highlightRule, setFromInput); // TODO remove
+$highlightedRuleId.on(resetHighlightedRule, toNull); // TODO remove

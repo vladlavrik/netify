@@ -1,7 +1,15 @@
 .root {
+	display: flex;
+	flex-direction: column;
 	position: relative;
 	height: 100vh;
 }
-.errorDisplay {
-	white-space: pre-wrap;
+
+.header {
+	flex-shrink: 0;
+}
+
+.content {
+	flex-grow: 1;
+	height: 0;
 }

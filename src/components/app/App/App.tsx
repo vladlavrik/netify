@@ -1,22 +1,34 @@
 import React, {memo, useMemo} from 'react';
 import {createPortal} from 'react-dom';
 import {useStore} from 'effector-react';
-import {$ruleComposeShown, $ruleEditorShown} from '@/stores/uiStore';
+import {$ruleComposeShown, $ruleEditorShownFor, $ruleDetailsShownFor} from '@/stores/uiStore';
 import {Logs} from '@/components/logs';
 import {Rules} from '@/components/rules';
+import {RuleViewer} from '@/components/ruleViewer';
 import {RuleCompose, RuleEditor} from '@/components/forms/rule';
+import {AppHeader} from '../AppHeader';
 import {AppSections} from '../AppSections';
 import styles from './app.css';
 
 export const App = memo(() => {
 	const composeShown = useStore($ruleComposeShown);
-	const editorShown = useStore($ruleEditorShown);
+	const editorShown = !!useStore($ruleEditorShownFor);
+	const detailsShown = !!useStore($ruleDetailsShownFor);
 
 	const modalTarget = useMemo(() => document.getElementById('modal-root')!, []);
 
 	return (
 		<div className={styles.root}>
-			<AppSections mainSection={<Rules />} secondarySection={<Logs />} />
+			<div className={styles.header}>
+				<AppHeader />
+			</div>
+			<div className={styles.content}>
+				<AppSections
+					mainSection={<Rules />}
+					secondarySection={<Logs />}
+					floatingSection={detailsShown ? <RuleViewer /> : null}
+				/>
+			</div>
 
 			{composeShown && createPortal(<RuleCompose />, modalTarget)}
 

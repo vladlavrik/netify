@@ -1,13 +1,15 @@
 .root {
 	top: 50vh;
-	transform: translateY(-50%);
+	box-sizing: border-box;
 	max-height: calc(100vh - 50px);
 	min-width: 220px;
+	max-width: calc(100vw - 16px);
 	padding: 0;
 	border: var(--color-brd-light) 1px solid;
 	border-radius: 3px;
 	overflow: auto;
 	box-shadow: 0 0 6px 2px #00000055;
+	transform: translateY(-50%);
 	background: var(--color-bg-main);
 
 	&::backdrop {

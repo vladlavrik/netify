@@ -14,7 +14,7 @@ export const RuleEditor = memo(() => {
 		store: $rules,
 		keys: [initialRuleId],
 		fn: (rules, [ruleId]) => rules.find(({id}) => id === ruleId) || null,
-	});
+	})!;
 
 	const handleSave = useCallback(async (rule: Rule) => {
 		await updateRule({dbRulesMapper, rule});
@@ -24,11 +24,6 @@ export const RuleEditor = memo(() => {
 	const handleCancel = useCallback(async () => {
 		hideRuleEditor();
 	}, []);
-
-	// Workaround for effector problem (or wrong usage): this component re-rendering before the parent.
-	if (!initialRule) {
-		return null;
-	}
 
 	return <RuleForm initialRule={initialRule} onSave={handleSave} onCancel={handleCancel} />;
 });

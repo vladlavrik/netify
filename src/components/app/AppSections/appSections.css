@@ -1,22 +1,76 @@
+@keyframes showFloatingSection {
+	from {
+		transform: translateX(100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
+
 .root {
 	display: flex;
 	position: relative;
 	height: 100%;
-	flex-direction: column;
 }
 
 .section {
-	min-height: 30px;
+	position: relative;
+	height: 100%;
+	flex-shrink: 0;
+
+	&.main {
+		flex-grow: 1;
+		flex-shrink: 10000;
+		min-width: min(300px, 100%);
+	}
+
+	&.secondary {
+		min-width: 100px;
+		max-width: calc(100% - 300px);
+	}
+}
+
+.floatingSection {
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	min-width: 100px;
+	max-width: calc(100% - 300px);
+	background: var(--color-bg-main);
+	border-left: var(--color-brd-lightest) 1px solid;
+	box-shadow: 0 10px 10px 1px #000d;
+	animation: showFloatingSection 0.12s ease-out;
+
+	&.overlay {
+		min-width: min(calc(100vw - 24px), 320px);
+	}
 }
 
 .separator {
-	padding: 2px 0;
-	cursor: row-resize;
+	position: relative;
+	width: 1px;
+	flex-shrink: 0;
+	background: var(--color-brd-lightest);
+	cursor: col-resize;
+	z-index: 1;
 
 	&::before {
-		display: block;
 		content: '';
-		height: 2px;
-		background: var(--color-brd-lightest);
+		display: block;
+		position: absolute;
+		left: -2px;
+		right: -2px;
+		top: 0;
+		bottom: 0;
+	}
+
+	&:hover::before {
+		left: -6px;
+		right: -6px;
+	}
+	&:active::before {
+		left: -10000px;
+		right: -10000px;
 	}
 }

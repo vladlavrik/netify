@@ -4,10 +4,9 @@
 body {
 	margin: 0;
 	overflow: hidden;
-	background: var(--color-bg-main);
-	font-size: 12px;
-	user-select: none;
+	font-size: 11px;
 	color: var(--color-main);
+	background: var(--color-bg-main);
 }
 
 :global body.platform-linux {
