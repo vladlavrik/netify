@@ -40,17 +40,20 @@ export const RulesList = memo(() => {
 		}
 	}, [highlightedId]);
 
-	const list = useList($rules, rule => (
-		<li
-			key={rule.id}
-			ref={rule.id === highlightedId ? highlightedItemRef : null}
-			className={classNames(styles.item, rule.id === highlightedId && styles.highlighted)}
-			onAnimationEnd={handleHighlightFinish}>
-			<RulesItem data={rule} onEdit={handleEdit} onRemove={setShowRemoveAskFor}>
-				<RulesDetails data={rule} />
-			</RulesItem>
-		</li>
-	));
+	const list = useList($rules, {
+		keys: [highlightedId, handleHighlightFinish, handleEdit, setShowRemoveAskFor],
+		fn: rule => ( // eslint-disable-line
+			<li
+				key={rule.id}
+				ref={rule.id === highlightedId ? highlightedItemRef : null}
+				className={classNames(styles.item, rule.id === highlightedId && styles.highlighted)}
+				onAnimationEnd={handleHighlightFinish}>
+				<RulesItem data={rule} onEdit={handleEdit} onRemove={setShowRemoveAskFor}>
+					<RulesDetails data={rule} />
+				</RulesItem>
+			</li>
+		),
+	});
 
 	return (
 		<>
