@@ -34,10 +34,18 @@ export class RequestBuilder {
 		}
 
 		// Then, patch headers list
+		const originalHeaders = headersMapToArray(request.headers);
 		let headers;
 		if (patch.setHeaders.length || patch.dropHeaders.length) {
-			const initial = headersMapToArray(request.headers);
-			headers = patchHeaders(initial, patch.setHeaders, patch.dropHeaders);
+			headers = patchHeaders(originalHeaders, patch.setHeaders, patch.dropHeaders);
+		}
+
+		if (patch.body) {
+			const hasContentType = (headers || originalHeaders).some(({name}) => name.toLowerCase() === 'content-type');
+			if (!hasContentType) {
+				headers = headers || originalHeaders;
+				headers.push({name: 'Content-Type', value: 'text/plain'});
+			}
 		}
 
 		return new this(requestId, url, method, headers, patch.body);
@@ -92,14 +100,10 @@ export class RequestBuilder {
 		}
 
 		if (postData) {
-			const contentLength = new TextEncoder().encode(postData).length.toString();
-			const newHeaders = [{name: 'Content-Length', value: contentLength}];
-
 			if (postDataType) {
-				newHeaders.push({name: 'Content-Type', value: postDataType});
+				data.headers = patchHeaders(this.headers || [], [{name: 'Content-Type', value: postDataType}], []);
 			}
 
-			data.headers = patchHeaders(this.headers || [], newHeaders, []);
 			data.postData = postData;
 		}
 
