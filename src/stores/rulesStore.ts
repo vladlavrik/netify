@@ -4,6 +4,7 @@ import {RulesMapper} from '@/services/indexedDB';
 
 export const $rules = createStore<Rule[]>([]);
 export const $hasRules = $rules.map(rules => rules.length > 0);
+export const $rulesCount = $rules.map(rules => rules.length);
 
 export const fetchRules = createEffect('fetch rules from db', {
 	async handler({dbRulesMapper}: {dbRulesMapper: RulesMapper}) {
@@ -20,6 +21,11 @@ export const createRule = createEffect('save new rule into a db', {
 export const updateRule = createEffect('update an existing rule into a db', {
 	async handler({dbRulesMapper, rule}: {dbRulesMapper: RulesMapper; rule: Rule}) {
 		return dbRulesMapper.updateItem(rule);
+	},
+});
+export const moveRule = createEffect('update a rule position in the list rules in a db', {
+	async handler({dbRulesMapper, ruleId, offset}: {dbRulesMapper: RulesMapper; ruleId: string; offset: number}) {
+		// TODO
 	},
 });
 

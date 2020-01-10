@@ -1,9 +1,9 @@
 import {useState, useLayoutEffect, RefObject, useMemo} from 'react';
 
-type Align = 'start' | 'end';
+export type Align = 'start' | 'end';
 
 type ExpansionRule = [
-	// Alight to
+	// Align to
 	[Align, Align],
 
 	// Max height of content (available space in px to the edge minus minimal padding space)
@@ -68,10 +68,10 @@ interface UseDropdownAutoPositionOptions {
 	expanded: boolean;
 
 	/** @default 'end'*/
-	preferAlightX?: Align;
+	preferAlignX?: Align;
 
 	/** @default 'end'*/
-	preferAlightY?: Align;
+	preferAlignY?: Align;
 
 	/** @default false */
 	checkByX?: boolean;
@@ -82,14 +82,14 @@ interface UseDropdownAutoPositionOptions {
 
 export function useDropdownAutoPosition(options: UseDropdownAutoPositionOptions) {
 	const {targetRef, contentRef, expanded} = options;
-	const {preferAlightX = 'end', preferAlightY = 'end', checkByX, checkByY} = options;
+	const {preferAlignX = 'end', preferAlignY = 'end', checkByX, checkByY} = options;
 
 	const defaultRule = useMemo<ExpansionRule>(
 		() => [
-			[preferAlightX, preferAlightY],
+			[preferAlignX, preferAlignY],
 			[undefined, undefined],
 		],
-		[preferAlightX, preferAlightY],
+		[preferAlignX, preferAlignY],
 	);
 
 	const [expansionRule, setExpansionRule] = useState(defaultRule);
@@ -111,19 +111,20 @@ export function useDropdownAutoPosition(options: UseDropdownAutoPositionOptions)
 				targetRect.width,
 				contentRect.left,
 				window.innerWidth - contentRect.right,
-				preferAlightX,
+				preferAlignX,
 				'start',
 			);
 		}
 
 		if (checkByY) {
+			console.log('Y');
 			newYRule = detectNewAxisRule(
 				targetRect.top,
 				window.innerHeight - targetRect.bottom,
 				targetRect.height,
 				contentRect.top,
 				window.innerHeight - contentRect.bottom,
-				preferAlightX,
+				preferAlignY,
 				'end',
 			);
 		}
@@ -134,7 +135,7 @@ export function useDropdownAutoPosition(options: UseDropdownAutoPositionOptions)
 		}
 
 		setExpansionRule([
-			[newXRule?.alignTo || preferAlightX, newYRule?.alignTo || preferAlightY],
+			[newXRule?.alignTo || preferAlignX, newYRule?.alignTo || preferAlignY],
 			[newXRule?.sizeLimit, newYRule?.sizeLimit],
 		]);
 

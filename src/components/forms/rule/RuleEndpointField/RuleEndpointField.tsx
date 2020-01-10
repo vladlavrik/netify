@@ -1,6 +1,7 @@
-import React, {memo, useCallback, useRef, useState} from 'react';
+import React, {memo, useRef, useCallback} from 'react';
 import {useField} from 'formik';
 import {FieldRow} from '@/components/forms/common/FieldRow';
+import {Dropdown, useDropdownExpansion} from '@/components/@common/misc/Dropdown';
 import {TextField} from '@/components/@common/forms/TextField';
 import {TextButton} from '@/components/@common/buttons/TextButton';
 import {FieldError} from '@/components/@common/forms/FieldError';
@@ -11,13 +12,11 @@ interface RuleEndpointField {
 }
 
 export const RuleEndpointField = memo<RuleEndpointField>(({name}) => {
-	const [urlMacrosShown, setUrlMacrosShown] = useState(false);
+	const [macrosDDExpanded, macrosDDActions] = useDropdownExpansion();
 
 	const [, , {setValue}] = useField(name);
 
 	const endpointFieldRef = useRef<HTMLInputElement>(null);
-
-	const handleUrlMacrosShownToggle = useCallback(() => setUrlMacrosShown(!urlMacrosShown), [urlMacrosShown]);
 
 	const handleMacrosInsert = useCallback(
 		(event: React.MouseEvent<HTMLElement>) => {
@@ -32,7 +31,6 @@ export const RuleEndpointField = memo<RuleEndpointField>(({name}) => {
 			const value = input.value.substr(0, start) + macros + input.value.substr(end);
 
 			setValue(value);
-			setUrlMacrosShown(false);
 		},
 		[setValue],
 	);
@@ -46,48 +44,52 @@ export const RuleEndpointField = memo<RuleEndpointField>(({name}) => {
 					name={name}
 					placeholder='Redirect a request by the new url'
 					suffix={
-						<div className={styles.macros}>
-							<TextButton
-								className={styles.macrosButton}
-								tabIndex={-1}
-								onClick={handleUrlMacrosShownToggle}>
-								{urlMacrosShown ? 'close' : 'add macros'}
-							</TextButton>
-							{urlMacrosShown && (
-								<div className={styles.macrosPicker}>
-									<TextButton
-										className={styles.macrosOption}
-										data-value='[protocol]'
-										onClick={handleMacrosInsert}>
-										Protocol
-									</TextButton>
-									<TextButton
-										className={styles.macrosOption}
-										data-value='[hostname]'
-										onClick={handleMacrosInsert}>
-										Hostname
-									</TextButton>
-									<TextButton
-										className={styles.macrosOption}
-										data-value='[port]'
-										onClick={handleMacrosInsert}>
-										Port
-									</TextButton>
-									<TextButton
-										className={styles.macrosOption}
-										data-value='[path]'
-										onClick={handleMacrosInsert}>
-										Path
-									</TextButton>
-									<TextButton
-										className={styles.macrosOption}
-										data-value='[query]'
-										onClick={handleMacrosInsert}>
-										Query
-									</TextButton>
-								</div>
-							)}
-						</div>
+						<Dropdown
+							className={styles.macros}
+							expanded={macrosDDExpanded}
+							target={
+								<TextButton
+									className={styles.macrosButton}
+									tabIndex={-1}
+									onClick={macrosDDActions.handleExpansionSwitch}>
+									{macrosDDExpanded ? 'close' : 'add macros'}
+								</TextButton>
+							}
+							preferExpansionAlignX='start'
+							onCollapse={macrosDDActions.handleCollapse}>
+							<div className={styles.macrosPicker}>
+								<TextButton
+									className={styles.macrosOption}
+									data-value='[protocol]'
+									onClick={handleMacrosInsert}>
+									Protocol
+								</TextButton>
+								<TextButton
+									className={styles.macrosOption}
+									data-value='[hostname]'
+									onClick={handleMacrosInsert}>
+									Hostname
+								</TextButton>
+								<TextButton
+									className={styles.macrosOption}
+									data-value='[port]'
+									onClick={handleMacrosInsert}>
+									Port
+								</TextButton>
+								<TextButton
+									className={styles.macrosOption}
+									data-value='[path]'
+									onClick={handleMacrosInsert}>
+									Path
+								</TextButton>
+								<TextButton
+									className={styles.macrosOption}
+									data-value='[query]'
+									onClick={handleMacrosInsert}>
+									Query
+								</TextButton>
+							</div>
+						</Dropdown>
 					}
 				/>
 

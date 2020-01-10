@@ -7,14 +7,10 @@ export enum ResourceType {
 	Font = 'Font',
 	Image = 'Image',
 	Media = 'Media',
-	Manifest = 'Manifest',
-	TextTrack = 'TextTrack',
-	EventSource = 'EventSource',
-	WebSocket = 'WebSocket',
-	SignedExchange = 'SignedExchange',
-	Ping = 'Ping',
-	CSPViolationReport = 'CSPViolationReport',
-	Other = 'Other',
+
+	// Temporary disabled because trigger exception when use with RequestPattern
+	// Manifest = 'Manifest',
+	// WebSocket = 'WebSocket',
 }
 
 export const resourceTypesList = [
@@ -26,12 +22,6 @@ export const resourceTypesList = [
 	ResourceType.Font,
 	ResourceType.Image,
 	ResourceType.Media,
-	ResourceType.Manifest,
-	ResourceType.TextTrack,
-	ResourceType.EventSource,
-	ResourceType.WebSocket,
-	ResourceType.SignedExchange,
-	ResourceType.Ping,
-	ResourceType.CSPViolationReport,
-	ResourceType.Other,
+	// ResourceType.Manifest,
+	// ResourceType.WebSocket,
 ];

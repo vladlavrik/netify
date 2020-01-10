@@ -13,7 +13,7 @@ export const RuleEditor = memo(() => {
 	const initialRule = useStoreMap({
 		store: $rules,
 		keys: [initialRuleId],
-		fn: (rules, [ruleId]) => rules.find(({id}) => id === ruleId) || null,
+		fn: (rules, [ruleId]) => rules.find(({id}) => id === ruleId),
 	})!;
 
 	const handleSave = useCallback(async (rule: Rule) => {

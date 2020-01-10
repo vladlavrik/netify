@@ -1,0 +1,37 @@
+.root {
+	padding: 8px 0;
+}
+
+.entry {
+}
+
+.checkbox {
+	height: 22px;
+	padding-left: 8px;
+}
+
+.button {
+	width: 100px;
+	height: 26px;
+	padding: 0 8px;
+
+	&:hover {
+		background: #393939; /* TODO to vars*/
+	}
+
+	&.moveAbove {
+		--icon-button-bg: url('./icons/above.svg');
+	}
+
+	&.moveBelow {
+		--icon-button-bg: url('./icons/below.svg');
+	}
+
+	&.edit {
+		--icon-button-bg: url('./icons/edit.svg');
+	}
+
+	&.remove {
+		--icon-button-bg: url('./icons/remove.svg');
+	}
+}

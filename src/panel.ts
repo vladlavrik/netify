@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {createStoreObject} from 'effector';
+import {combine} from 'effector';
 import {DbContext} from '@/contexts/dbContext';
 import {addLogEntry} from '@/stores/logsStore';
 import {$rules, $hasRules, fetchRules} from '@/stores/rulesStore';
-import {$debuggerEnabled, $debuggerActive, setDebuggerEnabled, setDebuggerActive, setPanelShown} from '@/stores/uiStore'; // prettier-ignore
+import {$debuggerEnabled, $debuggerActive, setDebuggerEnabled, setDebuggerActive, setDebuggerSwitching, setPanelShown} from '@/stores/uiStore'; // prettier-ignore
 import {openIDB, RulesMapper} from '@/services/indexedDB';
 import {ExtensionDevtoolsConnector, ExtensionTab, ExtensionIcon} from '@/services/extension';
 import {FetchDevtools, FetchRuleStore} from '@/services/devtools/fetch';
@@ -51,23 +51,20 @@ import '@/style/page.css';
 	fetchDevtools.events.requestProcessed.on(addLogEntry);
 
 	// Synchronize Fetch devtools activity value with the ui state and the extension icon
-	createStoreObject([$hasRules, $debuggerEnabled])
+	combine([$hasRules, $debuggerEnabled])
 		// Debugger is allowed if there is at least one rule and its enabled by an user
 		.map(conditions => conditions.every(Boolean))
 		.watch(async function manageDebuggerActive(isAllowed: boolean) {
 			// TODO disallow switch state when previous operation during
+			setDebuggerSwitching(true);
+
 			const debuggerActive = $debuggerActive.getState();
 			if (isAllowed && !debuggerActive) {
-				console.log('on', isAllowed, debuggerActive);
 				await devtools.initialize();
 				await fetchDevtools.enable();
 				extIcon.makeActive();
 				setDebuggerActive(true);
-				return;
-			}
-
-			if (!isAllowed && debuggerActive) {
-				console.log('off', isAllowed, debuggerActive);
+			} else if (!isAllowed && debuggerActive) {
 				await fetchDevtools.disable();
 				if (devtools.isAttached) {
 					await devtools.destroy();
@@ -75,6 +72,8 @@ import '@/style/page.css';
 				extIcon.makeInactive();
 				setDebuggerActive(false);
 			}
+
+			setDebuggerSwitching(false);
 		});
 
 	// Detach debugger on page leave

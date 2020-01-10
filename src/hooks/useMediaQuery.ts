@@ -1,6 +1,6 @@
 import {useState, useEffect, useMemo, useCallback} from 'react';
 
-export function useMedia<TV, TD>(conditions: Record<string, TV>, defaultValue: TD): TV | TD {
+export function useMediaQuery<TV, TD>(conditions: Record<string, TV>, defaultValue: TD): TV | TD {
 	const conditionsMap = useMemo(
 		() =>
 			new Map<MediaQueryList, TV>(Object.entries(conditions).map(([query, value]) => [matchMedia(query), value])),
@@ -35,6 +35,6 @@ export function useMedia<TV, TD>(conditions: Record<string, TV>, defaultValue: T
 	return value;
 }
 
-export function useBooleanMedia(query: string) {
-	return useMedia({[query]: true}, false);
+export function useBooleanMediaQuery(query: string) {
+	return useMediaQuery({[query]: true}, false);
 }

@@ -1,6 +1,6 @@
-import {useBooleanMedia} from '@/hooks/useMedia';
+import {useBooleanMediaQuery} from '@/hooks/useMediaQuery';
 
 /**
  * Compact mode is mean the second section (logs) is hidden
  */
-export const useCompactModeCondition = () => useBooleanMedia('(max-width: 520px)');
+export const useCompactModeCondition = () => useBooleanMediaQuery('(max-width: 520px)');

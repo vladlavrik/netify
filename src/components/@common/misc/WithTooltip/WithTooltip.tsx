@@ -56,3 +56,5 @@ export const WithTooltip = memo<WithTooltipProps>(props => {
 		</div>
 	);
 });
+
+WithTooltip.displayName = 'WithTooltip';

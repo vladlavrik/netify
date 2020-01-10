@@ -1,74 +1,106 @@
 .root {
-	position: relative;
-	font-size: 12px;
-	min-height: 48px;
-	user-select: text;
-}
-.entry {
 	display: flex;
 	align-items: center;
-	color: #b1b9c0;
-}
-.expandButton {
-	flex-shrink: 0;
-	margin: 0 5px 0 3px;
-	--icon-button-bg: #616161;
-	--icon-button-clip: polygon(30% 34%, 70% 34%, 50% 66%);
-}
-.expandButton.expanded {
-	--icon-button-clip: polygon(30% 66%, 70% 66%, 50% 34%);
-}
-.summary {
-	flex-grow: 1;
-	padding-right: 8px;
-	overflow: hidden;
-}
-.filterInfo {
-	display: flex;
-	margin-top: 8px;
-}
-.method,
-.type {
-	width: 100px;
-	min-width: 100px;
-	padding-right: 12px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-.url {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-.actionsInfo {
-	margin: 4px 0 8px 0;
-	color: #7e7e7e;
+	min-width: 300px; /* TODO */
+
+	&:nth-child(odd) {
+		background: #292929; /* TODO to vars*/
+	}
+
+	&.highlighted {
+		background: #393939; /* TODO to vars*/
+	}
 }
 
-.controlsPlaceholder {
-	margin: 0 6px;
+.entry {
+	width: 0; /* Fix nested overflow */
+	position: relative;
+	flex-grow: 1;
+	padding: 8px 0;
+	cursor: pointer;
+
+	&:focus {
+		outline: none;
+
+		& .url {
+			text-decoration: underline;
+		}
+	}
+}
+
+.focusable {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 0;
+
+	&:focus {
+		outline: none;
+		border: var(--color-focus) solid 1px;
+		width: 100%;
+		background: #393939; /* TODO to vars*/
+	}
+}
+
+.filter {
+	display: flex;
+	align-items: center;
+	position: relative;
+
+	&.inactive {
+		opacity: 0.5;
+	}
+}
+
+.labelBox,
+.labelMore {
+	flex-shrink: 0;
+	padding: 0 4px;
+	line-height: 16px;
+	border-radius: 2px;
+	font-weight: 700;
+	background: #444;
+}
+
+.labelBox {
+	margin: 0 2px 0 8px;
+	color: #cdcdcd;
+}
+
+.labelMore {
+	margin-left: 2px;
+}
+
+.url {
+	margin-left: 8px;
+	font-size: 12px;
+	color: #d5d5d5; /* TODO to vars accent */
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+
+	&.placeholder {
+		color: inherit;
+	}
+}
+
+.actionsSummary {
+	position: relative;
+	padding: 6px 4px 0 8px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.control {
+	flex-shrink: 0;
+	margin: 0 4px;
+	padding: 0 4px; /* To correct dropdown position */
+}
+
+.controlTarget {
 	width: 18px;
 	height: 18px;
 	background: url('./icons/more.svg');
-}
-.control {
-	display: none;
-	margin: 0 6px;
-	cursor: pointer;
-}
-.control.typeEdit {
-	--icon-button-bg: url('./icons/edit.svg');
-}
-.control.typeRemove {
-	--icon-button-bg: url('./icons/remove.svg');
-}
-.entry:hover .control {
-	display: block;
-}
-.entry:hover .controlsPlaceholder {
-	display: none;
-}
-
-.placeholder {
-	color: #616161;
 }

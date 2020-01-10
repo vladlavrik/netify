@@ -1,148 +1,177 @@
-import * as React from 'react';
-import classNames from 'classnames';
+import React, {memo, useContext, useState, useRef, useCallback, useMemo, useEffect} from 'react';
+import cn from 'classnames';
 import {Rule} from '@/interfaces/rule';
-import {RuleActionsType} from '@/constants/RuleActionsType';
+import {RequestMethod} from '@/constants/RequestMethod';
+import {ResourceType} from '@/constants/ResourceType';
+import {DbContext} from '@/contexts/dbContext';
+import {showRuleEditor} from '@/stores/uiStore';
+import {removeRule, updateRule, moveRule} from '@/stores/rulesStore';
 import {IconButton} from '@/components/@common/buttons/IconButton';
+import {Dropdown, useDropdownExpansion} from '@/components/@common/misc/Dropdown';
+import {PopUpConfirm} from '@/components/@common/popups/PopUpConfirm';
+import {stringifyActionsSummary} from './stringifyActionsSummary';
+import {RulesControl} from '../RulesControl';
 import styles from './rulesItem.css';
 
-interface Props {
+const methodLabelColors: Record<RequestMethod, string> = {
+	[RequestMethod.GET]: '#0d5202',
+	[RequestMethod.POST]: '#154260',
+	[RequestMethod.PUT]: '#776a16',
+	[RequestMethod.DELETE]: '#790d06',
+	[RequestMethod.PATCH]: '#496671',
+	[RequestMethod.HEAD]: '#616161',
+};
+
+const resourceLabelColors: Record<ResourceType, string> = {
+	[ResourceType.XHR]: '#316890',
+	[ResourceType.Fetch]: '#151579',
+	[ResourceType.Script]: '#71713f',
+	[ResourceType.Stylesheet]: '#793556',
+	[ResourceType.Document]: '#34825f',
+	[ResourceType.Font]: '#544c46',
+	[ResourceType.Image]: '#985a24',
+	[ResourceType.Media]: '#1b5490',
+};
+
+interface RulesItemProps {
 	data: Rule;
-	onEdit(id: string): void;
-	onRemove(id: string): void;
+	isStartEdgePosition: boolean; // Is the item leading or trailing in the list
+	isEndEdgePosition: boolean; // Is the item leading or trailing in the list
+	isHighlighted: boolean;
+	onShowDetails(id: string): void;
 }
 
-interface State {
-	expanded: boolean;
-}
+// TODO show names of methods and request types by value/name map
+// TODO use unique color of methods and request types
+export const RulesItem = memo<RulesItemProps>(props => {
+	const {data, isStartEdgePosition, isEndEdgePosition, isHighlighted, onShowDetails} = props;
+	const {id: ruleId, active, filter, action} = data;
+	const {url, methods, resourceTypes} = filter;
 
-export class RulesItem extends React.PureComponent<Props, State> {
-	state = {
-		expanded: false,
-	};
+	const {dbRulesMapper} = useContext(DbContext)!;
 
-	render() {
-		const {filter} = this.props.data;
-		const {expanded} = this.state;
-		const {url, methods, resourceTypes} = filter;
+	const [showRemoveAsk, setShowRemoveAsk] = useState(false);
 
-		return (
-			<div className={styles.root}>
-				<div className={styles.entry}>
-					<IconButton
-						className={classNames(styles.expandButton, expanded && styles.expanded)}
-						onClick={this.onToggleExpand}
-					/>
+	const rootRef = useRef<HTMLLIElement>(null);
 
-					<div className={styles.summary}>
-						<div className={styles.filterInfo}>
-							<span className={classNames(styles.value, styles.method)}>
-								{methods.length === 0 ? (
-									<span className={styles.placeholder}>All methods</span>
-								) : (
-									methods.join('/')
-								)}
-							</span>
-							<span className={classNames(styles.value, styles.type)}>
-								{resourceTypes.length === 0 ? (
-									<span className={styles.placeholder}>All resources</span>
-								) : (
-									resourceTypes.join('/')
-								)}
-							</span>
-							<span className={classNames(styles.value, styles.url)} title={url && url.toString()}>
-								{!url ? ( // prettier-ignore
-									<span className={styles.placeholder}>All urls</span>
-								) : (
-									url
-								)}
-							</span>
-						</div>
-						<p className={styles.actionsInfo}>{this.parseActionsArray()}</p>
-					</div>
+	const actionsSummary = useMemo(() => stringifyActionsSummary(action), [action]);
 
-					<div className={styles.controlsPlaceholder} />
+	const [controlDDExpanded, controlDDActions] = useDropdownExpansion();
 
-					<IconButton
-						className={classNames(styles.control, styles.typeEdit)}
-						tooltip='Edit the rule'
-						onClick={this.onEdit}
-					/>
-					<IconButton
-						className={classNames(styles.control, styles.typeRemove)}
-						tooltip='Remove the rule'
-						onClick={this.onRemove}
-					/>
+	const handleShowDetails = useCallback(() => onShowDetails(ruleId), [ruleId, onShowDetails]);
+
+	const handleShowDetailsByKeyboard = useCallback(
+		({key}: React.KeyboardEvent) => {
+			if (key === ' ' || key === 'Enter') {
+				handleShowDetails();
+			}
+		},
+		[handleShowDetails],
+	);
+
+	const handleEdit = useCallback(() => {
+		showRuleEditor(ruleId);
+		controlDDActions.handleCollapse();
+	}, [ruleId]);
+
+	const handleActiveToggle = useCallback(async () => {
+		const rule = {...data, active: !data.active};
+		await updateRule({dbRulesMapper, rule});
+	}, [data, dbRulesMapper]);
+
+	const handleMove = useCallback(
+		async (offset: number) => {
+			await moveRule({dbRulesMapper, ruleId, offset});
+		},
+		[ruleId],
+	);
+
+	const handleRemove = useCallback(() => {
+		setShowRemoveAsk(true);
+		controlDDActions.handleCollapse();
+	}, []);
+
+	const handleRemoveCancel = useCallback(() => {
+		setShowRemoveAsk(false);
+	}, []);
+
+	const handleRemoveConfirm = useCallback(async () => {
+		await removeRule({dbRulesMapper, ruleId});
+		setShowRemoveAsk(false);
+	}, [ruleId, dbRulesMapper]);
+
+	useEffect(() => {
+		if (isHighlighted && rootRef.current) {
+			(rootRef.current as any).scrollIntoViewIfNeeded(true);
+		}
+	}, [isHighlighted]);
+
+	return (
+		<li ref={rootRef} className={cn(styles.root, isHighlighted && styles.highlighted)}>
+			<div className={styles.entry} role='button' onClick={handleShowDetails}>
+				{/* Separate focusable element, inaccessible to the mouse.
+					It is necessary for handle a focus from the keyboard and ignoring a focus on the mouse click*/}
+				<div className={styles.focusable} role='button' tabIndex={0} onKeyDown={handleShowDetailsByKeyboard} />
+
+				<div className={cn(styles.filter, !active && styles.inactive)}>
+					{methods.length !== 0 && (
+						<span className={cn(styles.labelBox)} style={{backgroundColor: methodLabelColors[methods[0]]}}>
+							{methods[0]}
+						</span>
+					)}
+					{methods.length > 1 && (
+						<span className={styles.labelMore} title={methods.slice(1).join(', ')}>
+							+ {methods.length - 1}
+						</span>
+					)}
+
+					{resourceTypes.length !== 0 && (
+						<span
+							className={cn(styles.labelBox)}
+							style={{backgroundColor: resourceLabelColors[resourceTypes[0]]}}>
+							{resourceTypes[0]}
+						</span>
+					)}
+					{resourceTypes.length > 1 && (
+						<span className={styles.labelMore} title={resourceTypes.slice(1).join(', ')}>
+							+ {resourceTypes.length - 1}
+						</span>
+					)}
+
+					<span className={cn(styles.url, !url && styles.placeholder)} title={url && url.toString()}>
+						{url || 'Any url'}
+					</span>
 				</div>
 
-				{expanded && <div>{this.props.children}</div>}
+				<p className={styles.actionsSummary}>{active ? actionsSummary || 'No actions' : 'Inactive'}</p>
 			</div>
-		);
-	}
 
-	private parseActionsArray() {
-		// TODO show is active
-		const {action} = this.props.data;
-		const actions = [];
-
-		if (action.type === RuleActionsType.Breakpoint) {
-			if (action.request) {
-				actions.push('Breakpoint on request');
-			}
-			if (action.response) {
-				actions.push('Breakpoint on response');
-			}
-		}
-
-		if (action.type === RuleActionsType.Mutation) {
-			if (action.request) {
-				const {endpoint, method, setHeaders, dropHeaders, body} = action.request;
-				if (endpoint) {
-					actions.push('Redirect to url');
+			<Dropdown
+				className={styles.control}
+				expanded={controlDDExpanded}
+				target={
+					<IconButton className={styles.controlTarget} onClick={controlDDActions.handleExpansionSwitch} />
 				}
-				if (method) {
-					actions.push('Replacing method');
-				}
-				if (setHeaders.length > 0 || dropHeaders.length > 0) {
-					actions.push('Modifying request headers');
-				}
-				if (body) {
-					actions.push('Replacing request body');
-				}
-			}
-			if (action.response) {
-				const {statusCode, setHeaders, dropHeaders, body} = action.response;
-				if (statusCode) {
-					actions.push('Replacing response status');
-				}
-				if (setHeaders.length > 0 || dropHeaders.length > 0) {
-					actions.push('Modifying response headers');
-				}
-				if (body) {
-					actions.push('Replacing response body');
-				}
-			}
-		}
+				preferExpansionAlignX='start'
+				onCollapse={controlDDActions.handleCollapse}>
+				<RulesControl
+					ruleIsActive={active}
+					allowMoveAbove={!isStartEdgePosition && false /* TODO implement the feature */}
+					allowMoveBelow={!isEndEdgePosition && false}
+					onActiveToggle={handleActiveToggle}
+					onMove={handleMove}
+					onEdit={handleEdit}
+					onRemove={handleRemove}
+				/>
+			</Dropdown>
 
-		if (action.type === RuleActionsType.LocalResponse) {
-			actions.push('Local response');
-		}
+			{showRemoveAsk && (
+				<PopUpConfirm onConfirm={handleRemoveConfirm} onCancel={handleRemoveCancel}>
+					Remove the rule forever?
+				</PopUpConfirm>
+			)}
+		</li>
+	);
+});
 
-		if (action.type === RuleActionsType.Failure) {
-			actions.push('Returning error');
-		}
-
-		if (actions.length === 0) {
-			actions.push('No actions');
-		}
-
-		return actions.join(', ');
-	}
-
-	private onToggleExpand = () => {
-		this.setState(state => ({expanded: !state.expanded}));
-	};
-
-	private onEdit = () => this.props.onEdit(this.props.data.id);
-
-	private onRemove = () => this.props.onRemove(this.props.data.id);
-}
+RulesItem.displayName = 'RulesItem';

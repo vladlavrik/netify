@@ -9,11 +9,13 @@ interface IconButtonProps extends Omit<NativeButtonProps, 'type'> {
 }
 
 export const IconButton = memo<IconButtonProps>(props => {
-	const {className, tooltip, disabled, ...nativeProps} = props;
+	const {className, tooltip, disabled, children, ...nativeProps} = props;
 
 	return (
 		<WithTooltip disabled={disabled} tooltip={tooltip}>
-			<button {...nativeProps} className={classNames(styles.root, className)} type='button' disabled={disabled} />
+			<button {...nativeProps} className={classNames(styles.root, className)} type='button' disabled={disabled}>
+				{children && <div className={styles.title}>{children}</div>}
+			</button>
 		</WithTooltip>
 	);
 });

@@ -10,7 +10,7 @@ p {
 }
 
 /*prettier-ignore*/
-ul, ol {
+ul, ol, menu {
     margin: 0;
     padding: 0;
     list-style: none;

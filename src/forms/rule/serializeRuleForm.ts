@@ -122,7 +122,7 @@ export function serializeRuleForm(rule: Rule) {
 			const responseValue = value.actionConfigs[RuleActionsType.LocalResponse];
 
 			responseValue.statusCode = statusCode;
-			responseValue.headers = headers;
+			responseValue.headers.unshift(...headers);
 
 			responseValue.body.type = body.type;
 

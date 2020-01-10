@@ -2,6 +2,7 @@ import {createStore, createEvent} from 'effector';
 import {Log} from '@/interfaces/log';
 
 export const $logs = createStore<Log[]>([]);
+export const $hasLogs = $logs.map(logs => logs.length > 0);
 
 export const addLogEntry = createEvent<Log>('create log entry');
 export const clearLogsList = createEvent('clear logs list');
