@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {combine} from 'effector';
 import {DbContext} from '@/contexts/dbContext';
 import {addLogEntry} from '@/stores/logsStore';
-import {$rules, $hasRules, fetchRules} from '@/stores/rulesStore';
+import {$rules, $hasActiveRules, fetchRules} from '@/stores/rulesStore';
 import {$debuggerEnabled, $debuggerActive, setDebuggerEnabled, setDebuggerActive, setDebuggerSwitching, setPanelShown} from '@/stores/uiStore'; // prettier-ignore
 import {openIDB, RulesMapper} from '@/services/indexedDB';
 import {ExtensionDevtoolsConnector, ExtensionTab, ExtensionIcon} from '@/services/extension';
@@ -11,6 +11,8 @@ import {FetchDevtools, FetchRuleStore} from '@/services/devtools/fetch';
 import {getPlatform} from '@/helpers/browser';
 import {App} from '@/components/app';
 import '@/style/page.css';
+
+// TODO Render раньше
 
 (async () => {
 	// Get the current tab id, url and hostname
@@ -37,9 +39,6 @@ import '@/style/page.css';
 	const fetchRulesStore = new FetchRuleStore();
 	const fetchDevtools = new FetchDevtools(devtools, fetchRulesStore);
 
-	// Delivery the rules form the main store to the devtools
-	$rules.watch(rules => fetchRulesStore.setRulesList(rules));
-
 	// Load rules from database
 	await fetchRules({dbRulesMapper});
 
@@ -48,33 +47,42 @@ import '@/style/page.css';
 		setDebuggerEnabled(false);
 		setDebuggerActive(false);
 	});
+
+	// Delivery logs from devtools to the application store
 	fetchDevtools.events.requestProcessed.on(addLogEntry);
 
+	// Debugger is allowed if there is at least one active rule and its enabled by an user
+	const $debuggerAllowed = combine([$hasActiveRules, $debuggerEnabled]).map(conditions => conditions.every(Boolean));
+
 	// Synchronize Fetch devtools activity value with the ui state and the extension icon
-	combine([$hasRules, $debuggerEnabled])
-		// Debugger is allowed if there is at least one rule and its enabled by an user
-		.map(conditions => conditions.every(Boolean))
-		.watch(async function manageDebuggerActive(isAllowed: boolean) {
-			// TODO disallow switch state when previous operation during
-			setDebuggerSwitching(true);
+	combine({rules: $rules, debuggerAllowed: $debuggerAllowed}).watch(async function({rules, debuggerAllowed}) {
+		// TODO disallow switch state when previous operation during
 
-			const debuggerActive = $debuggerActive.getState();
-			if (isAllowed && !debuggerActive) {
-				await devtools.initialize();
-				await fetchDevtools.enable();
-				extIcon.makeActive();
-				setDebuggerActive(true);
-			} else if (!isAllowed && debuggerActive) {
-				await fetchDevtools.disable();
-				if (devtools.isAttached) {
-					await devtools.destroy();
-				}
-				extIcon.makeInactive();
-				setDebuggerActive(false);
+		setDebuggerSwitching(true);
+		fetchRulesStore.setRulesList(rules);
+
+		const debuggerActive = $debuggerActive.getState();
+		if (debuggerAllowed && !debuggerActive) {
+			// Switch on
+			await devtools.initialize();
+			await fetchDevtools.enable();
+			extIcon.makeActive();
+			setDebuggerActive(true);
+		} else if (!debuggerAllowed && debuggerActive) {
+			// Switch off
+			await fetchDevtools.disable();
+			if (devtools.isAttached) {
+				await devtools.destroy();
 			}
+			extIcon.makeInactive();
+			setDebuggerActive(false);
+		} else {
+			// Update the rules list and restart the fetch devtools service
+			await fetchDevtools.restart();
+		}
 
-			setDebuggerSwitching(false);
-		});
+		setDebuggerSwitching(false);
+	});
 
 	// Detach debugger on page leave
 	self.addEventListener('beforeunload', () => {

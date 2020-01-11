@@ -117,7 +117,6 @@ export function useDropdownAutoPosition(options: UseDropdownAutoPositionOptions)
 		}
 
 		if (checkByY) {
-			console.log('Y');
 			newYRule = detectNewAxisRule(
 				targetRect.top,
 				window.innerHeight - targetRect.bottom,

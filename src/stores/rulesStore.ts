@@ -4,6 +4,7 @@ import {RulesMapper} from '@/services/indexedDB';
 
 export const $rules = createStore<Rule[]>([]);
 export const $hasRules = $rules.map(rules => rules.length > 0);
+export const $hasActiveRules = $rules.map(rules => rules.filter(rule => rule.active).length > 0);
 export const $rulesCount = $rules.map(rules => rules.length);
 
 export const fetchRules = createEffect('fetch rules from db', {

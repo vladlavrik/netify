@@ -30,9 +30,7 @@ export class FetchDevtools {
 	private enabled = false;
 	private unsubscribeDevtoolsEvents?: () => void;
 
-	constructor(private readonly devtools: DevtoolsConnector, private readonly rulesStore: FetchRuleStore) {
-		rulesStore.rulesChanged.on(this.restart.bind(this));
-	}
+	constructor(private readonly devtools: DevtoolsConnector, private readonly rulesStore: FetchRuleStore) {}
 
 	async enable() {
 		this.enabled = true;

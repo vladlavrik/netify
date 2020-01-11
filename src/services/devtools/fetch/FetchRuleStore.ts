@@ -3,7 +3,6 @@ import {Rule} from '@/interfaces/Rule';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {ResourceType} from '@/constants/ResourceType';
 import {RequestMethod} from '@/constants/RequestMethod';
-import {Event} from '@/helpers/Events';
 
 type RequestStage = Protocol.Fetch.RequestStage;
 type RequestPattern = Protocol.Fetch.RequestPattern;
@@ -18,13 +17,11 @@ export class FetchRuleStore {
 		return new RegExp(`^${regexpStr}$`);
 	}
 
-	readonly rulesChanged = new Event();
 
 	private rulesList: Rule[] = [];
 
 	setRulesList(newRulesList: Rule[]) {
 		this.rulesList = newRulesList;
-		this.rulesChanged.emit();
 	}
 
 	getRequestPatterns() {
