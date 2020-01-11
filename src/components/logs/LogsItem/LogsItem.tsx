@@ -8,15 +8,15 @@ import {IconButton} from '@/components/@common/buttons/IconButton';
 import {WithTooltip} from '@/components/@common/misc/WithTooltip';
 import styles from './logsItem.css';
 
-type RequestStage = Log['requestStage'];
+type InterceptStage = Log['interceptStage'];
 
-const stageTitle: Record<RequestStage, string> = {
+const stageTitle: Record<InterceptStage, string> = {
 	Request: 'On request stage',
 	Response: 'On response stage',
 	Both: 'On request and response stages',
 };
 
-const stageIcon: Record<RequestStage, string> = {
+const stageIcon: Record<InterceptStage, string> = {
 	Request: styles.request,
 	Response: styles.response,
 	Both: styles.both,
@@ -24,7 +24,7 @@ const stageIcon: Record<RequestStage, string> = {
 
 interface LogsItemProps {
 	ruleId: string;
-	requestStage: RequestStage;
+	interceptStage: InterceptStage;
 	date: Date;
 	url: string;
 	resourceType: ResourceType;
@@ -33,7 +33,7 @@ interface LogsItemProps {
 }
 
 export const LogsItem = memo<LogsItemProps>(props => {
-	const {ruleId, requestStage, date, url, resourceType, method, onFollowRule} = props;
+	const {ruleId, interceptStage, date, url, resourceType, method, onFollowRule} = props;
 
 	const handleRuleFollow = useCallback(() => onFollowRule(ruleId), [ruleId, onFollowRule]);
 
@@ -41,20 +41,20 @@ export const LogsItem = memo<LogsItemProps>(props => {
 	const formattedTime = formatTime(date);
 
 	return (
-		<div className={styles.root}>
+		<li className={styles.root}>
 			<span className={styles.time} title={fullDate}>
 				{formattedTime}
 			</span>
-			<WithTooltip tooltip={stageTitle[requestStage]}>
-				<div className={classNames(styles.stage, stageIcon[requestStage])} />
+			<WithTooltip tooltip={stageTitle[interceptStage]}>
+				<div className={classNames(styles.stage, stageIcon[interceptStage])} />
 			</WithTooltip>
 			<span className={styles.method}>{method}</span>
 			<span className={styles.type}>{resourceType}</span>
 			<span className={styles.url} title={url}>
 				{url}
 			</span>
-			<IconButton className={styles.followButton} tooltip='Highlight rule' onClick={handleRuleFollow} />
-		</div>
+			<IconButton className={styles.followButton} tooltip='Follow a rule' onClick={handleRuleFollow} />
+		</li>
 	);
 });
 

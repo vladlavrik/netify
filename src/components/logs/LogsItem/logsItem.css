@@ -1,14 +1,18 @@
 .root {
 	display: flex;
 	align-items: center;
-	color: #b1b9c0;
+	min-width: 360px;
 	height: 28px;
-	user-select: text;
+	color: #b1b9c0;
+
+    &:nth-child(odd) {
+        background: #292929; /* TODO to vars*/
+    }
 }
 
 .time {
 	width: 56px;
-	margin: 0 8px;
+	margin-left: 8px;
 	flex-shrink: 0;
 	opacity: 0.5;
 }
@@ -18,26 +22,30 @@
 	height: 10px;
 	margin-right: 8px;
 
-	&.request {
-		background: url('icons/request.svg') no-repeat center;
-	}
-	&.response {
-		background: url('icons/response.svg') no-repeat center;
-	}
-	&.both {
-		background: url('icons/both.svg');
-	}
+&.request {
+	 background: url('icons/request.svg') no-repeat center;
+ }
+&.response {
+	 background: url('icons/response.svg') no-repeat center;
+ }
+&.both {
+	 background: url('icons/both.svg');
+ }
 }
 
 .method {
-	width: 48px;
+	width: 42px;
 	flex-shrink: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .type {
-	width: 58px;
+	width: 52px;
 	margin: 0 8px;
 	flex-shrink: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .url {

@@ -111,7 +111,7 @@ export class FetchDevtools {
 		// Report to UI logger about the new handled request
 		this.events.requestProcessed.emit({
 			requestId,
-			requestStage: 'Request',
+			interceptStage: 'Request',
 			ruleId: rule.id,
 			date: new Date(),
 			url: request.url,
@@ -170,7 +170,7 @@ export class FetchDevtools {
 		// Report to UI logger about the new handled response
 		this.events.requestProcessed.emit({
 			requestId,
-			requestStage: 'Response',
+			interceptStage: 'Response',
 			ruleId,
 			date: new Date(),
 			url: request.url,

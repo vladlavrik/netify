@@ -1,0 +1,13 @@
+.list {
+	height: 100%;
+	overflow: auto;
+}
+
+.placeholder {
+	position: relative;
+	margin: 0;
+	top: calc(50% - 8px);
+	font-size: 12px;
+	text-align: center;
+	color: #7e7e7e;
+}
