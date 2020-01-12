@@ -1,7 +1,7 @@
 import React, {memo, useMemo, useState, useCallback} from 'react';
 import {RequestBody, ResponseBody} from '@/interfaces/body';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
-import {RequestBodyType} from '@/constants/RequestBodyType';
+import {RequestBodyType, responseBodyTypesHumanTitles} from '@/constants/RequestBodyType';
 import {TextButton} from '@/components/@common/buttons/TextButton';
 import {RuleViewerDataTable} from '../RuleViewerDataTable';
 import styles from './RuleViewerBodyData.css';
@@ -59,9 +59,7 @@ export const RuleViewerBodyData = memo<RuleViewerBodyDataProps>(function RuleVie
 		case RequestBodyType.MultipartFromData:
 			return (
 				<>
-					<p className={styles.additionalInfo}>
-						{body.type === RequestBodyType.UrlEncodedForm ? 'Url encoded form' : 'Multipart from data'}
-					</p>
+					<p className={styles.additionalInfo}>{responseBodyTypesHumanTitles[body.type]}</p>
 					<RuleViewerDataTable values={body.value.map(({key, value}) => [key, value])} />
 				</>
 			);

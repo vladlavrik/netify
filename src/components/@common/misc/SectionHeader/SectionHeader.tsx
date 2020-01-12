@@ -8,7 +8,7 @@ interface SectionHeaderProps {
 
 export const SectionHeader = memo<SectionHeaderProps>(({title, children}) => (
 	<div className={styles.root}>
-		<p className={styles.title}>{title}</p>
+		<h1 className={styles.title}>{title}</h1>
 		{children}
 	</div>
 ));

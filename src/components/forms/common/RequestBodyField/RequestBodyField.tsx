@@ -1,21 +1,16 @@
 import React, {memo, useMemo} from 'react';
-import {RequestBodyType, requestBodyTypesList} from '@/constants/RequestBodyType';
+import {RequestBodyType, requestBodyTypesList, responseBodyTypesHumanTitles} from '@/constants/RequestBodyType';
 import {RadioTabs} from '@/components/@common/forms/RadioTabs';
 import {TextareaField} from '@/components/@common/forms/TextaredField';
 import {KeyValueArrayField} from '@/components/@common/forms/KeyValueArrayField';
 import {FieldRow} from '../FieldRow';
 
 function typeTitleGetter(type: 'Original' | RequestBodyType) {
-	switch (type) {
-		case 'Original':
-			return 'Original';
-		case RequestBodyType.Text:
-			return 'Text';
-		case RequestBodyType.UrlEncodedForm:
-			return 'Url encoded form';
-		case RequestBodyType.MultipartFromData:
-			return 'Multipart from data';
+	if (type === 'Original') {
+		return 'Original';
 	}
+
+	return responseBodyTypesHumanTitles[type];
 }
 
 interface RequestMethodFieldProps {

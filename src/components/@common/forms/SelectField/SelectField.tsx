@@ -11,6 +11,7 @@ interface SelectFieldProps {
 	className?: string;
 	name: string;
 	options: string[];
+	optionTitleGetter?(value: string): string;
 	placeholder?: string;
 	multiple?: boolean;
 	required?: boolean; // Disallow to select no one option
@@ -18,6 +19,7 @@ interface SelectFieldProps {
 
 export const SelectField = memo<SelectFieldProps>(props => {
 	const {className, name, placeholder, multiple, required} = props;
+	const {optionTitleGetter = (key: string) => key} = props;
 
 	const targetRef = useRef<HTMLButtonElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
@@ -78,7 +80,7 @@ export const SelectField = memo<SelectFieldProps>(props => {
 				onClick={handleExpansionToggle}
 				onBlur={handleFocusOut}
 				onKeyDown={handleKeyboardEvent}>
-				{values.join(', ') || placeholder}
+				{values.length === 0 ? placeholder : values.map(optionTitleGetter).join(', ')}
 			</button>
 
 			{expanded && (
@@ -100,7 +102,7 @@ export const SelectField = memo<SelectFieldProps>(props => {
 									data-index={index}
 									onClick={handleOptionClick}
 									onPointerDown={handleRefocusOnBlurRequire}>
-									{isEmpty ? placeholder || 'None' : option}
+									{isEmpty ? placeholder || 'None' : optionTitleGetter(option!)}
 								</li>
 							);
 						})}

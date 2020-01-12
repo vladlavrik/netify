@@ -5,9 +5,9 @@
 	height: 28px;
 	color: #b1b9c0;
 
-    &:nth-child(odd) {
-        background: #292929; /* TODO to vars*/
-    }
+	&:nth-child(odd) {
+		background: #292929; /* TODO to vars*/
+	}
 }
 
 .time {
@@ -22,15 +22,15 @@
 	height: 10px;
 	margin-right: 8px;
 
-&.request {
-	 background: url('icons/request.svg') no-repeat center;
- }
-&.response {
-	 background: url('icons/response.svg') no-repeat center;
- }
-&.both {
-	 background: url('icons/both.svg');
- }
+	&.request {
+		background: url('icons/request.svg') no-repeat center;
+	}
+	&.response {
+		background: url('icons/response.svg') no-repeat center;
+	}
+	&.both {
+		background: url('icons/both.svg');
+	}
 }
 
 .method {
