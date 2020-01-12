@@ -1,7 +1,7 @@
 import React, {memo, useMemo} from 'react';
 import {ResponseBodyType, responseBodyTypesList, responseBodyTypesHumanTitles} from '@/constants/ResponseBodyType';
 import {RadioTabs} from '@/components/@common/forms/RadioTabs';
-import {TextareaField} from '@/components/@common/forms/TextaredField';
+import {TextareaField} from '@/components/@common/forms/TextareaField';
 import {FileField} from '@/components/@common/forms/FileField';
 import {FieldRow} from '../FieldRow';
 

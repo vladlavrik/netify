@@ -41,8 +41,6 @@ interface RulesItemProps {
 	onShowDetails(id: string): void;
 }
 
-// TODO show names of methods and request types by value/name map
-// TODO use unique color of methods and request types
 export const RulesItem = memo<RulesItemProps>(function RulesItem(props) {
 	const {data, isStartEdgePosition, isEndEdgePosition, isHighlighted, onShowDetails} = props;
 	const {id: ruleId, active, filter, action} = data;
