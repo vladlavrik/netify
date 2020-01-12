@@ -31,3 +31,20 @@ export const responseErrorReasonsList = [
 	ResponseErrorReason.BlockedByClient,
 	ResponseErrorReason.BlockedByResponse,
 ];
+
+export const responseErrorReasonsHumanTitles: Record<ResponseErrorReason, string> = {
+	[ResponseErrorReason.Failed]: 'Failed',
+	[ResponseErrorReason.Aborted]: 'Aborted',
+	[ResponseErrorReason.TimedOut]: 'Access denied',
+	[ResponseErrorReason.AccessDenied]: 'Access denied',
+	[ResponseErrorReason.ConnectionClosed]: 'Connection closed',
+	[ResponseErrorReason.ConnectionReset]: 'Connection reset',
+	[ResponseErrorReason.ConnectionRefused]: 'Connection refused',
+	[ResponseErrorReason.ConnectionAborted]: 'Connection aborted',
+	[ResponseErrorReason.ConnectionFailed]: 'Connection failed',
+	[ResponseErrorReason.NameNotResolved]: 'Name not resolved',
+	[ResponseErrorReason.InternetDisconnected]: 'Internet disconnected',
+	[ResponseErrorReason.AddressUnreachable]: 'Address unreachable',
+	[ResponseErrorReason.BlockedByClient]: 'Blocked by client',
+	[ResponseErrorReason.BlockedByResponse]: 'Blocked by response',
+};

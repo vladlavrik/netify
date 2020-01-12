@@ -1,0 +1,19 @@
+.root {
+	display: flex;
+	align-items: center;
+	flex-shrink: 0;
+	height: 30px;
+	box-sizing: border-box;
+	border-bottom: var(--color-brd-main) 1px solid;
+	background: var(--color-bg-light);
+}
+
+.closeButton {
+	margin: 0 4px;
+	--icon-button-bg: url('./icons/close.svg');
+}
+
+.title {
+	flex-grow: 1;
+	font-size: 12px;
+}

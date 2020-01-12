@@ -1,0 +1,9 @@
+.title {
+	padding: 2px 12px 4px 27px;
+	vertical-align: top;
+}
+
+.value {
+	padding: 2px 8px 4px 0;
+	color: #d5d5d5; /* TODO to vars*/
+}

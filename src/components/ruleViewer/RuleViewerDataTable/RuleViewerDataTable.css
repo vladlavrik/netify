@@ -1,0 +1,19 @@
+.root {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.title {
+	padding: 2px 0;
+	vertical-align: top;
+	word-break: break-word;
+	font-weight: 700;
+	color: var(--color-main);
+}
+
+.value {
+	padding: 2px 8px;
+	vertical-align: top;
+	word-break: break-word;
+	color: #d5d5d5; /* TODO to vars*/
+}

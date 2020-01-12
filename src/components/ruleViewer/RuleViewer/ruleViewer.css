@@ -1,0 +1,22 @@
+.root {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.header {
+	min-width: 200px;
+	padding: 4px 0 4px 8px;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.headerData {
+	color: #d5d5d5; /* TODO to vars*/
+}
+
+.body {
+	flex-grow: 1;
+	padding: 8px 0;
+	overflow: auto;
+}
