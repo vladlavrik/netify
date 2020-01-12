@@ -1,5 +1,5 @@
 import React, {memo, ReactNode} from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import styles from './fieldRow.css';
 
 interface FieldRowProps {
@@ -8,11 +8,11 @@ interface FieldRowProps {
 	children?: ReactNode;
 }
 
-export const FieldRow = memo<FieldRowProps>(({className, title, children}) => (
-	<div className={classNames(styles.root, className)}>
-		<p className={styles.title}>{title}</p>
-		{children}
-	</div>
-));
-
-FieldRow.displayName = 'FieldRow';
+export const FieldRow = memo<FieldRowProps>(function FieldRow({className, title, children}) {
+	return (
+		<div className={cn(styles.root, className)}>
+			<p className={styles.title}>{title}</p>
+			{children}
+		</div>
+	);
+});

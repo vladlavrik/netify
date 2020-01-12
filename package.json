@@ -3,8 +3,9 @@
   "scripts": {
     "dev": "webpack --mode=development",
     "build": "webpack --mode=production",
-    "prettier": "prettier --write ./src/**/*.{js,ts,tsx,css,html}",
-    "test": "jest"
+    "prettier": "prettier --write ./src/**/*.{css,html}",
+    "eslintFix": "eslint --fix --ext=.tsx --ext=.ts ./src/",
+    "eslint": "eslint --ext=.tsx --ext=.ts ./src/"
   },
   "dependencies": {
     "@types/base64-js": "^1.2.5",

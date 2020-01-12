@@ -6,7 +6,7 @@ import {$rules, updateRule} from '@/stores/rulesStore';
 import {$ruleEditorShownFor, hideRuleEditor} from '@/stores/uiStore';
 import {RuleForm} from '../RuleForm';
 
-export const RuleEditor = memo(() => {
+export const RuleEditor = memo(function RuleEditor() {
 	const {dbRulesMapper} = useContext(DbContext)!;
 
 	const initialRuleId = useStore($ruleEditorShownFor);
@@ -27,5 +27,3 @@ export const RuleEditor = memo(() => {
 
 	return <RuleForm initialRule={initialRule} onSave={handleSave} onCancel={handleCancel} />;
 });
-
-RuleEditor.displayName = 'RuleEditor';

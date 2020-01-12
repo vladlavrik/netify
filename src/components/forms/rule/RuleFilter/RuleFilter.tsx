@@ -8,7 +8,7 @@ import {PopUpAlert} from '@/components/@common/popups/PopUpAlert';
 import {FieldRow} from '@/components/forms/common/FieldRow';
 import styles from './ruleFilter.css';
 
-export const RuleFilter = memo(() => {
+export const RuleFilter = memo(function RuleFilter() {
 	const [urlHintShown, setUrlHintShown] = useState(false);
 
 	const handleUrlHintShow = useCallback(() => setUrlHintShown(true), []);
@@ -66,5 +66,3 @@ export const RuleFilter = memo(() => {
 		</FieldRow>
 	);
 });
-
-RuleFilter.displayName = 'RuleFilter';

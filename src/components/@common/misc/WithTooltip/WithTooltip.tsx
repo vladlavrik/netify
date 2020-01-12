@@ -1,5 +1,5 @@
 import React, {memo, useState, useRef, useCallback, ReactNode} from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import {useDropdownAutoPosition} from '@/hooks/useDropdownAutoPosition';
 import styles from './withTooltip.css';
 
@@ -10,7 +10,7 @@ interface WithTooltipProps {
 	children: ReactNode;
 }
 
-export const WithTooltip = memo<WithTooltipProps>(props => {
+export const WithTooltip = memo<WithTooltipProps>(function WithTooltip(props) {
 	const {className, tooltip, disabled, children} = props;
 
 	const [expanded, setExpanded] = useState(false);
@@ -37,14 +37,14 @@ export const WithTooltip = memo<WithTooltipProps>(props => {
 	return (
 		<div
 			ref={targetRef}
-			className={classNames(styles.root, className)}
+			className={cn(styles.root, className)}
 			onPointerEnter={handleExpand}
 			onPointerLeave={handleCollapse}>
 			{children}
 			{expanded && (
 				<p
 					ref={contentRef}
-					className={classNames(
+					className={cn(
 						styles.tooltip,
 						styles[`expand-x-to-${expandXTo}`],
 						styles[`expand-y-to-${expandYTo}`],
@@ -56,5 +56,3 @@ export const WithTooltip = memo<WithTooltipProps>(props => {
 		</div>
 	);
 });
-
-WithTooltip.displayName = 'WithTooltip';

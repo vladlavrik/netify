@@ -8,11 +8,11 @@ interface PopUpAlertProps {
 	children: ReactNode;
 }
 
-export const PopUpAlert = memo<PopUpAlertProps>(({onClose, children}) => (
-	<PopUp className={styles.root}>
-		<div className={styles.content}>{children}</div>
-		<Button onClick={onClose}>Close</Button>
-	</PopUp>
-));
-
-PopUpAlert.displayName = 'PopUpAlert';
+export const PopUpAlert = memo<PopUpAlertProps>(function PopUpAlert({onClose, children}) {
+	return (
+		<PopUp className={styles.root}>
+			<div className={styles.content}>{children}</div>
+			<Button onClick={onClose}>Close</Button>
+		</PopUp>
+	);
+});

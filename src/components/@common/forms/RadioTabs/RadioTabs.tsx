@@ -10,7 +10,7 @@ interface RadioTabsProps {
 	children?(tab: string): ReactNode;
 }
 
-export const RadioTabs = memo<RadioTabsProps>(({name, options, optionTitleGetter, children}) => {
+export const RadioTabs = memo<RadioTabsProps>(function RadioTabs({name, options, optionTitleGetter, children}) {
 	const [field] = useField(name);
 
 	return (
@@ -27,5 +27,3 @@ export const RadioTabs = memo<RadioTabsProps>(({name, options, optionTitleGetter
 		</div>
 	);
 });
-
-RadioTabs.displayName = 'RadioTabs';

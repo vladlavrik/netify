@@ -6,8 +6,6 @@ interface FieldErrorProps {
 	name: string;
 }
 
-export const FieldError = memo<FieldErrorProps>(({name}) => (
-	<ErrorMessage component='p' className={styles.root} name={name} />
-));
-
-FieldError.displayName = 'FieldError';
+export const FieldError = memo<FieldErrorProps>(function FieldError({name}) {
+	return <ErrorMessage component='p' className={styles.root} name={name} />;
+});

@@ -1,5 +1,5 @@
 import React, {memo} from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import {FieldArray, getIn} from 'formik';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {TextField} from '@/components/@common/forms/TextField';
@@ -13,7 +13,7 @@ interface TextArrayFieldProps {
 	removeControlTitle?: string;
 }
 
-export const TextArrayField = memo<TextArrayFieldProps>(props => {
+export const TextArrayField = memo<TextArrayFieldProps>(function TextArrayField(props) {
 	const {name, placeholder, addControlTitle = 'Add new one', removeControlTitle = 'Remove item'} = props;
 
 	return (
@@ -34,13 +34,13 @@ export const TextArrayField = memo<TextArrayFieldProps>(props => {
 
 								{index === list.length - 1 ? (
 									<IconButton
-										className={classNames(styles.control, styles.typeAdd)}
+										className={cn(styles.control, styles.typeAdd)}
 										tooltip={addControlTitle}
 										onClick={() => helpers.push('')}
 									/>
 								) : (
 									<IconButton
-										className={classNames(styles.control, styles.typeRemove)}
+										className={cn(styles.control, styles.typeRemove)}
 										tooltip={removeControlTitle}
 										onClick={() => helpers.remove(index)}
 									/>
@@ -54,5 +54,3 @@ export const TextArrayField = memo<TextArrayFieldProps>(props => {
 		</ul>
 	);
 });
-
-TextArrayField.displayName = 'TextArrayField';

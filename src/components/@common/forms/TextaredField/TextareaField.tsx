@@ -1,5 +1,5 @@
 import React, {memo} from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import {useField} from 'formik';
 import styles from './textareaField.css';
 
@@ -12,13 +12,13 @@ interface TextareaFieldProps {
 	disabled?: boolean;
 }
 
-export const TextareaField = memo<TextareaFieldProps>(props => {
+export const TextareaField = memo<TextareaFieldProps>(function TextareaField(props) {
 	const {className, name, placeholder, rows = 4, maxlength, disabled} = props;
 	const [{value, onChange, onBlur}] = useField<string>(name);
 
 	return (
 		<textarea
-			className={classNames(styles.root, className)}
+			className={cn(styles.root, className)}
 			name={name}
 			disabled={disabled}
 			placeholder={placeholder}
@@ -31,5 +31,3 @@ export const TextareaField = memo<TextareaFieldProps>(props => {
 		/>
 	);
 });
-
-TextareaField.displayName = 'TextareaField';

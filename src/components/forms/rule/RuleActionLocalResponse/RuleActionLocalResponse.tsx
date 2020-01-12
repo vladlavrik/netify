@@ -4,7 +4,7 @@ import {StatusCodeField} from '@/components/forms/common/StatusCodeField';
 import {SetHeadersField} from '@/components/forms/common/SetHeadersField';
 import {ResponseBodyField} from '@/components/forms/common/ResponseBodyField';
 
-export const RuleActionLocalResponse = memo(() => {
+export const RuleActionLocalResponse = memo(function RuleActionLocalResponse() {
 	const namePrefix = `actionConfigs.${RuleActionsType.LocalResponse}`;
 
 	return (
@@ -15,5 +15,3 @@ export const RuleActionLocalResponse = memo(() => {
 		</div>
 	);
 });
-
-RuleActionLocalResponse.displayName = 'RuleActionLocalResponse';

@@ -11,7 +11,7 @@ interface AppSectionsProps {
 	floatingSection?: ReactNode;
 }
 
-export const AppSections = memo<AppSectionsProps>(props => {
+export const AppSections = memo<AppSectionsProps>(function AppSections(props) {
 	const {mainSection, secondarySection, floatingSection} = props;
 
 	const [secondarySectionWidth, setSecondarySectionWidth] = useState(() => window.innerWidth / 2);
@@ -68,5 +68,3 @@ export const AppSections = memo<AppSectionsProps>(props => {
 		</div>
 	);
 });
-
-AppSections.displayName = 'AppSections';

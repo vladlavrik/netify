@@ -6,7 +6,7 @@ import {RuleActionMutation} from '../RuleActionMutation';
 import {RuleActionLocalResponse} from '../RuleActionLocalResponse';
 import {RuleActionFailure} from '../RuleActionFailure';
 
-export const RuleActionConfig = memo(() => {
+export const RuleActionConfig = memo(function RuleActionConfig() {
 	const [field] = useField<RuleActionsType>('actionType');
 
 	switch (field.value) {
@@ -23,5 +23,3 @@ export const RuleActionConfig = memo(() => {
 			return <RuleActionFailure />;
 	}
 });
-
-RuleActionConfig.displayName = 'RuleActionConfig';

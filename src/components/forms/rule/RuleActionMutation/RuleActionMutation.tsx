@@ -1,5 +1,5 @@
 import React, {memo} from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {FieldRow} from '@/components/forms/common/FieldRow';
 import {RequestMethodField} from '@/components/forms/common/RequestMethodField';
@@ -11,13 +11,13 @@ import {ResponseBodyField} from '@/components/forms/common/ResponseBodyField';
 import {RuleEndpointField} from '../RuleEndpointField';
 import styles from './ruleActionMutation.css';
 
-export const RuleActionMutation = memo(() => {
+export const RuleActionMutation = memo(function RuleActionMutation() {
 	const namePrefix = `actionConfigs.${RuleActionsType.Mutation}`;
 
 	return (
 		<div>
 			<FieldRow title={<strong>Stage</strong>}>
-				<div className={classNames(styles.stageIcon, styles.request)} />
+				<div className={cn(styles.stageIcon, styles.request)} />
 				<span className={styles.stageName}>Request</span>
 			</FieldRow>
 
@@ -30,7 +30,7 @@ export const RuleActionMutation = memo(() => {
 			<div className={styles.separator} />
 
 			<FieldRow title={<strong>Stage</strong>}>
-				<div className={classNames(styles.stageIcon, styles.response)} />
+				<div className={cn(styles.stageIcon, styles.response)} />
 				<span className={styles.stageName}>Response</span>
 			</FieldRow>
 			<StatusCodeField name={`${namePrefix}.response.statusCode`} />
@@ -40,5 +40,3 @@ export const RuleActionMutation = memo(() => {
 		</div>
 	);
 });
-
-RuleActionMutation.displayName = 'RuleActionMutation';

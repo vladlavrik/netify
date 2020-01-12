@@ -18,7 +18,7 @@ interface RequestMethodFieldProps {
 	allowOrigin?: boolean;
 }
 
-export const RequestBodyField = memo<RequestMethodFieldProps>(({name, allowOrigin}) => {
+export const RequestBodyField = memo<RequestMethodFieldProps>(function RequestBodyField({name, allowOrigin}) {
 	const options = useMemo(() => {
 		return allowOrigin ? ['Original', ...requestBodyTypesList] : requestBodyTypesList;
 	}, [allowOrigin]);
@@ -51,5 +51,3 @@ export const RequestBodyField = memo<RequestMethodFieldProps>(({name, allowOrigi
 		</FieldRow>
 	);
 });
-
-RequestBodyField.displayName = 'RequestMethodField';

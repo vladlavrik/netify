@@ -6,7 +6,7 @@ import {Button} from '@/components/@common/buttons/Button';
 import {RulesItem} from '../RulesItem';
 import styles from './rulesList.css';
 
-export const RulesList = memo(() => {
+export const RulesList = memo(function RulesList() {
 	const hasRules = useStore($hasRules);
 	const highlightedId = useStore($ruleDetailsShownFor);
 	const rulesCount = useStore($rulesCount);
@@ -40,5 +40,3 @@ export const RulesList = memo(() => {
 		</div>
 	);
 });
-
-RulesList.displayName = 'RulesList';

@@ -17,7 +17,7 @@ interface ResponseBodyFieldProps {
 	allowOrigin?: boolean;
 }
 
-export const ResponseBodyField = memo<ResponseBodyFieldProps>(({name, allowOrigin}) => {
+export const ResponseBodyField = memo<ResponseBodyFieldProps>(function ResponseBodyField({name, allowOrigin}) {
 	const options = useMemo(() => {
 		return allowOrigin ? ['Original', ...responseBodyTypesList] : responseBodyTypesList;
 	}, [allowOrigin]);
@@ -42,5 +42,3 @@ export const ResponseBodyField = memo<ResponseBodyFieldProps>(({name, allowOrigi
 		</FieldRow>
 	);
 });
-
-ResponseBodyField.displayName = 'ResponseBodyField';

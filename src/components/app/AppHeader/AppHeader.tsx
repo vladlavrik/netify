@@ -1,6 +1,6 @@
 import React, {memo, useCallback} from 'react';
 import {useStore} from 'effector-react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import {$debuggerActive, $debuggerSwitching, $useRulesPerDomain, $logAllRequest, toggleDebuggerEnabled, toggleUseRulesPerDomain, toggleLogAllRequest} from '@/stores/uiStore'; // prettier-ignore
 import {$hasActiveRules} from '@/stores/rulesStore';
 import {useCompactModeCondition} from '@/hooks/useCompactModeCondition';
@@ -9,7 +9,7 @@ import {Checkbox} from '@/components/@common/forms/Checkbox';
 import {WithTooltip} from '@/components/@common/misc/WithTooltip';
 import styles from './appHeader.css';
 
-export const AppHeader = memo(() => {
+export const AppHeader = memo(function AppHeader() {
 	const debuggerActive = useStore($debuggerActive);
 	const debuggerSwitching = useStore($debuggerSwitching);
 	const hasActiveRules = useStore($hasActiveRules);
@@ -25,7 +25,7 @@ export const AppHeader = memo(() => {
 	return (
 		<header className={styles.root}>
 			<IconButton
-				className={classNames(styles.debuggerSwitcher, debuggerActive ? styles.active : styles.inactive)}
+				className={cn(styles.debuggerSwitcher, debuggerActive ? styles.active : styles.inactive)}
 				disabled={!hasActiveRules}
 				tooltip={debuggerActive ? 'Disable debugger' : 'Enable debugger'}
 				onClick={handleToggleDebuggerEnabled}>
@@ -72,5 +72,3 @@ export const AppHeader = memo(() => {
 		</header>
 	);
 });
-
-AppHeader.displayName = 'AppHeader';

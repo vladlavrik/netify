@@ -7,7 +7,7 @@ import {hideCompose} from '@/stores/uiStore';
 import {randomHex} from '@/helpers/random';
 import {RuleForm} from '../RuleForm';
 
-export const RuleCompose = memo(() => {
+export const RuleCompose = memo(function RuleCompose() {
 	const {dbRulesMapper} = useContext(DbContext)!;
 
 	const handleSave = useCallback(async (rule: Rule) => {
@@ -45,5 +45,3 @@ export const RuleCompose = memo(() => {
 
 	return <RuleForm initialRule={ruleValue} onSave={handleSave} onCancel={handleCancel} />;
 });
-
-RuleCompose.displayName = 'RuleCompose';

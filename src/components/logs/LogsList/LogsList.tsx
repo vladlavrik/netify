@@ -5,7 +5,7 @@ import {$logs, $hasLogs} from '@/stores/logsStore';
 import {LogsItem} from '../LogsItem';
 import styles from './logsList.css';
 
-export const LogsList = memo(() => {
+export const LogsList = memo(function LogsList() {
 	const hasLogs = useStore($hasLogs);
 
 	const listNode = useList($logs, log => (
@@ -23,5 +23,3 @@ export const LogsList = memo(() => {
 
 	return hasLogs ? <ul className={styles.list}>{listNode}</ul> : <p className={styles.placeholder}>No logs here</p>;
 });
-
-LogsList.displayName = 'LogsList';

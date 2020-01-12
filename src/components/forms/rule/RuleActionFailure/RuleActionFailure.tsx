@@ -7,16 +7,16 @@ import styles from './ruleActionFailure.css';
 
 const optionTitleGetter = (value: ResponseErrorReason) => responseErrorReasonsHumanTitles[value];
 
-export const RuleActionFailure = memo(() => (
-	<FieldRow title='Reason:'>
-		<SelectField
-			className={styles.field}
-			name={`actionConfigs.${RuleActionsType.Failure}.reason`}
-			options={responseErrorReasonsList}
-			optionTitleGetter={optionTitleGetter}
-			required
-		/>
-	</FieldRow>
-));
-
-RuleActionFailure.displayName = 'RuleActionFailure';
+export const RuleActionFailure = memo(function RuleActionFailure() {
+	return (
+		<FieldRow title='Reason:'>
+			<SelectField
+				className={styles.field}
+				name={`actionConfigs.${RuleActionsType.Failure}.reason`}
+				options={responseErrorReasonsList}
+				optionTitleGetter={optionTitleGetter}
+				required
+			/>
+		</FieldRow>
+	);
+});

@@ -6,10 +6,10 @@ interface DropHeadersFieldProps {
 	name: string;
 }
 
-export const DropHeadersField = memo<DropHeadersFieldProps>(({name}) => (
-	<FieldRow title='Drop headers:'>
-		<TextArrayField name={name} placeholder='Header name' />
-	</FieldRow>
-));
-
-DropHeadersField.displayName = 'DropHeadersField';
+export const DropHeadersField = memo<DropHeadersFieldProps>(function DropHeadersField({name}) {
+	return (
+		<FieldRow title='Drop headers:'>
+			<TextArrayField name={name} placeholder='Header name' />
+		</FieldRow>
+	);
+});

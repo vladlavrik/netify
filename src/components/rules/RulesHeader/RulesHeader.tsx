@@ -1,6 +1,6 @@
 import React, {memo, useCallback, useContext, useState} from 'react';
 import {useStore} from 'effector-react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import {DbContext} from '@/contexts/dbContext';
 import {$secondarySectionCollapsed, showCompose, toggleSecondarySectionCollapse} from '@/stores/uiStore';
 import {$hasRules, removeAllRules} from '@/stores/rulesStore';
@@ -10,7 +10,7 @@ import {IconButton} from '@/components/@common/buttons/IconButton';
 import {PopUpConfirm} from '@/components/@common/popups/PopUpConfirm';
 import styles from './rulesHeader.css';
 
-export const RulesHeader = memo(() => {
+export const RulesHeader = memo(function RulesHeader() {
 	const {dbRulesMapper} = useContext(DbContext)!;
 
 	const hasRules = useStore($hasRules);
@@ -34,12 +34,12 @@ export const RulesHeader = memo(() => {
 		<>
 			<SectionHeader title='Rules'>
 				<IconButton
-					className={classNames(styles.control, styles.add)}
+					className={cn(styles.control, styles.add)}
 					tooltip='Add a new rule'
 					onClick={handleShowCompose}
 				/>
 				<IconButton
-					className={classNames(styles.control, styles.clear)}
+					className={cn(styles.control, styles.clear)}
 					disabled={!hasRules}
 					tooltip='Clear all rules'
 					onClick={handleRemoveAllAsk}
@@ -50,10 +50,7 @@ export const RulesHeader = memo(() => {
 						<div className={styles.separator} />
 
 						<IconButton
-							className={classNames(
-								styles.control,
-								secondarySectionCollapsed ? styles.expand : styles.collapse,
-							)}
+							className={cn(styles.control, secondarySectionCollapsed ? styles.expand : styles.collapse)}
 							tooltip={secondarySectionCollapsed ? 'Expand logs' : 'Collapse logs'}
 							onClick={handleToggleSectionCollapsed}
 						/>
@@ -69,5 +66,3 @@ export const RulesHeader = memo(() => {
 		</>
 	);
 });
-
-RulesHeader.displayName = 'RulesHeader';

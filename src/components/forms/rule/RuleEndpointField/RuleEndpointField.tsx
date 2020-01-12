@@ -11,7 +11,7 @@ interface RuleEndpointField {
 	name: string;
 }
 
-export const RuleEndpointField = memo<RuleEndpointField>(({name}) => {
+export const RuleEndpointField = memo<RuleEndpointField>(function RuleEndpointField({name}) {
 	const [macrosDDExpanded, macrosDDActions] = useDropdownExpansion();
 
 	const [, , {setValue}] = useField(name);
@@ -98,5 +98,3 @@ export const RuleEndpointField = memo<RuleEndpointField>(({name}) => {
 		</FieldRow>
 	);
 });
-
-RuleEndpointField.displayName = 'RuleEndpointField';

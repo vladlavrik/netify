@@ -9,18 +9,18 @@ interface PopUpConfirmProps {
 	children: ReactNode;
 }
 
-export const PopUpConfirm = memo<PopUpConfirmProps>(({onConfirm, onCancel, children}) => (
-	<PopUp className={styles.root}>
-		<div className={styles.content}>{children}</div>
-		<div className={styles.buttons}>
-			<Button className={styles.button} onClick={onConfirm}>
-				Confirm
-			</Button>
-			<Button className={styles.button} styleType='light' onClick={onCancel}>
-				Cancel
-			</Button>
-		</div>
-	</PopUp>
-));
-
-PopUpConfirm.displayName = 'PopUpConfirm';
+export const PopUpConfirm = memo<PopUpConfirmProps>(function PopUpConfirm({onConfirm, onCancel, children}) {
+	return (
+		<PopUp className={styles.root}>
+			<div className={styles.content}>{children}</div>
+			<div className={styles.buttons}>
+				<Button className={styles.button} onClick={onConfirm}>
+					Confirm
+				</Button>
+				<Button className={styles.button} styleType='light' onClick={onCancel}>
+					Cancel
+				</Button>
+			</div>
+		</PopUp>
+	);
+});

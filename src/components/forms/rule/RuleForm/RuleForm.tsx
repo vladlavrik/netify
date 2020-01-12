@@ -14,7 +14,7 @@ interface RuleFormProps {
 	onCancel(): void;
 }
 
-export const RuleForm = memo<RuleFormProps>(({initialRule, onSave, onCancel}) => {
+export const RuleForm = memo<RuleFormProps>(function RuleForm({initialRule, onSave, onCancel}) {
 	const initialValues = useMemo(() => serializeRuleForm(initialRule), [initialRule]);
 
 	const handleSubmit = useCallback(
@@ -54,5 +54,3 @@ export const RuleForm = memo<RuleFormProps>(({initialRule, onSave, onCancel}) =>
 		</div>
 	);
 });
-
-RuleForm.displayName = 'RuleForm';

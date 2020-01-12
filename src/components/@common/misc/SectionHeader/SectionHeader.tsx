@@ -6,11 +6,11 @@ interface SectionHeaderProps {
 	children?: ReactNode;
 }
 
-export const SectionHeader = memo<SectionHeaderProps>(({title, children}) => (
-	<div className={styles.root}>
-		<h1 className={styles.title}>{title}</h1>
-		{children}
-	</div>
-));
-
-SectionHeader.displayName = 'SectionHeader';
+export const SectionHeader = memo<SectionHeaderProps>(function SectionHeader({title, children}) {
+	return (
+		<div className={styles.root}>
+			<h1 className={styles.title}>{title}</h1>
+			{children}
+		</div>
+	);
+});

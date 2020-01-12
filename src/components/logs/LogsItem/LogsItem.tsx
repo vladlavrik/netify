@@ -1,5 +1,5 @@
 import React, {memo, useCallback} from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import {Log} from '@/interfaces/log';
 import {ResourceType} from '@/constants/ResourceType';
 import {RequestMethod} from '@/constants/RequestMethod';
@@ -32,7 +32,7 @@ interface LogsItemProps {
 	onFollowRule(ruleId: string): void;
 }
 
-export const LogsItem = memo<LogsItemProps>(props => {
+export const LogsItem = memo<LogsItemProps>(function LogsItem(props) {
 	const {ruleId, interceptStage, date, url, resourceType, method, onFollowRule} = props;
 
 	const handleRuleFollow = useCallback(() => onFollowRule(ruleId), [ruleId, onFollowRule]);
@@ -46,7 +46,7 @@ export const LogsItem = memo<LogsItemProps>(props => {
 				{formattedTime}
 			</span>
 			<WithTooltip tooltip={stageTitle[interceptStage]}>
-				<div className={classNames(styles.stage, stageIcon[interceptStage])} />
+				<div className={cn(styles.stage, stageIcon[interceptStage])} />
 			</WithTooltip>
 			<span className={styles.method}>{method}</span>
 			<span className={styles.type}>{resourceType}</span>
@@ -57,5 +57,3 @@ export const LogsItem = memo<LogsItemProps>(props => {
 		</li>
 	);
 });
-
-LogsItem.displayName = 'LogsItem';

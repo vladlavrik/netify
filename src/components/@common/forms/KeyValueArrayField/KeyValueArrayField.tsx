@@ -1,5 +1,5 @@
 import React, {memo} from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import {FieldArray, getIn} from 'formik';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {TextField} from '@/components/@common/forms/TextField';
@@ -16,7 +16,7 @@ interface KeyValueArrayFieldProps {
 	removeControlTitle?: string;
 }
 
-export const KeyValueArrayField = memo<KeyValueArrayFieldProps>(props => {
+export const KeyValueArrayField = memo<KeyValueArrayFieldProps>(function KeyValueArrayField(props) {
 	const {
 		name,
 		keyNameSuffix,
@@ -51,13 +51,13 @@ export const KeyValueArrayField = memo<KeyValueArrayFieldProps>(props => {
 
 								{index === list.length - 1 ? (
 									<IconButton
-										className={classNames(styles.control, styles.typeAdd)}
+										className={cn(styles.control, styles.typeAdd)}
 										tooltip={addControlTitle}
 										onClick={() => helpers.push({[keyNameSuffix]: '', [valueNameSuffix]: ''})}
 									/>
 								) : (
 									<IconButton
-										className={classNames(styles.control, styles.typeRemove)}
+										className={cn(styles.control, styles.typeRemove)}
 										tooltip={removeControlTitle}
 										onClick={() => helpers.remove(index)}
 									/>
@@ -72,5 +72,3 @@ export const KeyValueArrayField = memo<KeyValueArrayFieldProps>(props => {
 		</ul>
 	);
 });
-
-KeyValueArrayField.displayName = 'KeyValueArrayField';

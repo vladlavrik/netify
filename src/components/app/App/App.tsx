@@ -10,7 +10,7 @@ import {AppHeader} from '../AppHeader';
 import {AppSections} from '../AppSections';
 import styles from './app.css';
 
-export const App = memo(() => {
+export const App = memo(function App() {
 	const composeShown = useStore($ruleComposeShown);
 	const editorShown = !!useStore($ruleEditorShownFor);
 	const detailsShown = !!useStore($ruleDetailsShownFor);
@@ -36,5 +36,3 @@ export const App = memo(() => {
 		</div>
 	);
 });
-
-App.displayName = 'App';

@@ -1,6 +1,6 @@
 import React, {memo, useMemo, useRef} from 'react';
 import {useField} from 'formik';
-import classNames from 'classnames';
+import cn from 'classnames';
 import {useDropdownAutoPosition} from '@/hooks/useDropdownAutoPosition';
 import {useSelectExpansion} from './useSelectExpansion';
 import {useSelectChange} from './useSelectChange';
@@ -17,7 +17,7 @@ interface SelectFieldProps {
 	required?: boolean; // Disallow to select no one option
 }
 
-export const SelectField = memo<SelectFieldProps>(props => {
+export const SelectField = memo<SelectFieldProps>(function SelectField(props) {
 	const {className, name, placeholder, multiple, required} = props;
 	const {optionTitleGetter = (key: string) => key} = props;
 
@@ -72,10 +72,10 @@ export const SelectField = memo<SelectFieldProps>(props => {
 	});
 
 	return (
-		<div className={classNames(styles.root, className)}>
+		<div className={cn(styles.root, className)}>
 			<button
 				ref={targetRef}
-				className={classNames(styles.label, !hasValue && styles.empty)}
+				className={cn(styles.label, !hasValue && styles.empty)}
 				type='button'
 				onClick={handleExpansionToggle}
 				onBlur={handleFocusOut}
@@ -86,7 +86,7 @@ export const SelectField = memo<SelectFieldProps>(props => {
 			{expanded && (
 				<div
 					ref={contentRef}
-					className={classNames(styles.content, styles[`expand-to-${expandTo}`])}
+					className={cn(styles.content, styles[`expand-to-${expandTo}`])}
 					style={{maxHeight: contentMaxHeight}}>
 					<ul>
 						{options.map((option, index) => {
@@ -94,7 +94,7 @@ export const SelectField = memo<SelectFieldProps>(props => {
 							return (
 								<li
 									key={option || 'empty'}
-									className={classNames(styles.option, {
+									className={cn(styles.option, {
 										[styles.empty]: isEmpty,
 										[styles.selected]: option && values.includes(option),
 										[styles.highlighted]: index === focusedOptionIndex,
@@ -112,5 +112,3 @@ export const SelectField = memo<SelectFieldProps>(props => {
 		</div>
 	);
 });
-
-SelectField.displayName = 'SelectField';

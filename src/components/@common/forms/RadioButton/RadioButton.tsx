@@ -1,5 +1,5 @@
 import React, {memo, ReactNode} from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import {useField} from 'formik';
 import styles from './radioButton.css';
 
@@ -11,11 +11,11 @@ interface RadioButtonProps {
 	children?: ReactNode;
 }
 
-export const RadioButton = memo<RadioButtonProps>(({className, name, value, disabled, children}) => {
+export const RadioButton = memo<RadioButtonProps>(function RadioButton({className, name, value, disabled, children}) {
 	const [{value: currentValue, onChange, onBlur}] = useField<string | undefined>(name);
 
 	return (
-		<label className={classNames(styles.root, className)}>
+		<label className={cn(styles.root, className)}>
 			<input
 				className={styles.input}
 				name={name}
@@ -31,5 +31,3 @@ export const RadioButton = memo<RadioButtonProps>(({className, name, value, disa
 		</label>
 	);
 });
-
-RadioButton.displayName = 'RadioButton';
