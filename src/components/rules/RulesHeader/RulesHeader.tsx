@@ -11,7 +11,7 @@ import {PopUpConfirm} from '@/components/@common/popups/PopUpConfirm';
 import styles from './rulesHeader.css';
 
 export const RulesHeader = memo(function RulesHeader() {
-	const {dbRulesMapper} = useContext(DbContext)!;
+	const {rulesMapper} = useContext(DbContext)!;
 
 	const hasRules = useStore($hasRules);
 	const secondarySectionCollapsed = useStore($secondarySectionCollapsed);
@@ -27,7 +27,7 @@ export const RulesHeader = memo(function RulesHeader() {
 	const handleRemoveAllCancel = useCallback(() => setShowRemoveAllAsk(false), []);
 	const handleRemoveAllConfirm = useCallback(async () => {
 		const perCurrentOrigin = $useRulesPerDomain.getState();
-		await removeAllRules({dbRulesMapper, perCurrentOrigin});
+		await removeAllRules({rulesMapper, perCurrentOrigin});
 		setShowRemoveAllAsk(false);
 	}, []);
 

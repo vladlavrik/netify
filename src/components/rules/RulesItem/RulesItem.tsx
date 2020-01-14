@@ -46,7 +46,7 @@ export const RulesItem = memo<RulesItemProps>(function RulesItem(props) {
 	const {id: ruleId, active, filter, action} = data;
 	const {url, methods, resourceTypes} = filter;
 
-	const {dbRulesMapper} = useContext(DbContext)!;
+	const {rulesMapper} = useContext(DbContext)!;
 
 	const [showRemoveAsk, setShowRemoveAsk] = useState(false);
 
@@ -74,12 +74,12 @@ export const RulesItem = memo<RulesItemProps>(function RulesItem(props) {
 
 	const handleActiveToggle = useCallback(async () => {
 		const rule = {...data, active: !data.active};
-		await updateRule({dbRulesMapper, rule});
-	}, [data, dbRulesMapper]);
+		await updateRule({rulesMapper, rule});
+	}, [data, rulesMapper]);
 
 	const handleMove = useCallback(
 		async (offset: number) => {
-			await moveRule({dbRulesMapper, ruleId, offset});
+			await moveRule({rulesMapper, ruleId, offset});
 		},
 		[ruleId],
 	);
@@ -94,9 +94,9 @@ export const RulesItem = memo<RulesItemProps>(function RulesItem(props) {
 	}, []);
 
 	const handleRemoveConfirm = useCallback(async () => {
-		await removeRule({dbRulesMapper, ruleId});
+		await removeRule({rulesMapper, ruleId});
 		setShowRemoveAsk(false);
-	}, [ruleId, dbRulesMapper]);
+	}, [ruleId, rulesMapper]);
 
 	useEffect(() => {
 		if (isHighlighted && rootRef.current) {

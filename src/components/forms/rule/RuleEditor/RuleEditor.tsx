@@ -7,7 +7,7 @@ import {$ruleEditorShownFor, hideRuleEditor} from '@/stores/uiStore';
 import {RuleForm} from '../RuleForm';
 
 export const RuleEditor = memo(function RuleEditor() {
-	const {dbRulesMapper} = useContext(DbContext)!;
+	const {rulesMapper} = useContext(DbContext)!;
 
 	const initialRuleId = useStore($ruleEditorShownFor);
 	const initialRule = useStoreMap({
@@ -17,7 +17,7 @@ export const RuleEditor = memo(function RuleEditor() {
 	})!;
 
 	const handleSave = useCallback(async (rule: Rule) => {
-		await updateRule({dbRulesMapper, rule});
+		await updateRule({rulesMapper, rule});
 		hideRuleEditor();
 	}, []);
 

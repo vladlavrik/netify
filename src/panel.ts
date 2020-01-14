@@ -97,7 +97,7 @@ class PanelApplication {
 
 		// Load a new rules list for the new domain
 		if ($useRulesPerDomain.getState()) {
-			await fetchRules({dbRulesMapper: this.rulesMapper, perCurrentHostname: true});
+			await fetchRules({rulesMapper: this.rulesMapper, perCurrentHostname: true});
 		}
 
 		// Report a new current tab url a devtool for compare request with related urls
@@ -120,9 +120,9 @@ class PanelApplication {
 	}
 
 	private fetchRules = async () => {
-		const dbRulesMapper = this.rulesMapper;
+		const {rulesMapper} = this;
 		const perCurrentHostname = $useRulesPerDomain.getState();
-		await fetchRules({dbRulesMapper, perCurrentHostname});
+		await fetchRules({rulesMapper, perCurrentHostname});
 	};
 
 	private initializeDevtools() {
@@ -167,12 +167,9 @@ class PanelApplication {
 		document.querySelector('body')!.classList.add(`platform-${platform}`);
 
 		// Render the UI
+		const {rulesMapper} = this;
 		const appElement = React.createElement(App);
-		const appWithStore = React.createElement(
-			DbContext.Provider,
-			{value: {dbRulesMapper: this.rulesMapper}},
-			appElement,
-		);
+		const appWithStore = React.createElement(DbContext.Provider, {value: {rulesMapper}}, appElement);
 		ReactDOM.render(appWithStore, document.getElementById('app-root'));
 	}
 }

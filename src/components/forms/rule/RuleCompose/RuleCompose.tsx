@@ -8,10 +8,10 @@ import {randomHex} from '@/helpers/random';
 import {RuleForm} from '../RuleForm';
 
 export const RuleCompose = memo(function RuleCompose() {
-	const {dbRulesMapper} = useContext(DbContext)!;
+	const {rulesMapper} = useContext(DbContext)!;
 
 	const handleSave = useCallback(async (rule: Rule) => {
-		await createRule({dbRulesMapper, rule});
+		await createRule({rulesMapper, rule});
 		hideCompose();
 	}, []);
 
