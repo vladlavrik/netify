@@ -8,6 +8,7 @@
 	background: none;
 	text-align: left;
 	color: inherit;
+	user-select: none;
 
 	&::before {
 		content: '';
