@@ -4,7 +4,7 @@ import {combine} from 'effector';
 import {DbContext} from '@/contexts/dbContext';
 import {addLogEntry} from '@/stores/logsStore';
 import {$rules, $hasActiveRules, fetchRules} from '@/stores/rulesStore';
-import {$debuggerEnabled, $debuggerActive, setDebuggerEnabled, setDebuggerActive, setDebuggerSwitching, setPanelShown} from '@/stores/uiStore'; // prettier-ignore
+import {$debuggerEnabled, $debuggerActive, $useRulesPerDomain, setDebuggerEnabled, setDebuggerActive, setDebuggerSwitching, setPanelShown} from '@/stores/uiStore'; // prettier-ignore
 import {openIDB, RulesMapper} from '@/services/indexedDB';
 import {ExtensionDevtoolsConnector, ExtensionTab, ExtensionIcon} from '@/services/extension';
 import {FetchDevtools, FetchRuleStore} from '@/services/devtools/fetch';
@@ -12,100 +12,169 @@ import {getPlatform} from '@/helpers/browser';
 import {App} from '@/components/app';
 import '@/style/page.css';
 
-// TODO Render раньше
+class PanelApplication {
+	private tabId = chrome.devtools.inspectedWindow.tabId;
+	private tab = new ExtensionTab(this.tabId);
 
-(async () => {
-	// Get the current tab id, url and hostname
-	const {tabId} = chrome.devtools.inspectedWindow;
-	const tabUrl = await new ExtensionTab(tabId).getUrl();
-	const tabHost = new URL(tabUrl).hostname;
+	private tabOrigin!: string;
+	private db!: IDBDatabase;
+	private rulesMapper!: RulesMapper;
 
-	// Open indexed db connection
-	let dbConnection = await openIDB();
+	extIcon = new ExtensionIcon(this.tabId, 'Netify');
+	devtools = new ExtensionDevtoolsConnector(this.tabId);
+	fetchRulesStore = new FetchRuleStore();
+	fetchDevtools = new FetchDevtools(this.devtools, this.fetchRulesStore);
 
-	try {
-		dbConnection = await openIDB();
-	} catch (error) {
-		// TODO test working after exception
-		console.error('Exception on open IndexedDB', error);
+	constructor() {
+		this.initialize().catch(error => {
+			// TODO handle the error
+			throw error;
+		});
 	}
 
-	// Initialize db data mappers
-	const dbRulesMapper = new RulesMapper(dbConnection, tabHost);
+	private async initialize() {
+		// Delivery logs from the devtools to the application store
+		this.fetchDevtools.events.requestProcessed.on(addLogEntry);
 
-	// Initialize devtools
-	const devtools = new ExtensionDevtoolsConnector(tabId);
-	const extIcon = new ExtensionIcon(tabId, 'Netify');
-	const fetchRulesStore = new FetchRuleStore();
-	const fetchDevtools = new FetchDevtools(devtools, fetchRulesStore);
+		// Make devtools inactive on an external used's detach
+		this.devtools.userDetachEvent.on(this.makeDevtoolsDisabled);
 
-	// Load rules from database
-	await fetchRules({dbRulesMapper});
+		// Detach debugger on the page leave
+		self.addEventListener('beforeunload', this.forcedDevtoolsDisable);
 
-	// Connect devtools and store by events model
-	devtools.userDetachEvent.on(() => {
+		// Listen to external (in extension) events
+		chrome.runtime.onMessage.addListener(this.handleExtensionEvents);
+
+		// Re-fetch the rules list on a browser tab hostname changed
+		this.tab.pageUrlChangeEvent.on(this.handleTabUrlChange);
+
+		// Re-fetch the rules list when user switch on/off rules list per domain
+		$useRulesPerDomain.updates.watch(this.fetchRules);
+
+		// Require the current browser's tab hostname
+		const tabUrl = await this.tab.getPageUrl();
+		this.tabOrigin = tabUrl.origin;
+
+		this.fetchRulesStore.setCurrentOrigin(this.tabOrigin);
+
+		await this.prepareDatabase();
+		await this.fetchRules();
+		this.renderUI();
+		this.initializeDevtools();
+	}
+
+	private makeDevtoolsDisabled() {
+		// Make devtools inactive on external used's detach
 		setDebuggerEnabled(false);
 		setDebuggerActive(false);
-	});
+	}
 
-	// Delivery logs from devtools to the application store
-	fetchDevtools.events.requestProcessed.on(addLogEntry);
-
-	// Debugger is allowed if there is at least one active rule and its enabled by an user
-	const $debuggerAllowed = combine([$hasActiveRules, $debuggerEnabled]).map(conditions => conditions.every(Boolean));
-
-	// Synchronize Fetch devtools activity value with the ui state and the extension icon
-	combine({rules: $rules, debuggerAllowed: $debuggerAllowed}).watch(async function({rules, debuggerAllowed}) {
-		// TODO disallow switch state when previous operation during
-
-		setDebuggerSwitching(true);
-		fetchRulesStore.setRulesList(rules);
-
-		const debuggerActive = $debuggerActive.getState();
-		if (debuggerAllowed && !debuggerActive) {
-			// Switch on
-			await devtools.initialize();
-			await fetchDevtools.enable();
-			extIcon.makeActive();
-			setDebuggerActive(true);
-		} else if (!debuggerAllowed && debuggerActive) {
-			// Switch off
-			await fetchDevtools.disable();
-			if (devtools.isAttached) {
-				await devtools.destroy();
-			}
-			extIcon.makeInactive();
-			setDebuggerActive(false);
-		} else {
-			// Update the rules list and restart the fetch devtools service
-			await fetchDevtools.restart();
-		}
-
-		setDebuggerSwitching(false);
-	});
-
-	// Detach debugger on page leave
-	self.addEventListener('beforeunload', () => {
+	private forcedDevtoolsDisable = () => {
 		if ($debuggerActive.getState()) {
-			fetchDevtools.disable();
-			devtools.destroy();
-			extIcon.makeInactive();
+			this.fetchDevtools.disable();
+			this.devtools.destroy();
+			this.extIcon.makeInactive();
 		}
-	});
+	};
 
-	// Save panes shown state
-	(chrome.extension as any).onMessage.addListener((message: {type: string; shown?: boolean}) => {
-		if (message.type === 'panelShowToggle') {
-			setPanelShown(!!message.shown);
+	private handleExtensionEvents = (message: any) => {
+		if (typeof message !== 'object') {
+			return;
 		}
-	});
 
-	// Define current platform styles
-	const platform = getPlatform();
-	document.querySelector('body')!.classList.add(`platform-${platform}`);
+		switch (message.type) {
+			case 'panelShowToggle':
+				setPanelShown(!!message.shown);
+		}
+	};
 
-	// Render the application UI
-	const appElement = React.createElement(App);
-	const appWithStore = React.createElement(DbContext.Provider, {value: {dbRulesMapper}}, appElement);
-	ReactDOM.render(appWithStore, document.getElementById('app-root'));
-})();
+	private handleTabUrlChange = async ({url: {origin}, originChanged}: {url: URL; originChanged: boolean}) => {
+		if (!originChanged) {
+			return;
+		}
+
+		this.rulesMapper.defineOrigin(origin);
+
+		// Load a new rules list for the new domain
+		if ($useRulesPerDomain.getState()) {
+			await fetchRules({dbRulesMapper: this.rulesMapper, perCurrentHostname: true});
+		}
+
+		// Report a new current tab url a devtool for compare request with related urls
+		if ($debuggerActive.getState()) {
+			this.fetchRulesStore.setCurrentOrigin(origin);
+			await this.fetchDevtools.restart();
+		}
+	};
+
+	private async prepareDatabase() {
+		try {
+			this.db = await openIDB();
+		} catch (error) {
+			// TODO test working after exception
+			console.error('Exception on open IndexedDB', error);
+		}
+
+		// Initialize db data mappers
+		this.rulesMapper = new RulesMapper(this.db, this.tabOrigin);
+	}
+
+	private fetchRules = async () => {
+		const dbRulesMapper = this.rulesMapper;
+		const perCurrentHostname = $useRulesPerDomain.getState();
+		await fetchRules({dbRulesMapper, perCurrentHostname});
+	};
+
+	private initializeDevtools() {
+		// Debugger is allowed if there is at least one active rule and its enabled by an user
+		const $debuggerAllowed = combine([$hasActiveRules, $debuggerEnabled]).map(conditions =>
+			conditions.every(Boolean),
+		);
+
+		// Synchronize Fetch devtools activity value with the ui state and the extension icon
+		combine({rules: $rules, debuggerAllowed: $debuggerAllowed}).watch(async ({rules, debuggerAllowed}) => {
+			// TODO disallow to switch state when previous operation during
+			setDebuggerSwitching(true);
+			this.fetchRulesStore.setRulesList(rules);
+
+			const debuggerActive = $debuggerActive.getState();
+			if (debuggerAllowed && !debuggerActive) {
+				// Switch on
+				await this.devtools.initialize();
+				await this.fetchDevtools.enable();
+				this.extIcon.makeActive();
+				setDebuggerActive(true);
+			} else if (!debuggerAllowed && debuggerActive) {
+				// Switch off
+				await this.fetchDevtools.disable();
+				if (this.devtools.isAttached) {
+					await this.devtools.destroy();
+				}
+				this.extIcon.makeInactive();
+				setDebuggerActive(false);
+			} else {
+				// Update the rules list and restart the fetch devtools service
+				await this.fetchDevtools.restart();
+			}
+
+			setDebuggerSwitching(false);
+		});
+	}
+
+	private renderUI() {
+		// Define current platform styles
+		const platform = getPlatform();
+		document.querySelector('body')!.classList.add(`platform-${platform}`);
+
+		// Render the UI
+		const appElement = React.createElement(App);
+		const appWithStore = React.createElement(
+			DbContext.Provider,
+			{value: {dbRulesMapper: this.rulesMapper}},
+			appElement,
+		);
+		ReactDOM.render(appWithStore, document.getElementById('app-root'));
+	}
+}
+
+new PanelApplication();

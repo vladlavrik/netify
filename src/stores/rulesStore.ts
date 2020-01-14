@@ -8,8 +8,8 @@ export const $hasActiveRules = $rules.map(rules => rules.filter(rule => rule.act
 export const $rulesCount = $rules.map(rules => rules.length);
 
 export const fetchRules = createEffect('fetch rules from db', {
-	async handler({dbRulesMapper}: {dbRulesMapper: RulesMapper}) {
-		return dbRulesMapper.getList();
+	async handler({dbRulesMapper, perCurrentHostname}: {dbRulesMapper: RulesMapper; perCurrentHostname: boolean}) {
+		return dbRulesMapper.getList(perCurrentHostname);
 	},
 });
 
@@ -37,8 +37,8 @@ export const removeRule = createEffect('remove a rule from db', {
 });
 
 export const removeAllRules = createEffect('remove all rules from db', {
-	async handler({dbRulesMapper}: {dbRulesMapper: RulesMapper}) {
-		return dbRulesMapper.removeAll();
+	async handler({dbRulesMapper, perCurrentOrigin}: {dbRulesMapper: RulesMapper; perCurrentOrigin: boolean}) {
+		return dbRulesMapper.removeAll(perCurrentOrigin);
 	},
 });
 

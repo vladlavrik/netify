@@ -17,8 +17,12 @@ export class FetchRuleStore {
 		return new RegExp(`^${regexpStr}$`);
 	}
 
-
+	private currentOrigin = '';
 	private rulesList: Rule[] = [];
+
+	setCurrentOrigin(newOrigin: string) {
+		this.currentOrigin = newOrigin;
+	}
 
 	setRulesList(newRulesList: Rule[]) {
 		this.rulesList = newRulesList;
@@ -75,7 +79,8 @@ export class FetchRuleStore {
 			}
 
 			const urlPattern = filter.url.startsWith('/')
-				? `*${filter.url}` // "*" instead protocol/host
+				? // If the url starts with the slash char - url related to the current tab origin
+				  this.currentOrigin + filter.url
 				: filter.url || '*';
 
 			for (const requestStage of stages) {

@@ -2,13 +2,17 @@ import {promisifyIDBRequest, generetifyIDBRequest} from './helper';
 import {Rule} from '@/interfaces/rule';
 
 interface RuleItem {
-	hostname: string;
+	origin: string;
 	timestamp: number;
 	rule: Rule;
 }
 
 export class RulesMapper {
-	constructor(private db: IDBDatabase, private hostname: string) {}
+	constructor(private db: IDBDatabase, private origin: string) {}
+
+	defineOrigin(origin: string) {
+		this.origin = origin;
+	}
 
 	async saveNewItem(rule: Rule) {
 		await promisifyIDBRequest(
@@ -16,7 +20,7 @@ export class RulesMapper {
 				.transaction(['rules'], 'readwrite')
 				.objectStore('rules')
 				.add({
-					hostname: this.hostname,
+					origin: this.origin,
 					timestamp: Date.now(),
 					rule,
 				}),
@@ -39,10 +43,13 @@ export class RulesMapper {
 		);
 	}
 
-	async removeAll() {
+	async removeAll(perCurrentOrigin: boolean) {
 		const store = this.db.transaction(['rules'], 'readwrite').objectStore('rules');
 
-		const cursorRequest = store.index('hostname').openKeyCursor(IDBKeyRange.only(this.hostname));
+		const cursorRequest = perCurrentOrigin
+			? store.index('origin').openKeyCursor(IDBKeyRange.only(this.origin))
+			: store.openKeyCursor();
+
 		const cursorGenerator = generetifyIDBRequest(cursorRequest);
 
 		const deleteRequestsPromises: Promise<IDBRequest>[] = [];
@@ -54,13 +61,13 @@ export class RulesMapper {
 		await Promise.all(deleteRequestsPromises);
 	}
 
-	async getList() {
+	async getList(perCurrentOrigin: boolean) {
+		const store = this.db.transaction(['rules'], 'readonly').objectStore('rules');
+
 		const items = await promisifyIDBRequest<RuleItem[]>(
-			this.db
-				.transaction(['rules'], 'readonly')
-				.objectStore('rules')
-				.index('hostname')
-				.getAll(this.hostname),
+			perCurrentOrigin
+				? store.index('origin').getAll(this.origin) // Fetch only rules created in the current browser page url origin
+				: store.getAll(), // Fetch all rules
 		);
 
 		return items

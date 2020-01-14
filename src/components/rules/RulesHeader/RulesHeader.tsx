@@ -2,7 +2,7 @@ import React, {memo, useCallback, useContext, useState} from 'react';
 import {useStore} from 'effector-react';
 import cn from 'classnames';
 import {DbContext} from '@/contexts/dbContext';
-import {$secondarySectionCollapsed, showCompose, toggleSecondarySectionCollapse} from '@/stores/uiStore';
+import {$secondarySectionCollapsed, $useRulesPerDomain, toggleSecondarySectionCollapse, showCompose} from '@/stores/uiStore'; // prettier-ignore
 import {$hasRules, removeAllRules} from '@/stores/rulesStore';
 import {useCompactModeCondition} from '@/hooks/useCompactModeCondition';
 import {SectionHeader} from '@/components/@common/misc/SectionHeader';
@@ -26,7 +26,8 @@ export const RulesHeader = memo(function RulesHeader() {
 
 	const handleRemoveAllCancel = useCallback(() => setShowRemoveAllAsk(false), []);
 	const handleRemoveAllConfirm = useCallback(async () => {
-		await removeAllRules({dbRulesMapper});
+		const perCurrentOrigin = $useRulesPerDomain.getState();
+		await removeAllRules({dbRulesMapper, perCurrentOrigin});
 		setShowRemoveAllAsk(false);
 	}, []);
 

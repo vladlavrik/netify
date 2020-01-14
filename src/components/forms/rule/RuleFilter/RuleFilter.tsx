@@ -49,9 +49,9 @@ export const RuleFilter = memo(function RuleFilter() {
 				{urlHintShown && (
 					<PopUpAlert onClose={handleUrlHintHide}>
 						<p className={styles.urlInfoText}>
-							As an url filter value can be used pathname only, when the value starts with &quot;/&quot; .
+							You can use a pathname only value starting with &quot;/&quot; for the current domain urls.
 							<br />
-							Or the full url with a domain if the value starts with a protocol name.
+							Otherwise, you must specify the full address value, including a protocol name.
 							<br />
 							<br />
 							You can also use special marks:
