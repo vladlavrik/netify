@@ -55,7 +55,7 @@ export const AppHeader = memo(function AppHeader() {
 				</Checkbox>
 			</WithTooltip>
 
-			{!isCompactMode && (
+			{!isCompactMode && false /* TODO waiting for feature implementation */ && (
 				<WithTooltip
 					tooltip={
 						<span>

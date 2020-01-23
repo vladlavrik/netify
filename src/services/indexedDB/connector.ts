@@ -1,7 +1,7 @@
 import {migrations} from './migrations';
 
 export const dbName = 'Netify';
-export const dbVersion = 1;
+export const dbVersion = 2;
 
 export async function openIDB() {
 	return new Promise<IDBDatabase>((resolve, reject) => {
@@ -13,13 +13,12 @@ export async function openIDB() {
 
 		request.onsuccess = () => {
 			resolve(request.result);
+			console.log('Success open');
 		};
 
-		request.onupgradeneeded = async event => {
-			const db = request.result;
-
-			for (let itemVersion = event.oldVersion; itemVersion < dbVersion; itemVersion++) {
-				await migrations[itemVersion + 1](db);
+		request.onupgradeneeded = function({oldVersion}) {
+			for (let oldVersionStep = oldVersion; oldVersionStep < dbVersion; oldVersionStep++) {
+				migrations[oldVersionStep](this.result, this.transaction!);
 			}
 		};
 	});
