@@ -65,7 +65,7 @@ function deserializeDropHeaders(headers: string[]) {
 }
 
 export function deserializeRuleForm(form: RuleFormSchema, id: string, active: boolean): Rule {
-	const {filter, actionType, actionConfigs} = form;
+	const {label, filter, actionType, actionConfigs} = form;
 
 	let action: Action;
 
@@ -123,6 +123,7 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 
 	return {
 		id,
+		label,
 		active,
 		filter: {
 			url: filter.url,

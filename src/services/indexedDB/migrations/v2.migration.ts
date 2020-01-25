@@ -132,7 +132,15 @@ function migrateRule({id, filter, actions}: LegacyRule) {
 		action = {
 			type: RuleActionsType.Mutation,
 			request: {
-				endpoint: mutateRequest.endpointReplace || undefined,
+				endpoint: mutateRequest.endpointReplace
+					? mutateRequest.endpointReplace
+							.replace('%protocol%', '[protocol]')
+							.replace('%host%', '[host]')
+							.replace('%hostname%', '[hostname]')
+							.replace('%port%', '[port]')
+							.replace('%path%', '[path]')
+							.replace('%query%', '[query]')
+					: undefined,
 				method: mutateRequest.methodReplace,
 				setHeaders: migrateSetHeaders(mutateRequest.headers.add),
 				dropHeaders: mutateRequest.headers.remove,
@@ -151,7 +159,7 @@ function migrateRule({id, filter, actions}: LegacyRule) {
 		id,
 		active: true,
 		filter: {
-			url: filter.url.value,
+			url: filter.url.value + (filter.url.value && filter.url.compareType === 'Starts with' ? '*' : ''),
 			resourceTypes: filter.resourceTypes.filter(item => resourceTypesList.includes(item)),
 			methods: filter.methods.filter(item => requestMethodsList.includes(item)),
 		},
@@ -169,13 +177,14 @@ export async function v2Migration(db: IDBDatabase, transaction: IDBTransaction) 
 			let rule: Rule;
 
 			try {
-				rule = migrateRule(entry);
+				rule = migrateRule(entry.rule);
 			} catch (error) {
 				console.error(error);
+				transaction.objectStore('rules').delete(entry.rule.id);
 				continue;
 			}
 
-			store.put({
+			transaction.objectStore('rules').put({
 				timestamp: entry.timestamp,
 				origin: entry.hostname,
 				rule,

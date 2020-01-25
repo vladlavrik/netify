@@ -10,8 +10,8 @@ export const RuleViewerDataTable = memo<RuleViewerDataTableProps>(function RuleV
 		<table className={styles.root}>
 			<tbody>
 				{values.map(([key, value], index) => (
-					<tr key={key + index.toString()}>
-						<td className={styles.title}>{key}</td>
+					<tr key={key + index.toString()} className={styles.row}>
+						<td className={styles.title}>{key}:</td>
 						<td className={styles.value}>{value}</td>
 					</tr>
 				))}

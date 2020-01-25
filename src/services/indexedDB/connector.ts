@@ -13,7 +13,6 @@ export async function openIDB() {
 
 		request.onsuccess = () => {
 			resolve(request.result);
-			console.log('Success open');
 		};
 
 		request.onupgradeneeded = function({oldVersion}) {

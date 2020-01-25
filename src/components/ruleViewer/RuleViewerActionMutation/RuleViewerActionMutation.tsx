@@ -44,7 +44,7 @@ export const RuleViewerActionMutation = memo<RuleViewerActionMutationProps>(func
 	};
 
 	if (!shownSections.request && !shownSections.response) {
-		return <p className={styles.placeholder}>No mutations</p>;
+		return <p className={styles.placeholder}>No changes</p>;
 	}
 
 	return (
@@ -70,14 +70,14 @@ export const RuleViewerActionMutation = memo<RuleViewerActionMutationProps>(func
 							</RuleViewerRow>
 						)}
 						{shownRows.request.setHeaders && (
-							<RuleViewerRow title='Set headers'>
+							<RuleViewerRow title='Set headers:'>
 								<RuleViewerDataTable
 									values={request.setHeaders.map(({name, value}) => [name, value])}
 								/>
 							</RuleViewerRow>
 						)}
 						{shownRows.request.dropHeaders && (
-							<RuleViewerRow title='Drop headers'>{request.dropHeaders.join(', ')}</RuleViewerRow>
+							<RuleViewerRow title='Drop headers:'>{request.dropHeaders.join(', ')}</RuleViewerRow>
 						)}
 						{shownRows.request.body && (
 							<RuleViewerRow title='Body:'>
@@ -97,14 +97,14 @@ export const RuleViewerActionMutation = memo<RuleViewerActionMutationProps>(func
 							<RuleViewerRow title='Status code:'>{response.statusCode}</RuleViewerRow>
 						)}
 						{shownRows.response.setHeaders && (
-							<RuleViewerRow title='Set headers'>
+							<RuleViewerRow title='Set headers:'>
 								<RuleViewerDataTable
 									values={response.setHeaders.map(({name, value}) => [name, value])}
 								/>
 							</RuleViewerRow>
 						)}
 						{shownRows.response.dropHeaders && (
-							<RuleViewerRow title='Drop headers'>
+							<RuleViewerRow title='Drop headers:'>
 								{response.dropHeaders.map((name, index) => (
 									<p key={name + index.toString()}>{name}</p>
 								))}

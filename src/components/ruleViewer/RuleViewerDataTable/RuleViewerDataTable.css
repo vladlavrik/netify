@@ -8,6 +8,7 @@
 	vertical-align: top;
 	word-break: break-word;
 	font-weight: 700;
+	line-height: 12px;
 	color: var(--color-main);
 }
 
@@ -16,4 +17,11 @@
 	vertical-align: top;
 	word-break: break-word;
 	color: #d5d5d5; /* TODO to vars*/
+}
+
+.row:first-child {
+	& .title,
+	& .value {
+		padding-top: 0;
+	}
 }
