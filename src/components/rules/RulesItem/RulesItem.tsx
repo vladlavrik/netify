@@ -43,7 +43,7 @@ interface RulesItemProps {
 
 export const RulesItem = memo<RulesItemProps>(function RulesItem(props) {
 	const {data, isStartEdgePosition, isEndEdgePosition, isHighlighted, onShowDetails} = props;
-	const {id: ruleId, active, filter, action} = data;
+	const {id: ruleId, label, active, filter, action} = data;
 	const {url, methods, resourceTypes} = filter;
 
 	const {rulesMapper} = useContext(DbContext)!;
@@ -110,6 +110,8 @@ export const RulesItem = memo<RulesItemProps>(function RulesItem(props) {
 				{/* Separate focusable element, inaccessible to the mouse.
 					It is necessary for handle a focus from the keyboard and ignoring a focus on the mouse click*/}
 				<div className={styles.focusable} role='button' tabIndex={0} onKeyDown={handleShowDetailsByKeyboard} />
+
+				{label && <p className={styles.label}>{label}</p>}
 
 				<div className={cn(styles.filter, !active && styles.inactive)}>
 					{methods.length !== 0 && (

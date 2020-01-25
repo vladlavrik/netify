@@ -2,7 +2,7 @@
 	display: flex;
 	flex-grow: 1;
 	padding-top: 16px;
-	padding-bottom: 4px;
+	padding-bottom: 8px;
 }
 
 .fields {
@@ -11,18 +11,19 @@
 	flex-grow: 1;
 }
 
+.urlField {
+	flex-grow: 20;
+	margin: 0 8px 8px 0;
+}
+
 @media (max-width: 640px) {
 	.fields {
 		flex-wrap: wrap;
 	}
 	.urlField {
 		width: 100%;
+		margin-right: 0;
 	}
-}
-
-.urlField {
-	flex-grow: 20;
-	margin: 0 8px 8px 0;
 }
 
 .urlInfoButton {

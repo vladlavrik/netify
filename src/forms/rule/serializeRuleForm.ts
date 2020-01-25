@@ -7,9 +7,10 @@ import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {ResponseErrorReason} from '@/constants/ResponseErrorReason';
 
 export function serializeRuleForm(rule: Rule) {
-	const {filter, action} = rule;
+	const {label, filter, action} = rule;
 
 	const value: RuleFormSchema = {
+		label,
 		filter: {
 			url: filter.url,
 			resourceTypes: filter.resourceTypes,

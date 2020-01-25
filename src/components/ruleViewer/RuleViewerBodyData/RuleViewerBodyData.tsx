@@ -68,7 +68,7 @@ export const RuleViewerBodyData = memo<RuleViewerBodyDataProps>(function RuleVie
 			return (
 				<p>
 					{body.value.name} <span className={styles.additionalInfo}>({body.value.size} bytes)</span>
-					<a className={styles.downloadLink} href={fileUrl} download>
+					<a className={styles.downloadLink} href={fileUrl} download={body.value.name}>
 						Download
 					</a>
 				</p>

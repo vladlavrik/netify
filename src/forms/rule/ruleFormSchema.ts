@@ -7,6 +7,7 @@ import {responseErrorReasonsList, ResponseErrorReason} from '@/constants/Respons
 import {statusCodeSchema, headersSchema, requestBodySchema, responseBodySchema} from '../common/commonFormSchemes';
 
 export const ruleFormSchema = object({
+	label: string().notRequired(),
 	filter: object({
 		url: string(),
 		resourceTypes: array().of(mixed<ResourceType>().oneOf(resourceTypesList)),

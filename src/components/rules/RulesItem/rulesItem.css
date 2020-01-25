@@ -43,6 +43,14 @@
 	}
 }
 
+.label {
+	margin: 0 8px 6px 8px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: #d5d5d5; /* TODO to vars accent */
+}
+
 .filter {
 	display: flex;
 	align-items: center;

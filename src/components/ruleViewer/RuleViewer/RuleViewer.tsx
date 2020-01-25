@@ -29,7 +29,7 @@ export const RuleViewer = memo(function RuleViewer() {
 		return null;
 	}
 
-	const {filter, action} = rule;
+	const {label, filter, action} = rule;
 
 	const hasFilter = !!filter.url || filter.resourceTypes.length !== 0 || filter.methods.length !== 0;
 
@@ -38,18 +38,22 @@ export const RuleViewer = memo(function RuleViewer() {
 			<RuleViewerHeader />
 
 			<div className={styles.body}>
+				{label && (
+					<h2 className={styles.header}>
+						<span className={styles.headerTitle}>Label:</span>
+						<span className={styles.headerData}>{label}</span>
+					</h2>
+				)}
+
 				<h2 className={styles.header}>
-					Filter
-					{!hasFilter && (
-						<>
-							:<span> All request</span>
-						</>
-					)}
+					<span className={styles.headerTitle}>Filter{!hasFilter && ':'}</span>
+					{!hasFilter && <span>All request</span>}
 				</h2>
 				{hasFilter && <RuleViewerFilter filter={filter} />}
 
 				<h2 className={styles.header}>
-					Action: <span className={styles.headerData}>{ruleActionsTypeHumanTitles[action.type]}</span>
+					<span className={styles.headerTitle}>Action:</span>
+					<span className={styles.headerData}>{ruleActionsTypeHumanTitles[action.type]}</span>
 				</h2>
 
 				{action.type === RuleActionsType.Mutation && <RuleViewerActionMutation action={action} />}

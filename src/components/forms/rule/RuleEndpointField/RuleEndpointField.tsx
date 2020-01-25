@@ -43,7 +43,7 @@ export const RuleEndpointField = memo<RuleEndpointField>(function RuleEndpointFi
 					className={styles.field}
 					name={name}
 					placeholder='Redirect a request by the new url'
-					suffix={
+					suffixChildren={
 						<Dropdown
 							className={styles.macros}
 							expanded={macrosDDExpanded}

@@ -6,9 +6,16 @@
 
 .header {
 	min-width: 200px;
-	padding: 4px 0 4px 8px;
-	font-weight: bold;
+	padding: 4px 8px 4px 8px;
 	font-size: 12px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: break-word;
+}
+
+.headerTitle {
+	padding-right: 6px;
+	font-weight: 700;
 }
 
 .headerData {

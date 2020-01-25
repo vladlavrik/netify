@@ -3,6 +3,7 @@ import {useFormik, Form, FormikProvider} from 'formik';
 import {Rule} from '@/interfaces/rule';
 import {ruleFormSchema, serializeRuleForm, deserializeRuleForm, RuleFormSchema} from '@/forms/rule';
 import {Button} from '@/components/@common/buttons/Button';
+import {RuleLabel} from '../RuleLabel';
 import {RuleFilter} from '../RuleFilter';
 import {RuleActionSwitcher} from '../RuleActionSwitcher';
 import {RuleActionConfig} from '../RuleActionConfig';
@@ -37,6 +38,7 @@ export const RuleForm = memo<RuleFormProps>(function RuleForm({initialRule, onSa
 		<div className={styles.root}>
 			<FormikProvider value={form}>
 				<Form className={styles.form}>
+					<RuleLabel />
 					<RuleFilter />
 					<RuleActionSwitcher />
 					<div className={styles.config}>

@@ -44,7 +44,8 @@ export type Action = BreakpointAction | MutationAction | LocalResponseAction | F
 
 export interface Rule {
 	id: string;
-	active: boolean; // TODO use it
+	label?: string;
+	active: boolean;
 	filter: {
 		url: string;
 		resourceTypes: ResourceType[];

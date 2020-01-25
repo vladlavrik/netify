@@ -1,0 +1,9 @@
+.root {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border-bottom: #4b4b4b /* TODO to variables */ 1px solid;
+}
+
+.field {
+	width: 520px;
+}

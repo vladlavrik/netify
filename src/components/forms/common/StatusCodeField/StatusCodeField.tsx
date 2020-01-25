@@ -12,7 +12,7 @@ export const StatusCodeField = memo<StatusCodeFieldProps>(function StatusCodeFie
 	return (
 		<FieldRow title='Status code:'>
 			<div>
-				<TextField className={styles.field} name={name} maxlength={3} />
+				<TextField className={styles.field} name={name} maxLength={3} />
 				<FieldError name={name} />
 			</div>
 		</FieldRow>

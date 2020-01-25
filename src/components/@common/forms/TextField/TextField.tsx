@@ -3,43 +3,38 @@ import {useField} from 'formik';
 import cn from 'classnames';
 import styles from './textField.css';
 
-interface TextFieldProps {
+type NativeInputProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
+
+interface TextFieldProps extends NativeInputProps {
 	className?: string;
 	name: string;
-	placeholder?: string;
-	maxlength?: number;
-	disabled?: boolean;
-	readOnly?: boolean;
-	prefix?: ReactNode;
-	suffix?: ReactNode;
+	prefixChildren?: ReactNode;
+	suffixChildren?: ReactNode;
 }
 
 // eslint-disable-next-line react/display-name
 export const TextField = memo(
 	forwardRef<HTMLInputElement, TextFieldProps>(function TextField(props, ref) {
-		const {className, name, placeholder, maxlength, disabled, readOnly, prefix, suffix} = props;
+		const {className, name, prefixChildren, suffixChildren, ...nativeProps} = props;
 		const [field] = useField<string>(name);
 
 		return (
 			<div className={cn(styles.root, className)}>
-				{prefix && <div className={styles.prefix}>{prefix}</div>}
+				{prefixChildren && <div className={styles.prefix}>{prefixChildren}</div>}
 				<input
 					ref={ref}
 					className={styles.input}
+					{...nativeProps}
 					{...field}
 					value={field.value || ''}
 					type='text'
 					spellCheck={false}
 					autoComplete='off'
-					placeholder={placeholder}
-					maxLength={maxlength}
-					disabled={disabled}
-					readOnly={readOnly}
 				/>
 
 				<div className={styles.filler} />
 
-				{suffix && <div className={styles.suffix}>{suffix}</div>}
+				{suffixChildren && <div className={styles.suffix}>{suffixChildren}</div>}
 			</div>
 		);
 	}),

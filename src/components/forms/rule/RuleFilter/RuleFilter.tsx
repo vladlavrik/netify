@@ -15,13 +15,13 @@ export const RuleFilter = memo(function RuleFilter() {
 	const handleUrlHintHide = useCallback(() => setUrlHintShown(false), []);
 
 	return (
-		<FieldRow className={styles.root} title='Request filter'>
+		<FieldRow className={styles.root} title='Request filter:'>
 			<div className={styles.fields}>
 				<TextField
 					className={styles.urlField}
 					name='filter.url'
 					placeholder='Url'
-					suffix={
+					suffixChildren={
 						<IconButton
 							tabIndex={-1}
 							className={styles.urlInfoButton}
