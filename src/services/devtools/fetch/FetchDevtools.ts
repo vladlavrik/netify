@@ -18,9 +18,9 @@ type FulfillRequestRequest = Protocol.Fetch.FulfillRequestRequest;
 type FailRequestRequest = Protocol.Fetch.FailRequestRequest;
 
 /**
- * Service to provide interception request by rule filters and:
- * - patching the by the rules
- * - triggering breakpoints and continue with the mutated data
+ * The service provides requests interception by rule filters and:
+ * - patching they by the rules
+ * - triggering breakpoints and continue them with a mutated data
  */
 export class FetchDevtools {
 	readonly events = {
