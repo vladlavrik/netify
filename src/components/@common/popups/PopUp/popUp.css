@@ -11,8 +11,4 @@
 	box-shadow: 0 0 6px 2px var(--color-shadow-overlay-main);
 	transform: translateY(-50%);
 	background: var(--color-bg-main);
-
-	&::backdrop {
-		background: var(--color-bg-backdrop);
-	}
 }

@@ -52,8 +52,10 @@
 	overflow-y: auto;
 	overscroll-behavior: contain;
 	border: var(--color-brd-outline) 1px solid;
-	color: var(--color-main);
+	border-radius: 3px;
 	background: var(--color-bg-main);
+	box-shadow: 0 1px 3px 1px var(--color-shadow-overlay-lite);
+	color: var(--color-main);
 	user-select: none;
 	z-index: 2;
 
@@ -85,11 +87,12 @@
 	}
 
 	&.selected {
-		background: #ccc3; /* TODO check with a light theme, maybe should use --color-bg-accent */
+		background: #aaa5; /* TODO check with a light theme, maybe should use --color-bg-accent */
 	}
 
 	&:hover,
 	&.highlighted {
 		background: var(--color-focus);
+		color: var(--color-inside-focus);
 	}
 }

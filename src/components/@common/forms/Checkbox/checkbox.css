@@ -4,8 +4,10 @@
 	align-items: center;
 }
 
-.input {
-	filter: invert(80%);
+:global(.dark-theme) {
+	& .input {
+		filter: invert(80%);
+	}
 }
 
 .label {

@@ -57,6 +57,7 @@ class PanelApplication {
 
 		this.fetchRulesStore.setCurrentOrigin(this.tabOrigin);
 
+		this.defineUIEnvironment();
 		await this.prepareDatabase();
 		await this.fetchRules();
 		this.renderUI();
@@ -161,12 +162,18 @@ class PanelApplication {
 		});
 	}
 
-	private renderUI() {
+	private defineUIEnvironment() {
 		// Define current platform styles
 		const platform = getPlatform();
 		document.querySelector('body')!.classList.add(`platform-${platform}`);
 
-		// Render the UI
+		// Define a theme
+		if ((chrome.devtools.panels as any).themeName === 'dark') {
+			document.documentElement.classList.add('dark-theme');
+		}
+	}
+
+	private renderUI() {
 		const {rulesMapper} = this;
 		const appElement = React.createElement(App);
 		const appWithStore = React.createElement(DbContext.Provider, {value: {rulesMapper}}, appElement);
