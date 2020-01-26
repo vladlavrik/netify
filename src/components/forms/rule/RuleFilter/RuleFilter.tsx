@@ -36,14 +36,14 @@ export const RuleFilter = memo(function RuleFilter() {
 					name='filter.resourceTypes'
 					options={resourceTypesList}
 					multiple
-					placeholder='Any resources'
+					placeholder='Any resource'
 				/>
 				<SelectField
 					className={styles.methodsField}
 					name='filter.methods'
 					options={requestMethodsList}
 					multiple
-					placeholder='Any methods'
+					placeholder='Any method'
 				/>
 
 				{urlHintShown && (

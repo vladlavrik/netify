@@ -27,7 +27,7 @@ export const AppHeader = memo(function AppHeader() {
 			<IconButton
 				className={cn(styles.debuggerSwitcher, debuggerActive ? styles.active : styles.inactive)}
 				disabled={!hasActiveRules}
-				tooltip={debuggerActive ? 'Disable debugger' : 'Enable debugger'}
+				tooltip={debuggerActive ? 'Stop requests listening' : 'Start requests listening'}
 				onClick={handleToggleDebuggerEnabled}>
 				{!debuggerSwitching && debuggerActive && 'Listening'}
 				{!debuggerSwitching && !debuggerActive && 'Inactive'}
