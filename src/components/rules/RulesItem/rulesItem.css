@@ -1,14 +1,14 @@
 .root {
 	display: flex;
 	align-items: center;
-	min-width: 300px; /* TODO */
+	min-width: 300px;
 
 	&:nth-child(odd) {
-		background: #292929; /* TODO to vars*/
+		background: var(--color-bg-odd-item);
 	}
 
 	&.highlighted {
-		background: #393939; /* TODO to vars*/
+		background: var(--color-bg-accent);
 	}
 }
 
@@ -36,10 +36,10 @@
 	width: 0;
 
 	&:focus {
-		outline: none;
-		border: var(--color-focus) solid 1px;
 		width: 100%;
-		background: #393939; /* TODO to vars*/
+		border: var(--color-focus) solid 1px;
+		background: var(--color-bg-accent);
+		outline: none;
 	}
 }
 
@@ -48,7 +48,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	color: #d5d5d5; /* TODO to vars accent */
+	color: var(--color-content-accent);
 }
 
 .filter {
@@ -83,10 +83,10 @@
 .url {
 	margin-left: 8px;
 	font-size: 12px;
-	color: #d5d5d5; /* TODO to vars accent */
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+	color: var(--color-content-accent);
 
 	&.placeholder {
 		color: inherit;

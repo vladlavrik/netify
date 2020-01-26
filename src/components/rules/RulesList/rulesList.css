@@ -9,7 +9,7 @@
 	margin: 0;
 	font-size: 12px;
 	text-align: center;
-	color: #7e7e7e;
+	color: var(--color-placeholder);
 }
 
 .composeButton {

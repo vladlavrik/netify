@@ -5,14 +5,14 @@
 	min-width: 220px;
 	max-width: calc(100vw - 16px);
 	padding: 0;
-	border: var(--color-brd-light) 1px solid;
+	border: var(--color-brd-outline) 1px solid;
 	border-radius: 3px;
 	overflow: auto;
-	box-shadow: 0 0 6px 2px #00000055;
+	box-shadow: 0 0 6px 2px var(--color-shadow-overlay-main);
 	transform: translateY(-50%);
 	background: var(--color-bg-main);
 
 	&::backdrop {
-		background: #00000033;
+		background: var(--color-bg-backdrop);
 	}
 }

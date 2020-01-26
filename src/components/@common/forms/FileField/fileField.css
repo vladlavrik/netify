@@ -17,7 +17,7 @@
 	right: 0;
 	top: 0;
 	bottom: 0;
-	border: 1px dashed var(--color-brd-lightest);
+	border: 1px dashed var(--color-brd-strong);
 	border-radius: 3px;
 }
 
@@ -36,7 +36,7 @@
 
 .title {
 	line-height: 18px;
-	color: var(--color-dark);
+	color: var(--color-placeholder);
 }
 
 .value {
@@ -45,11 +45,11 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	color: var(--color-main);
+	color: var(--color-content);
 }
 
 .note {
 	line-height: 18px;
 	font-size: 11px;
-	color: var(--color-dark);
+	color: var(--color-main);
 }

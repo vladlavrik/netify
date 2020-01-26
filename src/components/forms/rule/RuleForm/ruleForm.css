@@ -5,7 +5,7 @@
 	right: 0;
 	bottom: 0;
 	box-sizing: border-box;
-	background: var(--color-bg-light);
+	background: var(--color-bg-lite);
 	overflow: auto;
 	z-index: 10;
 }
@@ -22,7 +22,7 @@
 	display: flex;
 	margin-top: 12px;
 	padding: 12px 8px 24px 118px;
-	border-top: #4b4b4b /* TODO to variables */ 1px solid;
+	border-top: var(--color-brd-lite) 1px solid;
 }
 
 .saveButton {

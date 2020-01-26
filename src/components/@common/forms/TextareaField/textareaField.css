@@ -11,13 +11,14 @@
 	background: var(--color-bg-main);
 	font-family: inherit;
 	font-size: 11px;
-	color: var(--color-light);
+	color: var(--color-content);
 	resize: vertical;
 
 	&:focus {
 		outline: none;
 		border-color: var(--color-focus);
 	}
+
 	&:disabled {
 		border-color: transparent;
 		background: var(--color-bg-main);

@@ -4,10 +4,10 @@
 
 .content {
 	position: absolute;
-	border: #3e3d3f 1px solid; /*TODO use var*/
+	border: var(--color-brd-outline) 1px solid;
 	border-radius: 3px;
 	background: var(--color-bg-main);
-	box-shadow: 1px 1px 2px #0003;
+	box-shadow: 1px 1px 2px var(--color-shadow-overlay-lite);
 	z-index: 100;
 
 	&.expand-x-to-start {

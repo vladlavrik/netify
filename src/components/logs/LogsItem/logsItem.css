@@ -3,10 +3,10 @@
 	align-items: center;
 	min-width: 360px;
 	height: 28px;
-	color: #b1b9c0;
+	color: var(--color-content);
 
 	&:nth-child(odd) {
-		background: #292929; /* TODO to vars*/
+		background: var(--color-bg-odd-item);
 	}
 }
 

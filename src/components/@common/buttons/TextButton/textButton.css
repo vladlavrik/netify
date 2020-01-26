@@ -5,7 +5,7 @@
 	border-width: 1px 0 1px 0;
 	border-bottom-color: currentColor;
 	background: transparent;
-	color: var(--color-light);
+	color: var(--color-content);
 	font-size: 11px;
 	cursor: pointer;
 

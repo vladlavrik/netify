@@ -5,7 +5,7 @@
 	padding: 1px 6px 0 4px;
 	box-sizing: border-box;
 	border-bottom: var(--color-brd-main) 1px solid;
-	background: var(--color-bg-light);
+	background: var(--color-bg-lite);
 }
 
 .debuggerSwitcher {
@@ -24,7 +24,7 @@
 .separator {
 	height: 16px;
 	width: 1px;
-	background-color: #3d3d3d; /* TODO to vars*/
+	background-color: var(--color-brd-separator);
 }
 
 .control {

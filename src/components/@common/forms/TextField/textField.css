@@ -2,7 +2,6 @@
 	display: flex;
 	position: relative;
 	width: 300px;
-	color: var(--color-light);
 }
 .prefix,
 .suffix {
@@ -17,7 +16,7 @@
 	border: none;
 	line-height: 20px;
 	font-size: 11px;
-	color: inherit;
+	color: var(--color-content);
 	background: transparent;
 	z-index: 1;
 
@@ -26,8 +25,6 @@
 	}
 
 	&:disabled {
-		border-color: transparent;
-		background: var(--color-bg-main);
 		color: var(--color-main);
 	}
 }

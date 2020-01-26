@@ -20,5 +20,5 @@
 .separator {
 	margin: 8px 8px 8px 118px;
 	height: 1px;
-	background: #4b4b4b /* TODO to variables */;
+	background: var(--color-brd-lite);
 }

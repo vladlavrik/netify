@@ -16,7 +16,7 @@
 	padding: 2px 8px;
 	vertical-align: top;
 	word-break: break-word;
-	color: #d5d5d5; /* TODO to vars*/
+	color: var(--color-content-accent);
 }
 
 .row:first-child {

@@ -19,5 +19,5 @@
 	height: 16px;
 	width: 1px;
 	margin: 0 2px 0 6px;
-	background-color: #3d3d3d; /* TODO to vars*/
+	background-color: var(--color-brd-separator);
 }

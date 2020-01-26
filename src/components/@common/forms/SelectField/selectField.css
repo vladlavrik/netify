@@ -29,7 +29,7 @@
 		top: 7px;
 		width: 7px;
 		height: 6px;
-		background: #616161;
+		background: var(--color-placeholder);
 		clip-path: polygon(0 0, 100% 0, 50% 100%);
 	}
 
@@ -51,7 +51,7 @@
 	box-sizing: border-box;
 	overflow-y: auto;
 	overscroll-behavior: contain;
-	border: #61616160 1px solid;
+	border: var(--color-brd-outline) 1px solid;
 	color: var(--color-main);
 	background: var(--color-bg-main);
 	user-select: none;
@@ -85,7 +85,7 @@
 	}
 
 	&.selected {
-		background: var(--color-bg-active);
+		background: #ccc3; /* TODO check with a light theme, maybe should use --color-bg-accent */
 	}
 
 	&:hover,

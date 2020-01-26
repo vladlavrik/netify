@@ -11,7 +11,7 @@
 	}
 
 	&.style-light {
-		background: var(--color-bg-light);
+		background: var(--color-bg-lite);
 		color: var(--color-main);
 	}
 

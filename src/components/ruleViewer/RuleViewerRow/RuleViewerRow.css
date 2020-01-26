@@ -5,5 +5,5 @@
 
 .value {
 	padding: 2px 8px 4px 0;
-	color: #d5d5d5; /* TODO to vars*/
+	color: var(--color-content-accent);
 }

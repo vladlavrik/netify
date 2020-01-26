@@ -38,8 +38,8 @@
 	min-width: 100px;
 	max-width: calc(100% - 300px);
 	background: var(--color-bg-main);
-	border-left: var(--color-brd-lightest) 1px solid;
-	box-shadow: 0 10px 10px 1px #000d;
+	border-left: var(--color-brd-strong) 1px solid;
+	box-shadow: 0 10px 10px 1px var(--color-shadow-overlay-strong);
 	animation: showFloatingSection 0.12s ease-out;
 
 	&.overlay {
@@ -51,7 +51,7 @@
 	position: relative;
 	width: 1px;
 	flex-shrink: 0;
-	background: var(--color-brd-lightest);
+	background: var(--color-brd-strong);
 	cursor: col-resize;
 	z-index: 1;
 

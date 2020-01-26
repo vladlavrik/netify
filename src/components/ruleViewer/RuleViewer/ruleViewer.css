@@ -19,7 +19,7 @@
 }
 
 .headerData {
-	color: #d5d5d5; /* TODO to vars*/
+	color: var(--color-content-accent);
 }
 
 .body {
