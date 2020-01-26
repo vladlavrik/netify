@@ -19,8 +19,16 @@ export function buildResponseBodyFromText(source: string) {
 }
 
 export function buildResponseBodyFromBase64(value: string) {
-	const length = toByteArray(value).length;
-	return {value, length};
+	try {
+		const length = toByteArray(value).length;
+		return {value, length};
+	} catch (error) {
+		console.error(error);
+		return {
+			value: btoa('<<Invalid base64 content>>'),
+			length: 0,
+		};
+	}
 }
 
 export async function buildResponseBodyFromFile(source: File) {

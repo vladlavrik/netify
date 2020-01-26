@@ -12,7 +12,7 @@ export class FetchRuleStore {
 	private static transformUrlPatterToRegexp(pattern: string) {
 		const regexpStr = pattern
 			.replace(/\?/g, '.') // ? wildcards pattern
-			.replace(/\*/g, '.*?'); // * wildcards pattern
+			.replace(/\*/g, '.*?'); // * Wildcards pattern
 
 		return new RegExp(`^${regexpStr}$`);
 	}
@@ -48,7 +48,7 @@ export class FetchRuleStore {
 					}
 					break;
 
-				case RuleActionsType.Mutation:
+				case RuleActionsType.Mutation: {
 					const {request, response} = action;
 					const hasRequestMutation =
 						!!request.endpoint ||
@@ -71,6 +71,7 @@ export class FetchRuleStore {
 					}
 
 					break;
+				}
 
 				case RuleActionsType.LocalResponse:
 				case RuleActionsType.Failure:
@@ -114,7 +115,7 @@ export class FetchRuleStore {
 					.slice(0, 3) // First double slash is the end of schema, third slash is the path part start
 					.join('/');
 
-				const fullFilterUrl = filter.url.startsWith('/') // it mean schema and host is not defined
+				const fullFilterUrl = filter.url.startsWith('/') // It mean schema and host is not defined
 					? requestUrlOrigin + filter.url
 					: filter.url;
 

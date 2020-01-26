@@ -38,7 +38,7 @@ export class FetchDevtools {
 		const patterns = this.rulesStore.getRequestPatterns();
 		await this.devtools.sendCommand<EnableRequest>('Fetch.enable', {patterns});
 
-		this.unsubscribeDevtoolsEvents = await this.devtools.listenEvent<RequestPausedEvent>(
+		this.unsubscribeDevtoolsEvents = this.devtools.listenEvent<RequestPausedEvent>(
 			'Fetch.requestPaused',
 			this.process.bind(this),
 		);
@@ -199,7 +199,7 @@ export class FetchDevtools {
 
 	private log(message: string, ...data: any[]) {
 		if (process.env.NODE_ENV === 'development') {
-			console.info(`%cFetch devtools: ${message}`, 'color: #3478B1', ...data)
+			console.info(`%cFetch devtools: ${message}`, 'color: #3478B1', ...data);
 		}
 	}
 }

@@ -1,3 +1,3 @@
-build
-devtools
-node_modules
+./build
+./devtools
+./node_modules

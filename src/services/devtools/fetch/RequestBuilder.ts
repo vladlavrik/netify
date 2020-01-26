@@ -92,11 +92,12 @@ export class RequestBuilder {
 				postDataType = 'application/x-www-form-urlencoded';
 				break;
 
-			case RequestBodyType.MultipartFromData:
+			case RequestBodyType.MultipartFromData: {
 				const boundary = `----NetifyFormBoundary${randomHex(24)}`;
 				postData = buildRequestBodyFromMultipartForm(this.body.value, boundary);
 				postDataType = `multipart/form-data; boundary=${boundary}`;
 				break;
+			}
 		}
 
 		if (postData) {

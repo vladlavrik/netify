@@ -13,8 +13,7 @@ export function buildRequestBodyFromMultipartForm(form: {key: string; value: str
 		})
 		.join('');
 
-	return `${data}--${boundary}--\r\n`
-
+	return `${data}--${boundary}--\r\n`;
 }
 
 export function parseUrlEncodedForm(source: string): {key: string; value: string}[] {

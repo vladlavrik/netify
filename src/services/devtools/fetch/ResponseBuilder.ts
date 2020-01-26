@@ -58,7 +58,7 @@ export class ResponseBuilder {
 			responseCode: this.statusCode,
 		};
 
-		if (!this.body ) {
+		if (!this.body) {
 			return data;
 		}
 
