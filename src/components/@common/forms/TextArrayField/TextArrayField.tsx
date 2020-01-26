@@ -1,9 +1,10 @@
 import React, {memo} from 'react';
-import cn from 'classnames';
 import {FieldArray, getIn} from 'formik';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {TextField} from '@/components/@common/forms/TextField';
 import {FieldError} from '@/components/@common/forms/FieldError';
+import AddIcon from './icons/add.svg';
+import RemoveIcon from './icons/remove.svg';
 import styles from './textArrayField.css';
 
 interface TextArrayFieldProps {
@@ -34,13 +35,15 @@ export const TextArrayField = memo<TextArrayFieldProps>(function TextArrayField(
 
 								{index === list.length - 1 ? (
 									<IconButton
-										className={cn(styles.control, styles.typeAdd)}
+										className={styles.control}
+										icon={<AddIcon />}
 										tooltip={addControlTitle}
 										onClick={() => helpers.push('')}
 									/>
 								) : (
 									<IconButton
-										className={cn(styles.control, styles.typeRemove)}
+										className={styles.control}
+										icon={<RemoveIcon />}
 										tooltip={removeControlTitle}
 										onClick={() => helpers.remove(index)}
 									/>

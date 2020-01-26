@@ -10,7 +10,6 @@
 
 .closeButton {
 	margin: 0 4px;
-	--icon-button-bg: url('./icons/close.svg');
 }
 
 .title {

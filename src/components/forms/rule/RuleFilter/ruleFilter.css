@@ -27,7 +27,6 @@
 }
 
 .urlInfoButton {
-	--icon-button-bg: url('./icons/info.svg');
 	margin: 1px 4px 0 0;
 }
 

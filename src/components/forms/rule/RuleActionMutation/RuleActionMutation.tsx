@@ -1,5 +1,4 @@
 import React, {memo} from 'react';
-import cn from 'classnames';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {FieldRow} from '@/components/forms/common/FieldRow';
 import {RequestMethodField} from '@/components/forms/common/RequestMethodField';
@@ -9,6 +8,8 @@ import {StatusCodeField} from '@/components/forms/common/StatusCodeField';
 import {RequestBodyField} from '@/components/forms/common/RequestBodyField';
 import {ResponseBodyField} from '@/components/forms/common/ResponseBodyField';
 import {RuleEndpointField} from '../RuleEndpointField';
+import RequestIcon from './icons/request.svg';
+import ResponseIcon from './icons/response.svg';
 import styles from './ruleActionMutation.css';
 
 export const RuleActionMutation = memo(function RuleActionMutation() {
@@ -17,7 +18,7 @@ export const RuleActionMutation = memo(function RuleActionMutation() {
 	return (
 		<div>
 			<FieldRow title={<strong>Stage</strong>}>
-				<div className={cn(styles.stageIcon, styles.request)} />
+				<RequestIcon className={styles.stageIcon} />
 				<span className={styles.stageName}>Request</span>
 			</FieldRow>
 
@@ -30,7 +31,7 @@ export const RuleActionMutation = memo(function RuleActionMutation() {
 			<div className={styles.separator} />
 
 			<FieldRow title={<strong>Stage</strong>}>
-				<div className={cn(styles.stageIcon, styles.response)} />
+				<ResponseIcon className={styles.stageIcon} />
 				<span className={styles.stageName}>Response</span>
 			</FieldRow>
 			<StatusCodeField name={`${namePrefix}.response.statusCode`} />

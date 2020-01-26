@@ -10,31 +10,34 @@
 	color: inherit;
 	user-select: none;
 
-	&::before {
-		content: '';
-		display: block;
-		width: 18px;
-		height: 18px;
-		opacity: 0.75;
-		background: var(--icon-button-bg, none) center no-repeat;
-		transform: rotate(var(--icon-button-rotate, 0));
-		transition: transform 0.1s ease-out, opacity 0.1s ease-out;
-		clip-path: var(--icon-button-clip, none);
-	}
 	&:focus {
 		outline: var(--color-focus) solid 1px;
 	}
-	&:hover::before {
-		opacity: 1;
-	}
-	&:disabled::before {
-		opacity: 0.5;
-		outline: none;
+
+	&:hover {
+		color: var(--color-content);
 	}
 }
 
+.icon {
+	width: 18px;
+	height: 18px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	fill: var(--color-icon-regular);
+}
+
+.root:hover .icon {
+	fill: var(--color-icon-hover);
+}
+
+.root:disabled .icon {
+	fill: var(--color-icon-disabled);
+}
+
 .title {
-	padding: 0 2px 0 	4px;
+	padding: 0 2px 0 4px;
 }
 
 .tooltip {

@@ -23,12 +23,4 @@
 
 .control {
 	flex-shrink: 0;
-
-	&.typeAdd {
-		--icon-button-bg: url('icons/add.svg');
-	}
-
-	&.typeRemove {
-		--icon-button-bg: url('icons/remove.svg');
-	}
 }

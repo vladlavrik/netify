@@ -11,6 +11,7 @@ import {Dropdown, useDropdownExpansion} from '@/components/@common/misc/Dropdown
 import {PopUpConfirm} from '@/components/@common/popups/PopUpConfirm';
 import {stringifyActionsSummary} from './stringifyActionsSummary';
 import {RulesControl} from '../RulesControl';
+import MoreIcon from './icons/more.svg';
 import styles from './rulesItem.css';
 
 const methodLabelColors: Record<RequestMethod, string> = {
@@ -95,7 +96,6 @@ export const RulesItem = memo<RulesItemProps>(function RulesItem(props) {
 
 	const handleRemoveConfirm = useCallback(async () => {
 		await removeRule({rulesMapper, ruleId});
-		setShowRemoveAsk(false);
 	}, [ruleId, rulesMapper]);
 
 	useEffect(() => {
@@ -149,9 +149,7 @@ export const RulesItem = memo<RulesItemProps>(function RulesItem(props) {
 			<Dropdown
 				className={styles.control}
 				expanded={controlDDExpanded}
-				target={
-					<IconButton className={styles.controlTarget} onClick={controlDDActions.handleExpansionSwitch} />
-				}
+				target={<IconButton icon={<MoreIcon />} onClick={controlDDActions.handleExpansionSwitch} />}
 				preferExpansionAlignX='start'
 				onCollapse={controlDDActions.handleCollapse}>
 				<RulesControl

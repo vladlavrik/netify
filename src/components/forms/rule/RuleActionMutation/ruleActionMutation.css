@@ -2,14 +2,6 @@
 	width: 8px;
 	height: 10px;
 	margin: 5px 8px 5px 0;
-
-	&.request {
-		background: url('./icons/request.svg');
-	}
-
-	&.response {
-		background: url('./icons/response.svg');
-	}
 }
 
 .stageName {

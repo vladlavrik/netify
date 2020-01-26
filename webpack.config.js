@@ -50,7 +50,14 @@ module.exports = (env, {mode} = {}) => ({
 				],
 			},
 			{
-				test: /\.svg|png$/,
+				test: /\.svg$/,
+				loader: 'svg-react-loader',
+				options: {
+					name: 'Icon',
+				},
+			},
+			{
+				test: /\.png$/,
 				loader: 'file-loader',
 				options: {
 					name: 'icons/[hash:hex:8].[ext]',

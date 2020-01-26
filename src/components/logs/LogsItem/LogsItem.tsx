@@ -1,11 +1,14 @@
 import React, {memo, useCallback} from 'react';
-import cn from 'classnames';
 import {Log} from '@/interfaces/log';
 import {ResourceType} from '@/constants/ResourceType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {formatFullTime, formatTime} from '@/helpers/dateFormat';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {WithTooltip} from '@/components/@common/misc/WithTooltip';
+import RequestIcon from './icons/request.svg';
+import ResponseIcon from './icons/response.svg';
+import BothIcon from './icons/both.svg';
+import FollowIcon from './icons/follow.svg';
 import styles from './logsItem.css';
 
 type InterceptStage = Log['interceptStage'];
@@ -14,12 +17,6 @@ const stageTitle: Record<InterceptStage, string> = {
 	Request: 'On request stage',
 	Response: 'On response stage',
 	Both: 'On request and response stages',
-};
-
-const stageIcon: Record<InterceptStage, string> = {
-	Request: styles.request,
-	Response: styles.response,
-	Both: styles.both,
 };
 
 interface LogsItemProps {
@@ -45,15 +42,22 @@ export const LogsItem = memo<LogsItemProps>(function LogsItem(props) {
 			<span className={styles.time} title={fullDate}>
 				{formattedTime}
 			</span>
-			<WithTooltip tooltip={stageTitle[interceptStage]}>
-				<div className={cn(styles.stage, stageIcon[interceptStage])} />
+			<WithTooltip className={styles.stage} tooltip={stageTitle[interceptStage]}>
+				{interceptStage === 'Both' && <BothIcon />}
+				{interceptStage === 'Request' && <RequestIcon />}
+				{interceptStage === 'Response' && <ResponseIcon />}
 			</WithTooltip>
 			<span className={styles.method}>{method}</span>
 			<span className={styles.type}>{resourceType}</span>
 			<span className={styles.url} title={url}>
 				{url}
 			</span>
-			<IconButton className={styles.followButton} tooltip='Follow a rule' onClick={handleRuleFollow} />
+			<IconButton
+				className={styles.followButton}
+				icon={<FollowIcon />}
+				tooltip='Follow a rule'
+				onClick={handleRuleFollow}
+			/>
 		</li>
 	);
 });

@@ -1,12 +1,13 @@
 import React, {memo, useCallback} from 'react';
 import {useStore} from 'effector-react';
-import cn from 'classnames';
 import {$debuggerActive, $debuggerSwitching, $useRulesPerDomain, $logAllRequest, toggleDebuggerEnabled, toggleUseRulesPerDomain, toggleLogAllRequest} from '@/stores/uiStore'; // prettier-ignore
 import {$hasActiveRules} from '@/stores/rulesStore';
 import {useCompactModeCondition} from '@/hooks/useCompactModeCondition';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {Checkbox} from '@/components/@common/forms/Checkbox';
 import {WithTooltip} from '@/components/@common/misc/WithTooltip';
+import ListeningActiveIcon from './icons/listening-active.svg';
+import ListeningInactiveIcon from './icons/listening-inactive.svg';
 import styles from './appHeader.css';
 
 export const AppHeader = memo(function AppHeader() {
@@ -25,9 +26,10 @@ export const AppHeader = memo(function AppHeader() {
 	return (
 		<header className={styles.root}>
 			<IconButton
-				className={cn(styles.debuggerSwitcher, debuggerActive ? styles.active : styles.inactive)}
+				className={styles.debuggerSwitcher}
 				disabled={!hasActiveRules}
 				tooltip={debuggerActive ? 'Stop requests listening' : 'Start requests listening'}
+				icon={debuggerActive ? <ListeningActiveIcon /> : <ListeningInactiveIcon />}
 				onClick={handleToggleDebuggerEnabled}>
 				{!debuggerSwitching && debuggerActive && 'Listening'}
 				{!debuggerSwitching && !debuggerActive && 'Inactive'}

@@ -1,6 +1,5 @@
 import React, {memo, useCallback, useContext, useState} from 'react';
 import {useStore} from 'effector-react';
-import cn from 'classnames';
 import {DbContext} from '@/contexts/dbContext';
 import {$secondarySectionCollapsed, $useRulesPerDomain, toggleSecondarySectionCollapse, showCompose} from '@/stores/uiStore'; // prettier-ignore
 import {$hasRules, removeAllRules} from '@/stores/rulesStore';
@@ -8,6 +7,10 @@ import {useCompactModeCondition} from '@/hooks/useCompactModeCondition';
 import {SectionHeader} from '@/components/@common/misc/SectionHeader';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {PopUpConfirm} from '@/components/@common/popups/PopUpConfirm';
+import AddIcon from './icons/add.svg';
+import ClearIcon from './icons/clear.svg';
+import CollapseIcon from './icons/collapse.svg';
+import ExpandIcon from './icons/expand.svg';
 import styles from './rulesHeader.css';
 
 export const RulesHeader = memo(function RulesHeader() {
@@ -35,14 +38,16 @@ export const RulesHeader = memo(function RulesHeader() {
 		<>
 			<SectionHeader title='Rules'>
 				<IconButton
-					className={cn(styles.control, styles.add)}
+					className={styles.control}
+					icon={<AddIcon />}
 					tooltip='Add a new rule'
 					onClick={handleShowCompose}
 				/>
 				<IconButton
-					className={cn(styles.control, styles.clear)}
-					disabled={!hasRules}
+					className={styles.control}
+					icon={<ClearIcon />}
 					tooltip='Clear all rules'
+					disabled={!hasRules}
 					onClick={handleRemoveAllAsk}
 				/>
 
@@ -51,8 +56,8 @@ export const RulesHeader = memo(function RulesHeader() {
 						<div className={styles.separator} />
 
 						<IconButton
-							className={cn(styles.control, secondarySectionCollapsed ? styles.expand : styles.collapse)}
-							tooltip={secondarySectionCollapsed ? 'Expand logs' : 'Collapse logs'}
+							className={styles.control}
+							icon={secondarySectionCollapsed ? <ExpandIcon /> : <CollapseIcon />}
 							onClick={handleToggleSectionCollapsed}
 						/>
 					</>

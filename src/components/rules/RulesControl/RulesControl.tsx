@@ -1,7 +1,10 @@
 import React, {memo, useCallback} from 'react';
-import cn from 'classnames';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {Checkbox} from '@/components/@common/forms/Checkbox';
+import AboveIcon from './icons/above.svg';
+import BelowIcon from './icons/below.svg';
+import EditIcon from './icons/edit.svg';
+import RemoveIcon from './icons/remove.svg';
 import styles from './rulesControl.css';
 
 interface RulesControlProps {
@@ -27,19 +30,19 @@ export const RulesControl = memo<RulesControlProps>(function RulesControl(props)
 					Active
 				</Checkbox>
 				{allowMoveAbove && (
-					<IconButton className={cn(styles.button, styles.moveAbove)} onClick={handleMoveAbove}>
+					<IconButton className={styles.button} icon={<AboveIcon />} onClick={handleMoveAbove}>
 						Move above
 					</IconButton>
 				)}
 				{allowMoveBelow && (
-					<IconButton className={cn(styles.button, styles.moveBelow)} onClick={handleMoveBelow}>
+					<IconButton className={styles.button} icon={<BelowIcon />} onClick={handleMoveBelow}>
 						Move below
 					</IconButton>
 				)}
-				<IconButton className={cn(styles.button, styles.edit)} onClick={onEdit}>
+				<IconButton className={styles.button} icon={<EditIcon />} onClick={onEdit}>
 					Edit
 				</IconButton>
-				<IconButton className={cn(styles.button, styles.remove)} onClick={onRemove}>
+				<IconButton className={styles.button} icon={<RemoveIcon />} onClick={onRemove}>
 					Remove
 				</IconButton>
 			</li>

@@ -10,15 +10,6 @@
 
 .debuggerSwitcher {
 	margin-right: 12px;
-	--icon-button-clip: circle(34%); /* TODO use icon and remove --icon-button-clip*/
-
-	&.active {
-		--icon-button-bg: #eb3941;
-	}
-
-	&.inactive {
-		--icon-button-bg: #cccccc;
-	}
 }
 
 .separator {

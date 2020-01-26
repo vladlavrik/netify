@@ -1,9 +1,10 @@
 import React, {memo} from 'react';
-import cn from 'classnames';
 import {MutationAction} from '@/interfaces/rule';
 import {RuleViewerRow} from '../RuleViewerRow';
 import {RuleViewerDataTable} from '../RuleViewerDataTable';
 import {RuleViewerBodyData} from '../RuleViewerBodyData';
+import RequestIcon from './icons/request.svg';
+import ResponseIcon from './icons/response.svg';
 import styles from './RuleViewerActionMutation.css';
 
 interface RuleViewerActionMutationProps {
@@ -57,7 +58,8 @@ export const RuleViewerActionMutation = memo<RuleViewerActionMutationProps>(func
 				{shownSections.request && (
 					<>
 						<tr>
-							<td className={cn(styles.sectionTitle, styles.request)} colSpan={2}>
+							<td className={styles.sectionTitle} colSpan={2}>
+								<RequestIcon className={styles.sectionIcon} />
 								Request
 							</td>
 						</tr>
@@ -89,7 +91,8 @@ export const RuleViewerActionMutation = memo<RuleViewerActionMutationProps>(func
 				{shownSections.response && (
 					<>
 						<tr>
-							<td className={cn(styles.sectionTitle, styles.response)} colSpan={2}>
+							<td className={styles.sectionTitle} colSpan={2}>
+								<ResponseIcon className={styles.sectionIcon} />
 								Response
 							</td>
 						</tr>

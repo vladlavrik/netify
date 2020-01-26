@@ -14,24 +14,4 @@
 	width: 100px;
 	height: 26px;
 	padding: 0 8px;
-
-	&:hover {
-		background: var(--color-bg-accent);
-	}
-
-	&.moveAbove {
-		--icon-button-bg: url('./icons/above.svg');
-	}
-
-	&.moveBelow {
-		--icon-button-bg: url('./icons/below.svg');
-	}
-
-	&.edit {
-		--icon-button-bg: url('./icons/edit.svg');
-	}
-
-	&.remove {
-		--icon-button-bg: url('./icons/remove.svg');
-	}
 }

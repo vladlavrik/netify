@@ -14,22 +14,11 @@
 .sectionTitle {
 	display: flex;
 	align-items: center;
-	padding: 2px 0 2px 10px;
+	padding: 2px 8px;
 	font-size: 12px;
 	font-weight: 700;
+}
 
-	&::before {
-		content: '';
-		display: block;
-		width: 8px;
-		height: 10px;
-		margin-right: 8px;
-	}
-	&.request::before {
-		background: url('./icons/request.svg');
-	}
-
-	&.response::before {
-		background: url('./icons/response.svg');
-	}
+.sectionIcon {
+	margin-right: 10px;
 }

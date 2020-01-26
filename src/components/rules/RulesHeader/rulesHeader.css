@@ -1,18 +1,5 @@
 .control {
 	margin: 0 2px 0 6px;
-
-	&.add {
-		--icon-button-bg: url('./icons/add.svg');
-	}
-	&.clear {
-		--icon-button-bg: url('./icons/clear.svg');
-	}
-	&.expand {
-		--icon-button-bg: url('./icons/expand.svg');
-	}
-	&.collapse {
-		--icon-button-bg: url('./icons/collapse.svg');
-	}
 }
 
 .separator {

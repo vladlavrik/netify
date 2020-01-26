@@ -6,6 +6,7 @@ import {SelectField} from '@/components/@common/forms/SelectField';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {PopUpAlert} from '@/components/@common/popups/PopUpAlert';
 import {FieldRow} from '@/components/forms/common/FieldRow';
+import InfoIcon from './icons/info.svg';
 import styles from './ruleFilter.css';
 
 export const RuleFilter = memo(function RuleFilter() {
@@ -23,9 +24,10 @@ export const RuleFilter = memo(function RuleFilter() {
 					placeholder='Url'
 					suffixChildren={
 						<IconButton
-							tabIndex={-1}
 							className={styles.urlInfoButton}
+							icon={<InfoIcon />}
 							tooltip='Url pattern hint'
+							tabIndex={-1}
 							onClick={handleUrlHintShow}
 						/>
 					}

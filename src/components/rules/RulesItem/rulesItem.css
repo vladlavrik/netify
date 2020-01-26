@@ -106,9 +106,3 @@
 	margin: 0 4px;
 	padding: 0 4px; /* To correct dropdown position */
 }
-
-.controlTarget {
-	width: 18px;
-	height: 18px;
-	background: url('./icons/more.svg');
-}
