@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
-
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, {mode} = {}) => ({
@@ -33,7 +33,7 @@ module.exports = (env, {mode} = {}) => ({
 				test: /\.css$/,
 				use: [
 					{
-						loader: 'style-loader',
+						loader: MiniCssExtractPlugin.loader,
 					},
 					{
 						loader: 'css-loader',
@@ -75,6 +75,10 @@ module.exports = (env, {mode} = {}) => ({
 		new HtmlWebpackPlugin({
 			template: './src/panel.html',
 			filename: 'panel.html',
+		}),
+		new MiniCssExtractPlugin({
+			filename: '[name].css',
+			chunkFilename: '[name]-[id].css',
 		}),
 		new CopyWebpackPlugin([
 			'src/manifest.json',
