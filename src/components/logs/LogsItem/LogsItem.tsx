@@ -50,7 +50,11 @@ export const LogsItem = memo<LogsItemProps>(function LogsItem(props) {
 			<span className={styles.method}>{method}</span>
 			<span className={styles.type}>{resourceType}</span>
 			<span className={styles.url} title={url}>
-				{url}
+				/
+				{url
+					.split('/')
+					.slice(3)
+					.join('/') /* Skip an origin part */}
 			</span>
 			<IconButton
 				className={styles.followButton}
