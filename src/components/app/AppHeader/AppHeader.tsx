@@ -44,16 +44,16 @@ export const AppHeader = memo(function AppHeader() {
 					<span>
 						If checked - only rules created within
 						<br />
-						the current domain will be shown in
+						the current page origin will be shown
 						<br />
-						the list of rules.
+						in the list of rules.
 					</span>
 				}>
 				<Checkbox
 					className={styles.control}
 					checked={useRulesPerDomain}
 					onChange={handleToggleUseRulesPerDomain}>
-					Rules per domain
+					Rules per site
 				</Checkbox>
 			</WithTooltip>
 
