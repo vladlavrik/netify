@@ -27,7 +27,7 @@ export function stringifyActionsSummary(action: Action) {
 					actions.push('Request method replace');
 				}
 				if (setHeaders.length > 0 || dropHeaders.length > 0) {
-					actions.push('Request Headers mutation');
+					actions.push('Request headers mutation');
 				}
 				if (body) {
 					actions.push('Request body replace');
@@ -39,7 +39,7 @@ export function stringifyActionsSummary(action: Action) {
 					actions.push('Response status code replace');
 				}
 				if (setHeaders.length > 0 || dropHeaders.length > 0) {
-					actions.push('Response Headers mutation');
+					actions.push('Response headers mutation');
 				}
 				if (body) {
 					actions.push('Response body replace');

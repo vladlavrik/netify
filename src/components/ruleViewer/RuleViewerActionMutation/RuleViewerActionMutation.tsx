@@ -24,8 +24,8 @@ export const RuleViewerActionMutation = memo<RuleViewerActionMutationProps>(func
 		},
 		response: {
 			statusCode: !!response.statusCode,
-			setHeaders: request.setHeaders.length > 0,
-			dropHeaders: request.dropHeaders.length > 0,
+			setHeaders: response.setHeaders.length > 0,
+			dropHeaders: response.dropHeaders.length > 0,
 			body: response.body,
 		},
 	};

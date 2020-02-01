@@ -1,9 +1,11 @@
 .title {
 	padding: 2px 12px 4px 27px;
+	white-space: nowrap;
 	vertical-align: top;
 }
 
 .value {
 	padding: 2px 8px 4px 0;
+	word-break: break-word;
 	color: var(--color-content-accent);
 }

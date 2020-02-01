@@ -7,7 +7,7 @@
 
 .checkbox {
 	height: 22px;
-	padding-left: 8px;
+	padding: 0 0 2px 8px;
 }
 
 .button {
