@@ -3,7 +3,7 @@ Debugging proxy that will allow you to intercept and mutate requests from a web 
 Netify is a debugging proxy that will allow you to intercept and mutate your requests, like Fiddler or Charles, but it more compact and implemented directly in the Chrome devtools.
 
 <div align="center">
-<img src="screenshots/rules.png" width="640" align="center">
+<img src="screenshots/promo.png" width="720" align="center">
 </div>
 
 ### Features that Netify gives you:
