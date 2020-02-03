@@ -18,9 +18,7 @@ type HeaderEntry = Protocol.Fetch.HeaderEntry;
  *  - transform to a breakpoint data and vise-versa - updated breakpoint data to a data for continue the request (FUTURE)
  */
 export class RequestBuilder {
-	static asRequestPatch({request, requestId}: RequestPausedEvent, action: MutationAction) {
-		const patch = action.request;
-
+	static asRequestPatch({request, requestId}: RequestPausedEvent, patch: MutationAction['request']) {
 		// Rewrite request params before send to server
 		let url;
 		if (patch.endpoint) {

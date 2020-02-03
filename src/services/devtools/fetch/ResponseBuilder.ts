@@ -17,9 +17,8 @@ type HeaderEntry = Protocol.Fetch.HeaderEntry;
  */
 
 export class ResponseBuilder {
-	static asResponsePatch(pausedRequest: RequestPausedEvent, action: MutationAction) {
+	static asResponsePatch(pausedRequest: RequestPausedEvent, mutation: MutationAction['response']) {
 		const {requestId, responseStatusCode, responseHeaders} = pausedRequest;
-		const mutation = action.response;
 
 		let statusCode = responseStatusCode!;
 		if (mutation.statusCode) {

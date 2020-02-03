@@ -4,6 +4,7 @@ import {Log} from '@/interfaces/log';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
+import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {StatusCode} from '@/constants/StatusCode';
 import {Event} from '@/helpers/Events';
 import {DevtoolsConnector} from '@/services/devtools';
@@ -13,6 +14,7 @@ import {FetchRuleStore} from './FetchRuleStore';
 
 type EnableRequest = Protocol.Fetch.EnableRequest;
 type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
+type GetResponseBodyResponse = Protocol.Fetch.GetResponseBodyResponse;
 type ContinueRequestRequest = Protocol.Fetch.ContinueRequestRequest;
 type FulfillRequestRequest = Protocol.Fetch.FulfillRequestRequest;
 type FailRequestRequest = Protocol.Fetch.FailRequestRequest;
@@ -132,7 +134,7 @@ export class FetchDevtools {
 	}
 
 	private async processRequestMutation(pausedRequest: RequestPausedEvent, action: MutationAction) {
-		const builder = RequestBuilder.asRequestPatch(pausedRequest, action);
+		const builder = RequestBuilder.asRequestPatch(pausedRequest, action.request);
 		const continueParams = builder.build();
 		await this.continueRequest(continueParams);
 	}
@@ -162,8 +164,19 @@ export class FetchDevtools {
 			return;
 		}
 
+		const mutation = {...action.response};
+
+		// If a body value is not defined by the rule, get an original body, because response body if required to fullfill request
+		if (!mutation.body) {
+			const {body: value, base64Encoded} = await this.getResponseBody(requestId);
+			mutation.body = {
+				type: base64Encoded ? ResponseBodyType.Base64 : ResponseBodyType.Text,
+				value,
+			};
+		}
+
 		// Build the response from the original response data and patch from the rule
-		const builder = ResponseBuilder.asResponsePatch(pausedRequest, action);
+		const builder = ResponseBuilder.asResponsePatch(pausedRequest, mutation);
 		const fulfilParams = await builder.build();
 		await this.fulfillRequest(fulfilParams);
 
@@ -177,6 +190,10 @@ export class FetchDevtools {
 			method: request.method as RequestMethod,
 			resourceType: resourceType as ResourceType,
 		});
+	}
+
+	private async getResponseBody(requestId: string) {
+		return this.devtools.sendCommand<{}, GetResponseBodyResponse>('Fetch.getResponseBody', {requestId});
 	}
 
 	private async continueRequest(params: ContinueRequestRequest) {
@@ -198,8 +215,6 @@ export class FetchDevtools {
 	}
 
 	private log(message: string, ...data: any[]) {
-		if (process.env.NODE_ENV === 'development') {
-			console.info(`%cFetch devtools: ${message}`, 'color: #3478B1', ...data);
-		}
+		console.info(`%cFetch devtools: ${message}`, 'color: #3478B1', ...data);
 	}
 }
