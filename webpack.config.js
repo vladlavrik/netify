@@ -3,6 +3,9 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const GitRevisionPlugin = require('git-revision-webpack-plugin');
+const ZipPlugin = require('zip-webpack-plugin');
 
 module.exports = (env, {mode} = {}) => ({
 	mode,
@@ -72,6 +75,7 @@ module.exports = (env, {mode} = {}) => ({
 		extensions: ['.tsx', '.ts', '.js'],
 	},
 	plugins: [
+		new CleanWebpackPlugin(),
 		new HtmlWebpackPlugin({
 			template: './src/panel.html',
 			filename: 'panel.html',
@@ -86,6 +90,7 @@ module.exports = (env, {mode} = {}) => ({
 			'src/devtool.js',
 			{from: 'src/style/icons', to: 'icons'},
 		]),
+		...(mode === 'production' ? [new GitRevisionPlugin(), new ZipPlugin({filename: 'netify'})] : []),
 	],
 	watch: mode === 'development',
 	devtool: mode === 'development' ? 'inline-source-map' : 'source-map',
