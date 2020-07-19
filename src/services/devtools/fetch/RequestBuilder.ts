@@ -1,16 +1,13 @@
-import {Protocol} from 'devtools-protocol';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {RequestBodyType} from '@/constants/RequestBodyType';
 import {MutationAction} from '@/interfaces/rule';
 import {RequestBody} from '@/interfaces/body';
+import {RequestBreakpoint} from '@/interfaces/breakpoint';
 import {randomHex} from '@/helpers/random';
 import {compileUrlFromPattern} from './helpers/url';
 import {headersMapToArray, patchHeaders} from './helpers/headers';
 import {buildRequestBodyFromMultipartForm, buildRequestBodyFromUrlEncodedForm} from './helpers/forms';
-
-type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
-type ContinueRequestRequest = Protocol.Fetch.ContinueRequestRequest;
-type HeaderEntry = Protocol.Fetch.HeaderEntry;
+import {RequestPausedEvent, ContinueRequestRequest, HeaderEntry} from './protocol';
 
 /**
  * Request handler provides processing the paused request to:
@@ -55,7 +52,8 @@ export class RequestBuilder {
 		// TODO FUTURE
 	}
 
-	static compileBreakpoint() {
+	static compileBreakpoint({}: RequestPausedEvent) {
+		return {} as RequestBreakpoint;
 		// TODO FUTURE
 	}
 

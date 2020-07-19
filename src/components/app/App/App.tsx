@@ -6,6 +6,7 @@ import {Logs} from '@/components/logs';
 import {Rules} from '@/components/rules';
 import {RuleViewer} from '@/components/ruleViewer';
 import {RuleCompose, RuleEditor} from '@/components/forms/rule';
+import {BreakpointRequest, BreakpointResponse} from '@/components/forms/breakpoint';
 import {AppHeader} from '../AppHeader';
 import {AppSections} from '../AppSections';
 import styles from './app.css';
@@ -33,6 +34,8 @@ export const App = memo(function App() {
 			{composeShown && createPortal(<RuleCompose />, modalTarget)}
 
 			{editorShown && createPortal(<RuleEditor />, modalTarget)}
+
+			{editorShown && createPortal(<BreakpointRequest />, modalTarget)}
 		</div>
 	);
 });

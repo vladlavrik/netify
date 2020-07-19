@@ -1,21 +1,16 @@
-import {Protocol} from 'devtools-protocol';
 import {Rule, MutationAction, LocalResponseAction, FailureAction} from '@/interfaces/rule';
 import {Log} from '@/interfaces/log';
+import {Breakpoint} from '@/interfaces/breakpoint';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {StatusCode} from '@/constants/StatusCode';
 import {Event} from '@/helpers/Events';
 import {DevtoolsConnector} from '@/services/devtools';
+import {EnableRequest, GetResponseBodyResponse, RequestPausedEvent, ResponsePausedEvent, ContinueRequestRequest, FulfillRequestRequest, FailRequestRequest} from './protocol' // prettier-ignore
 import {ResponseBuilder} from './ResponseBuilder';
 import {RequestBuilder} from './RequestBuilder';
 import {FetchRuleStore} from './FetchRuleStore';
-
-type EnableRequest = Protocol.Fetch.EnableRequest;
-type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
-type ContinueRequestRequest = Protocol.Fetch.ContinueRequestRequest;
-type FulfillRequestRequest = Protocol.Fetch.FulfillRequestRequest;
-type FailRequestRequest = Protocol.Fetch.FailRequestRequest;
 
 /**
  * The service provides requests interception by rule filters and:
@@ -25,6 +20,7 @@ type FailRequestRequest = Protocol.Fetch.FailRequestRequest;
 export class FetchDevtools {
 	readonly events = {
 		requestProcessed: new Event<Log>(),
+		requestBreakpoint: new Event<Breakpoint>(),
 	};
 
 	private enabled = false;
@@ -79,7 +75,7 @@ export class FetchDevtools {
 		if (!pausedRequest.hasOwnProperty('responseStatusCode')) {
 			await this.processRequest(pausedRequest, rule);
 		} else {
-			await this.processResponse(pausedRequest, rule);
+			await this.processResponse(pausedRequest as ResponsePausedEvent, rule);
 		}
 	}
 
@@ -89,7 +85,7 @@ export class FetchDevtools {
 		switch (rule.action.type) {
 			// Trigger breakpoint event
 			case RuleActionsType.Breakpoint:
-				// TODO FUTURE
+				this.triggerRequestBreakpoint(pausedRequest);
 				break;
 
 			// Response locally without sending request to server
@@ -120,6 +116,29 @@ export class FetchDevtools {
 		});
 	}
 
+	private async processResponse(pausedResponse: ResponsePausedEvent, rule: Rule) {
+		switch (rule.action.type) {
+			case RuleActionsType.Breakpoint:
+				this.triggerResponseBreakpoint(pausedResponse);
+				break;
+
+			case RuleActionsType.Mutation:
+				this.processResponseMutation(pausedResponse, rule.action, rule.id);
+				break;
+		}
+	}
+
+	private triggerRequestBreakpoint(pausedRequest: RequestPausedEvent) {
+		const breakpoint = RequestBuilder.compileBreakpoint(pausedRequest);
+		this.events.requestBreakpoint.emit(breakpoint);
+	}
+
+	private async triggerResponseBreakpoint(pausedResponse: ResponsePausedEvent) {
+		const {body, base64Encoded} = await this.getResponseBody(pausedResponse.requestId);
+		const breakpoint = ResponseBuilder.compileBreakpoint(pausedResponse, body, base64Encoded);
+		this.events.requestBreakpoint.emit(breakpoint);
+	}
+
 	private async processRequestFailure(requestId: string, action: FailureAction) {
 		const errorReason = action.reason;
 		await this.failRequest({requestId, errorReason});
@@ -137,20 +156,8 @@ export class FetchDevtools {
 		await this.continueRequest(continueParams);
 	}
 
-	private async processResponse(pausedRequest: RequestPausedEvent, rule: Rule) {
-		switch (rule.action.type) {
-			case RuleActionsType.Breakpoint:
-				// TODO FUTURE
-				break;
-
-			case RuleActionsType.Mutation:
-				this.processResponseMutation(pausedRequest, rule.action, rule.id);
-				break;
-		}
-	}
-
-	private async processResponseMutation(pausedRequest: RequestPausedEvent, action: MutationAction, ruleId: string) {
-		const {requestId, request, resourceType} = pausedRequest;
+	private async processResponseMutation(pausedResponse: ResponsePausedEvent, action: MutationAction, ruleId: string) {
+		const {requestId, request, resourceType} = pausedResponse;
 		const {statusCode, setHeaders, dropHeaders, body} = action.response;
 
 		const noChanges = !statusCode && setHeaders.length === 0 && dropHeaders.length === 0 && !body;
@@ -163,7 +170,7 @@ export class FetchDevtools {
 		}
 
 		// Build the response from the original response data and patch from the rule
-		const builder = ResponseBuilder.asResponsePatch(pausedRequest, action);
+		const builder = ResponseBuilder.asResponsePatch(pausedResponse, action);
 		const fulfilParams = await builder.build();
 		await this.fulfillRequest(fulfilParams);
 
@@ -197,9 +204,11 @@ export class FetchDevtools {
 		await this.devtools.sendCommand('Fetch.failRequest', params);
 	}
 
+	private async getResponseBody(requestId: string) {
+		return this.devtools.sendCommand<{}, GetResponseBodyResponse>('Fetch.getResponseBody', {requestId});
+	}
+
 	private log(message: string, ...data: any[]) {
-		if (process.env.NODE_ENV === 'development') {
-			console.info(`%cFetch devtools: ${message}`, 'color: #3478B1', ...data);
-		}
+		console.info(`%cFetch devtools: ${message}`, 'color: #3478B1', ...data);
 	}
 }

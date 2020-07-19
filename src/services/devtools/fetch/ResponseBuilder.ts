@@ -1,13 +1,10 @@
-import {Protocol} from 'devtools-protocol';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {MutationAction, LocalResponseAction} from '@/interfaces/rule';
 import {ResponseBody} from '@/interfaces/body';
+import {ResponseBreakpoint} from '@/interfaces/breakpoint';
+import {ResponsePausedEvent, FulfillRequestRequest, HeaderEntry} from './protocol' // prettier-ignore
 import {buildResponseBodyFromBase64, buildResponseBodyFromFile, buildResponseBodyFromText} from './helpers/response';
 import {patchHeaders} from './helpers/headers';
-
-type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
-type FulfillRequestRequest = Protocol.Fetch.FulfillRequestRequest;
-type HeaderEntry = Protocol.Fetch.HeaderEntry;
 
 /**
  * Response handler provides processing the paused response to:
@@ -17,8 +14,8 @@ type HeaderEntry = Protocol.Fetch.HeaderEntry;
  */
 
 export class ResponseBuilder {
-	static asResponsePatch(pausedRequest: RequestPausedEvent, action: MutationAction) {
-		const {requestId, responseStatusCode, responseHeaders} = pausedRequest;
+	static asResponsePatch(pausedResponse: ResponsePausedEvent, action: MutationAction) {
+		const {requestId, responseStatusCode, responseHeaders} = pausedResponse;
 		const mutation = action.response;
 
 		let statusCode = responseStatusCode!;
@@ -40,7 +37,8 @@ export class ResponseBuilder {
 		// TODO FUTURE
 	}
 
-	static compileBreakpoint() {
+	static compileBreakpoint({}: ResponsePausedEvent, body: string, base64Encoded: boolean) {
+		return {} as ResponseBreakpoint;
 		// TODO FUTURE
 	}
 

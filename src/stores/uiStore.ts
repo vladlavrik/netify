@@ -15,7 +15,6 @@ export const hideRuleEditor = createEvent('hide rule editor');
 export const showRuleDetails = createEvent<string>('show rule details');
 export const hideRuleDetails = createEvent('hide rule rule details');
 
-/** TODO for future */
 export const $panelShown = restore(setPanelShown, true); //
 
 /** Network debugger is enabled ny user, but this does not ensure that it is active, as it may be a list of rules is empty */

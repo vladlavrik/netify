@@ -4,6 +4,7 @@ import {combine} from 'effector';
 import {DbContext} from '@/contexts/dbContext';
 import {addLogEntry} from '@/stores/logsStore';
 import {$rules, $hasActiveRules, fetchRules} from '@/stores/rulesStore';
+import {} from '@/stores/breakpointsStore';
 import {$debuggerEnabled, $debuggerActive, $useRulesPerDomain, setDebuggerEnabled, setDebuggerActive, setDebuggerSwitching, setPanelShown} from '@/stores/uiStore'; // prettier-ignore
 import {openIDB, RulesMapper} from '@/services/indexedDB';
 import {ExtensionDevtoolsConnector, ExtensionTab, ExtensionIcon} from '@/services/extension';
