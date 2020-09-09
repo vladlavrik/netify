@@ -15,3 +15,16 @@ Netify is a debugging proxy that will allow you to intercept and mutate your req
 - Adding, replacing and removing response headers.
 - Replacing a response body with a text value, Base64, or file's content.
 - Cancel requests on the client.
+
+### FAQ
+Q. Netify shows a blank page when I open it, why is this happening?  
+A. This is sometimes caused by your "Cookies and other site data" being set too strict, you can add an exception for the extension:    
+
+1. Copy `chrome://settings/cookies?search=Sites+that+can+always+use+cookies` into the URL bar and press enter.    
+2. Scroll down until you find the words "Sites that can always use cookies" highlighted in yellow.  
+3. Click the "Add" button to the right of the highlighted words.  
+4. Paste the extension ID (`mdafhjaillpdogjdigdkmnoddeoegblj`) into the "site" text box in the popup, then click the add button.    
+
+If you still have netify open, right click the blank netify page and click "reload frame".    
+If you already closed netify, just re-open it.    
+The netify window should no longer give you a blank screen.    
