@@ -1,3 +1,10 @@
+import {fromByteArray} from 'base64-js';
+
+export function buildRequestBodyFromText(source: string) {
+	const byteArray = new TextEncoder().encode(source);
+	return fromByteArray(byteArray);
+}
+
 export function buildRequestBodyFromUrlEncodedForm(form: {key: string; value: string}[]) {
 	return form
 		.map(({key, value}: {key: string; value: string}) => {
