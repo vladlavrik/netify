@@ -6,7 +6,7 @@ import {RequestBody} from '@/interfaces/body';
 import {randomHex} from '@/helpers/random';
 import {compileUrlFromPattern} from './helpers/url';
 import {headersMapToArray, patchHeaders} from './helpers/headers';
-import {buildRequestBodyFromText, buildRequestBodyFromMultipartForm, buildRequestBodyFromUrlEncodedForm} from './helpers/postData'; // prettier-ignore
+import {buildRequestBodyFromMultipartForm, buildRequestBodyFromUrlEncodedForm} from './helpers/forms';
 
 type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
 type ContinueRequestRequest = Protocol.Fetch.ContinueRequestRequest;
@@ -82,7 +82,7 @@ export class RequestBuilder {
 
 		switch (this.body.type) {
 			case RequestBodyType.Text:
-				postData = buildRequestBodyFromText(this.body.value);
+				postData = this.body.value;
 				break;
 
 			case RequestBodyType.UrlEncodedForm:
