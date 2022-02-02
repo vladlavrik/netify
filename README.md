@@ -14,4 +14,8 @@ Netify is a debugging proxy that will allow you to intercept and mutate your req
 - Replacing a response status code.
 - Adding, replacing and removing response headers.
 - Replacing a response body with a text value, Base64, or file's content.
-- Cancel requests on the client.
+- Cancel requests on the client.  
+
+----
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/vladlavrik)
