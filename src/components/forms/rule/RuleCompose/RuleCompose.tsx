@@ -1,5 +1,5 @@
 import React, {memo, useCallback, useContext, useMemo} from 'react';
-import {Rule} from '@/interfaces/Rule';
+import {Rule} from '@/interfaces/rule';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {DbContext} from '@/contexts/dbContext';
 import {createRule} from '@/stores/rulesStore';

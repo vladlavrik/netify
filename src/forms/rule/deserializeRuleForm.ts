@@ -1,6 +1,6 @@
 import {HeadersArray} from '@/interfaces/headers';
 import {RequestBody, ResponseBody} from '@/interfaces/body';
-import {Action, BreakpointAction, FailureAction, LocalResponseAction, MutationAction, Rule} from '@/interfaces/Rule';
+import {Action, BreakpointAction, FailureAction, LocalResponseAction, MutationAction, Rule} from '@/interfaces/rule';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {BreakpointStage} from '@/constants/BreakpointStage';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';

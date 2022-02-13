@@ -1,5 +1,5 @@
 import {Protocol} from 'devtools-protocol';
-import {Rule} from '@/interfaces/Rule';
+import {Rule} from '@/interfaces/rule';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {ResourceType} from '@/constants/ResourceType';
 import {RequestMethod} from '@/constants/RequestMethod';

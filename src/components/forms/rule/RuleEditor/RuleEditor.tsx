@@ -1,6 +1,6 @@
 import React, {memo, useCallback, useContext} from 'react';
 import {useStore, useStoreMap} from 'effector-react';
-import {Rule} from '@/interfaces/Rule';
+import {Rule} from '@/interfaces/rule';
 import {DbContext} from '@/contexts/dbContext';
 import {$rules, updateRule} from '@/stores/rulesStore';
 import {$ruleEditorShownFor, hideRuleEditor} from '@/stores/uiStore';

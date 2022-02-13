@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import {Rule} from '@/interfaces/rule';
 import {RuleViewerRow} from '../RuleViewerRow';
-import styles from './ruleViewerFilter.css';
+import styles from './RuleViewerFilter.css';
 
 interface RuleViewerRowProps {
 	filter: Rule['filter'];

@@ -1,5 +1,5 @@
 import {RuleFormSchema} from './ruleFormSchema';
-import {Rule} from '@/interfaces/Rule';
+import {Rule} from '@/interfaces/rule';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {BreakpointStage} from '@/constants/BreakpointStage';
 import {RequestBodyType} from '@/constants/RequestBodyType';
