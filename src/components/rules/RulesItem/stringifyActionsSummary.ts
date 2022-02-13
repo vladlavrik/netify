@@ -53,6 +53,11 @@ export function stringifyActionsSummary(action: Action) {
 
 		case RuleActionsType.Failure:
 			actions.push('Failure');
+			break;
+
+		case RuleActionsType.Delay:
+			actions.push('Delay');
+			break;
 	}
 
 	return actions.join(', ');

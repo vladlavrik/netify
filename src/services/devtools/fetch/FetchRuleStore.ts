@@ -75,6 +75,7 @@ export class FetchRuleStore {
 
 				case RuleActionsType.LocalResponse:
 				case RuleActionsType.Failure:
+				case RuleActionsType.Delay:
 					stages.push('Request');
 					break;
 			}

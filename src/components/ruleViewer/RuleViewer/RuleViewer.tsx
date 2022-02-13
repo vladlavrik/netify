@@ -5,6 +5,7 @@ import {$ruleDetailsShownFor, hideRuleDetails} from '@/stores/uiStore';
 import {$rules} from '@/stores/rulesStore';
 import {RuleViewerHeader} from '../RuleViewerHeader';
 import {RuleViewerFilter} from '../RuleViewerFilter';
+import {RuleViewerActionDelay} from '../RuleViewerActionDelay';
 import {RuleViewerActionFailure} from '../RuleViewerActionFailure';
 import {RuleViewerActionLocalResponse} from '../RuleViewerActionLocalResponse';
 import {RuleViewerActionMutation} from '../RuleViewerActionMutation';
@@ -61,6 +62,8 @@ export const RuleViewer = memo(function RuleViewer() {
 				{action.type === RuleActionsType.LocalResponse && <RuleViewerActionLocalResponse action={action} />}
 
 				{action.type === RuleActionsType.Failure && <RuleViewerActionFailure action={action} />}
+
+				{action.type === RuleActionsType.Delay && <RuleViewerActionDelay action={action} />}
 			</div>
 		</div>
 	);

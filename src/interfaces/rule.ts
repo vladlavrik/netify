@@ -40,7 +40,12 @@ export interface FailureAction {
 	reason: ResponseErrorReason;
 }
 
-export type Action = BreakpointAction | MutationAction | LocalResponseAction | FailureAction;
+export interface DelayAction {
+	type: RuleActionsType.Delay;
+	timeout: number;
+}
+
+export type Action = BreakpointAction | MutationAction | LocalResponseAction | FailureAction | DelayAction;
 
 export interface Rule {
 	id: string;

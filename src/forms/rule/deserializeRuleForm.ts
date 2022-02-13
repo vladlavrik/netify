@@ -1,6 +1,14 @@
 import {HeadersArray} from '@/interfaces/headers';
 import {RequestBody, ResponseBody} from '@/interfaces/body';
-import {Action, BreakpointAction, FailureAction, LocalResponseAction, MutationAction, Rule} from '@/interfaces/rule';
+import {
+	Action,
+	BreakpointAction,
+	DelayAction,
+	FailureAction,
+	LocalResponseAction,
+	MutationAction,
+	Rule,
+} from '@/interfaces/rule';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {BreakpointStage} from '@/constants/BreakpointStage';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
@@ -118,6 +126,13 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 				type: RuleActionsType.Failure,
 				reason: actionConfigs[RuleActionsType.Failure].reason,
 			} as FailureAction;
+			break;
+
+		case RuleActionsType.Delay:
+			action = {
+				type: RuleActionsType.Delay,
+				timeout: Number(actionConfigs[RuleActionsType.Delay].timeout),
+			} as DelayAction;
 			break;
 	}
 

@@ -4,7 +4,13 @@ import {requestMethodsList, RequestMethod} from '@/constants/RequestMethod';
 import {ruleActionsTypesList, RuleActionsType} from '@/constants/RuleActionsType';
 import {breakpointStagesList, BreakpointStage} from '@/constants/BreakpointStage';
 import {responseErrorReasonsList, ResponseErrorReason} from '@/constants/ResponseErrorReason';
-import {statusCodeSchema, headersSchema, requestBodySchema, responseBodySchema} from '../common/commonFormSchemes';
+import {
+	statusCodeSchema,
+	headersSchema,
+	requestBodySchema,
+	responseBodySchema,
+	delayTimeoutSchema,
+} from '../common/commonFormSchemes';
 
 export const ruleFormSchema = object({
 	label: string().notRequired(),
@@ -47,6 +53,9 @@ export const ruleFormSchema = object({
 		}),
 		[RuleActionsType.Failure]: object({
 			reason: mixed<ResponseErrorReason>().oneOf(responseErrorReasonsList),
+		}),
+		[RuleActionsType.Delay]: object({
+			timeout: delayTimeoutSchema.required('delay timeout is required'),
 		}),
 	}).required(),
 }).required();

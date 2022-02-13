@@ -56,6 +56,9 @@ export function serializeRuleForm(rule: Rule) {
 			[RuleActionsType.Failure]: {
 				reason: ResponseErrorReason.Failed,
 			},
+			[RuleActionsType.Delay]: {
+				timeout: 0,
+			},
 		},
 	};
 
@@ -141,6 +144,11 @@ export function serializeRuleForm(rule: Rule) {
 
 		case RuleActionsType.Failure: {
 			value.actionConfigs[RuleActionsType.Failure].reason = action.reason;
+			break;
+		}
+
+		case RuleActionsType.Delay: {
+			value.actionConfigs[RuleActionsType.Delay].timeout = action.timeout;
 			break;
 		}
 	}

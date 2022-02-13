@@ -16,11 +16,16 @@ export const headersSchema = array().of(
 );
 
 const statusCodeInvalidError = 'Invalid status code';
+const delayTimeoutInvalidError = 'Invalid delay time';
 
 export const statusCodeSchema = number()
 	.typeError(statusCodeInvalidError)
 	.min(100, statusCodeInvalidError)
 	.max(599, statusCodeInvalidError);
+
+export const delayTimeoutSchema = number()
+	.typeError(delayTimeoutInvalidError)
+	.min(0, delayTimeoutInvalidError);
 
 export const requestBodySchema = object({
 	type: mixed<'Original' | RequestBodyType>().oneOf(['Original', ...requestBodyTypesList]),

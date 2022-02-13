@@ -1,5 +1,5 @@
 import {Protocol} from 'devtools-protocol';
-import {Rule, MutationAction, LocalResponseAction, FailureAction} from '@/interfaces/rule';
+import {Rule, MutationAction, LocalResponseAction, FailureAction, DelayAction} from '@/interfaces/rule';
 import {Log} from '@/interfaces/log';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {RequestMethod} from '@/constants/RequestMethod';
@@ -108,6 +108,11 @@ export class FetchDevtools {
 			case RuleActionsType.Failure:
 				this.processRequestFailure(requestId, rule.action);
 				break;
+
+			// Delay request
+			case RuleActionsType.Delay:
+				this.processRequestDelay(requestId, rule.action);
+				break;
 		}
 
 		// Report to UI logger about the new handled request
@@ -125,6 +130,11 @@ export class FetchDevtools {
 	private async processRequestFailure(requestId: string, action: FailureAction) {
 		const errorReason = action.reason;
 		await this.failRequest({requestId, errorReason});
+	}
+
+	private async processRequestDelay(requestId: string, action: DelayAction) {
+		const timeout = action.timeout;
+		await this.delayRequest({requestId, timeout});
 	}
 
 	private async processLocalResponse(requestId: string, action: LocalResponseAction) {
@@ -212,6 +222,12 @@ export class FetchDevtools {
 	private async failRequest(params: FailRequestRequest) {
 		this.log('fail request with params %o', params);
 		await this.devtools.sendCommand('Fetch.failRequest', params);
+	}
+
+	private async delayRequest(params: {requestId: string; timeout: number}) {
+		this.log('delay request with params %o', params);
+		await new Promise(resolve => setTimeout(resolve, params.timeout));
+		await this.continueRequest({requestId: params.requestId});
 	}
 
 	private log(message: string, ...data: any[]) {
