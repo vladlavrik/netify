@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "name": "netify-playground",
+  "scripts": {
+    "start": "node --inspect server.js"
+  },
+  "devDependencies": {
+    "node-static": "^0.7.11"
+  }
+}
