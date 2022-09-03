@@ -28,6 +28,11 @@ export class FetchRuleStore {
 		this.rulesList = newRulesList;
 	}
 
+	reset() {
+		this.currentOrigin = '';
+		this.rulesList = [];
+	}
+
 	getRequestPatterns() {
 		const patterns: RequestPattern[] = [];
 

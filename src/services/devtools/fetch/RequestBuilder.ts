@@ -1,7 +1,7 @@
 import {Protocol} from 'devtools-protocol';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {RequestBodyType} from '@/constants/RequestBodyType';
-import {MutationAction} from '@/interfaces/rule';
+import {MutationRuleAction} from '@/interfaces/rule';
 import {RequestBody} from '@/interfaces/body';
 import {randomHex} from '@/helpers/random';
 import {compileUrlFromPattern} from './helpers/url';
@@ -18,7 +18,7 @@ type HeaderEntry = Protocol.Fetch.HeaderEntry;
  *  - transform to a breakpoint data and vise-versa - updated breakpoint data to a data for continue the request (FUTURE)
  */
 export class RequestBuilder {
-	static asRequestPatch({request, requestId}: RequestPausedEvent, patch: MutationAction['request']) {
+	static asRequestPatch({request, requestId}: RequestPausedEvent, patch: MutationRuleAction['request']) {
 		// Rewrite request params before send to server
 		let url;
 		if (patch.endpoint) {

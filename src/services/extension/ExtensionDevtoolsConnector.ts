@@ -16,7 +16,7 @@ export class ExtensionDevtoolsConnector implements DevtoolsConnector {
 	}
 
 	async initialize() {
-		await new Promise((resolve, reject) => {
+		await new Promise<void>((resolve, reject) => {
 			chrome.debugger.attach({tabId: this.tabId}, this.debuggerVersion, () => {
 				if (chrome.runtime.lastError) {
 					reject(new Error(chrome.runtime.lastError.message));
@@ -30,7 +30,7 @@ export class ExtensionDevtoolsConnector implements DevtoolsConnector {
 	}
 
 	async destroy() {
-		await new Promise((resolve, reject) => {
+		await new Promise<void>((resolve, reject) => {
 			chrome.debugger.detach({tabId: this.tabId}, () => {
 				if (chrome.runtime.lastError) {
 					reject(new Error(chrome.runtime.lastError.message));

@@ -12,6 +12,10 @@
 	}
 }
 
+.selectCheckbox {
+	margin-left: 8px;
+}
+
 .entry {
 	width: 0; /* Fix nested overflow */
 	position: relative;
@@ -48,7 +52,12 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	font-style: italic;
 	color: var(--color-content-accent);
+
+	&.inactive {
+		opacity: 0.5;
+	}
 }
 
 .filter {

@@ -1,19 +1,20 @@
-import React, {memo, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {createPortal} from 'react-dom';
-import {useStore} from 'effector-react';
-import {$ruleComposeShown, $ruleEditorShownFor, $ruleDetailsShownFor} from '@/stores/uiStore';
+import {observer} from 'mobx-react-lite';
+import {RuleCompose, RuleEditor} from '@/components/forms/rule';
 import {Logs} from '@/components/logs';
 import {Rules} from '@/components/rules';
 import {RuleViewer} from '@/components/ruleViewer';
-import {RuleCompose, RuleEditor} from '@/components/forms/rule';
+import {useStores} from '@/stores/useStores';
 import {AppHeader} from '../AppHeader';
 import {AppSections} from '../AppSections';
 import styles from './app.css';
 
-export const App = memo(function App() {
-	const composeShown = useStore($ruleComposeShown);
-	const editorShown = !!useStore($ruleEditorShownFor);
-	const detailsShown = !!useStore($ruleDetailsShownFor);
+export const App = observer(() => {
+	const {rulesStore} = useStores();
+	const {composeShown} = rulesStore;
+	const editorShown = !!rulesStore.editorShownFor;
+	const detailsShown = !!rulesStore.detailsShownFor;
 
 	const modalTarget = useMemo(() => document.getElementById('modal-root')!, []);
 
@@ -36,3 +37,5 @@ export const App = memo(function App() {
 		</div>
 	);
 });
+
+App.displayName = 'App';

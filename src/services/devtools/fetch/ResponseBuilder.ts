@@ -1,6 +1,6 @@
 import {Protocol} from 'devtools-protocol';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
-import {MutationAction, LocalResponseAction} from '@/interfaces/rule';
+import {MutationRuleAction, LocalResponseRuleAction} from '@/interfaces/rule';
 import {ResponseBody} from '@/interfaces/body';
 import {buildResponseBodyFromBase64, buildResponseBodyFromFile, buildResponseBodyFromText} from './helpers/response';
 import {patchHeaders} from './helpers/headers';
@@ -17,7 +17,7 @@ type HeaderEntry = Protocol.Fetch.HeaderEntry;
  */
 
 export class ResponseBuilder {
-	static asResponsePatch(pausedRequest: RequestPausedEvent, mutation: MutationAction['response']) {
+	static asResponsePatch(pausedRequest: RequestPausedEvent, mutation: MutationRuleAction['response']) {
 		const {requestId, responseStatusCode, responseHeaders} = pausedRequest;
 
 		let statusCode = responseStatusCode!;
@@ -30,7 +30,7 @@ export class ResponseBuilder {
 		return new this(requestId, statusCode, headers, mutation.body);
 	}
 
-	static asLocalResponse(requestId: string, action: LocalResponseAction) {
+	static asLocalResponse(requestId: string, action: LocalResponseRuleAction) {
 		const {statusCode, headers, body} = action;
 		return new this(requestId, statusCode, headers, body);
 	}

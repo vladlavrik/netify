@@ -1,17 +1,18 @@
-import React, {memo} from 'react';
-import {MutationAction} from '@/interfaces/rule';
-import {RuleViewerRow} from '../RuleViewerRow';
-import {RuleViewerDataTable} from '../RuleViewerDataTable';
+import React from 'react';
+import {observer} from 'mobx-react-lite';
+import {MutationRuleAction} from '@/interfaces/rule';
 import {RuleViewerBodyData} from '../RuleViewerBodyData';
+import {RuleViewerDataTable} from '../RuleViewerDataTable';
+import {RuleViewerRow} from '../RuleViewerRow';
 import RequestIcon from './icons/request.svg';
 import ResponseIcon from './icons/response.svg';
-import styles from './RuleViewerActionMutation.css';
+import styles from './ruleViewerActionMutation.css';
 
 interface RuleViewerActionMutationProps {
-	action: MutationAction;
+	action: MutationRuleAction;
 }
 
-export const RuleViewerActionMutation = memo<RuleViewerActionMutationProps>(function RuleViewerActionMutation(props) {
+export const RuleViewerActionMutation = observer<RuleViewerActionMutationProps>((props) => {
 	const {request, response} = props.action;
 
 	const shownRows = {
@@ -124,3 +125,5 @@ export const RuleViewerActionMutation = memo<RuleViewerActionMutationProps>(func
 		</table>
 	);
 });
+
+RuleViewerActionMutation.displayName = 'RuleViewerActionMutation';

@@ -1,5 +1,5 @@
 import React, {memo} from 'react';
-import styles from './RuleViewerDataTable.css';
+import styles from './ruleViewerDataTable.css';
 
 interface RuleViewerDataTableProps {
 	values: [string, string][];

@@ -2,7 +2,7 @@ import React, {memo, ReactNode} from 'react';
 import styles from './sectionHeader.css';
 
 interface SectionHeaderProps {
-	title: string;
+	title: ReactNode;
 	children?: ReactNode;
 }
 

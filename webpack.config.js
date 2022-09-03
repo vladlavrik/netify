@@ -75,7 +75,6 @@ module.exports = (env, {mode} = {}) => ({
 		extensions: ['.tsx', '.ts', '.js'],
 	},
 	plugins: [
-		new CleanWebpackPlugin(),
 		new HtmlWebpackPlugin({
 			template: './src/panel.html',
 			filename: 'panel.html',
@@ -85,12 +84,14 @@ module.exports = (env, {mode} = {}) => ({
 			chunkFilename: '[name]-[id].css',
 		}),
 		new CopyWebpackPlugin([
-			'src/manifest.json',
-			'src/devtool.html',
-			'src/devtool.js',
-			{from: 'src/style/icons', to: 'icons'},
+			'./src/manifest.json',
+			'./src/devtool.html',
+			'./src/devtool.js',
+			{from: './src/style/icons', to: 'icons'},
 		]),
-		...(mode === 'production' ? [new GitRevisionPlugin(), new ZipPlugin({filename: 'netify'})] : []),
+		...(mode === 'production'
+			? [new CleanWebpackPlugin(), new GitRevisionPlugin(), new ZipPlugin({filename: 'netify'})]
+			: []),
 	],
 	watch: mode === 'development',
 	devtool: mode === 'development' ? 'inline-source-map' : 'source-map',

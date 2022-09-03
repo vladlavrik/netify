@@ -1,5 +1,5 @@
 import React, {memo, ReactNode} from 'react';
-import styles from './RuleViewerRow.css';
+import styles from './ruleViewerRow.css';
 
 interface RuleViewerRowProps {
 	title: string;

@@ -1,7 +1,7 @@
-import {Action} from '@/interfaces/rule';
+import {RuleAction} from '@/interfaces/rule';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 
-export function stringifyActionsSummary(action: Action) {
+export function stringifyActionsSummary(action: RuleAction) {
 	const actions = [];
 
 	switch (action.type) {

@@ -1,17 +1,17 @@
-import React, {memo, useCallback} from 'react';
-import {Log} from '@/interfaces/log';
-import {ResourceType} from '@/constants/ResourceType';
-import {RequestMethod} from '@/constants/RequestMethod';
+import React from 'react';
+import {observer} from 'mobx-react-lite';
+import {LogEntry} from '@/interfaces/log';
 import {formatFullTime, formatTime} from '@/helpers/dateFormat';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {WithTooltip} from '@/components/@common/misc/WithTooltip';
-import RequestIcon from './icons/request.svg';
-import ResponseIcon from './icons/response.svg';
+import {useStores} from '@/stores/useStores';
 import BothIcon from './icons/both.svg';
 import FollowIcon from './icons/follow.svg';
+import RequestIcon from './icons/request.svg';
+import ResponseIcon from './icons/response.svg';
 import styles from './logsItem.css';
 
-type InterceptStage = Log['interceptStage'];
+type InterceptStage = LogEntry['interceptStage'];
 
 const stageTitle: Record<InterceptStage, string> = {
 	Request: 'On request stage',
@@ -20,20 +20,20 @@ const stageTitle: Record<InterceptStage, string> = {
 };
 
 interface LogsItemProps {
-	ruleId: string;
-	interceptStage: InterceptStage;
-	date: Date;
-	url: string;
-	resourceType: ResourceType;
-	method: RequestMethod;
-	onFollowRule(ruleId: string): void;
+	data: LogEntry;
 }
 
-export const LogsItem = memo<LogsItemProps>(function LogsItem(props) {
-	const {ruleId, interceptStage, date, url, resourceType, method, onFollowRule} = props;
+export const LogsItem = observer<LogsItemProps>((props) => {
+	const {data} = props;
+	const {ruleId, url, resourceType, method, interceptStage, timestamp} = data;
 
-	const handleRuleFollow = useCallback(() => onFollowRule(ruleId), [ruleId, onFollowRule]);
+	const {rulesStore} = useStores();
 
+	const handleRuleFollow = () => {
+		rulesStore.showDetails(ruleId);
+	};
+
+	const date = new Date(timestamp);
 	const fullDate = formatFullTime(date);
 	const formattedTime = formatTime(date);
 
@@ -50,11 +50,7 @@ export const LogsItem = memo<LogsItemProps>(function LogsItem(props) {
 			<span className={styles.method}>{method}</span>
 			<span className={styles.type}>{resourceType}</span>
 			<span className={styles.url} title={url}>
-				/
-				{url
-					.split('/')
-					.slice(3)
-					.join('/') /* Skip an origin part */}
+				/{url.split('/').slice(3).join('/') /* Skip an url origin part */}
 			</span>
 			<IconButton
 				className={styles.followButton}
@@ -65,3 +61,5 @@ export const LogsItem = memo<LogsItemProps>(function LogsItem(props) {
 		</li>
 	);
 });
+
+LogsItem.displayName = 'LogsItem';

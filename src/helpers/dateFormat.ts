@@ -1,9 +1,9 @@
-const timeOnlyDateFormat = {
+const timeOnlyDateFormat: Intl.DateTimeFormatOptions = {
 	minute: '2-digit',
 	second: '2-digit',
 };
 
-const fullDateFormat = {
+const fullDateFormat: Intl.DateTimeFormatOptions = {
 	year: 'numeric',
 	day: 'numeric',
 	month: 'short',

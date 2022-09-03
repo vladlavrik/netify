@@ -9,18 +9,23 @@
 }
 
 .debuggerSwitcher {
-	margin-right: 12px;
+	min-width: 76px;
+	margin-right: 6px;
 }
 
 .separator {
 	height: 16px;
 	width: 1px;
+	margin-right: 8px;
 	background-color: var(--color-brd-separator);
 }
 
-.control {
-	margin: 0 8px;
+.mainControl,
+.additionalControl {
+	margin-right: 8px;
+}
 
+.mainControl {
 	@media (max-width: 256px) {
 		white-space: nowrap;
 		overflow: hidden;

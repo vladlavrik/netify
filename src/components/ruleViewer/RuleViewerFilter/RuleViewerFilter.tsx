@@ -1,4 +1,5 @@
-import React, {memo} from 'react';
+import React from 'react';
+import {observer} from 'mobx-react-lite';
 import {Rule} from '@/interfaces/rule';
 import {RuleViewerRow} from '../RuleViewerRow';
 import styles from './ruleViewerFilter.css';
@@ -7,7 +8,7 @@ interface RuleViewerRowProps {
 	filter: Rule['filter'];
 }
 
-export const RuleViewerFilter = memo<RuleViewerRowProps>(function RuleViewerFilter(props) {
+export const RuleViewerFilter = observer<RuleViewerRowProps>((props) => {
 	const {url, resourceTypes, methods} = props.filter;
 
 	return (
@@ -22,3 +23,5 @@ export const RuleViewerFilter = memo<RuleViewerRowProps>(function RuleViewerFilt
 		</table>
 	);
 });
+
+RuleViewerFilter.displayName = 'RuleViewerFilter';

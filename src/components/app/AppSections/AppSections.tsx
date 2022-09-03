@@ -1,8 +1,8 @@
-import React, {memo, useState, useCallback, useEffect, ReactNode} from 'react';
-import {useStore} from 'effector-react';
+import React, {ReactNode, useCallback, useEffect, useState} from 'react';
 import cn from 'classnames';
-import {$secondarySectionCollapsed} from '@/stores/uiStore';
+import {observer} from 'mobx-react-lite';
 import {useCompactModeCondition} from '@/hooks/useCompactModeCondition';
+import {useStores} from '@/stores/useStores';
 import styles from './appSections.css';
 
 interface AppSectionsProps {
@@ -11,13 +11,14 @@ interface AppSectionsProps {
 	floatingSection?: ReactNode;
 }
 
-export const AppSections = memo<AppSectionsProps>(function AppSections(props) {
+export const AppSections = observer<AppSectionsProps>((props) => {
 	const {mainSection, secondarySection, floatingSection} = props;
 
 	const [secondarySectionWidth, setSecondarySectionWidth] = useState(() => window.innerWidth / 2);
 
 	const isCompactsMode = useCompactModeCondition();
-	const showSecondarySection = !useStore($secondarySectionCollapsed) && !isCompactsMode;
+	const {appUiStore} = useStores();
+	const showSecondarySection = !appUiStore.secondarySectionCollapsed && !isCompactsMode;
 
 	/* eslint-disable @typescript-eslint/no-use-before-define */
 	const handleStartSectionsResize = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
@@ -68,3 +69,4 @@ export const AppSections = memo<AppSectionsProps>(function AppSections(props) {
 		</div>
 	);
 });
+AppSections.displayName = 'AppSections';

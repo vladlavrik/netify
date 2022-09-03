@@ -1,16 +1,17 @@
-import React, {memo, useMemo, useState, useCallback} from 'react';
-import {RequestBody, ResponseBody} from '@/interfaces/body';
-import {ResponseBodyType} from '@/constants/ResponseBodyType';
+import React, {useCallback, useMemo, useState} from 'react';
+import {observer} from 'mobx-react-lite';
 import {RequestBodyType, responseBodyTypesHumanTitles} from '@/constants/RequestBodyType';
+import {ResponseBodyType} from '@/constants/ResponseBodyType';
+import {RequestBody, ResponseBody} from '@/interfaces/body';
 import {TextButton} from '@/components/@common/buttons/TextButton';
 import {RuleViewerDataTable} from '../RuleViewerDataTable';
-import styles from './RuleViewerBodyData.css';
+import styles from './ruleViewerBodyData.css';
 
 interface RuleViewerBodyDataProps {
 	body: RequestBody | ResponseBody;
 }
 
-export const RuleViewerBodyData = memo<RuleViewerBodyDataProps>(function RuleViewerBodyData({body}) {
+export const RuleViewerBodyData = observer<RuleViewerBodyDataProps>(({body}) => {
 	const [expanded, setExpanded] = useState(false);
 	const handleExpand = useCallback(() => setExpanded(true), []);
 
@@ -22,7 +23,7 @@ export const RuleViewerBodyData = memo<RuleViewerBodyDataProps>(function RuleVie
 		}
 
 		return URL.createObjectURL(body.value);
-	}, [body]);
+	}, [body.type, body.value]);
 
 	switch (body.type) {
 		case RequestBodyType.Text:
@@ -75,3 +76,5 @@ export const RuleViewerBodyData = memo<RuleViewerBodyDataProps>(function RuleVie
 			);
 	}
 });
+
+RuleViewerBodyData.displayName = 'RuleViewerBodyData';

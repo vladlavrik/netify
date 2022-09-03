@@ -1,11 +1,15 @@
-import React, {memo, useCallback} from 'react';
-import {hideRuleDetails} from '@/stores/uiStore';
+import React, {memo} from 'react';
 import {IconButton} from '@/components/@common/buttons/IconButton';
+import {useStores} from '@/stores/useStores';
 import CloseIcon from './icons/close.svg';
-import styles from './RuleViewerHeader.css';
+import styles from './ruleViewerHeader.css';
 
-export const RuleViewerHeader = memo(function RuleViewerHeader() {
-	const handleClose = useCallback(() => hideRuleDetails(), []);
+export const RuleViewerHeader = memo(() => {
+	const {rulesStore} = useStores();
+
+	const handleClose = () => {
+		rulesStore.closeDetails();
+	};
 
 	return (
 		<div className={styles.root}>
@@ -19,3 +23,5 @@ export const RuleViewerHeader = memo(function RuleViewerHeader() {
 		</div>
 	);
 });
+
+RuleViewerHeader.displayName = 'RuleViewerHeader';

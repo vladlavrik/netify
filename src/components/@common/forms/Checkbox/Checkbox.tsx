@@ -11,7 +11,7 @@ export const Checkbox = memo<CheckboxProps>(function Checkbox({className, childr
 	return (
 		<label className={cn(styles.root, className)}>
 			<input {...nativeProps} className={styles.input} type='checkbox' />
-			<div className={styles.label}>{children}</div>
+			{children && <div className={styles.label}>{children}</div>}
 		</label>
 	);
 });

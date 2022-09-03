@@ -1,17 +1,18 @@
-import React, {memo, useContext, useState, useRef, useCallback, useMemo, useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import cn from 'classnames';
-import {Rule} from '@/interfaces/rule';
+import {toJS} from 'mobx';
+import {observer} from 'mobx-react-lite';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
-import {DbContext} from '@/contexts/dbContext';
-import {showRuleEditor} from '@/stores/uiStore';
-import {removeRule, updateRule, moveRule} from '@/stores/rulesStore';
+import {Rule} from '@/interfaces/rule';
 import {IconButton} from '@/components/@common/buttons/IconButton';
+import {Checkbox} from '@/components/@common/forms/Checkbox';
 import {Dropdown, useDropdownExpansion} from '@/components/@common/misc/Dropdown';
 import {PopUpConfirm} from '@/components/@common/popups/PopUpConfirm';
-import {stringifyActionsSummary} from './stringifyActionsSummary';
+import {useStores} from '@/stores/useStores';
 import {RulesControl} from '../RulesControl';
 import MoreIcon from './icons/more.svg';
+import {stringifyActionsSummary} from './stringifyActionsSummary';
 import styles from './rulesItem.css';
 
 const methodLabelColors: Record<RequestMethod, string> = {
@@ -39,15 +40,16 @@ interface RulesItemProps {
 	isStartEdgePosition: boolean; // Is the item leading or trailing in the list
 	isEndEdgePosition: boolean; // Is the item leading or trailing in the list
 	isHighlighted: boolean;
-	onShowDetails(id: string): void;
+	isExportMode: boolean;
+	isSelected: boolean;
 }
 
-export const RulesItem = memo<RulesItemProps>(function RulesItem(props) {
-	const {data, isStartEdgePosition, isEndEdgePosition, isHighlighted, onShowDetails} = props;
+export const RulesItem = observer<RulesItemProps>((props) => {
+	const {data, isStartEdgePosition, isEndEdgePosition, isHighlighted, isExportMode, isSelected} = props;
 	const {id: ruleId, label, active, filter, action} = data;
 	const {url, methods, resourceTypes} = filter;
 
-	const {rulesMapper} = useContext(DbContext)!;
+	const {rulesStore} = useStores();
 
 	const [showRemoveAsk, setShowRemoveAsk] = useState(false);
 
@@ -57,46 +59,50 @@ export const RulesItem = memo<RulesItemProps>(function RulesItem(props) {
 
 	const [controlDDExpanded, controlDDActions] = useDropdownExpansion();
 
-	const handleShowDetails = useCallback(() => onShowDetails(ruleId), [ruleId, onShowDetails]);
+	const handleShowDetails = () => {
+		rulesStore.showDetails(ruleId);
+	};
 
-	const handleShowDetailsByKeyboard = useCallback(
-		({key}: React.KeyboardEvent) => {
-			if (key === ' ' || key === 'Enter') {
-				handleShowDetails();
-			}
-		},
-		[handleShowDetails],
-	);
+	const handleShowDetailsByKeyboard = ({key}: React.KeyboardEvent) => {
+		if (key === ' ' || key === 'Enter') {
+			handleShowDetails();
+		}
+	};
+
+	const handleSelectionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (event.currentTarget.checked) {
+			rulesStore.selectItem(ruleId);
+		} else {
+			rulesStore.unselectItem(ruleId);
+		}
+	};
 
 	const handleEdit = useCallback(() => {
-		showRuleEditor(ruleId);
+		rulesStore.showEditor(ruleId);
 		controlDDActions.handleCollapse();
 	}, [ruleId]);
 
 	const handleActiveToggle = useCallback(async () => {
-		const rule = {...data, active: !data.active};
-		await updateRule({rulesMapper, rule});
-	}, [data, rulesMapper]);
+		rulesStore.updateRule({...toJS(data), active: !data.active});
+	}, [data]);
 
-	const handleMove = useCallback(
-		async (offset: number) => {
-			await moveRule({rulesMapper, ruleId, offset});
-		},
-		[ruleId],
-	);
+	const handleMove = useCallback(async () => {
+		// TODO in future
+	}, [ruleId]);
 
 	const handleRemove = useCallback(() => {
 		setShowRemoveAsk(true);
 		controlDDActions.handleCollapse();
 	}, []);
 
-	const handleRemoveCancel = useCallback(() => {
+	const handleRemoveCancel = () => {
 		setShowRemoveAsk(false);
-	}, []);
+	};
 
-	const handleRemoveConfirm = useCallback(async () => {
-		await removeRule({rulesMapper, ruleId});
-	}, [ruleId, rulesMapper]);
+	const handleRemoveConfirm = async () => {
+		rulesStore.removeRule(ruleId);
+		setShowRemoveAsk(false);
+	};
 
 	useEffect(() => {
 		if (isHighlighted && rootRef.current) {
@@ -106,12 +112,16 @@ export const RulesItem = memo<RulesItemProps>(function RulesItem(props) {
 
 	return (
 		<li ref={rootRef} className={cn(styles.root, isHighlighted && styles.highlighted)}>
+			{isExportMode && (
+				<Checkbox className={styles.selectCheckbox} checked={isSelected} onChange={handleSelectionChange} />
+			)}
+
 			<div className={styles.entry} role='button' onClick={handleShowDetails}>
 				{/* Separate focusable element, inaccessible to the mouse.
 					It is necessary for handle a focus from the keyboard and ignoring a focus on the mouse click*/}
 				<div className={styles.focusable} role='button' tabIndex={0} onKeyDown={handleShowDetailsByKeyboard} />
 
-				{label && <p className={styles.label}>{label}</p>}
+				{label && <p className={cn(styles.label, !active && styles.inactive)}>{label}</p>}
 
 				<div className={cn(styles.filter, !active && styles.inactive)}>
 					{methods.length !== 0 && (
@@ -146,22 +156,24 @@ export const RulesItem = memo<RulesItemProps>(function RulesItem(props) {
 				<p className={styles.actionsSummary}>{active ? actionsSummary || 'No actions' : 'Inactive'}</p>
 			</div>
 
-			<Dropdown
-				className={styles.control}
-				expanded={controlDDExpanded}
-				target={<IconButton icon={<MoreIcon />} onClick={controlDDActions.handleExpansionSwitch} />}
-				preferExpansionAlignX='start'
-				onCollapse={controlDDActions.handleCollapse}>
-				<RulesControl
-					ruleIsActive={active}
-					allowMoveAbove={!isStartEdgePosition && false /* TODO implement the feature */}
-					allowMoveBelow={!isEndEdgePosition && false}
-					onActiveToggle={handleActiveToggle}
-					onMove={handleMove}
-					onEdit={handleEdit}
-					onRemove={handleRemove}
-				/>
-			</Dropdown>
+			{!isExportMode && (
+				<Dropdown
+					className={styles.control}
+					expanded={controlDDExpanded}
+					target={<IconButton icon={<MoreIcon />} onClick={controlDDActions.handleExpansionSwitch} />}
+					preferExpansionAlignX='start'
+					onCollapse={controlDDActions.handleCollapse}>
+					<RulesControl
+						ruleIsActive={active}
+						allowMoveAbove={!isStartEdgePosition && false /* TODO implement the feature */}
+						allowMoveBelow={!isEndEdgePosition && false}
+						onActiveToggle={handleActiveToggle}
+						onMove={handleMove}
+						onEdit={handleEdit}
+						onRemove={handleRemove}
+					/>
+				</Dropdown>
+			)}
 
 			{showRemoveAsk && (
 				<PopUpConfirm onConfirm={handleRemoveConfirm} onCancel={handleRemoveCancel}>
@@ -171,3 +183,5 @@ export const RulesItem = memo<RulesItemProps>(function RulesItem(props) {
 		</li>
 	);
 });
+
+RulesItem.displayName = 'RulesItem';

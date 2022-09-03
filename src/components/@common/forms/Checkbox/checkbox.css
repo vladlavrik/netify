@@ -3,6 +3,10 @@
 	height: 18px;
 	align-items: center;
 }
+.input {
+	margin: 2.5px;
+}
+
 
 :global(.dark-theme) {
 	& .input {
@@ -11,6 +15,6 @@
 }
 
 .label {
-	margin-left: 4px;
+	margin-left: 6px;
 	user-select: none;
 }

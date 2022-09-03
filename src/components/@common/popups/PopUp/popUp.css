@@ -4,6 +4,7 @@
 	max-height: calc(100vh - 50px);
 	min-width: 220px;
 	max-width: calc(100vw - 16px);
+	margin: 0 auto;
 	padding: 0;
 	border: var(--color-brd-outline) 1px solid;
 	border-radius: 3px;

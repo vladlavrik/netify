@@ -1,0 +1,58 @@
+import {z} from 'zod';
+import {RequestMethod} from '@/constants/RequestMethod';
+import {ResourceType} from '@/constants/ResourceType';
+import {ResponseErrorReason} from '@/constants/ResponseErrorReason';
+import {RuleActionsType} from '@/constants/RuleActionsType';
+import {headersListSchema} from './headersListSchema';
+import {requestBodySchema} from './requestBodySchema';
+import {responseBodySchema} from './responseBodySchema';
+
+export const rulesExportSchema = z.object({
+	version: z.number(),
+	rules: z.array(
+		z.object({
+			id: z.string(),
+			label: z.string().optional(),
+			filter: z.object({
+				url: z.string(),
+				resourceTypes: z.array(z.nativeEnum(ResourceType)),
+				methods: z.array(z.nativeEnum(RequestMethod)),
+			}),
+			action: z.union([
+				z.object({
+					type: z.literal(RuleActionsType.Breakpoint),
+					request: z.boolean(),
+					response: z.boolean(),
+				}),
+				z.object({
+					type: z.literal(RuleActionsType.Mutation),
+					request: z.object({
+						endpoint: z.string().optional(),
+						method: z.nativeEnum(RequestMethod).optional(),
+						setHeaders: headersListSchema,
+						dropHeaders: z.array(z.string()),
+						body: requestBodySchema.optional(),
+					}),
+					response: z.object({
+						statusCode: z.number().optional(),
+						setHeaders: headersListSchema,
+						dropHeaders: z.array(z.string()),
+						body: responseBodySchema.optional(),
+					}),
+				}),
+				z.object({
+					type: z.literal(RuleActionsType.LocalResponse),
+					statusCode: z.number(),
+					headers: headersListSchema,
+					body: responseBodySchema.optional(),
+				}),
+				z.object({
+					type: z.literal(RuleActionsType.Failure),
+					reason: z.nativeEnum(ResponseErrorReason),
+				}),
+			]),
+		}),
+	),
+});
+
+export type RuleExportInputSchema = z.input<typeof rulesExportSchema>;

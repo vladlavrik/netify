@@ -1,4 +1,4 @@
-import {Action, Rule} from '@/interfaces/rule';
+import {RuleAction, Rule} from '@/interfaces/rule';
 import {RequestBody, ResponseBody} from '@/interfaces/body';
 import {ResourceType, resourceTypesList} from '@/constants/ResourceType';
 import {RequestMethod, requestMethodsList} from '@/constants/RequestMethod';
@@ -112,7 +112,7 @@ function migrateResponseBody({type, textValue, fileValue}: LegacyResponseBody): 
 }
 
 function migrateRule({id, filter, actions}: LegacyRule) {
-	let action!: Action;
+	let action!: RuleAction;
 
 	const {mutateRequest, mutateResponse, cancelRequest} = actions;
 

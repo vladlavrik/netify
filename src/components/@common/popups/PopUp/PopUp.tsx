@@ -13,7 +13,7 @@ export const PopUp = memo<PopUpProps>(function PopUp({className, children}) {
 	const attachTargetRef = useRef<HTMLElement>(document.getElementById('modal-root')!);
 
 	useEffect(() => {
-		modalRef.current!.showModal();
+		(modalRef.current! as any).showModal(); // TODO fix types
 	}, []);
 
 	return ReactDOM.createPortal(

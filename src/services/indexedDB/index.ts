@@ -1,2 +1,2 @@
 export * from './connector';
-export * from './RulesMapper';
+export * from './helper';
