@@ -17,7 +17,7 @@ interface RulesControlProps {
 	onRemove(): void;
 }
 
-export const RulesControl = memo<RulesControlProps>(function RulesControl(props) {
+export const RulesControl = memo<RulesControlProps>((props) => {
 	const {ruleIsActive, allowMoveAbove, allowMoveBelow, onActiveToggle, onMove, onEdit, onRemove} = props;
 
 	const handleMoveAbove = useCallback(() => onMove(-1), [onMove]);
@@ -47,3 +47,5 @@ export const RulesControl = memo<RulesControlProps>(function RulesControl(props)
 		</div>
 	);
 });
+
+RulesControl.displayName = 'RulesControl';

@@ -17,18 +17,14 @@
 }
 
 .entry {
-	width: 0; /* Fix nested overflow */
-	position: relative;
 	flex-grow: 1;
+	position: relative;
+	width: 0; /* Fix nested overflow */
 	padding: 8px 0;
 	cursor: pointer;
 
 	&:focus {
 		outline: none;
-
-		& .url {
-			text-decoration: underline;
-		}
 	}
 }
 
@@ -42,17 +38,18 @@
 	&:focus {
 		width: 100%;
 		border: var(--color-focus) solid 1px;
-		background: var(--color-bg-accent);
 		outline: none;
+		background: var(--color-bg-accent);
 	}
 }
 
 .label {
-	margin: 0 8px 6px 8px;
+	position: relative;
+	margin: 0 8px 6px;
 	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 	font-style: italic;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 	color: var(--color-content-accent);
 
 	&.inactive {
@@ -74,8 +71,8 @@
 .labelMore {
 	flex-shrink: 0;
 	padding: 0 4px;
-	line-height: 16px;
 	border-radius: 2px;
+	line-height: 16px;
 	font-weight: 700;
 	background: #444;
 }
@@ -91,8 +88,8 @@
 
 .url {
 	margin-left: 8px;
-	font-size: 12px;
 	overflow: hidden;
+	font-size: 12px;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	color: var(--color-content-accent);
@@ -100,6 +97,10 @@
 	&.placeholder {
 		color: inherit;
 	}
+}
+
+.entry:focus .url {
+	text-decoration: underline;
 }
 
 .actionsSummary {

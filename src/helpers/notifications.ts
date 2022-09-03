@@ -8,7 +8,7 @@ export function pushNotification(id: string, title: string, message: string, but
 		iconUrl: logoIconUrl,
 		title,
 		message,
-		buttons: buttons.map(itemTitle => ({title: itemTitle})), // TODO test on windows, maybe need add icon
+		buttons: buttons.map((itemTitle) => ({title: itemTitle})), // TODO test on windows, maybe need add icon
 	});
 }
 

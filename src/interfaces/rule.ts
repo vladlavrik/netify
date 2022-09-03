@@ -1,7 +1,7 @@
-import {RuleActionsType} from '@/constants/RuleActionsType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {ResponseErrorReason} from '@/constants/ResponseErrorReason';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {HeadersArray} from '@/interfaces/headers';
 import {RequestBody, ResponseBody} from './body';
 

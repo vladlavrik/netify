@@ -1,27 +1,27 @@
 .root {
 	display: block;
-	padding: 3px 6px;
+	box-sizing: border-box;
 	width: 100%;
 	min-height: 64px;
 	max-height: 300px;
-	box-sizing: border-box;
-	line-height: 14px;
+	padding: 3px 6px;
 	border: transparent 1px solid;
 	border-radius: 3px;
-	background: var(--color-bg-main);
+	line-height: 14px;
 	font-family: inherit;
 	font-size: 11px;
 	color: var(--color-content);
+	background: var(--color-bg-main);
 	resize: vertical;
 
 	&:focus {
-		outline: none;
 		border-color: var(--color-focus);
+		outline: none;
 	}
 
 	&:disabled {
 		border-color: transparent;
-		background: var(--color-bg-main);
 		color: var(--color-main);
+		background: var(--color-bg-main);
 	}
 }

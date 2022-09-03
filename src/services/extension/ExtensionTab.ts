@@ -18,7 +18,7 @@ export class ExtensionTab {
 	}
 
 	async getPageUrl() {
-		const {url}: {url?: string} = await new Promise(resolve => chrome.tabs.get(this.tabId, resolve));
+		const {url}: {url?: string} = await new Promise((resolve) => chrome.tabs.get(this.tabId, resolve));
 		if (!url) {
 			throw new Error("Can't get the target tab url");
 		}

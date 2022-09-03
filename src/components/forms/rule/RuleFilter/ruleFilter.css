@@ -20,6 +20,7 @@
 	.fields {
 		flex-wrap: wrap;
 	}
+
 	.urlField {
 		width: 100%;
 		margin-right: 0;
@@ -45,6 +46,7 @@
 	.resourceTypesField {
 		width: 180px;
 	}
+
 	.methodsField {
 		width: 180px;
 	}

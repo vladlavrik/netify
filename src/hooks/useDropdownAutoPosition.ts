@@ -1,4 +1,4 @@
-import {useState, useLayoutEffect, RefObject, useMemo} from 'react';
+import {RefObject, useLayoutEffect, useMemo, useState} from 'react';
 
 export type Align = 'start' | 'end';
 

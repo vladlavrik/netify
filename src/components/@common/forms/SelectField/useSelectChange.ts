@@ -26,7 +26,7 @@ export function useSelectChange(params: UseSelectFieldKeyboardParams) {
 				newValue = [newValueOption];
 			} else {
 				// Toggle the selected option im multiple mode
-				newValue = options.filter(itemOption => {
+				newValue = options.filter((itemOption) => {
 					if (newValueOption === itemOption) {
 						return !values.includes(itemOption);
 					}

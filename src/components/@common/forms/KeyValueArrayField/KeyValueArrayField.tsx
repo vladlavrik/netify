@@ -1,8 +1,8 @@
 import React, {memo} from 'react';
 import {FieldArray, getIn} from 'formik';
 import {IconButton} from '@/components/@common/buttons/IconButton';
-import {TextField} from '@/components/@common/forms/TextField';
 import {FieldError} from '@/components/@common/forms/FieldError';
+import {TextField} from '@/components/@common/forms/TextField';
 import AddIcon from './icons/add.svg';
 import RemoveIcon from './icons/remove.svg';
 import styles from './keyValueArrayField.css';
@@ -17,7 +17,7 @@ interface KeyValueArrayFieldProps {
 	removeControlTitle?: string;
 }
 
-export const KeyValueArrayField = memo<KeyValueArrayFieldProps>(function KeyValueArrayField(props) {
+export const KeyValueArrayField = memo<KeyValueArrayFieldProps>((props) => {
 	const {
 		name,
 		keyNameSuffix,
@@ -32,7 +32,7 @@ export const KeyValueArrayField = memo<KeyValueArrayFieldProps>(function KeyValu
 		<ul className={styles.root}>
 			<FieldArray
 				name={name}
-				render={helpers => {
+				render={(helpers) => {
 					const list = getIn(helpers.form.values, name);
 					return list.map((_: any, index: number) => (
 						// eslint-disable-next-line react/no-array-index-key
@@ -75,3 +75,5 @@ export const KeyValueArrayField = memo<KeyValueArrayFieldProps>(function KeyValu
 		</ul>
 	);
 });
+
+KeyValueArrayField.displayName = 'KeyValueArrayField';

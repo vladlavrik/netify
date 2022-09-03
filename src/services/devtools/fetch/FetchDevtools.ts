@@ -1,16 +1,16 @@
 import {Protocol} from 'devtools-protocol';
-import {Rule, MutationRuleAction, LocalResponseRuleAction, FailureRuleAction} from '@/interfaces/rule';
-import {LogEntry} from '@/interfaces/log';
-import {RuleActionsType} from '@/constants/RuleActionsType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {StatusCode} from '@/constants/StatusCode';
-import {Event} from '@/helpers/Events';
+import {LogEntry} from '@/interfaces/log';
+import {FailureRuleAction, LocalResponseRuleAction, MutationRuleAction, Rule} from '@/interfaces/rule';
 import {DevtoolsConnector} from '@/services/devtools';
-import {ResponseBuilder} from './ResponseBuilder';
-import {RequestBuilder} from './RequestBuilder';
+import {Event} from '@/helpers/Events';
 import {FetchRuleStore} from './FetchRuleStore';
+import {RequestBuilder} from './RequestBuilder';
+import {ResponseBuilder} from './ResponseBuilder';
 
 type EnableRequest = Protocol.Fetch.EnableRequest;
 type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
@@ -151,7 +151,11 @@ export class FetchDevtools {
 		}
 	}
 
-	private async processResponseMutation(pausedRequest: RequestPausedEvent, action: MutationRuleAction, ruleId: string) {
+	private async processResponseMutation(
+		pausedRequest: RequestPausedEvent,
+		action: MutationRuleAction,
+		ruleId: string,
+	) {
 		const {requestId, request, resourceType} = pausedRequest;
 		const {statusCode, setHeaders, dropHeaders, body} = action.response;
 

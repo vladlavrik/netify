@@ -1,4 +1,4 @@
-import React, {memo, ReactNode} from 'react';
+import React, {FC, ReactNode} from 'react';
 import styles from './ruleViewerRow.css';
 
 interface RuleViewerRowProps {
@@ -6,11 +6,10 @@ interface RuleViewerRowProps {
 	children: ReactNode;
 }
 
-export const RuleViewerRow = memo<RuleViewerRowProps>(function RuleViewerRow({title, children}) {
-	return (
-		<tr>
-			<td className={styles.title}>{title}</td>
-			<td className={styles.value}>{children}</td>
-		</tr>
-	);
-});
+export const RuleViewerRow: FC<RuleViewerRowProps> = ({title, children}) => (
+	<tr>
+		<td className={styles.title}>{title}</td>
+		<td className={styles.value}>{children}</td>
+	</tr>
+);
+RuleViewerRow.displayName = 'RuleViewerRow';

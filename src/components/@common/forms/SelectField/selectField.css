@@ -9,17 +9,17 @@
 	position: relative;
 	width: 100%;
 	padding: 0 18px 0 6px;
-	overflow: hidden;
 	border: transparent 1px solid;
 	border-radius: 3px;
+	overflow: hidden;
 	line-height: 18px;
-	text-align: left;
-	white-space: nowrap;
 	font-size: 11px;
+	white-space: nowrap;
 	text-overflow: ellipsis;
-	user-select: none;
-	background: var(--color-bg-main);
+	text-align: left;
 	color: inherit;
+	background: var(--color-bg-main);
+	user-select: none;
 
 	&::after {
 		content: '';
@@ -38,8 +38,8 @@
 	}
 
 	&:focus {
-		outline: none;
 		border-color: var(--color-focus);
+		outline: none;
 	}
 }
 
@@ -47,25 +47,27 @@
 	position: absolute;
 	left: 0;
 	right: 0;
-	padding: 2px 0;
 	box-sizing: border-box;
-	overflow-y: auto;
-	overscroll-behavior: contain;
+	padding: 2px 0;
 	border: var(--color-brd-outline) 1px solid;
 	border-radius: 3px;
+	overflow-y: auto;
+	z-index: 2;
+	color: var(--color-main);
 	background: var(--color-bg-main);
 	box-shadow: 0 1px 3px 1px var(--color-shadow-overlay-lite);
-	color: var(--color-main);
+	overscroll-behavior: contain;
 	user-select: none;
-	z-index: 2;
 
 	&::-webkit-scrollbar {
-		background-color: transparent;
 		width: 6px;
+		background-color: transparent;
 	}
+
 	&.expand-to-start {
 		bottom: 100%;
 	}
+
 	&.expand-to-end {
 		top: 100%;
 	}
@@ -74,11 +76,11 @@
 .option {
 	display: block;
 	padding: 0 6px;
-	font-size: 12px;
+	overflow: hidden;
 	line-height: 20px;
+	font-size: 12px;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	overflow: hidden;
 	color: var(--color-main);
 	cursor: pointer;
 
@@ -92,7 +94,7 @@
 
 	&:hover,
 	&.highlighted {
-		background: var(--color-focus);
 		color: var(--color-inside-focus);
+		background: var(--color-focus);
 	}
 }

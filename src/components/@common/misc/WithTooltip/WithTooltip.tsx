@@ -1,4 +1,4 @@
-import React, {memo, useState, useRef, useCallback, ReactNode} from 'react';
+import React, {FC, ReactNode, useCallback, useRef, useState} from 'react';
 import cn from 'classnames';
 import {useDropdownAutoPosition} from '@/hooks/useDropdownAutoPosition';
 import styles from './withTooltip.css';
@@ -10,7 +10,7 @@ interface WithTooltipProps {
 	children: ReactNode;
 }
 
-export const WithTooltip = memo<WithTooltipProps>(function WithTooltip(props) {
+export const WithTooltip: FC<WithTooltipProps> = (props) => {
 	const {className, tooltip, disabled, children} = props;
 
 	const [expanded, setExpanded] = useState(false);
@@ -55,4 +55,6 @@ export const WithTooltip = memo<WithTooltipProps>(function WithTooltip(props) {
 			)}
 		</div>
 	);
-});
+};
+
+WithTooltip.displayName = 'WithTooltip';

@@ -1,9 +1,9 @@
 import {Protocol} from 'devtools-protocol';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
-import {MutationRuleAction, LocalResponseRuleAction} from '@/interfaces/rule';
 import {ResponseBody} from '@/interfaces/body';
-import {buildResponseBodyFromBase64, buildResponseBodyFromFile, buildResponseBodyFromText} from './helpers/response';
+import {LocalResponseRuleAction, MutationRuleAction} from '@/interfaces/rule';
 import {patchHeaders} from './helpers/headers';
+import {buildResponseBodyFromBase64, buildResponseBodyFromFile, buildResponseBodyFromText} from './helpers/response';
 
 type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
 type FulfillRequestRequest = Protocol.Fetch.FulfillRequestRequest;

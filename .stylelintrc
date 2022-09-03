@@ -1,0 +1,237 @@
+{
+  "plugins": ["stylelint-order", "stylelint-prettier"],
+  "extends": ["stylelint-config-standard", "stylelint-config-recommended", "stylelint-prettier/recommended"],
+  "rules": {
+    "no-descending-specificity": [true, {"ignore": "selectors-within-list"}],
+
+    "color-function-notation": "legacy",
+    "color-named": "never",
+
+    "length-zero-no-unit": true,
+    "font-weight-notation": "numeric",
+    "shorthand-property-no-redundant-values": true,
+    "value-no-vendor-prefix": true,
+    "property-no-vendor-prefix": true,
+    "declaration-block-no-redundant-longhand-properties": true,
+    "declaration-no-important": true,
+    "declaration-block-single-line-max-declarations": 1,
+    "selector-class-pattern": "^[a-zA-Z0-9-]+$",
+    "selector-no-qualifying-type": true,
+    "selector-no-vendor-prefix": true,
+    "selector-pseudo-element-colon-notation": "double",
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["global"]
+      }
+    ],
+    "max-nesting-depth": 4,
+    "no-unknown-animations": true,
+    "color-hex-length": "short",
+    "function-name-case": "lower",
+    "function-whitespace-after": "always",
+    "function-url-quotes": "always",
+    "value-keyword-case": "lower",
+    "media-feature-range-operator-space-before": "always",
+    "media-feature-range-operator-space-after": "always",
+    "comment-empty-line-before": ["always", {"except": ["first-nested"]}],
+    "comment-whitespace-inside": "always",
+
+    "order/order": ["declarations", "custom-properties"],
+    "order/properties-order": [
+      "all",
+      "appearance",
+      "content",
+      "display",
+      "float",
+      {
+        "groupName": "Flexible boxes",
+        "properties": [
+          "flex-wrap",
+          "align-content",
+          "align-items",
+          "align-self",
+          "justify-content",
+          "justify-items",
+          "justify-self",
+          "flex",
+          "flex-basis",
+          "flex-direction",
+          "flex-flow",
+          "flex-grow",
+          "flex-shrink",
+          "order"
+        ]
+      },
+      {
+        "groupName": "Position",
+        "properties": ["position", "left", "right", "top", "bottom"]
+      },
+      {
+        "groupName": "Size",
+        "properties": [
+          "box-sizing",
+          "width",
+          "min-width",
+          "max-width",
+          "height",
+          "min-height",
+          "max-height",
+          "margin",
+          "margin-top",
+          "margin-right",
+          "margin-bottom",
+          "margin-left",
+          "padding",
+          "padding-top",
+          "padding-right",
+          "padding-bottom",
+          "padding-left"
+        ]
+      },
+      {
+        "groupName": "Border",
+        "properties": [
+          "border",
+          "border-color",
+          "border-style",
+          "border-width",
+          "border-top",
+          "border-top-color",
+          "border-top-style",
+          "border-top-width",
+          "border-right",
+          "border-right-color",
+          "border-right-style",
+          "border-right-width",
+          "border-bottom",
+          "border-bottom-color",
+          "border-bottom-style",
+          "border-bottom-width",
+          "border-left",
+          "border-left-color",
+          "border-left-style",
+          "border-left-width",
+          "border-radius",
+          "border-top-left-radius",
+          "border-top-right-radius",
+          "border-bottom-right-radius",
+          "border-bottom-left-radius",
+          "border-spacing",
+          "border-collapse",
+          "stroke",
+          "stroke-dasharray",
+          "stroke-dashoffset",
+          "stroke-linecap",
+          "stroke-linejoin",
+          "stroke-miterlimit",
+          "stroke-opacity",
+          "stroke-width"
+        ]
+      },
+      {
+        "groupName": "Outline",
+        "properties": ["outline", "outline-width", "outline-style", "outline-color", "outline-offset"]
+      },
+      {
+        "groupName": "Overflow",
+        "properties": ["overflow", "overflow-x", "overflow-y", "-webkit-overflow-scrolling"]
+      },
+      {
+        "groupName": "Visibility",
+        "properties": ["visibility", "opacity"]
+      },
+      "z-index",
+      "clear",
+      {
+        "groupName": "Lists",
+        "properties": [
+          "counter-reset",
+          "counter-increment",
+          "list-style",
+          "list-style-position",
+          "list-style-type",
+          "list-style-image"
+        ]
+      },
+      {
+        "groupName": "Typography",
+        "properties": [
+          "line-height",
+          "font",
+          "font-family",
+          "font-size",
+          "font-style",
+          "font-weight",
+          "font-variant",
+          "font-size-adjust",
+          "font-stretch",
+          "letter-spacing",
+          "word-break",
+          "word-spacing",
+          "word-wrap",
+          "overflow-wrap",
+          "white-space",
+          "text-overflow",
+          "text-align",
+          "text-decoration",
+          "text-indent",
+          "vertical-align",
+          "color",
+          "font-smooth",
+          "-webkit-font-smoothing",
+          "-moz-osx-font-smoothing",
+          "-webkit-text-size-adjust",
+          "-ms-text-size-adjust"
+        ]
+      },
+      {
+        "groupName": "Background",
+        "properties": [
+          "background",
+          "background-color",
+          "background-image",
+          "background-repeat",
+          "background-position",
+          "background-position-x",
+          "background-position-y",
+          "background-clip",
+          "background-origin",
+          "background-size",
+          "fill",
+          "fill-opacity",
+          "fill-rule"
+        ]
+      },
+      "box-shadow",
+      "clip",
+      {
+        "groupName": "Transitions",
+        "properties": [
+          "transition",
+          "transition-delay",
+          "transition-timing-function",
+          "transition-duration",
+          "transition-property",
+          "transform",
+          "transform-origin"
+        ]
+      },
+      {
+        "groupName": "Animation",
+        "properties": [
+          "animation",
+          "animation-name",
+          "animation-duration",
+          "animation-play-state",
+          "animation-timing-function",
+          "animation-delay",
+          "animation-iteration-count",
+          "animation-direction"
+        ]
+      },
+      "resize",
+      "cursor"
+    ]
+  }
+}

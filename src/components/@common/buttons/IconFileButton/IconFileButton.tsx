@@ -8,7 +8,7 @@ interface IconFileButtonProps extends IconButtonProps {
 	onFileSelect(files: FileList): void;
 }
 
-export const IconFileButton = memo<IconFileButtonProps>(function IconFileButton(props) {
+export const IconFileButton = memo<IconFileButtonProps>((props) => {
 	const {accept, multiple, onFileSelect, ...proxyProps} = props;
 
 	const fieldRef = useRef<HTMLInputElement>(null);
@@ -41,3 +41,5 @@ export const IconFileButton = memo<IconFileButtonProps>(function IconFileButton(
 		</>
 	);
 });
+
+IconFileButton.displayName = 'IconFileButton';

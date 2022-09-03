@@ -7,10 +7,10 @@ interface RequestMethodFieldProps {
 	name: string;
 }
 
-export const RequestMethodField = memo<RequestMethodFieldProps>(function RequestMethodField({name}) {
-	return (
-		<FieldRow title='Method:'>
-			<SelectField name={name} placeholder='Method' options={requestMethodsList} />
-		</FieldRow>
-	);
-});
+export const RequestMethodField = memo<RequestMethodFieldProps>(({name}) => (
+	<FieldRow title='Method:'>
+		<SelectField name={name} placeholder='Method' options={requestMethodsList} />
+	</FieldRow>
+));
+
+RequestMethodField.displayName = 'RequestMethodField';

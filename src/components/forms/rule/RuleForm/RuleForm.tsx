@@ -1,12 +1,12 @@
 import React, {memo, useCallback, useMemo} from 'react';
-import {useFormik, Form, FormikProvider} from 'formik';
+import {Form, FormikProvider, useFormik} from 'formik';
 import {Rule} from '@/interfaces/rule';
-import {ruleFormSchema, serializeRuleForm, deserializeRuleForm, RuleFormSchema} from '@/forms/rule';
 import {Button} from '@/components/@common/buttons/Button';
-import {RuleLabel} from '../RuleLabel';
-import {RuleFilter} from '../RuleFilter';
-import {RuleActionSwitcher} from '../RuleActionSwitcher';
+import {deserializeRuleForm, RuleFormSchema, ruleFormSchema, serializeRuleForm} from '@/forms/rule';
 import {RuleActionConfig} from '../RuleActionConfig';
+import {RuleActionSwitcher} from '../RuleActionSwitcher';
+import {RuleFilter} from '../RuleFilter';
+import {RuleLabel} from '../RuleLabel';
 import styles from './ruleForm.css';
 
 interface RuleFormProps {
@@ -15,7 +15,7 @@ interface RuleFormProps {
 	onCancel(): void;
 }
 
-export const RuleForm = memo<RuleFormProps>(function RuleForm({initialRule, onSave, onCancel}) {
+export const RuleForm = memo<RuleFormProps>(({initialRule, onSave, onCancel}) => {
 	const initialValues = useMemo(() => serializeRuleForm(initialRule), [initialRule]);
 
 	const handleSubmit = useCallback(
@@ -56,3 +56,5 @@ export const RuleForm = memo<RuleFormProps>(function RuleForm({initialRule, onSa
 		</div>
 	);
 });
+
+RuleForm.displayName = 'RuleForm';

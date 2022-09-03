@@ -5,7 +5,9 @@
     "build": "webpack --mode=production",
     "prettier": "prettier --write ./src/**/*.{css,html}",
     "eslintFix": "eslint --fix --ext=.tsx --ext=.ts ./src/",
-    "eslint": "eslint --ext=.tsx --ext=.ts ./src/"
+    "eslint": "eslint --ext=.tsx --ext=.ts ./src/",
+    "stylelint": "stylelint ./src/**/**/*.css",
+    "stylelintFix": "stylelint ./src/**/**/*.css --fix"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.4.0",
@@ -53,6 +55,12 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.4",
     "eslint-plugin-simple-import-sort": "^8.0.0",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "stylelint": "^14.11.0",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-recommended": "^9.0.0",
+    "stylelint-config-standard": "^28.0.0",
+    "stylelint-order": "^5.0.0",
+    "stylelint-prettier": "^2.0.0"
   }
 }

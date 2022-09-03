@@ -1,5 +1,5 @@
-import {Event} from '@/helpers/Events';
 import {DevtoolsConnector} from '@/services/devtools';
+import {Event} from '@/helpers/Events';
 
 type EventParams = Record<string, any>;
 type EventCallback = (params: EventParams) => void;

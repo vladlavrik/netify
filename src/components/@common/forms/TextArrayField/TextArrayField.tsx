@@ -1,8 +1,8 @@
 import React, {memo} from 'react';
 import {FieldArray, getIn} from 'formik';
 import {IconButton} from '@/components/@common/buttons/IconButton';
-import {TextField} from '@/components/@common/forms/TextField';
 import {FieldError} from '@/components/@common/forms/FieldError';
+import {TextField} from '@/components/@common/forms/TextField';
 import AddIcon from './icons/add.svg';
 import RemoveIcon from './icons/remove.svg';
 import styles from './textArrayField.css';
@@ -14,14 +14,14 @@ interface TextArrayFieldProps {
 	removeControlTitle?: string;
 }
 
-export const TextArrayField = memo<TextArrayFieldProps>(function TextArrayField(props) {
+export const TextArrayField = memo<TextArrayFieldProps>((props) => {
 	const {name, placeholder, addControlTitle = 'Add new one', removeControlTitle = 'Remove item'} = props;
 
 	return (
 		<ul className={styles.root}>
 			<FieldArray
 				name={name}
-				render={helpers => {
+				render={(helpers) => {
 					const list = getIn(helpers.form.values, name);
 					return list.map((_: any, index: number) => (
 						// eslint-disable-next-line react/no-array-index-key
@@ -57,3 +57,5 @@ export const TextArrayField = memo<TextArrayFieldProps>(function TextArrayField(
 		</ul>
 	);
 });
+
+TextArrayField.displayName = 'TextArrayField';

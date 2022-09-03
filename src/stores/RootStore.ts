@@ -1,8 +1,8 @@
+import {RulesMapper} from '@/services/rulesMapper';
+import {AppUiStore} from '@/stores/AppUiStore';
 import {DebuggerStateStore} from '@/stores/DebuggerStateStore';
 import {LogsStore} from '@/stores/LogsStore';
 import {RulesStore} from '@/stores/RulesStore';
-import {AppUiStore} from '@/stores/AppUiStore';
-import {RulesMapper} from '@/services/rulesMapper';
 
 export class RootStore {
 	appUiStore: AppUiStore;

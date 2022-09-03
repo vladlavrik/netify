@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useEffect, RefObject} from 'react';
+import {RefObject, useCallback, useEffect, useMemo} from 'react';
 
 /**
  * In hook is active it is listen document click event and
@@ -10,10 +10,11 @@ import {useCallback, useMemo, useEffect, RefObject} from 'react';
 export function useOutsideClickListener(targets: RefObject<Element>[], handler?: () => void, active = true) {
 	const topElement = useMemo(() => document.body, []);
 
+	// TODO optimize
 	const handlerClick = useCallback(
 		(event: MouseEvent) => {
 			let currentTarget = event.target as Element | null;
-			const targetNodes = targets.map(target => target.current!);
+			const targetNodes = targets.map((target) => target.current!);
 
 			while (currentTarget !== topElement && currentTarget) {
 				if (targetNodes.includes(currentTarget)) {

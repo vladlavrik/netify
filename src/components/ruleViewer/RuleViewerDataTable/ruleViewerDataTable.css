@@ -1,21 +1,21 @@
 .root {
-	border-collapse: collapse;
 	border-spacing: 0;
+	border-collapse: collapse;
 }
 
 .title {
 	padding: 2px 0;
-	vertical-align: top;
-	word-break: break-word;
-	font-weight: 700;
 	line-height: 12px;
+	font-weight: 700;
+	word-break: break-word;
+	vertical-align: top;
 	color: var(--color-main);
 }
 
 .value {
 	padding: 2px 8px;
-	vertical-align: top;
 	word-break: break-word;
+	vertical-align: top;
 	color: var(--color-content-accent);
 }
 

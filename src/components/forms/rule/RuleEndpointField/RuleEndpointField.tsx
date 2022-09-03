@@ -1,17 +1,17 @@
-import React, {memo, useRef, useCallback} from 'react';
+import React, {memo, useCallback, useRef} from 'react';
 import {useField} from 'formik';
-import {FieldRow} from '@/components/forms/common/FieldRow';
-import {Dropdown, useDropdownExpansion} from '@/components/@common/misc/Dropdown';
-import {TextField} from '@/components/@common/forms/TextField';
 import {TextButton} from '@/components/@common/buttons/TextButton';
 import {FieldError} from '@/components/@common/forms/FieldError';
+import {TextField} from '@/components/@common/forms/TextField';
+import {Dropdown, useDropdownExpansion} from '@/components/@common/misc/Dropdown';
+import {FieldRow} from '@/components/forms/common/FieldRow';
 import styles from './ruleEndpointField.css';
 
-interface RuleEndpointField {
+interface RuleEndpointFieldProps {
 	name: string;
 }
 
-export const RuleEndpointField = memo<RuleEndpointField>(function RuleEndpointField({name}) {
+export const RuleEndpointField = memo<RuleEndpointFieldProps>(({name}) => {
 	const [macrosDDExpanded, macrosDDActions] = useDropdownExpansion();
 
 	const [, , {setValue}] = useField(name);
@@ -98,3 +98,5 @@ export const RuleEndpointField = memo<RuleEndpointField>(function RuleEndpointFi
 		</FieldRow>
 	);
 });
+
+RuleEndpointField.displayName = 'RuleEndpointField';

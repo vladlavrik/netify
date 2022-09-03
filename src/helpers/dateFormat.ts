@@ -16,10 +16,7 @@ const fullDateFormat: Intl.DateTimeFormatOptions = {
  */
 export function formatTime(date: Date) {
 	const time = date.toLocaleString('en-US', timeOnlyDateFormat);
-	const milliseconds = date
-		.getMilliseconds()
-		.toString()
-		.padStart(3, '0');
+	const milliseconds = date.getMilliseconds().toString().padStart(3, '0');
 
 	return `${time}.${milliseconds}`;
 }

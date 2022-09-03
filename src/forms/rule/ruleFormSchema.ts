@@ -1,10 +1,10 @@
-import {string, array, object, mixed, InferType} from 'yup';
-import {resourceTypesList, ResourceType} from '@/constants/ResourceType';
-import {requestMethodsList, RequestMethod} from '@/constants/RequestMethod';
-import {ruleActionsTypesList, RuleActionsType} from '@/constants/RuleActionsType';
-import {breakpointStagesList, BreakpointStage} from '@/constants/BreakpointStage';
-import {responseErrorReasonsList, ResponseErrorReason} from '@/constants/ResponseErrorReason';
-import {statusCodeSchema, headersSchema, requestBodySchema, responseBodySchema} from '../common/commonFormSchemes';
+import {array, InferType, mixed, object, string} from 'yup';
+import {BreakpointStage, breakpointStagesList} from '@/constants/BreakpointStage';
+import {RequestMethod, requestMethodsList} from '@/constants/RequestMethod';
+import {ResourceType, resourceTypesList} from '@/constants/ResourceType';
+import {ResponseErrorReason, responseErrorReasonsList} from '@/constants/ResponseErrorReason';
+import {RuleActionsType, ruleActionsTypesList} from '@/constants/RuleActionsType';
+import {headersSchema, requestBodySchema, responseBodySchema, statusCodeSchema} from '../common/commonFormSchemes';
 
 export const ruleFormSchema = object({
 	label: string().notRequired(),
@@ -16,9 +16,7 @@ export const ruleFormSchema = object({
 	actionType: mixed<RuleActionsType>().oneOf(ruleActionsTypesList),
 	actionConfigs: object({
 		[RuleActionsType.Breakpoint]: object({
-			stage: mixed<BreakpointStage>()
-				.oneOf(breakpointStagesList)
-				.default(BreakpointStage.Both),
+			stage: mixed<BreakpointStage>().oneOf(breakpointStagesList).default(BreakpointStage.Both),
 		}),
 		[RuleActionsType.Mutation]: object({
 			request: object({
@@ -26,9 +24,7 @@ export const ruleFormSchema = object({
 					/^((https?:)|(\[protocol]))\/\/.+/,
 					'The endpoint url should be started with a protocol (or suitable macros) and have a hostname',
 				),
-				method: mixed<RequestMethod>()
-					.oneOf(requestMethodsList)
-					.notRequired(),
+				method: mixed<RequestMethod>().oneOf(requestMethodsList).notRequired(),
 				setHeaders: headersSchema,
 				dropHeaders: array().of(string()),
 				body: requestBodySchema,

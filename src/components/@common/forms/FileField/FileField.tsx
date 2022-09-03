@@ -1,6 +1,6 @@
-import React, {memo, useCallback} from 'react';
-import {useField} from 'formik';
+import React, {memo} from 'react';
 import cn from 'classnames';
+import {useField} from 'formik';
 import styles from './fileField.css';
 
 interface FileFieldProps {
@@ -8,18 +8,15 @@ interface FileFieldProps {
 	name: string;
 }
 
-export const FileField = memo<FileFieldProps>(function FileField({className, name}) {
+export const FileField = memo<FileFieldProps>(({className, name}) => {
 	const [{value, onBlur}, , {setValue}] = useField<File>(name);
 
-	const onChange = useCallback(
-		(event: React.ChangeEvent<HTMLInputElement>) => {
-			const file = event.target.files![0];
-			if (file) {
-				setValue(file);
-			}
-		},
-		[setValue],
-	);
+	const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files![0];
+		if (file) {
+			setValue(file);
+		}
+	};
 
 	return (
 		<label className={cn(styles.root, className)}>
@@ -36,3 +33,5 @@ export const FileField = memo<FileFieldProps>(function FileField({className, nam
 		</label>
 	);
 });
+
+FileField.displayName = 'FileField';

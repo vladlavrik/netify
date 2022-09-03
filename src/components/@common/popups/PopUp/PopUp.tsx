@@ -1,4 +1,4 @@
-import React, {memo, useRef, useEffect, ReactNode} from 'react';
+import React, {FC, ReactNode, useEffect, useRef} from 'react';
 import ReactDOM from 'react-dom';
 import cn from 'classnames';
 import styles from './popUp.css';
@@ -8,7 +8,7 @@ interface PopUpProps {
 	children?: ReactNode;
 }
 
-export const PopUp = memo<PopUpProps>(function PopUp({className, children}) {
+export const PopUp: FC<PopUpProps> = ({className, children}) => {
 	const modalRef = useRef<HTMLDialogElement>(null);
 	const attachTargetRef = useRef<HTMLElement>(document.getElementById('modal-root')!);
 
@@ -22,4 +22,6 @@ export const PopUp = memo<PopUpProps>(function PopUp({className, children}) {
 		</dialog>,
 		attachTargetRef.current,
 	);
-});
+};
+
+PopUp.displayName = 'PopUp';

@@ -1,15 +1,15 @@
 .root {
 	top: 50vh;
 	box-sizing: border-box;
-	max-height: calc(100vh - 50px);
 	min-width: 220px;
 	max-width: calc(100vw - 16px);
+	max-height: calc(100vh - 50px);
 	margin: 0 auto;
 	padding: 0;
 	border: var(--color-brd-outline) 1px solid;
 	border-radius: 3px;
 	overflow: auto;
+	background: var(--color-bg-main);
 	box-shadow: 0 0 6px 2px var(--color-shadow-overlay-main);
 	transform: translateY(-50%);
-	background: var(--color-bg-main);
 }

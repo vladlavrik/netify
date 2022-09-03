@@ -1,5 +1,5 @@
-import {RuleAction} from '@/interfaces/rule';
 import {RuleActionsType} from '@/constants/RuleActionsType';
+import {RuleAction} from '@/interfaces/rule';
 
 export function stringifyActionsSummary(action: RuleAction) {
 	const actions = [];

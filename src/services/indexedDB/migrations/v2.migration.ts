@@ -1,11 +1,11 @@
-import {RuleAction, Rule} from '@/interfaces/rule';
-import {RequestBody, ResponseBody} from '@/interfaces/body';
-import {ResourceType, resourceTypesList} from '@/constants/ResourceType';
-import {RequestMethod, requestMethodsList} from '@/constants/RequestMethod';
-import {RuleActionsType} from '@/constants/RuleActionsType';
-import {ResponseErrorReason} from '@/constants/ResponseErrorReason';
-import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {RequestBodyType} from '@/constants/RequestBodyType';
+import {RequestMethod, requestMethodsList} from '@/constants/RequestMethod';
+import {ResourceType, resourceTypesList} from '@/constants/ResourceType';
+import {ResponseBodyType} from '@/constants/ResponseBodyType';
+import {ResponseErrorReason} from '@/constants/ResponseErrorReason';
+import {RuleActionsType} from '@/constants/RuleActionsType';
+import {RequestBody, ResponseBody} from '@/interfaces/body';
+import {Rule, RuleAction} from '@/interfaces/rule';
 
 interface LegacyRequestBody {
 	type: 'Original' | 'Text' | 'UrlEncodedForm' | 'MultipartFromData';
@@ -160,8 +160,8 @@ function migrateRule({id, filter, actions}: LegacyRule) {
 		active: true,
 		filter: {
 			url: filter.url.value + (filter.url.value && filter.url.compareType === 'Starts with' ? '*' : ''),
-			resourceTypes: filter.resourceTypes.filter(item => resourceTypesList.includes(item)),
-			methods: filter.methods.filter(item => requestMethodsList.includes(item)),
+			resourceTypes: filter.resourceTypes.filter((item) => resourceTypesList.includes(item)),
+			methods: filter.methods.filter((item) => requestMethodsList.includes(item)),
 		},
 		action,
 	};
@@ -172,7 +172,7 @@ export async function v2Migration(db: IDBDatabase, transaction: IDBTransaction) 
 	store.createIndex('origin', 'origin', {unique: false});
 	store.deleteIndex('hostname');
 
-	store.getAll().onsuccess = function() {
+	store.getAll().onsuccess = function () {
 		for (const entry of this.result) {
 			let rule: Rule;
 

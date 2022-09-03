@@ -1,4 +1,4 @@
-import {useState, useEffect, useMemo, useCallback} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 
 export function useMediaQuery<TV, TD>(conditions: Record<string, TV>, defaultValue: TD): TV | TD {
 	const conditionsMap = useMemo(
@@ -11,7 +11,7 @@ export function useMediaQuery<TV, TD>(conditions: Record<string, TV>, defaultVal
 
 	// Function that gets value based on matching media query
 	const getValue = useCallback(() => {
-		const activeMql = mediaQueryLists.find(mql => mql.matches);
+		const activeMql = mediaQueryLists.find((mql) => mql.matches);
 		return activeMql ? conditionsMap.get(activeMql)! : defaultValue;
 	}, [conditionsMap, mediaQueryLists]);
 

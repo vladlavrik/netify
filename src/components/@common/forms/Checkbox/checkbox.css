@@ -1,12 +1,12 @@
 .root {
 	display: flex;
-	height: 18px;
 	align-items: center;
+	height: 18px;
 }
+
 .input {
 	margin: 2.5px;
 }
-
 
 :global(.dark-theme) {
 	& .input {

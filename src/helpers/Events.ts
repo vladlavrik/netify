@@ -16,6 +16,6 @@ export class Event<T = void> {
 	}
 
 	emit = (event: T) => {
-		this.listeners.forEach(listener => listener(event));
+		this.listeners.forEach((listener) => listener(event));
 	};
 }

@@ -1,7 +1,7 @@
 .root {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    border-bottom: var(--color-brd-lite) 1px solid;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	border-bottom: var(--color-brd-lite) 1px solid;
 }
 
 .field {

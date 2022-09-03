@@ -2,11 +2,11 @@ import React, {memo} from 'react';
 import {useField} from 'formik';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {RuleActionBreakpoint} from '../RuleActionBreakpoint';
-import {RuleActionMutation} from '../RuleActionMutation';
-import {RuleActionLocalResponse} from '../RuleActionLocalResponse';
 import {RuleActionFailure} from '../RuleActionFailure';
+import {RuleActionLocalResponse} from '../RuleActionLocalResponse';
+import {RuleActionMutation} from '../RuleActionMutation';
 
-export const RuleActionConfig = memo(function RuleActionConfig() {
+export const RuleActionConfig = memo(() => {
 	const [field] = useField<RuleActionsType>('actionType');
 
 	switch (field.value) {
@@ -23,3 +23,5 @@ export const RuleActionConfig = memo(function RuleActionConfig() {
 			return <RuleActionFailure />;
 	}
 });
+
+RuleActionConfig.displayName = 'RuleActionConfig';

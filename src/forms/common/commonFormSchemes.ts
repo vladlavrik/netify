@@ -1,4 +1,4 @@
-import {number, string, array, object, mixed} from 'yup';
+import {array, mixed, number, object, string} from 'yup';
 import {RequestBodyType, requestBodyTypesList} from '@/constants/RequestBodyType';
 import {ResponseBodyType, responseBodyTypesList} from '@/constants/ResponseBodyType';
 

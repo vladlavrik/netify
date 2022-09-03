@@ -1,6 +1,6 @@
-import React, {memo, useRef, ReactNode} from 'react';
+import React, {FC, ReactNode, useRef} from 'react';
 import cn from 'classnames';
-import {useDropdownAutoPosition, Align} from '@/hooks/useDropdownAutoPosition';
+import {Align, useDropdownAutoPosition} from '@/hooks/useDropdownAutoPosition';
 import {useOutsideClickListener} from '@/hooks/useOutsideClickListener';
 import styles from './dropdown.css';
 
@@ -14,7 +14,7 @@ interface DropdownProps {
 	children: ReactNode;
 }
 
-export const Dropdown = memo<DropdownProps>(function Dropdown(props) {
+export const Dropdown: FC<DropdownProps> = (props) => {
 	const {className, expanded, target, preferExpansionAlignX, preferExpansionAlignY, onCollapse, children} = props;
 
 	const targetRef = useRef<HTMLDivElement>(null);
@@ -50,4 +50,6 @@ export const Dropdown = memo<DropdownProps>(function Dropdown(props) {
 			)}
 		</div>
 	);
-});
+};
+
+Dropdown.displayName = 'Dropdown';

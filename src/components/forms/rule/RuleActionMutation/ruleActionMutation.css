@@ -5,12 +5,12 @@
 }
 
 .stageName {
-	font-weight: 700;
 	line-height: 20px;
+	font-weight: 700;
 }
 
 .separator {
-	margin: 8px 8px 8px 118px;
 	height: 1px;
+	margin: 8px 8px 8px 118px;
 	background: var(--color-brd-lite);
 }

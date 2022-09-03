@@ -3,22 +3,24 @@
 	position: relative;
 	width: 300px;
 }
+
 .prefix,
 .suffix {
-	position: relative;
 	flex-shrink: 1;
+	position: relative;
 	z-index: 1;
 }
+
 .input {
-	position: relative;
 	flex-grow: 1;
+	position: relative;
 	padding: 0 6px;
 	border: none;
+	z-index: 1;
 	line-height: 20px;
 	font-size: 11px;
 	color: var(--color-content);
 	background: transparent;
-	z-index: 1;
 
 	&:focus {
 		outline: none;
