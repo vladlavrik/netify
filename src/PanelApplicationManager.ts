@@ -172,8 +172,12 @@ export class PanelApplicationManager {
 				return;
 			}
 
+			if (message.tabId !== chrome.devtools.inspectedWindow.tabId) {
+				return;
+			}
+
 			switch (message.type) {
-				case 'panelShowToggle':
+				case 'panelShowChange':
 					this.rootStore.appUiStore.setPanelActive(!!message.shown);
 					break;
 			}

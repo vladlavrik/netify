@@ -9,10 +9,14 @@ const ZipPlugin = require('zip-webpack-plugin');
 
 module.exports = (env, {mode} = {}) => ({
 	mode,
-	entry: './src/panel.ts',
+	entry: {
+		background: './src/background.ts',
+		devtool: './src/devtool.ts',
+		panel: './src/panel.ts',
+	},
 	output: {
 		publicPath: '/',
-		filename: 'panel.js',
+		filename: '[name].js',
 		path: path.resolve(__dirname, 'build'),
 	},
 	stats: {
@@ -76,19 +80,20 @@ module.exports = (env, {mode} = {}) => ({
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
+			template: './src/devtool.html',
+			filename: 'devtool.html',
+			chunks: ['devtool'],
+		}),
+		new HtmlWebpackPlugin({
 			template: './src/panel.html',
 			filename: 'panel.html',
+			chunks: ['panel'],
 		}),
 		new MiniCssExtractPlugin({
 			filename: '[name].css',
 			chunkFilename: '[name]-[id].css',
 		}),
-		new CopyWebpackPlugin([
-			'./src/manifest.json',
-			'./src/devtool.html',
-			'./src/devtool.js',
-			{from: './src/style/icons', to: 'icons'},
-		]),
+		new CopyWebpackPlugin(['./src/manifest.json', {from: './src/style/icons', to: 'icons'}]),
 		...(mode === 'production'
 			? [new CleanWebpackPlugin(), new GitRevisionPlugin(), new ZipPlugin({filename: 'netify'})]
 			: []),
