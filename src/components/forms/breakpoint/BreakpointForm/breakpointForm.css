@@ -1,0 +1,50 @@
+.root {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	box-sizing: border-box;
+	border-top: var(--color-brd-main) 1px solid;
+	background: var(--color-bg-light);
+	z-index: 10;
+	overflow-x: auto;
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	min-width: 500px;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+.header {
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	flex-wrap: wrap;
+	padding: 8px;
+	border-bottom: var(--color-brd-main) 1px solid;
+}
+
+.title {
+	padding-right: 24px;
+	flex-shrink: 0;
+}
+
+.controls {
+	padding-right: 24px;
+	flex-shrink: 0;
+}
+
+.picker {
+	flex-shrink: 0;
+}
+
+.content {
+	flex-grow: 1;
+	overflow-y: auto;
+	overflow-x: hidden; /* fix */
+	padding: 8px 8px 16px 8px;
+}

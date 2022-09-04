@@ -1,4 +1,3 @@
-import {Event} from '@/helpers/Events';
 import logoIconUrl from '@/style/icons/logo-128.png';
 
 export function pushNotification(id: string, title: string, message: string, buttons: string[] = []) {
@@ -12,7 +11,6 @@ export function pushNotification(id: string, title: string, message: string, but
 	});
 }
 
-export const notificationButtonClickEvent = new Event<{notificationId: string; buttonIndex: number}>();
-chrome.notifications.onButtonClicked.addListener((notificationId: string, buttonIndex: number) => {
-	notificationButtonClickEvent.emit({notificationId, buttonIndex});
-});
+export function subscribeNotificationClick(callback: (notificationId: string, buttonIndex: number) => void) {
+	chrome.notifications.onButtonClicked.addListener(callback);
+}

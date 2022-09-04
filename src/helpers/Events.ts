@@ -1,5 +1,6 @@
 export type Listener<T> = (event: T) => any;
 
+// TODO rename file, use a non conflict name
 export class Event<T = void> {
 	private listeners: Listener<T>[] = [];
 

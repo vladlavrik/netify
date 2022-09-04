@@ -27,6 +27,8 @@ type FailRequestRequest = Protocol.Fetch.FailRequestRequest;
 export class FetchDevtools {
 	readonly events = {
 		requestProcessed: new Event<LogEntry>(),
+		requestProcessed: new Event<Log>(),
+		requestBreakpoint: new Event<Breakpoint>(),
 	};
 
 	private enabled = false;
@@ -91,7 +93,7 @@ export class FetchDevtools {
 		switch (rule.action.type) {
 			// Trigger breakpoint event
 			case RuleActionsType.Breakpoint:
-				// TODO FUTURE
+				this.triggerRequestBreakpoint(pausedRequest);
 				break;
 
 			// Response locally without sending request to server
@@ -123,6 +125,30 @@ export class FetchDevtools {
 	}
 
 	private async processRequestFailure(requestId: string, action: FailureRuleAction) {
+	private async processResponse(pausedResponse: ResponsePausedEvent, rule: Rule) {
+		switch (rule.action.type) {
+			case RuleActionsType.Breakpoint:
+				this.triggerResponseBreakpoint(pausedResponse);
+				break;
+
+			case RuleActionsType.Mutation:
+				this.processResponseMutation(pausedResponse, rule.action, rule.id);
+				break;
+		}
+	}
+
+	private triggerRequestBreakpoint(pausedRequest: RequestPausedEvent) {
+		const breakpoint = RequestBuilder.compileBreakpoint(pausedRequest);
+		this.events.requestBreakpoint.emit(breakpoint);
+	}
+
+	private async triggerResponseBreakpoint(pausedResponse: ResponsePausedEvent) {
+		const {body, base64Encoded} = await this.getResponseBody(pausedResponse.requestId);
+		const breakpoint = ResponseBuilder.compileBreakpoint(pausedResponse, body, base64Encoded);
+		this.events.requestBreakpoint.emit(breakpoint);
+	}
+
+	private async processRequestFailure(requestId: string, action: FailureAction) {
 		const errorReason = action.reason;
 		await this.failRequest({requestId, errorReason});
 	}
@@ -157,6 +183,8 @@ export class FetchDevtools {
 		ruleId: string,
 	) {
 		const {requestId, request, resourceType} = pausedRequest;
+	private async processResponseMutation(pausedResponse: ResponsePausedEvent, action: MutationAction, ruleId: string) {
+		const {requestId, request, resourceType} = pausedResponse;
 		const {statusCode, setHeaders, dropHeaders, body} = action.response;
 
 		const noChanges = !statusCode && setHeaders.length === 0 && dropHeaders.length === 0 && !body;
@@ -181,6 +209,7 @@ export class FetchDevtools {
 
 		// Build the response from the original response data and patch from the rule
 		const builder = ResponseBuilder.asResponsePatch(pausedRequest, mutation);
+		const builder = ResponseBuilder.asResponsePatch(pausedResponse, action);
 		const fulfilParams = await builder.build();
 		await this.fulfillRequest(fulfilParams);
 
@@ -216,6 +245,10 @@ export class FetchDevtools {
 	private async failRequest(params: FailRequestRequest) {
 		this.log('fail request with params %o', params);
 		await this.devtools.sendCommand('Fetch.failRequest', params);
+	}
+
+	private async getResponseBody(requestId: string) {
+		return this.devtools.sendCommand<{}, GetResponseBodyResponse>('Fetch.getResponseBody', {requestId});
 	}
 
 	private log(message: string, ...data: any[]) {

@@ -5,6 +5,8 @@ import {RuleCompose, RuleEditor} from '@/components/forms/rule';
 import {Logs} from '@/components/logs';
 import {Rules} from '@/components/rules';
 import {RuleViewer} from '@/components/ruleViewer';
+import {RuleCompose, RuleEditor} from '@/components/forms/rule';
+import {BreakpointRequest, BreakpointResponse} from '@/components/forms/breakpoint';
 import {useStores} from '@/stores/useStores';
 import {AppHeader} from '../AppHeader';
 import {AppSections} from '../AppSections';
@@ -34,6 +36,8 @@ export const App = observer(() => {
 			{composeShown && createPortal(<RuleCompose />, modalTarget)}
 
 			{editorShown && createPortal(<RuleEditor />, modalTarget)}
+
+			{editorShown && createPortal(<BreakpointRequest />, modalTarget)}
 		</div>
 	);
 });

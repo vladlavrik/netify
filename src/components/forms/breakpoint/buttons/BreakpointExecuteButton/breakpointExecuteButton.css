@@ -1,0 +1,4 @@
+.root {
+	margin-right: 16px;
+	--button-icon: url('./icons/execute.svg');
+}
