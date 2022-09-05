@@ -1,10 +1,10 @@
 import React, {memo, useMemo} from 'react';
-import {ResponseBodyType, responseBodyTypesList, responseBodyTypesHumanTitles} from '@/constants/ResponseBodyType';
+import {ResponseBodyType, responseBodyTypesHumanTitles, responseBodyTypesList} from '@/constants/ResponseBodyType';
+import {FieldError} from '@/components/@common/forms/FieldError';
+import {FileField} from '@/components/@common/forms/FileField';
 import {RadioTabs} from '@/components/@common/forms/RadioTabs';
 import {TextareaField} from '@/components/@common/forms/TextareaField';
-import {FileField} from '@/components/@common/forms/FileField';
 import {FieldRow} from '../FieldRow';
-import {FieldError} from '@/components/@common/forms/FieldError';
 
 function typeTitleGetter(type: 'Original' | ResponseBodyType) {
 	if (type === 'Original') {
@@ -18,7 +18,7 @@ interface ResponseBodyFieldProps {
 	allowOrigin?: boolean;
 }
 
-export const ResponseBodyField = memo<ResponseBodyFieldProps>(function ResponseBodyField({name, allowOrigin}) {
+export const ResponseBodyField = memo<ResponseBodyFieldProps>(({name, allowOrigin}) => {
 	const options = useMemo(() => {
 		return allowOrigin ? ['Original', ...responseBodyTypesList] : responseBodyTypesList;
 	}, [allowOrigin]);
@@ -26,7 +26,7 @@ export const ResponseBodyField = memo<ResponseBodyFieldProps>(function ResponseB
 	return (
 		<FieldRow title='Body:'>
 			<RadioTabs name={`${name}.type`} options={options} optionTitleGetter={typeTitleGetter}>
-				{tabName => {
+				{(tabName) => {
 					switch (tabName) {
 						case ResponseBodyType.Text:
 						case ResponseBodyType.Base64:
@@ -48,3 +48,5 @@ export const ResponseBodyField = memo<ResponseBodyFieldProps>(function ResponseB
 		</FieldRow>
 	);
 });
+
+ResponseBodyField.displayName = 'ResponseBodyField';

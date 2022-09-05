@@ -1,9 +1,9 @@
 import React, {memo, useMemo, useRef} from 'react';
-import {useField} from 'formik';
 import cn from 'classnames';
+import {useField} from 'formik';
 import {useDropdownAutoPosition} from '@/hooks/useDropdownAutoPosition';
-import {useSelectExpansion} from './useSelectExpansion';
 import {useSelectChange} from './useSelectChange';
+import {useSelectExpansion} from './useSelectExpansion';
 import {useSelectKeyboard} from './useSelectKeyboard';
 import styles from './selectField.css';
 
@@ -17,7 +17,7 @@ interface SelectFieldProps {
 	required?: boolean; // Disallow to select no one option
 }
 
-export const SelectField = memo<SelectFieldProps>(function SelectField(props) {
+export const SelectField = memo<SelectFieldProps>((props) => {
 	const {className, name, placeholder, multiple, required} = props;
 	const {optionTitleGetter = (key: string) => key} = props;
 
@@ -37,14 +37,8 @@ export const SelectField = memo<SelectFieldProps>(function SelectField(props) {
 
 	const options = !required && hasValue ? [undefined, ...props.options] : props.options;
 
-	const {
-		expanded,
-		handleExpansionToggle,
-		handleExpand,
-		handleCollapse,
-		handleFocusOut,
-		handleRefocusOnBlurRequire,
-	} = useSelectExpansion(targetRef);
+	const {expanded, handleExpansionToggle, handleExpand, handleCollapse, handleFocusOut, handleRefocusOnBlurRequire} =
+		useSelectExpansion(targetRef);
 
 	const {handleOptionSelect, handleOptionClick} = useSelectChange({
 		name,
@@ -112,3 +106,5 @@ export const SelectField = memo<SelectFieldProps>(function SelectField(props) {
 		</div>
 	);
 });
+
+SelectField.displayName = 'SelectField';

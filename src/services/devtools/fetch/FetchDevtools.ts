@@ -1,16 +1,16 @@
 import {Protocol} from 'devtools-protocol';
-import {Rule, MutationAction, LocalResponseAction, FailureAction} from '@/interfaces/rule';
-import {Log} from '@/interfaces/log';
-import {RuleActionsType} from '@/constants/RuleActionsType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
 import {StatusCode} from '@/constants/StatusCode';
-import {Event} from '@/helpers/Events';
+import {LogEntry} from '@/interfaces/log';
+import {FailureRuleAction, LocalResponseRuleAction, MutationRuleAction, Rule} from '@/interfaces/rule';
 import {DevtoolsConnector} from '@/services/devtools';
-import {ResponseBuilder} from './ResponseBuilder';
-import {RequestBuilder} from './RequestBuilder';
+import {Event} from '@/helpers/Events';
 import {FetchRuleStore} from './FetchRuleStore';
+import {RequestBuilder} from './RequestBuilder';
+import {ResponseBuilder} from './ResponseBuilder';
 
 type EnableRequest = Protocol.Fetch.EnableRequest;
 type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
@@ -26,7 +26,7 @@ type FailRequestRequest = Protocol.Fetch.FailRequestRequest;
  */
 export class FetchDevtools {
 	readonly events = {
-		requestProcessed: new Event<Log>(),
+		requestProcessed: new Event<LogEntry>(),
 	};
 
 	private enabled = false;
@@ -115,25 +115,25 @@ export class FetchDevtools {
 			requestId,
 			interceptStage: 'Request',
 			ruleId: rule.id,
-			date: new Date(),
+			timestamp: Date.now(),
 			url: request.url,
 			method: request.method as RequestMethod,
 			resourceType: resourceType as ResourceType,
 		});
 	}
 
-	private async processRequestFailure(requestId: string, action: FailureAction) {
+	private async processRequestFailure(requestId: string, action: FailureRuleAction) {
 		const errorReason = action.reason;
 		await this.failRequest({requestId, errorReason});
 	}
 
-	private async processLocalResponse(requestId: string, action: LocalResponseAction) {
+	private async processLocalResponse(requestId: string, action: LocalResponseRuleAction) {
 		const builder = ResponseBuilder.asLocalResponse(requestId, action);
 		const fulfilParams = await builder.build();
 		await this.fulfillRequest(fulfilParams);
 	}
 
-	private async processRequestMutation(pausedRequest: RequestPausedEvent, action: MutationAction) {
+	private async processRequestMutation(pausedRequest: RequestPausedEvent, action: MutationRuleAction) {
 		const builder = RequestBuilder.asRequestPatch(pausedRequest, action.request);
 		const continueParams = builder.build();
 		await this.continueRequest(continueParams);
@@ -151,7 +151,11 @@ export class FetchDevtools {
 		}
 	}
 
-	private async processResponseMutation(pausedRequest: RequestPausedEvent, action: MutationAction, ruleId: string) {
+	private async processResponseMutation(
+		pausedRequest: RequestPausedEvent,
+		action: MutationRuleAction,
+		ruleId: string,
+	) {
 		const {requestId, request, resourceType} = pausedRequest;
 		const {statusCode, setHeaders, dropHeaders, body} = action.response;
 
@@ -185,7 +189,7 @@ export class FetchDevtools {
 			requestId,
 			interceptStage: 'Response',
 			ruleId,
-			date: new Date(),
+			timestamp: Date.now(),
 			url: request.url,
 			method: request.method as RequestMethod,
 			resourceType: resourceType as ResourceType,

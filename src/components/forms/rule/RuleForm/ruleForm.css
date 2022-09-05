@@ -1,13 +1,13 @@
 .root {
 	position: absolute;
-	top: 0;
 	left: 0;
 	right: 0;
+	top: 0;
 	bottom: 0;
 	box-sizing: border-box;
-	background: var(--color-bg-lite);
 	overflow: auto;
 	z-index: 10;
+	background: var(--color-bg-lite);
 }
 
 .form {

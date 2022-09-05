@@ -17,10 +17,7 @@ function checkTextLikeContentType(domainContentType: string) {
 
 /** Can detect urlencoded or multipart forms and text-like types */
 export function extractRequestContentType(contentType: string) {
-	const domainType = contentType
-		.split(';')[0]
-		.trim()
-		.toLowerCase();
+	const domainType = contentType.split(';')[0].trim().toLowerCase();
 
 	if (domainType === 'application/x-www-form-urlencoded') {
 		return RequestBodyType.UrlEncodedForm;
@@ -39,10 +36,7 @@ export function extractRequestContentType(contentType: string) {
 
 /** Can be detected only text-like type other is unknown */
 export function extractResponseContentType(contentType: string) {
-	const domainType = contentType
-		.split(';')[0]
-		.trim()
-		.toLowerCase();
+	const domainType = contentType.split(';')[0].trim().toLowerCase();
 
 	if (checkTextLikeContentType(domainType)) {
 		return ResponseBodyType.Text;

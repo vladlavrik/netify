@@ -3,6 +3,6 @@ export function randomHex(length: number) {
 	self.crypto.getRandomValues(array);
 
 	return Array.from(array)
-		.map(byte => byte.toString(16).padStart(2, '0')) // 8byte integer to 2char hex
+		.map((byte) => byte.toString(16).padStart(2, '0')) // 8byte integer to 2char hex
 		.join('');
 }

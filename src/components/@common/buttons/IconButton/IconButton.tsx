@@ -1,15 +1,16 @@
-import React, {memo, ReactNode} from 'react';
+import React, {FC, ReactNode} from 'react';
 import cn from 'classnames';
 import {WithTooltip} from '../../misc/WithTooltip';
 import styles from './iconButton.css';
 
 type NativeButtonProps = React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
-interface IconButtonProps extends Omit<NativeButtonProps, 'type'> {
+
+export interface IconButtonProps extends Omit<NativeButtonProps, 'type'> {
 	icon: ReactNode;
 	tooltip?: string;
 }
 
-export const IconButton = memo<IconButtonProps>(function IconButton(props) {
+export const IconButton: FC<IconButtonProps> = (props) => {
 	const {className, icon, tooltip, disabled, children, ...nativeProps} = props;
 
 	return (
@@ -20,4 +21,6 @@ export const IconButton = memo<IconButtonProps>(function IconButton(props) {
 			</button>
 		</WithTooltip>
 	);
-});
+};
+
+IconButton.displayName = 'IconButton';

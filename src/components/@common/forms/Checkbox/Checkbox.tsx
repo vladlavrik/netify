@@ -1,4 +1,4 @@
-import React, {memo, ReactNode} from 'react';
+import React, {FC, ReactNode} from 'react';
 import cn from 'classnames';
 import styles from './checkbox.css';
 
@@ -7,11 +7,13 @@ interface CheckboxProps extends Omit<NativeInputProps, 'type'> {
 	children?: ReactNode;
 }
 
-export const Checkbox = memo<CheckboxProps>(function Checkbox({className, children, ...nativeProps}) {
+export const Checkbox: FC<CheckboxProps> = ({className, children, ...nativeProps}) => {
 	return (
 		<label className={cn(styles.root, className)}>
 			<input {...nativeProps} className={styles.input} type='checkbox' />
-			<div className={styles.label}>{children}</div>
+			{children && <div className={styles.label}>{children}</div>}
 		</label>
 	);
-});
+};
+
+Checkbox.displayName = 'Checkbox';

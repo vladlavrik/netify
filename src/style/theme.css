@@ -3,29 +3,24 @@
 	--color-bg-lite: #f3f3f3;
 	--color-bg-odd-item: #f5f5f5;
 	--color-bg-accent: #d0d0d0;
-
 	--color-brd-main: #cdcdcd;
 	--color-brd-lite: #dedede;
 	--color-brd-strong: #bababa;
-	--color-brd-separator: #cccccc;
+	--color-brd-separator: #ccc;
 	--color-brd-outline: #61616160;
-
 	--color-main: #5a5a5a;
-	--color-content-accent: #222222;
+	--color-content-accent: #222;
 	--color-content: #303942;
 	--color-focus: #0e639c;
 	--color-inside-focus: #d5d5d5;
-	--color-placeholder: #888888;
-
+	--color-placeholder: #888;
 	--color-icon-regular: #6e6e6e;
 	--color-icon-disabled: #b0b0b0;
 	--color-icon-hover: #2f2f2f;
-
 	--color-shadow-overlay-lite: #9993;
 	--color-shadow-overlay-main: #ccc5;
 	--color-shadow-overlay-strong: #aaad;
 	--color-shadow-system-focus: #94b8f1;
-
 	--color-scrollbar: #ccc;
 	--color-dialog-backdrop: #fff6;
 }
@@ -36,32 +31,27 @@ dialog::backdrop {
 
 :global(.dark-theme) {
 	--color-bg-main: #242424;
-	--color-bg-lite: #333333;
+	--color-bg-lite: #333;
 	--color-bg-odd-item: #292929;
 	--color-bg-accent: #393939;
-
 	--color-brd-main: #525252;
 	--color-brd-lite: #4b4b4b;
-	--color-brd-strong: #777777;
+	--color-brd-strong: #777;
 	--color-brd-separator: #3d3d3d;
 	--color-brd-outline: #61616160;
-
 	--color-main: #a5a5a5;
 	--color-content-accent: #d5d5d5;
 	--color-content: #bdc6cf;
 	--color-focus: #0e639c;
 	--color-inside-focus: #d5d5d5;
 	--color-placeholder: #7e7e7e;
-
 	--color-icon-regular: #919191;
 	--color-icon-disabled: #626262;
-	--color-icon-hover: #cccccc;
-
+	--color-icon-hover: #ccc;
 	--color-shadow-overlay-lite: #0003;
 	--color-shadow-overlay-main: #0005;
 	--color-shadow-overlay-strong: #000d;
 	--color-shadow-system-focus: #cc7f1c;
-
 	--color-scrollbar: #333;
 	--color-dialog-backdrop: #0003;
 }

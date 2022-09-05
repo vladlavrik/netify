@@ -1,38 +1,39 @@
-import React, {memo} from 'react';
-import {LocalResponseAction} from '@/interfaces/rule';
-import {RuleViewerRow} from '../RuleViewerRow';
-import {RuleViewerDataTable} from '../RuleViewerDataTable';
+import React from 'react';
+import {observer} from 'mobx-react-lite';
+import {LocalResponseRuleAction} from '@/interfaces/rule';
 import {RuleViewerBodyData} from '../RuleViewerBodyData';
-import styles from './RuleViewerActionLocalResponse.css';
+import {RuleViewerDataTable} from '../RuleViewerDataTable';
+import {RuleViewerRow} from '../RuleViewerRow';
+import styles from './ruleViewerActionLocalResponse.css';
 
 interface RuleViewerActionLocalResponseProps {
-	action: LocalResponseAction;
+	action: LocalResponseRuleAction;
 }
 
-export const RuleViewerActionLocalResponse = memo<RuleViewerActionLocalResponseProps>(
-	function RuleViewerActionLocalResponse(props) {
-		const {statusCode, headers, body} = props.action;
+export const RuleViewerActionLocalResponse = observer<RuleViewerActionLocalResponseProps>((props) => {
+	const {statusCode, headers, body} = props.action;
 
-		return (
-			<table className={styles.root}>
-				<colgroup>
-					<col className={styles.titleColumn} />
-					<col />
-				</colgroup>
-				<tbody>
-					<RuleViewerRow title='Status code:'>{statusCode}</RuleViewerRow>
+	return (
+		<table className={styles.root}>
+			<colgroup>
+				<col className={styles.titleColumn} />
+				<col />
+			</colgroup>
+			<tbody>
+				<RuleViewerRow title='Status code:'>{statusCode}</RuleViewerRow>
 
-					{headers.length > 0 && (
-						<RuleViewerRow title='Headers:'>
-							<RuleViewerDataTable values={headers.map(({name, value}) => [name, value])} />
-						</RuleViewerRow>
-					)}
-
-					<RuleViewerRow title='Body:'>
-						<RuleViewerBodyData body={body} />
+				{headers.length > 0 && (
+					<RuleViewerRow title='Headers:'>
+						<RuleViewerDataTable values={headers.map(({name, value}) => [name, value])} />
 					</RuleViewerRow>
-				</tbody>
-			</table>
-		);
-	},
-);
+				)}
+
+				<RuleViewerRow title='Body:'>
+					<RuleViewerBodyData body={body} />
+				</RuleViewerRow>
+			</tbody>
+		</table>
+	);
+});
+
+RuleViewerActionLocalResponse.displayName = 'RuleViewerActionLocalResponse';

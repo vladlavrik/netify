@@ -5,7 +5,6 @@
 		"eslint:recommended",
 		"plugin:react/recommended",
 		"prettier",
-		"prettier/@typescript-eslint",
 		"plugin:prettier/recommended"
 	],
 	"parserOptions": {
@@ -26,21 +25,30 @@
 		"browser": true,
 		"es6": true
 	},
+	"plugins": ["simple-import-sort"],
 	"rules": {
 		// Rewrite for eslitnrecommended
 		"no-prototype-builtins": "off",
 
 		// Rewrite for @typescript-eslint/recommended
 		"@typescript-eslint/explicit-function-return-type": "off", // To no write manually return types of React functional components
-		"@typescript-eslint/interface-name-prefix": ["error", "never"],
+		"@typescript-eslint/explicit-module-boundary-types": "off",
 		"@typescript-eslint/no-namespace": "off",
 		"@typescript-eslint/no-non-null-assertion": "off",
 		"@typescript-eslint/no-parameter-properties": "off",
 		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/ban-types": [
+			"error",
+			{
+				"types": {
+					"{}": false
+				}
+			}
+		],
 
 		// Rest rules of "@typescript-eslint" except included in the "@typescript-eslint/recommended"
 		"@typescript-eslint/await-thenable": "error",
-		"@typescript-eslint/ban-ts-ignore": "error",
+		"@typescript-eslint/ban-ts-comment": "error",
 		"@typescript-eslint/func-call-spacing": "error",
 		"@typescript-eslint/member-ordering": [
 			"error",
@@ -48,9 +56,56 @@
 				"default": ["static-field", "static-method", "instance-field", "constructor", "method"]
 			}
 		],
+		"@typescript-eslint/naming-convention": [
+			"error",
+			{
+				"selector": "default",
+				"format": ["camelCase"]
+			},
+			{
+				"selector": "variable",
+				"modifiers": ["const"],
+				"format": ["camelCase", "PascalCase"] // Allow PascalCase for React functional components and import classes
+			},
+			{
+				"selector": "function",
+				"format": ["camelCase", "PascalCase"] // Allow PascalCase for React functional components
+			},
+			{
+				"selector": "property",
+				"format": ["camelCase", "UPPER_CASE", "PascalCase"]
+			},
+			{
+				"selector": "property",
+				"format": null, // Allow using dash-case and space separated properties, e.g. for define HTTP headers
+				"filter": {
+					"regex": "[- ]",
+					"match": true
+				}
+			},
+			{
+				"selector": "property",
+				"format": null,
+				"modifiers": ["requiresQuotes"]
+			},
+			{
+				"selector": "parameter",
+				"format": ["camelCase"],
+				"leadingUnderscore": "allow" // Allow to define nonusable parameters
+			},
+			{
+				"selector": "enumMember",
+				"format": ["camelCase", "UPPER_CASE", "PascalCase"]
+			},
+			{
+				"selector": "typeLike",
+				"format": ["PascalCase"]
+			}
+		],
 		"@typescript-eslint/no-extraneous-class": "error",
 		"@typescript-eslint/no-for-in-array": "error",
 		"@typescript-eslint/no-require-imports": "error",
+		"@typescript-eslint/no-shadow": "error",
 		"@typescript-eslint/no-this-alias": ["error", {"allowDestructuring": true}],
 		"@typescript-eslint/no-unnecessary-qualifier": "error", // Insignificantly
 		"@typescript-eslint/no-unnecessary-type-assertion": "off", // Temporary disabled by reason: https://github.com/typescript-eslint/typescript-eslint/issues/532
@@ -68,13 +123,13 @@
 
 		// Rest rules of "react" except included in the "react/recommended"
 		"react/button-has-type": "error",
-		"react/display-name": "error",
+		"react/display-name": ["error", {"ignoreTranspilerName": true}],
 		"react/no-array-index-key": "error",
 		"react/no-typos": "error",
 		"react/no-this-in-sfc": "error",
+		"react/no-unknown-property": "off",
 		"react/prop-types": "off",
 		"react/jsx-boolean-value": ["error", "never"],
-
 		"react/jsx-no-bind": ["error", {"allowArrowFunctions": true}],
 		"react/jsx-no-comment-textnodes": "error",
 		"react/jsx-fragments": "error",
@@ -83,7 +138,6 @@
 		"no-undef": "off", // Covered by typescript and only hinders
 
 		// Variables section
-		"no-shadow": ["error", {"builtinGlobals": false, "hoist": "functions"}],
 		"no-shadow-restricted-names": "error",
 
 		// Stylistic Issues section
@@ -144,7 +198,6 @@
 		// Best Practices section
 		"eqeqeq": "error",
 		"guard-for-in": "error",
-		"no-alert": "error",
 		"no-div-regex": "error",
 		"no-eval": "error",
 		"no-extend-native": "error",
@@ -170,6 +223,31 @@
 		"no-with": "error",
 		"prefer-promise-reject-errors": "error",
 		"radix": "error",
-		"yoda": "error"
+		"yoda": "error",
+
+		"simple-import-sort/imports": [
+			"warn",
+			{
+				"groups": [
+					[
+						"react",
+						"react-dom",
+						"^[\\w-]+$", // Other npm modules
+						"^@\\/constants\\/",
+						"^@\\/interfaces\\/",
+						"^@\\/services\\/",
+						"^@\\/helpers\\/",
+						"^@\\/hooks\\/",
+						"^@\\/components\\/",
+						"^@\\/style\\/",
+						"^",
+						"^\\..\\/",
+						"^\\.\\/",
+						"^@.+\\.svg?$",
+						"\\.css$"
+					]
+				]
+			}
+		]
 	}
 }

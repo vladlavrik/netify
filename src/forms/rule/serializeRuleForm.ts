@@ -1,10 +1,10 @@
-import {RuleFormSchema} from './ruleFormSchema';
-import {Rule} from '@/interfaces/Rule';
-import {RuleActionsType} from '@/constants/RuleActionsType';
 import {BreakpointStage} from '@/constants/BreakpointStage';
 import {RequestBodyType} from '@/constants/RequestBodyType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {ResponseErrorReason} from '@/constants/ResponseErrorReason';
+import {RuleActionsType} from '@/constants/RuleActionsType';
+import {Rule} from '@/interfaces/Rule';
+import {RuleFormSchema} from './ruleFormSchema';
 
 export function serializeRuleForm(rule: Rule) {
 	const {label, filter, action} = rule;

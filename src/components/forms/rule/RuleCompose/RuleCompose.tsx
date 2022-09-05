@@ -1,23 +1,20 @@
-import React, {memo, useCallback, useContext, useMemo} from 'react';
-import {Rule} from '@/interfaces/Rule';
+import React, {memo, useMemo} from 'react';
 import {RuleActionsType} from '@/constants/RuleActionsType';
-import {DbContext} from '@/contexts/dbContext';
-import {createRule} from '@/stores/rulesStore';
-import {hideCompose} from '@/stores/uiStore';
+import {Rule} from '@/interfaces/Rule';
 import {randomHex} from '@/helpers/random';
+import {useStores} from '@/stores/useStores';
 import {RuleForm} from '../RuleForm';
 
-export const RuleCompose = memo(function RuleCompose() {
-	const {rulesMapper} = useContext(DbContext)!;
+export const RuleCompose = memo(() => {
+	const {rulesStore} = useStores();
 
-	const handleSave = useCallback(async (rule: Rule) => {
-		await createRule({rulesMapper, rule});
-		hideCompose();
-	}, []);
+	const handleCreate = (rule: Rule) => {
+		rulesStore.createRule(rule);
+	};
 
-	const handleCancel = useCallback(async () => {
-		hideCompose();
-	}, []);
+	const handleClose = () => {
+		rulesStore.closeCompose();
+	};
 
 	const ruleValue = useMemo<Rule>(
 		() => ({
@@ -43,5 +40,7 @@ export const RuleCompose = memo(function RuleCompose() {
 		[],
 	);
 
-	return <RuleForm initialRule={ruleValue} onSave={handleSave} onCancel={handleCancel} />;
+	return <RuleForm initialRule={ruleValue} onSave={handleCreate} onCancel={handleClose} />;
 });
+
+RuleCompose.displayName = 'RuleCompose';

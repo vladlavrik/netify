@@ -1,17 +1,18 @@
 .root {
 	display: flex;
-	height: 28px;
 	align-items: center;
+	min-height: 28px;
 	padding: 1px 6px 0 8px;
 	border-bottom: var(--color-brd-main) 1px solid;
 	background: var(--color-bg-lite);
 }
 
 .title {
-	color: var(--color-main);
 	flex-grow: 1;
 	flex-shrink: 1;
+	padding: 2px 0;
 	overflow: hidden;
-	text-overflow: ellipsis;
 	font-size: 12px;
+	text-overflow: ellipsis;
+	color: var(--color-main);
 }

@@ -1,23 +1,23 @@
-/*prettier-ignore*/
+/* prettier-ignore */
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
-    font-weight: inherit;
     font-size: inherit;
+    font-weight: inherit;
 }
 
 p {
 	margin: 0;
 }
 
-/*prettier-ignore*/
+/* prettier-ignore */
 ul, ol, menu {
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-/*prettier-ignore*/
+/* prettier-ignore */
 button, input, textarea {
-    font-size: inherit;
     font-family: inherit;
+    font-size: inherit;
 }

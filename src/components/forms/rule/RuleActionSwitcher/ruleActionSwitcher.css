@@ -2,15 +2,15 @@
 	padding-top: 16px;
 	padding-bottom: 16px;
 	border: var(--color-brd-lite) solid;
-	border-width: 1px 0 1px;
+	border-width: 1px 0;
 }
 
 .entry {
+	margin-right: 16px;
 	padding: 0 6px;
-	line-height: 20px;
 	border: var(--color-brd-lite) 1px solid;
 	border-radius: 11px;
-	margin-right: 16px;
+	line-height: 20px;
 
 	&.current {
 		background: var(--color-bg-main);

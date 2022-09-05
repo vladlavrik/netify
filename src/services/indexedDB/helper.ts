@@ -1,5 +1,5 @@
-export async function promisifyIDBRequest<TResult = any>(request: IDBRequest) {
-	return new Promise<TResult>((resolve, reject) => {
+export async function promisifyIDBRequest<T>(request: IDBRequest<T>) {
+	return new Promise<T>((resolve, reject) => {
 		request.onsuccess = () => {
 			resolve(request.result);
 		};
@@ -10,7 +10,7 @@ export async function promisifyIDBRequest<TResult = any>(request: IDBRequest) {
 	});
 }
 
-export function generetifyIDBRequest(request: IDBRequest) {
+export function generetifyIDBRequest<T extends {continue(): void} | null | undefined>(request: IDBRequest<T>) {
 	return {
 		[Symbol.asyncIterator]() {
 			return {
@@ -27,7 +27,7 @@ export function generetifyIDBRequest(request: IDBRequest) {
 
 					return {
 						done: !result,
-						value: result,
+						value: result as T,
 					};
 				},
 			};

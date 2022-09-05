@@ -1,14 +1,15 @@
-import React, {memo} from 'react';
-import {FailureAction} from '@/interfaces/rule';
+import React from 'react';
+import {observer} from 'mobx-react-lite';
 import {responseErrorReasonsHumanTitles} from '@/constants/ResponseErrorReason';
+import {FailureRuleAction} from '@/interfaces/rule';
 import {RuleViewerRow} from '../RuleViewerRow';
-import styles from './RuleViewerActionFailure.css';
+import styles from './ruleViewerActionFailure.css';
 
 interface RuleViewerActionFailureProps {
-	action: FailureAction;
+	action: FailureRuleAction;
 }
 
-export const RuleViewerActionFailure = memo<RuleViewerActionFailureProps>(function RuleViewerActionFailure(props) {
+export const RuleViewerActionFailure = observer<RuleViewerActionFailureProps>((props) => {
 	const {reason} = props.action;
 
 	return (
@@ -19,3 +20,5 @@ export const RuleViewerActionFailure = memo<RuleViewerActionFailureProps>(functi
 		</table>
 	);
 });
+
+RuleViewerActionFailure.displayName = 'RuleViewerActionFailure';

@@ -6,19 +6,22 @@
 	position: absolute;
 	border: var(--color-brd-outline) 1px solid;
 	border-radius: 3px;
+	z-index: 100;
 	background: var(--color-bg-main);
 	box-shadow: 0 1px 3px 1px var(--color-shadow-overlay-lite);
-	z-index: 100;
 
 	&.expand-x-to-start {
 		right: 0;
 	}
+
 	&.expand-x-to-end {
 		left: 0;
 	}
+
 	&.expand-y-to-start {
 		bottom: calc(100% + 1px);
 	}
+
 	&.expand-y-to-end {
 		top: calc(100% + 1px);
 	}

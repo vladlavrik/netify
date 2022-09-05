@@ -1,11 +1,18 @@
-import {HeadersArray} from '@/interfaces/headers';
-import {RequestBody, ResponseBody} from '@/interfaces/body';
-import {Action, BreakpointAction, FailureAction, LocalResponseAction, MutationAction, Rule} from '@/interfaces/Rule';
-import {RuleActionsType} from '@/constants/RuleActionsType';
 import {BreakpointStage} from '@/constants/BreakpointStage';
-import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {RequestBodyType} from '@/constants/RequestBodyType';
-import {RuleFormSchema, RequestBodySchema, ResponseBodySchema} from './ruleFormSchema';
+import {ResponseBodyType} from '@/constants/ResponseBodyType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
+import {RequestBody, ResponseBody} from '@/interfaces/body';
+import {HeadersArray} from '@/interfaces/headers';
+import {
+	BreakpointRuleAction,
+	FailureRuleAction,
+	LocalResponseRuleAction,
+	MutationRuleAction,
+	Rule,
+	RuleAction,
+} from '@/interfaces/Rule';
+import {RequestBodySchema, ResponseBodySchema, RuleFormSchema} from './ruleFormSchema';
 
 function deserializeRequestBody({type, textValue, formValue}: RequestBodySchema): RequestBody | undefined {
 	switch (type) {
@@ -61,13 +68,13 @@ function deserializeSetHeaders(headers: HeadersArray) {
 }
 
 function deserializeDropHeaders(headers: string[]) {
-	return headers.map(name => name.trim()).filter(name => !!name);
+	return headers.map((name) => name.trim()).filter((name) => !!name);
 }
 
 export function deserializeRuleForm(form: RuleFormSchema, id: string, active: boolean): Rule {
 	const {label, filter, actionType, actionConfigs} = form;
 
-	let action: Action;
+	let action: RuleAction;
 
 	switch (actionType) {
 		case RuleActionsType.Breakpoint: {
@@ -76,7 +83,7 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 				type: RuleActionsType.Breakpoint,
 				request: [BreakpointStage.Both, BreakpointStage.Request].includes(stage),
 				response: [BreakpointStage.Both, BreakpointStage.Response].includes(stage),
-			} as BreakpointAction;
+			} as BreakpointRuleAction;
 			break;
 		}
 
@@ -97,7 +104,7 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 					dropHeaders: deserializeDropHeaders(response.dropHeaders),
 					body: deserializeResponseBody(response.body),
 				},
-			} as MutationAction;
+			} as MutationRuleAction;
 			break;
 		}
 
@@ -109,7 +116,7 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 				statusCode: Number(statusCode),
 				headers: deserializeSetHeaders(headers),
 				body: deserializeResponseBody(body)!,
-			} as LocalResponseAction;
+			} as LocalResponseRuleAction;
 			break;
 		}
 
@@ -117,7 +124,7 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 			action = {
 				type: RuleActionsType.Failure,
 				reason: actionConfigs[RuleActionsType.Failure].reason,
-			} as FailureAction;
+			} as FailureRuleAction;
 			break;
 	}
 

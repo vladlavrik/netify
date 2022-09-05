@@ -1,40 +1,64 @@
-import React, {memo, useCallback} from 'react';
-import {useStore} from 'effector-react';
-import {$debuggerActive, $debuggerSwitching, $useRulesPerDomain, $logAllRequest, toggleDebuggerEnabled, toggleUseRulesPerDomain, toggleLogAllRequest} from '@/stores/uiStore'; // prettier-ignore
-import {$hasActiveRules} from '@/stores/rulesStore';
+import React, {useCallback} from 'react';
+import {observer} from 'mobx-react-lite';
 import {useCompactModeCondition} from '@/hooks/useCompactModeCondition';
 import {IconButton} from '@/components/@common/buttons/IconButton';
+import {IconFileButton} from '@/components/@common/buttons/IconFileButton';
 import {Checkbox} from '@/components/@common/forms/Checkbox';
 import {WithTooltip} from '@/components/@common/misc/WithTooltip';
+import {useStores} from '@/stores/useStores';
+import ExportIcon from './icons/export.svg';
+import ImportIcon from './icons/import.svg';
 import ListeningActiveIcon from './icons/listening-active.svg';
 import ListeningInactiveIcon from './icons/listening-inactive.svg';
 import styles from './appHeader.css';
 
-export const AppHeader = memo(function AppHeader() {
-	const debuggerActive = useStore($debuggerActive);
-	const debuggerSwitching = useStore($debuggerSwitching);
-	const hasActiveRules = useStore($hasActiveRules);
-	const useRulesPerDomain = useStore($useRulesPerDomain);
-	const logAllRequest = useStore($logAllRequest);
+export const AppHeader = observer(() => {
+	const {debuggerStateStore, rulesStore, logsStore} = useStores();
+
+	const debuggingActive = debuggerStateStore.active;
+	const debuggingSwitching = debuggerStateStore.switching;
+	const hasAnyRules = rulesStore.hasAnyRules;
+	const hasActiveRules = rulesStore.hasActiveRules;
+	const isExportMode = rulesStore.exportMode;
+	const useRulesPerDomain = rulesStore.filterByOrigin;
+	const logAllRequest = logsStore.logAllRequest;
 
 	const isCompactMode = useCompactModeCondition();
 
-	const handleToggleDebuggerEnabled = useCallback(() => toggleDebuggerEnabled(), []);
-	const handleToggleUseRulesPerDomain = useCallback(() => toggleUseRulesPerDomain(), []);
-	const handleToggleLogAllRequest = useCallback(() => toggleLogAllRequest(), []);
+	const handleToggleEnabled = () => {
+		if (!debuggingSwitching) {
+			debuggerStateStore.toggleEnabled();
+		}
+	};
+
+	const handleToggleFilterByOrigin = () => {
+		rulesStore.toggleFilterByOrigin();
+	};
+
+	const handleInitExport = () => {
+		rulesStore.initExport();
+	};
+
+	const handleImport = useCallback((files: FileList) => {
+		rulesStore.importRules(files[0]);
+	}, []);
+
+	const handleToggleLogAllRequest = () => {
+		logsStore.toggleLogAllRequest();
+	};
 
 	return (
 		<header className={styles.root}>
 			<IconButton
 				className={styles.debuggerSwitcher}
 				disabled={!hasActiveRules}
-				tooltip={debuggerActive ? 'Stop requests listening' : 'Start requests listening'}
-				icon={debuggerActive ? <ListeningActiveIcon /> : <ListeningInactiveIcon />}
-				onClick={handleToggleDebuggerEnabled}>
-				{!debuggerSwitching && debuggerActive && 'Listening'}
-				{!debuggerSwitching && !debuggerActive && 'Inactive'}
-				{debuggerSwitching && debuggerActive && 'Stopping'}
-				{debuggerSwitching && !debuggerActive && 'Starting'}
+				tooltip={debuggingActive ? 'Stop requests listening' : 'Start requests listening'}
+				icon={debuggingActive ? <ListeningActiveIcon /> : <ListeningInactiveIcon />}
+				onClick={handleToggleEnabled}>
+				{!debuggingSwitching && debuggingActive && 'Listening'}
+				{!debuggingSwitching && !debuggingActive && 'Inactive'}
+				{debuggingSwitching && debuggingActive && 'Stopping'}
+				{debuggingSwitching && !debuggingActive && 'Starting'}
 			</IconButton>
 
 			<div className={styles.separator} />
@@ -50,9 +74,9 @@ export const AppHeader = memo(function AppHeader() {
 					</span>
 				}>
 				<Checkbox
-					className={styles.control}
+					className={styles.mainControl}
 					checked={useRulesPerDomain}
-					onChange={handleToggleUseRulesPerDomain}>
+					onChange={handleToggleFilterByOrigin}>
 					Rules per site
 				</Checkbox>
 			</WithTooltip>
@@ -66,11 +90,35 @@ export const AppHeader = memo(function AppHeader() {
 							not just those affected by the rules.
 						</span>
 					}>
-					<Checkbox className={styles.control} checked={logAllRequest} onChange={handleToggleLogAllRequest}>
+					<Checkbox
+						className={styles.mainControl}
+						checked={logAllRequest}
+						onChange={handleToggleLogAllRequest}>
 						Log all requests
 					</Checkbox>
 				</WithTooltip>
 			)}
+
+			<div className={styles.separator} />
+
+			<IconFileButton
+				className={styles.additionalControl}
+				icon={<ImportIcon />}
+				disabled={isExportMode}
+				tooltip='Import rules'
+				accept='.json'
+				onFileSelect={handleImport}
+			/>
+
+			<IconButton
+				className={styles.additionalControl}
+				icon={<ExportIcon />}
+				disabled={isExportMode || !hasAnyRules}
+				tooltip='Export rules'
+				onClick={handleInitExport}
+			/>
 		</header>
 	);
 });
+
+AppHeader.displayName = 'AppHeader';

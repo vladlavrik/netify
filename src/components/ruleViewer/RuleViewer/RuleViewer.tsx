@@ -1,31 +1,25 @@
-import React, {memo, useEffect} from 'react';
-import {useStore, useStoreMap} from 'effector-react';
+import React, {useEffect} from 'react';
+import {observer} from 'mobx-react-lite';
 import {RuleActionsType, ruleActionsTypeHumanTitles} from '@/constants/RuleActionsType';
-import {$ruleDetailsShownFor, hideRuleDetails} from '@/stores/uiStore';
-import {$rules} from '@/stores/rulesStore';
-import {RuleViewerHeader} from '../RuleViewerHeader';
-import {RuleViewerFilter} from '../RuleViewerFilter';
+import {useStores} from '@/stores/useStores';
 import {RuleViewerActionFailure} from '../RuleViewerActionFailure';
 import {RuleViewerActionLocalResponse} from '../RuleViewerActionLocalResponse';
 import {RuleViewerActionMutation} from '../RuleViewerActionMutation';
+import {RuleViewerFilter} from '../RuleViewerFilter';
+import {RuleViewerHeader} from '../RuleViewerHeader';
 import styles from './ruleViewer.css';
 
-export const RuleViewer = memo(function RuleViewer() {
-	const ruleId = useStore($ruleDetailsShownFor);
-
-	const rule = useStoreMap({
-		store: $rules,
-		keys: [ruleId],
-		fn: (rules, [currentRuleId]) => rules.find(({id}) => id === currentRuleId) || null,
-	});
+export const RuleViewer = observer(() => {
+	const {rulesStore} = useStores();
+	const rule = rulesStore.detailedRule;
 
 	useEffect(() => {
 		if (!rule) {
-			hideRuleDetails();
+			rulesStore.closeDetails();
 		}
 	}, [rule]);
 
-	if (!ruleId || !rule) {
+	if (!rule) {
 		return null;
 	}
 
@@ -65,3 +59,5 @@ export const RuleViewer = memo(function RuleViewer() {
 		</div>
 	);
 });
+
+RuleViewer.displayName = 'RuleViewer';

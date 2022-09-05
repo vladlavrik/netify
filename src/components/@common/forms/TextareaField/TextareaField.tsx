@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React, {FC} from 'react';
 import cn from 'classnames';
 import {useField} from 'formik';
 import styles from './textareaField.css';
@@ -12,7 +12,7 @@ interface TextareaFieldProps {
 	disabled?: boolean;
 }
 
-export const TextareaField = memo<TextareaFieldProps>(function TextareaField(props) {
+export const TextareaField: FC<TextareaFieldProps> = (props) => {
 	const {className, name, placeholder, rows = 4, maxlength, disabled} = props;
 	const [{value, onChange, onBlur}] = useField<string>(name);
 
@@ -30,4 +30,6 @@ export const TextareaField = memo<TextareaFieldProps>(function TextareaField(pro
 			onBlur={onBlur}
 		/>
 	);
-});
+};
+
+TextareaField.displayName = 'TextareaField';

@@ -1,7 +1,11 @@
 .root {
 	display: flex;
-	height: 18px;
 	align-items: center;
+	height: 18px;
+}
+
+.input {
+	margin: 2.5px;
 }
 
 :global(.dark-theme) {
@@ -11,6 +15,6 @@
 }
 
 .label {
-	margin-left: 4px;
+	margin-left: 6px;
 	user-select: none;
 }

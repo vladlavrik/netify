@@ -1,7 +1,7 @@
 .root {
 	display: flex;
-	height: 18px;
 	align-items: center;
+	height: 18px;
 }
 
 .input {
@@ -16,19 +16,19 @@
 	width: 10px;
 	height: 10px;
 	margin: 1px 0;
-	border-radius: 6px;
 	border: var(--color-main) 1px solid;
+	border-radius: 6px;
 
 	&::before {
 		content: '';
 		display: block;
-		margin: 3px;
 		flex-shrink: 0;
 		width: 4px;
 		height: 4px;
+		margin: 3px;
 		border-radius: 5px;
-		background: var(--color-main);
 		opacity: 0;
+		background: var(--color-main);
 		transition: opacity 0.1s ease-out;
 	}
 }

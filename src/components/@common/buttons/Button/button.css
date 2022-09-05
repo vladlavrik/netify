@@ -1,23 +1,23 @@
 .root {
 	height: 24px;
 	padding: 0 8px;
-	border-radius: 3px;
 	border: var(--color-brd-main) 1px solid;
+	border-radius: 3px;
 	cursor: pointer;
 
 	&.style-unfilled {
-		background: transparent;
 		color: var(--color-main);
+		background: transparent;
 	}
 
 	&.style-light {
-		background: var(--color-bg-lite);
 		color: var(--color-main);
+		background: var(--color-bg-lite);
 	}
 
 	&.style-dark {
-		background: var(--color-bg-main);
 		color: var(--color-main);
+		background: var(--color-bg-main);
 	}
 
 	&.withIcon {
@@ -36,7 +36,7 @@
 	}
 
 	&:focus {
-		outline: none;
 		border-color: var(--color-focus);
+		outline: none;
 	}
 }

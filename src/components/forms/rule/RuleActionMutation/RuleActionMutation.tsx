@@ -1,18 +1,18 @@
 import React, {memo} from 'react';
 import {RuleActionsType} from '@/constants/RuleActionsType';
-import {FieldRow} from '@/components/forms/common/FieldRow';
-import {RequestMethodField} from '@/components/forms/common/RequestMethodField';
-import {SetHeadersField} from '@/components/forms/common/SetHeadersField';
 import {DropHeadersField} from '@/components/forms/common/DropHeadersField';
-import {StatusCodeField} from '@/components/forms/common/StatusCodeField';
+import {FieldRow} from '@/components/forms/common/FieldRow';
 import {RequestBodyField} from '@/components/forms/common/RequestBodyField';
+import {RequestMethodField} from '@/components/forms/common/RequestMethodField';
 import {ResponseBodyField} from '@/components/forms/common/ResponseBodyField';
+import {SetHeadersField} from '@/components/forms/common/SetHeadersField';
+import {StatusCodeField} from '@/components/forms/common/StatusCodeField';
 import {RuleEndpointField} from '../RuleEndpointField';
 import RequestIcon from './icons/request.svg';
 import ResponseIcon from './icons/response.svg';
 import styles from './ruleActionMutation.css';
 
-export const RuleActionMutation = memo(function RuleActionMutation() {
+export const RuleActionMutation = memo(() => {
 	const namePrefix = `actionConfigs.${RuleActionsType.Mutation}`;
 
 	return (
@@ -41,3 +41,5 @@ export const RuleActionMutation = memo(function RuleActionMutation() {
 		</div>
 	);
 });
+
+RuleActionMutation.displayName = 'RuleActionMutation';

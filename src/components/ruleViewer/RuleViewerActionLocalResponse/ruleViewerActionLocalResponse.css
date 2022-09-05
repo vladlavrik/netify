@@ -1,8 +1,8 @@
 .root {
 	width: 100%;
-	table-layout: fixed;
-	border-collapse: collapse;
 	border-spacing: 0;
+	border-collapse: collapse;
+	table-layout: fixed;
 }
 
 .titleColumn {

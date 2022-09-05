@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Title</title>
+	</head>
+	<body>
+		<button onClick="fetchImage()">Fetch image</button>
+		<button onClick="fetchText()">Fetch text</button>
+		<button onClick="fetchJSON()">Fetch JSON</button>
+		<button onClick="postText()">Post text</button>
+		<button onClick="postTextMultipartForm()">Post Multipart form</button>
+		<button onClick="postBlobMultipartForm()">Post Multipart blob form</button>
+		<form target="ifr" method="post" action="./test.txt?urlencoded-form">
+			<input type="hidden" name="name" value="agent" />
+			<input type="hidden" name="profession" value="taxi 🚗 diver" />
+			<input type="hidden" name="трамвай" value="🚠" />
+			<button>Post urlencoded form</button>
+		</form>
+		<iframe name="ifr" hidden></iframe>
+
+		<div id="response"></div>
+
+		<script>
+			const target = document.getElementById('response');
+
+			function appendResult(node) {
+				target.innerHTML = `<p>${new Date().toLocaleTimeString()}</p>`;
+				target.appendChild(node);
+			}
+
+			function appendTextResult(text) {
+				const node = document.createElement('p');
+				node.innerText = text;
+				appendResult(node);
+			}
+
+			function logResponse(response) {
+				console.group(`Url: ${response.url}, status: ${response.status}`);
+				response.headers.forEach((value, key) => console.log(`${key}: ${value}`));
+				console.groupEnd();
+				return response;
+			}
+
+			function fetchImage() {
+				const img = new Image();
+				img.src = './test.png?d=' + Date.now();
+				appendResult(img);
+			}
+
+			function fetchText() {
+				fetch('./test.txt', {headers: {FFFF: 'bb'}})
+					.then(logResponse)
+					.then(resp => resp.text())
+					.then(appendTextResult);
+			}
+
+			function fetchJSON() {
+				fetch('./test.json')
+					.then(logResponse)
+					.then(resp => resp.json())
+					.then(resp => appendTextResult(JSON.stringify(resp)));
+			}
+
+			function postText() {
+				fetch('./test.txt', {method: 'POST', body: 'Secret | Секрет | 👻'})
+					.then(logResponse)
+					.then(resp => resp.text())
+					.then(appendTextResult);
+			}
+
+			function postTextMultipartForm() {
+				const form = new FormData();
+				form.append('name', 'Agent 007 💣');
+				form.append('age', 'all');
+
+				fetch('./test.txt?multipart-form-data', {method: 'POST', body: form})
+					.then(logResponse)
+					.then(resp => resp.text())
+					.then(appendTextResult);
+			}
+
+			function postBlobMultipartForm() {
+				const form = new FormData();
+				form.append('text', 'value');
+				form.append('file', new Blob(['Hello World'], {type: 'text:plain'}), 'hello-world.txt');
+				// TODO add blob image
+
+				fetch('./test.txt?multipart-form-blob-data', {method: 'POST', body: form}).then(logResponse);
+			}
+		</script>
+	</body>
+</html>

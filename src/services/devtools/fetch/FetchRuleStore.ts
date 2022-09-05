@@ -1,8 +1,8 @@
 import {Protocol} from 'devtools-protocol';
-import {Rule} from '@/interfaces/Rule';
-import {RuleActionsType} from '@/constants/RuleActionsType';
-import {ResourceType} from '@/constants/ResourceType';
 import {RequestMethod} from '@/constants/RequestMethod';
+import {ResourceType} from '@/constants/ResourceType';
+import {RuleActionsType} from '@/constants/RuleActionsType';
+import {Rule} from '@/interfaces/Rule';
 
 type RequestStage = Protocol.Fetch.RequestStage;
 type RequestPattern = Protocol.Fetch.RequestPattern;
@@ -26,6 +26,11 @@ export class FetchRuleStore {
 
 	setRulesList(newRulesList: Rule[]) {
 		this.rulesList = newRulesList;
+	}
+
+	reset() {
+		this.currentOrigin = '';
+		this.rulesList = [];
 	}
 
 	getRequestPatterns() {

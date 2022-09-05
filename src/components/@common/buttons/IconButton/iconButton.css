@@ -3,11 +3,11 @@
 	align-items: center;
 	width: auto;
 	height: auto;
-	border: none;
 	padding: 0;
-	background: none;
+	border: none;
 	text-align: left;
 	color: inherit;
+	background: none;
 	user-select: none;
 
 	&:focus {
@@ -20,11 +20,11 @@
 }
 
 .icon {
-	width: 18px;
-	height: 18px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	width: 18px;
+	height: 18px;
 	fill: var(--color-icon-regular);
 }
 
@@ -37,7 +37,7 @@
 }
 
 .title {
-	padding: 0 2px 0 4px;
+	padding: 0 2px 0 6px;
 }
 
 .tooltip {

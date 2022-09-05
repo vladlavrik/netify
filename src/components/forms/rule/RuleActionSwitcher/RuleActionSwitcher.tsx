@@ -1,12 +1,12 @@
 import React, {memo} from 'react';
-import {useField} from 'formik';
 import cn from 'classnames';
+import {useField} from 'formik';
 import {RuleActionsType, ruleActionsTypeHumanTitles} from '@/constants/RuleActionsType';
 import {RadioButton} from '@/components/@common/forms/RadioButton';
 import {FieldRow} from '@/components/forms/common/FieldRow';
 import styles from './ruleActionSwitcher.css';
 
-export const RuleActionSwitcher = memo(function RuleActionSwitcher() {
+export const RuleActionSwitcher = memo(() => {
 	const name = 'actionType';
 	const [field] = useField(name);
 
@@ -24,3 +24,5 @@ export const RuleActionSwitcher = memo(function RuleActionSwitcher() {
 		</FieldRow>
 	);
 });
+
+RuleActionSwitcher.displayName = 'RuleActionSwitcher';

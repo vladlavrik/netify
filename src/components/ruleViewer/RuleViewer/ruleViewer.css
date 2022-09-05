@@ -6,11 +6,11 @@
 
 .header {
 	min-width: 200px;
-	padding: 4px 8px 4px 8px;
-	font-size: 12px;
+	padding: 4px 8px;
 	overflow: hidden;
-	text-overflow: ellipsis;
+	font-size: 12px;
 	word-break: break-word;
+	text-overflow: ellipsis;
 }
 
 .headerTitle {

@@ -1,4 +1,4 @@
-import {useState, useRef, useCallback, RefObject} from 'react';
+import {RefObject, useCallback, useRef, useState} from 'react';
 
 export function useSelectExpansion(targetRef: RefObject<HTMLElement>) {
 	const [expanded, setExpanded] = useState(false);

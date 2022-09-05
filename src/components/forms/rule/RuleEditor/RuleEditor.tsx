@@ -1,29 +1,34 @@
-import React, {memo, useCallback, useContext} from 'react';
-import {useStore, useStoreMap} from 'effector-react';
-import {Rule} from '@/interfaces/Rule';
-import {DbContext} from '@/contexts/dbContext';
-import {$rules, updateRule} from '@/stores/rulesStore';
-import {$ruleEditorShownFor, hideRuleEditor} from '@/stores/uiStore';
+import React, {useEffect} from 'react';
+import {toJS} from 'mobx';
+import {observer} from 'mobx-react-lite';
+import {Rule} from '@/interfaces/rule';
+import {useStores} from '@/stores/useStores';
 import {RuleForm} from '../RuleForm';
 
-export const RuleEditor = memo(function RuleEditor() {
-	const {rulesMapper} = useContext(DbContext)!;
+export const RuleEditor = observer(() => {
+	const {rulesStore} = useStores();
 
-	const initialRuleId = useStore($ruleEditorShownFor);
-	const initialRule = useStoreMap({
-		store: $rules,
-		keys: [initialRuleId],
-		fn: (rules, [ruleId]) => rules.find(({id}) => id === ruleId),
-	})!;
+	const initialRule = toJS(rulesStore.editingRule);
 
-	const handleSave = useCallback(async (rule: Rule) => {
-		await updateRule({rulesMapper, rule});
-		hideRuleEditor();
-	}, []);
+	const handleSave = (rule: Rule) => {
+		rulesStore.updateRule(rule);
+	};
 
-	const handleCancel = useCallback(async () => {
-		hideRuleEditor();
-	}, []);
+	const handleClose = () => {
+		rulesStore.closeEditor();
+	};
 
-	return <RuleForm initialRule={initialRule} onSave={handleSave} onCancel={handleCancel} />;
+	useEffect(() => {
+		if (!initialRule) {
+			handleClose();
+		}
+	}, [initialRule]);
+
+	if (!initialRule) {
+		return null;
+	}
+
+	return <RuleForm initialRule={initialRule} onSave={handleSave} onCancel={handleClose} />;
 });
+
+RuleEditor.displayName = 'RuleEditor';

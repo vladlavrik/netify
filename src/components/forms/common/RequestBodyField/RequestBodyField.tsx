@@ -1,8 +1,8 @@
 import React, {memo, useMemo} from 'react';
 import {RequestBodyType, requestBodyTypesList, responseBodyTypesHumanTitles} from '@/constants/RequestBodyType';
+import {KeyValueArrayField} from '@/components/@common/forms/KeyValueArrayField';
 import {RadioTabs} from '@/components/@common/forms/RadioTabs';
 import {TextareaField} from '@/components/@common/forms/TextareaField';
-import {KeyValueArrayField} from '@/components/@common/forms/KeyValueArrayField';
 import {FieldRow} from '../FieldRow';
 
 function typeTitleGetter(type: 'Original' | RequestBodyType) {
@@ -18,7 +18,7 @@ interface RequestMethodFieldProps {
 	allowOrigin?: boolean;
 }
 
-export const RequestBodyField = memo<RequestMethodFieldProps>(function RequestBodyField({name, allowOrigin}) {
+export const RequestBodyField = memo<RequestMethodFieldProps>(({name, allowOrigin}) => {
 	const options = useMemo(() => {
 		return allowOrigin ? ['Original', ...requestBodyTypesList] : requestBodyTypesList;
 	}, [allowOrigin]);
@@ -51,3 +51,5 @@ export const RequestBodyField = memo<RequestMethodFieldProps>(function RequestBo
 		</FieldRow>
 	);
 });
+
+RequestBodyField.displayName = 'RequestBodyField';

@@ -6,16 +6,16 @@ interface SetHeadersFieldProps {
 	name: string;
 }
 
-export const SetHeadersField = memo<SetHeadersFieldProps>(function SetHeadersField({name}) {
-	return (
-		<FieldRow title='Set headers:'>
-			<KeyValueArrayField
-				name={name}
-				keyNameSuffix='name'
-				valueNameSuffix='value'
-				keyPlaceholder='Header name'
-				valuePlaceholder='Header value'
-			/>
-		</FieldRow>
-	);
-});
+export const SetHeadersField = memo<SetHeadersFieldProps>(({name}) => (
+	<FieldRow title='Set headers:'>
+		<KeyValueArrayField
+			name={name}
+			keyNameSuffix='name'
+			valueNameSuffix='value'
+			keyPlaceholder='Header name'
+			valuePlaceholder='Header value'
+		/>
+	</FieldRow>
+));
+
+SetHeadersField.displayName = 'SetHeadersField';

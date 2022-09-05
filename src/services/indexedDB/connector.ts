@@ -15,7 +15,7 @@ export async function openIDB() {
 			resolve(request.result);
 		};
 
-		request.onupgradeneeded = function({oldVersion}) {
+		request.onupgradeneeded = function ({oldVersion}) {
 			for (let oldVersionStep = oldVersion; oldVersionStep < dbVersion; oldVersionStep++) {
 				migrations[oldVersionStep](this.result, this.transaction!);
 			}

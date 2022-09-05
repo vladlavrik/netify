@@ -1,12 +1,12 @@
 import {Protocol} from 'devtools-protocol';
-import {RequestMethod} from '@/constants/RequestMethod';
 import {RequestBodyType} from '@/constants/RequestBodyType';
-import {MutationAction} from '@/interfaces/rule';
+import {RequestMethod} from '@/constants/RequestMethod';
 import {RequestBody} from '@/interfaces/body';
+import {MutationRuleAction} from '@/interfaces/rule';
 import {randomHex} from '@/helpers/random';
-import {compileUrlFromPattern} from './helpers/url';
 import {headersMapToArray, patchHeaders} from './helpers/headers';
-import {buildRequestBodyFromText, buildRequestBodyFromMultipartForm, buildRequestBodyFromUrlEncodedForm} from './helpers/postData'; // prettier-ignore
+import {buildRequestBodyFromMultipartForm, buildRequestBodyFromText, buildRequestBodyFromUrlEncodedForm} from './helpers/postData'; // prettier-ignore
+import {compileUrlFromPattern} from './helpers/url';
 
 type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
 type ContinueRequestRequest = Protocol.Fetch.ContinueRequestRequest;
@@ -18,7 +18,7 @@ type HeaderEntry = Protocol.Fetch.HeaderEntry;
  *  - transform to a breakpoint data and vise-versa - updated breakpoint data to a data for continue the request (FUTURE)
  */
 export class RequestBuilder {
-	static asRequestPatch({request, requestId}: RequestPausedEvent, patch: MutationAction['request']) {
+	static asRequestPatch({request, requestId}: RequestPausedEvent, patch: MutationRuleAction['request']) {
 		// Rewrite request params before send to server
 		let url;
 		if (patch.endpoint) {

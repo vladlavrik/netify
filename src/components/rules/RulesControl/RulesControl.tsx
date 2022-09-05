@@ -17,35 +17,35 @@ interface RulesControlProps {
 	onRemove(): void;
 }
 
-export const RulesControl = memo<RulesControlProps>(function RulesControl(props) {
+export const RulesControl = memo<RulesControlProps>((props) => {
 	const {ruleIsActive, allowMoveAbove, allowMoveBelow, onActiveToggle, onMove, onEdit, onRemove} = props;
 
 	const handleMoveAbove = useCallback(() => onMove(-1), [onMove]);
 	const handleMoveBelow = useCallback(() => onMove(1), [onMove]);
 
 	return (
-		<menu className={styles.root}>
-			<li className={styles.entry}>
-				<Checkbox className={styles.checkbox} checked={ruleIsActive} onChange={onActiveToggle}>
-					Active
-				</Checkbox>
-				{allowMoveAbove && (
-					<IconButton className={styles.button} icon={<AboveIcon />} onClick={handleMoveAbove}>
-						Move above
-					</IconButton>
-				)}
-				{allowMoveBelow && (
-					<IconButton className={styles.button} icon={<BelowIcon />} onClick={handleMoveBelow}>
-						Move below
-					</IconButton>
-				)}
-				<IconButton className={styles.button} icon={<EditIcon />} onClick={onEdit}>
-					Edit
+		<div className={styles.root}>
+			<Checkbox className={styles.checkbox} checked={ruleIsActive} onChange={onActiveToggle}>
+				Active
+			</Checkbox>
+			{allowMoveAbove && (
+				<IconButton className={styles.button} icon={<AboveIcon />} onClick={handleMoveAbove}>
+					Move above
 				</IconButton>
-				<IconButton className={styles.button} icon={<RemoveIcon />} onClick={onRemove}>
-					Remove
+			)}
+			{allowMoveBelow && (
+				<IconButton className={styles.button} icon={<BelowIcon />} onClick={handleMoveBelow}>
+					Move below
 				</IconButton>
-			</li>
-		</menu>
+			)}
+			<IconButton className={styles.button} icon={<EditIcon />} onClick={onEdit}>
+				Edit
+			</IconButton>
+			<IconButton className={styles.button} icon={<RemoveIcon />} onClick={onRemove}>
+				Remove
+			</IconButton>
+		</div>
 	);
 });
+
+RulesControl.displayName = 'RulesControl';

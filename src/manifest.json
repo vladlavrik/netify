@@ -1,5 +1,5 @@
 {
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"name": "Netify",
 	"description": "Debugging proxy that will allow you to intercept and mutate requests from a web page",
 	"author": "Vlad Lavrik <vladlavrik@ukr.net>",
@@ -11,13 +11,16 @@
 	},
 	"minimum_chrome_version": "78.0.0.0",
 	"devtools_page": "devtool.html",
-	"page_action":  {
+	"action":  {
 		"default_icon": {
-			"16": "icons/logo-16.png",
-			"24": "icons/logo-24.png",
-			"32": "icons/logo-32.png"
+			"16": "icons/logo-inactive-16.png",
+			"24": "icons/logo-inactive-24.png",
+			"32": "icons/logo-inactive-32.png"
 		},
 		"default_title": "Netify (inactive)"
+	},
+	"background": {
+		"service_worker": "background.js"
 	},
 	"permissions": [
 		"debugger",

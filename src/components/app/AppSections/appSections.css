@@ -1,7 +1,8 @@
-@keyframes showFloatingSection {
+@keyframes show-floating-section {
 	from {
 		transform: translateX(100%);
 	}
+
 	to {
 		transform: translateX(0);
 	}
@@ -14,9 +15,9 @@
 }
 
 .section {
+	flex-shrink: 0;
 	position: relative;
 	height: 100%;
-	flex-shrink: 0;
 
 	&.main {
 		flex-grow: 1;
@@ -37,10 +38,10 @@
 	bottom: 0;
 	min-width: 100px;
 	max-width: calc(100% - 300px);
-	background: var(--color-bg-main);
 	border-left: var(--color-brd-strong) 1px solid;
+	background: var(--color-bg-main);
 	box-shadow: 0 10px 10px 1px var(--color-shadow-overlay-strong);
-	animation: showFloatingSection 0.12s ease-out;
+	animation: show-floating-section 0.12s ease-out;
 
 	&.overlay {
 		min-width: min(calc(100vw - 24px), 320px);
@@ -48,12 +49,12 @@
 }
 
 .separator {
+	flex-shrink: 0;
 	position: relative;
 	width: 1px;
-	flex-shrink: 0;
+	z-index: 1;
 	background: var(--color-brd-strong);
 	cursor: col-resize;
-	z-index: 1;
 
 	&::before {
 		content: '';
@@ -69,6 +70,7 @@
 		left: -6px;
 		right: -6px;
 	}
+
 	&:active::before {
 		left: -10000px;
 		right: -10000px;

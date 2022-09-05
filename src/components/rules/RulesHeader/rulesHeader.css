@@ -1,10 +1,15 @@
+.activeTitle {
+	font-weight: 700;
+	color: var(--color-focus);
+}
+
 .control {
-	margin: 0 2px 0 6px;
+	margin: 0 2px 0 4px;
 }
 
 .separator {
-	height: 16px;
 	width: 1px;
+	height: 16px;
 	margin: 0 2px 0 6px;
 	background-color: var(--color-brd-separator);
 }
