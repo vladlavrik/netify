@@ -4,7 +4,6 @@ import {TextButton} from '@/components/@common/buttons/TextButton';
 import {FieldError} from '@/components/@common/forms/FieldError';
 import {TextField} from '@/components/@common/forms/TextField';
 import {Dropdown, useDropdownExpansion} from '@/components/@common/misc/Dropdown';
-import {FieldRow} from '@/components/forms/common/FieldRow';
 import styles from './ruleEndpointField.css';
 
 interface RuleEndpointFieldProps {
@@ -14,7 +13,7 @@ interface RuleEndpointFieldProps {
 export const RuleEndpointField = memo<RuleEndpointFieldProps>(({name}) => {
 	const [macrosDDExpanded, macrosDDActions] = useDropdownExpansion();
 
-	const [, , {setValue}] = useField(name);
+	const [field, , {setValue}] = useField(name);
 
 	const endpointFieldRef = useRef<HTMLInputElement>(null);
 
@@ -36,66 +35,64 @@ export const RuleEndpointField = memo<RuleEndpointFieldProps>(({name}) => {
 	);
 
 	return (
-		<FieldRow title='Endpoint:'>
-			<div className={styles.row}>
-				<TextField
-					ref={endpointFieldRef}
-					className={styles.field}
-					name={name}
-					placeholder='Redirect a request by the new url'
-					suffixChildren={
-						<Dropdown
-							className={styles.macros}
-							expanded={macrosDDExpanded}
-							target={
-								<TextButton
-									className={styles.macrosButton}
-									tabIndex={-1}
-									onClick={macrosDDActions.handleExpansionSwitch}>
-									{macrosDDExpanded ? 'close' : 'add macros'}
-								</TextButton>
-							}
-							preferExpansionAlignX='start'
-							onCollapse={macrosDDActions.handleCollapse}>
-							<div className={styles.macrosPicker}>
-								<TextButton
-									className={styles.macrosOption}
-									data-value='[protocol]'
-									onClick={handleMacrosInsert}>
-									Protocol
-								</TextButton>
-								<TextButton
-									className={styles.macrosOption}
-									data-value='[hostname]'
-									onClick={handleMacrosInsert}>
-									Hostname
-								</TextButton>
-								<TextButton
-									className={styles.macrosOption}
-									data-value='[port]'
-									onClick={handleMacrosInsert}>
-									Port
-								</TextButton>
-								<TextButton
-									className={styles.macrosOption}
-									data-value='[path]'
-									onClick={handleMacrosInsert}>
-									Path
-								</TextButton>
-								<TextButton
-									className={styles.macrosOption}
-									data-value='[query]'
-									onClick={handleMacrosInsert}>
-									Query
-								</TextButton>
-							</div>
-						</Dropdown>
-					}
-				/>
+		<div className={styles.root}>
+			<TextField
+				ref={endpointFieldRef}
+				className={styles.field}
+				placeholder='Redirect a request by the new url'
+				suffixChildren={
+					<Dropdown
+						className={styles.macros}
+						expanded={macrosDDExpanded}
+						target={
+							<TextButton
+								className={styles.macrosButton}
+								tabIndex={-1}
+								onClick={macrosDDActions.handleExpansionSwitch}>
+								{macrosDDExpanded ? 'close' : 'add macros'}
+							</TextButton>
+						}
+						preferExpansionAlignX='start'
+						onCollapse={macrosDDActions.handleCollapse}>
+						<div className={styles.macrosPicker}>
+							<TextButton
+								className={styles.macrosOption}
+								data-value='[protocol]'
+								onClick={handleMacrosInsert}>
+								Protocol
+							</TextButton>
+							<TextButton
+								className={styles.macrosOption}
+								data-value='[hostname]'
+								onClick={handleMacrosInsert}>
+								Hostname
+							</TextButton>
+							<TextButton
+								className={styles.macrosOption}
+								data-value='[port]'
+								onClick={handleMacrosInsert}>
+								Port
+							</TextButton>
+							<TextButton
+								className={styles.macrosOption}
+								data-value='[path]'
+								onClick={handleMacrosInsert}>
+								Path
+							</TextButton>
+							<TextButton
+								className={styles.macrosOption}
+								data-value='[query]'
+								onClick={handleMacrosInsert}>
+								Query
+							</TextButton>
+						</div>
+					</Dropdown>
+				}
+				{...field}
+			/>
 
-				<FieldError name={name} />
-			</div>
-		</FieldRow>
+			<FieldError name={name} />
+		</div>
 	);
 });
 

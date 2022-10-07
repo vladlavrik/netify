@@ -98,7 +98,7 @@ export class PanelApplicationManager {
 				rules: toJS(rulesStore.list), // Used "list" instead of "activeRules" to workaround mobx bug: reaction not fired
 			}),
 			async ({debuggingEnabled, currentOrigin}) => {
-				const rules = rulesStore.activeRules;
+				const rules = rulesStore.activeRules.map((item) => toJS(item));
 				const debuggingActive = debuggerStateStore.active;
 				const debuggingShouldBeActive = debuggingEnabled && rules.length !== 0;
 
@@ -124,7 +124,7 @@ export class PanelApplicationManager {
 	}
 
 	private async enableDebugging(rules: Rule[], currentOrigin: string) {
-		this.fetchRulesStore.setRulesList(toJS(rules));
+		this.fetchRulesStore.setRulesList(rules);
 		this.fetchRulesStore.setCurrentOrigin(currentOrigin);
 		await this.devtoolsConnector.initialize();
 		await this.fetchDevtools.enable();

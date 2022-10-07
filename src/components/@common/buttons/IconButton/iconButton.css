@@ -11,11 +11,21 @@
 	user-select: none;
 
 	&:focus {
+		outline: none;
+	}
+
+	&:focus-visible {
 		outline: var(--color-focus) solid 1px;
 	}
 
 	&:hover {
 		color: var(--color-content);
+	}
+
+	&.isOutline {
+		padding: 0 8px 0 2px;
+		border: var(--color-brd-main) 1px solid;
+		border-radius: 3px;
 	}
 }
 
@@ -38,6 +48,7 @@
 
 .title {
 	padding: 0 2px 0 6px;
+	white-space: nowrap;
 }
 
 .tooltip {

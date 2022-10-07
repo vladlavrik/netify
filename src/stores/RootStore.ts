@@ -1,19 +1,19 @@
-import {RulesMapper} from '@/services/rulesMapper';
-import {AppUiStore} from '@/stores/AppUiStore';
-import {DebuggerStateStore} from '@/stores/DebuggerStateStore';
-import {LogsStore} from '@/stores/LogsStore';
-import {RulesStore} from '@/stores/RulesStore';
+import type {RulesMapper} from '@/services/rulesMapper';
+import {AppUiStore} from './AppUiStore';
+import {DebuggerStateStore} from './DebuggerStateStore';
+import {LogsStore} from './LogsStore';
+import {RulesStore} from './RulesStore';
 
 export class RootStore {
 	appUiStore: AppUiStore;
 	debuggerStateStore: DebuggerStateStore;
-	logsStore: LogsStore;
 	rulesStore: RulesStore;
+	logsStore: LogsStore;
 
-	constructor({rulesMapper}: {rulesMapper: RulesMapper}) {
+	constructor({rulesMapper}: {rulesMapper: RulesMapper;}) {
 		this.appUiStore = new AppUiStore();
 		this.debuggerStateStore = new DebuggerStateStore();
-		this.logsStore = new LogsStore();
 		this.rulesStore = new RulesStore(rulesMapper);
+		this.logsStore = new LogsStore();
 	}
 }

@@ -1,5 +1,5 @@
 import React, {memo} from 'react';
-import {FieldArray, getIn} from 'formik';
+import {Field, FieldArray, FieldProps, getIn} from 'formik';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {FieldError} from '@/components/@common/forms/FieldError';
 import {TextField} from '@/components/@common/forms/TextField';
@@ -38,17 +38,17 @@ export const KeyValueArrayField = memo<KeyValueArrayFieldProps>((props) => {
 						// eslint-disable-next-line react/no-array-index-key
 						<li key={index} className={styles.item}>
 							<div className={styles.entry}>
-								<TextField
-									className={styles.field}
-									name={`${name}[${index}].${keyNameSuffix}`}
-									placeholder={keyPlaceholder}
-								/>
+								<Field name={`${name}[${index}].${keyNameSuffix}`}>
+									{({field}: FieldProps) => (
+										<TextField className={styles.field} placeholder={keyPlaceholder} {...field} />
+									)}
+								</Field>
 
-								<TextField
-									className={styles.field}
-									name={`${name}[${index}].${valueNameSuffix}`}
-									placeholder={valuePlaceholder}
-								/>
+								<Field name={`${name}[${index}].${valueNameSuffix}`}>
+									{({field}: FieldProps) => (
+										<TextField className={styles.field} placeholder={valuePlaceholder} {...field} />
+									)}
+								</Field>
 
 								{index === list.length - 1 ? (
 									<IconButton

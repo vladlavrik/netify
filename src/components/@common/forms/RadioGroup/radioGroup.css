@@ -1,0 +1,10 @@
+.root {
+	display: flex;
+	flex-wrap: wrap;
+	margin-bottom: 8px;
+}
+
+.option {
+	margin-right: 16px;
+	white-space: nowrap;
+}

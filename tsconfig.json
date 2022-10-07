@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"target": "ES2018",
 		"module": "ES2015",
-		"lib": ["esnext", "dom"],
+		"lib": ["esnext", "dom", "dom.iterable"],
 		"jsx": "react",
 		"sourceMap": true,
 		"strict": true,

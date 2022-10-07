@@ -1,17 +1,27 @@
 import React, {memo} from 'react';
 import {RuleActionsType} from '@/constants/RuleActionsType';
-import {ResponseBodyField} from '@/components/forms/common/ResponseBodyField';
-import {SetHeadersField} from '@/components/forms/common/SetHeadersField';
-import {StatusCodeField} from '@/components/forms/common/StatusCodeField';
+import {ResponseBodyField} from '@/components/@common/formsKit/ResponseBodyField';
+import {SetHeadersField} from '@/components/@common/formsKit/SetHeadersField';
+import {StatusCodeField} from '@/components/@common/formsKit/StatusCodeField';
+import {RuleRow} from '../RuleRow';
 
 export const RuleActionLocalResponse = memo(() => {
 	const namePrefix = `actionConfigs.${RuleActionsType.LocalResponse}`;
 
 	return (
 		<div>
-			<StatusCodeField name={`${namePrefix}.statusCode`} />
-			<SetHeadersField name={`${namePrefix}.headers`} />
-			<ResponseBodyField name={`${namePrefix}.body`} />
+			<RuleRow title='Status code:'>
+				<StatusCodeField name={`${namePrefix}.statusCode`} />
+			</RuleRow>
+			<RuleRow title='Set headers:'>
+				<SetHeadersField name={`${namePrefix}.headers`} />
+			</RuleRow>
+			<RuleRow title='Body:'>
+				<ResponseBodyField
+					name={`${namePrefix}.body`}
+					fileFieldNote='Body replacing will also rewrites "Content-Type" header'
+				/>
+			</RuleRow>
 		</div>
 	);
 });

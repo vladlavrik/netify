@@ -1,26 +1,27 @@
-import React, {memo, useCallback, useState} from 'react';
+import React, {memo, useState} from 'react';
+import {useField} from 'formik';
 import {requestMethodsList} from '@/constants/RequestMethod';
 import {resourceTypesList} from '@/constants/ResourceType';
 import {IconButton} from '@/components/@common/buttons/IconButton';
-import {SelectField} from '@/components/@common/forms/SelectField';
+import {MultiselectField} from '@/components/@common/forms/MultiselectField';
 import {TextField} from '@/components/@common/forms/TextField';
 import {PopUpAlert} from '@/components/@common/popups/PopUpAlert';
-import {FieldRow} from '@/components/forms/common/FieldRow';
+import {RuleRow} from '../RuleRow';
 import InfoIcon from './icons/info.svg';
 import styles from './ruleFilter.css';
 
 export const RuleFilter = memo(() => {
 	const [urlHintShown, setUrlHintShown] = useState(false);
+	const [urlField] = useField('filter.url');
 
-	const handleUrlHintShow = useCallback(() => setUrlHintShown(true), []);
-	const handleUrlHintHide = useCallback(() => setUrlHintShown(false), []);
+	const handleUrlHintShow = () => setUrlHintShown(true);
+	const handleUrlHintHide = () => setUrlHintShown(false);
 
 	return (
-		<FieldRow className={styles.root} title='Request filter:'>
+		<RuleRow className={styles.root} title='Request filter:'>
 			<div className={styles.fields}>
 				<TextField
 					className={styles.urlField}
-					name='filter.url'
 					placeholder='Url'
 					suffixChildren={
 						<IconButton
@@ -31,16 +32,17 @@ export const RuleFilter = memo(() => {
 							onClick={handleUrlHintShow}
 						/>
 					}
+					{...urlField}
 				/>
 
-				<SelectField
+				<MultiselectField
 					className={styles.resourceTypesField}
 					name='filter.resourceTypes'
 					options={resourceTypesList}
 					multiple
 					placeholder='Any resource'
 				/>
-				<SelectField
+				<MultiselectField
 					className={styles.methodsField}
 					name='filter.methods'
 					options={requestMethodsList}
@@ -65,7 +67,7 @@ export const RuleFilter = memo(() => {
 					</PopUpAlert>
 				)}
 			</div>
-		</FieldRow>
+		</RuleRow>
 	);
 });
 

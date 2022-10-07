@@ -13,7 +13,7 @@ export class RulesLocalMapper implements RulesMapper {
 	private list: RuleItem[] = [];
 
 	async saveNewItem(rule: Rule, origin: string) {
-		this.list.push({rule, origin});
+		this.list.unshift({rule, origin});
 	}
 
 	async saveNewMultipleItems(rules: Rule[], origin: string) {

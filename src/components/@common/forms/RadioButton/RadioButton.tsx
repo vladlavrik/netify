@@ -1,31 +1,20 @@
-import React, {FC, ReactNode} from 'react';
+import React, {FC} from 'react';
 import cn from 'classnames';
-import {useField} from 'formik';
 import styles from './radioButton.css';
 
-interface RadioButtonProps {
-	className?: string;
+type NativeInputProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
+
+export interface RadioButtonProps extends Omit<NativeInputProps, 'ref' | 'type'> {
 	name: string;
 	value: string | undefined;
-	disabled?: boolean;
-	children?: ReactNode;
 }
 
-export const RadioButton: FC<RadioButtonProps> = ({className, name, value, disabled, children}) => {
-	const [{value: currentValue, onChange, onBlur}] = useField<string | undefined>(name);
+export const RadioButton: FC<RadioButtonProps> = (props) => {
+	const {className, children, ...nativeProps} = props;
 
 	return (
 		<label className={cn(styles.root, className)}>
-			<input
-				className={styles.input}
-				name={name}
-				type='radio'
-				value={value}
-				disabled={disabled}
-				checked={value === currentValue}
-				onChange={onChange}
-				onBlur={onBlur}
-			/>
+			<input className={styles.input} type='radio' {...nativeProps} />
 			<div className={styles.imitator} />
 			<p className={styles.label}>{children}</p>
 		</label>

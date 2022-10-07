@@ -1,25 +1,7 @@
 .root {
 	position: relative;
 	width: 80px;
-	font-size: 12px;
 	color: var(--color-main);
-}
-
-.label {
-	position: relative;
-	width: 100%;
-	padding: 0 18px 0 6px;
-	border: transparent 1px solid;
-	border-radius: 3px;
-	overflow: hidden;
-	line-height: 18px;
-	font-size: 11px;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	text-align: left;
-	color: inherit;
-	background: var(--color-bg-main);
-	user-select: none;
 
 	&::after {
 		content: '';
@@ -32,69 +14,33 @@
 		background: var(--color-placeholder);
 		clip-path: polygon(0 0, 100% 0, 50% 100%);
 	}
+}
 
-	&.empty {
-		color: var(--color-placeholder);
-	}
+.field {
+	appearance: none;
+	position: relative;
+	width: 100%;
+	padding: 0 18px 0 6px;
+	border: transparent 1px solid;
+	border-radius: 3px;
+	overflow: hidden;
+	line-height: 18px;
+	font-size: 11px;
+	color: inherit;
+	background: var(--color-bg-main);
+	user-select: none;
 
 	&:focus {
+		outline: none;
+	}
+
+	&:focus-visible {
 		border-color: var(--color-focus);
 		outline: none;
 	}
-}
 
-.content {
-	position: absolute;
-	left: 0;
-	right: 0;
-	box-sizing: border-box;
-	padding: 2px 0;
-	border: var(--color-brd-outline) 1px solid;
-	border-radius: 3px;
-	overflow-y: auto;
-	z-index: 2;
-	color: var(--color-main);
-	background: var(--color-bg-main);
-	box-shadow: 0 1px 3px 1px var(--color-shadow-overlay-lite);
-	overscroll-behavior: contain;
-	user-select: none;
-
-	&::-webkit-scrollbar {
-		width: 6px;
-		background-color: transparent;
-	}
-
-	&.expand-to-start {
-		bottom: 100%;
-	}
-
-	&.expand-to-end {
-		top: 100%;
-	}
-}
-
-.option {
-	display: block;
-	padding: 0 6px;
-	overflow: hidden;
-	line-height: 20px;
-	font-size: 12px;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	color: var(--color-main);
-	cursor: pointer;
-
-	&.empty {
+	/* Selected an empty value */
+	&:has(.option[value='']:checked) {
 		color: var(--color-placeholder);
-	}
-
-	&.selected {
-		background: #aaa5; /* TODO check with a light theme, maybe should use --color-bg-accent */
-	}
-
-	&:hover,
-	&.highlighted {
-		color: var(--color-inside-focus);
-		background: var(--color-focus);
 	}
 }

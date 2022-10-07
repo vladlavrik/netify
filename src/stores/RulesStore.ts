@@ -107,7 +107,7 @@ export class RulesStore {
 	}
 
 	addRules(rules: Rule[]) {
-		this.list.push(...rules);
+		this.list.unshift(...rules);
 	}
 
 	patchRule(data: Rule) {
@@ -264,10 +264,19 @@ export class RulesStore {
 	}
 
 	async exportRules() {
+		let saveResult;
 		try {
-			await new RulesExporter().export(this.selectedRules);
+			saveResult = await new RulesExporter().export(this.selectedRules);
 		} catch (error) {
+			console.log('Can`t export rules due uncaught error');
 			console.error(error);
+			return;
+		}
+
+		if (!saveResult.success) {
+			console.log('Can`t export rules error');
+			console.error(saveResult.error);
+			return;
 		}
 
 		this.finishExport();
