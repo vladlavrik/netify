@@ -2,10 +2,18 @@ import {Protocol} from 'devtools-protocol';
 import {RequestBodyType} from '@/constants/RequestBodyType';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {RequestBody} from '@/interfaces/body';
+import {RequestBreakpointInput} from '@/interfaces/breakpoint';
+import {HeadersArray} from '@/interfaces/headers';
 import {MutationRuleAction} from '@/interfaces/rule';
 import {randomHex} from '@/helpers/random';
 import {headersMapToArray, patchHeaders} from './helpers/headers';
-import {buildRequestBodyFromMultipartForm, buildRequestBodyFromText, buildRequestBodyFromUrlEncodedForm} from './helpers/postData'; // prettier-ignore
+import {
+	buildRequestBodyFromMultipartForm,
+	buildRequestBodyFromText,
+	buildRequestBodyFromUrlEncodedForm,
+	parseUrlEncodedForm,
+	parseUrlMultipartForm,
+} from './helpers/postData';
 import {compileUrlFromPattern} from './helpers/url';
 
 type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
@@ -49,12 +57,57 @@ export class RequestBuilder {
 		return new this(requestId, url, method, headers, patch.body);
 	}
 
-	static asBreakpointExecute() {
-		// TODO FUTURE
+	static asBreakpointExecute(
+		requestId: string,
+		{url, method, headers, body}: {url: string; method: RequestMethod; headers: HeadersArray; body?: RequestBody},
+	) {
+		return new this(requestId, url, method, headers, body);
 	}
 
-	static compileBreakpoint() {
-		// TODO FUTURE
+	static compileBreakpoint({request}: RequestPausedEvent): RequestBreakpointInput {
+		let body: RequestBody | undefined;
+		const contentType = new Headers(request.headers).get('content-type');
+
+		if (!request.postData) {
+			body = undefined;
+		} else if (contentType === 'application/x-www-form-urlencoded') {
+			try {
+				body = {
+					type: RequestBodyType.UrlEncodedForm,
+					value: parseUrlEncodedForm(request.postData),
+				};
+			} catch (error) {
+				console.error(error);
+			}
+		} else if (contentType && contentType.startsWith('multipart/form-data')) {
+			const boundary = contentType
+				.split(/; ?/)
+				.map((part) => part.split('='))
+				.find(([key]) => key === 'boundary')?.[1];
+
+			if (boundary) {
+				try {
+					body = {
+						type: RequestBodyType.MultipartFromData,
+						value: parseUrlMultipartForm(request.postData, boundary),
+					};
+				} catch (error) {
+					console.error(error);
+				}
+			}
+		} else {
+			body = {
+				type: RequestBodyType.Text,
+				value: request.postData || '',
+			};
+		}
+
+		return {
+			url: request.url,
+			method: request.method as RequestMethod,
+			headers: Object.entries(request.headers).map(([name, value]) => ({name, value})),
+			body,
+		};
 	}
 
 	private constructor(

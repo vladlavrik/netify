@@ -31,6 +31,9 @@ import '@/style/page.css';
 
 	// Initialize the stores
 	const rootStore = new RootStore({rulesMapper});
+	if (process.env.NODE_ENV === 'development') {
+		(window as any).__store = rootStore;
+	}
 
 	// Create the panel application manager
 	const panelApplicationManager = new PanelApplicationManager(

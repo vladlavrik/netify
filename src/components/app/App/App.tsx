@@ -1,22 +1,22 @@
 import React, {useMemo} from 'react';
 import {createPortal} from 'react-dom';
 import {observer} from 'mobx-react-lite';
+import {Breakpoint} from '@/components/forms/breakpoint';
 import {RuleCompose, RuleEditor} from '@/components/forms/rule';
 import {Logs} from '@/components/logs';
 import {Rules} from '@/components/rules';
 import {RuleViewer} from '@/components/ruleViewer';
-import {RuleCompose, RuleEditor} from '@/components/forms/rule';
-import {BreakpointRequest, BreakpointResponse} from '@/components/forms/breakpoint';
 import {useStores} from '@/stores/useStores';
 import {AppHeader} from '../AppHeader';
 import {AppSections} from '../AppSections';
 import styles from './app.css';
 
 export const App = observer(() => {
-	const {rulesStore} = useStores();
+	const {rulesStore, breakpointsStore} = useStores();
 	const {composeShown} = rulesStore;
 	const editorShown = !!rulesStore.editorShownFor;
 	const detailsShown = !!rulesStore.detailsShownFor;
+	const breakpointShown = breakpointsStore.hasBreakpoint;
 
 	const modalTarget = useMemo(() => document.getElementById('modal-root')!, []);
 
@@ -37,7 +37,7 @@ export const App = observer(() => {
 
 			{editorShown && createPortal(<RuleEditor />, modalTarget)}
 
-			{editorShown && createPortal(<BreakpointRequest />, modalTarget)}
+			{breakpointShown && createPortal(<Breakpoint />, modalTarget)}
 		</div>
 	);
 });

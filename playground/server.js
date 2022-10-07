@@ -7,6 +7,7 @@ const port = 7000;
 const staticServer = new nodeStatic.Server(path.join(__dirname, './assets'), {
 	headers: {
 		'X-Bar': 'foo',
+		'Set-Cookie': `testcookie=value.time:${new Date().toLocaleTimeString()}; Max-Age=99999; Path=/`,
 	},
 });
 

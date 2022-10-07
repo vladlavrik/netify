@@ -1,0 +1,42 @@
+.root {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	box-sizing: border-box;
+	overflow: auto;
+	z-index: 101;
+	background: var(--color-bg-lite);
+}
+
+.header {
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	min-width: 320px;
+	padding: 12px 8px;
+	border-bottom: var(--color-brd-lite) 1px solid;
+	overflow: hidden;
+}
+
+.title {
+	flex-shrink: 0;
+	margin-right: 12px;
+	line-height: 20px;
+	font-size: 12px;
+	font-weight: 700;
+	color: var(--color-main);
+}
+
+.requestInfo {
+	overflow: hidden;
+	font-size: 12px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	color: var(--color-content-accent);
+}
+
+.requestSelect {
+	flex-grow: 1;
+}

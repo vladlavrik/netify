@@ -4,13 +4,20 @@ import {ResourceType} from '@/constants/ResourceType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {StatusCode} from '@/constants/StatusCode';
+import {Breakpoint} from '@/interfaces/breakpoint';
 import {LogEntry} from '@/interfaces/log';
-import {FailureRuleAction, LocalResponseRuleAction, MutationRuleAction, Rule} from '@/interfaces/rule';
+import {
+	BreakpointRuleAction,
+	FailureRuleAction,
+	LocalResponseRuleAction,
+	MutationRuleAction,
+	Rule,
+} from '@/interfaces/rule';
 import {DevtoolsConnector} from '@/services/devtools';
 import {Event} from '@/helpers/Events';
 import {FetchRuleStore} from './FetchRuleStore';
 import {RequestBuilder} from './RequestBuilder';
-import {ResponseBuilder} from './ResponseBuilder';
+import {ResponseBuilder, ResponsePausedEvent} from './ResponseBuilder';
 
 type EnableRequest = Protocol.Fetch.EnableRequest;
 type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
@@ -21,13 +28,12 @@ type FailRequestRequest = Protocol.Fetch.FailRequestRequest;
 
 /**
  * The service provides requests interception by rule filters and:
- * - patching they by the rules
+ * - patching them by the rules
  * - triggering breakpoints and continue them with a mutated data
  */
 export class FetchDevtools {
 	readonly events = {
 		requestProcessed: new Event<LogEntry>(),
-		requestProcessed: new Event<Log>(),
 		requestBreakpoint: new Event<Breakpoint>(),
 	};
 
@@ -83,34 +89,12 @@ export class FetchDevtools {
 		if (!pausedRequest.hasOwnProperty('responseStatusCode')) {
 			await this.processRequest(pausedRequest, rule);
 		} else {
-			await this.processResponse(pausedRequest, rule);
+			await this.processResponse(pausedRequest as ResponsePausedEvent, rule);
 		}
 	}
 
 	private async processRequest(pausedRequest: RequestPausedEvent, rule: Rule) {
 		const {requestId, request, resourceType} = pausedRequest;
-
-		switch (rule.action.type) {
-			// Trigger breakpoint event
-			case RuleActionsType.Breakpoint:
-				this.triggerRequestBreakpoint(pausedRequest);
-				break;
-
-			// Response locally without sending request to server
-			case RuleActionsType.LocalResponse:
-				this.processLocalResponse(requestId, rule.action);
-				break;
-
-			// Mutate request by the rule and send it to a server
-			case RuleActionsType.Mutation:
-				this.processRequestMutation(pausedRequest, rule.action);
-				break;
-
-			// Failure request
-			case RuleActionsType.Failure:
-				this.processRequestFailure(requestId, rule.action);
-				break;
-		}
 
 		// Report to UI logger about the new handled request
 		this.events.requestProcessed.emit({
@@ -122,33 +106,88 @@ export class FetchDevtools {
 			method: request.method as RequestMethod,
 			resourceType: resourceType as ResourceType,
 		});
-	}
 
-	private async processRequestFailure(requestId: string, action: FailureRuleAction) {
-	private async processResponse(pausedResponse: ResponsePausedEvent, rule: Rule) {
 		switch (rule.action.type) {
+			// Trigger breakpoint event
 			case RuleActionsType.Breakpoint:
-				this.triggerResponseBreakpoint(pausedResponse);
+				await this.triggerRequestBreakpoint(pausedRequest, rule.action);
 				break;
 
+			// Response locally without sending request to server
+			case RuleActionsType.LocalResponse:
+				await this.processLocalResponse(requestId, rule.action);
+				break;
+
+			// Mutate request by the rule and send it to a server
 			case RuleActionsType.Mutation:
-				this.processResponseMutation(pausedResponse, rule.action, rule.id);
+				await this.processRequestMutation(pausedRequest, rule.action);
+				break;
+
+			// Failure request
+			case RuleActionsType.Failure:
+				await this.processRequestFailure(requestId, rule.action);
 				break;
 		}
 	}
 
-	private triggerRequestBreakpoint(pausedRequest: RequestPausedEvent) {
-		const breakpoint = RequestBuilder.compileBreakpoint(pausedRequest);
-		this.events.requestBreakpoint.emit(breakpoint);
+	private async processResponse(pausedResponse: ResponsePausedEvent, rule: Rule) {
+		switch (rule.action.type) {
+			case RuleActionsType.Breakpoint:
+				await this.triggerResponseBreakpoint(pausedResponse, rule.action);
+				break;
+
+			case RuleActionsType.Mutation:
+				await this.processResponseMutation(pausedResponse, rule.action, rule.id);
+				break;
+		}
 	}
 
-	private async triggerResponseBreakpoint(pausedResponse: ResponsePausedEvent) {
+	private async triggerRequestBreakpoint(pausedRequest: RequestPausedEvent, action: BreakpointRuleAction) {
+		const {requestId} = pausedRequest;
+		if (!action.request) {
+			await this.continueRequest({requestId});
+			return;
+		}
+
+		const data = RequestBuilder.compileBreakpoint(pausedRequest);
+		this.events.requestBreakpoint.emit({
+			stage: 'Request',
+			requestId,
+			data,
+			continue: async (params) => {
+				const builder = RequestBuilder.asBreakpointExecute(requestId, params);
+				const continueParams = builder.build();
+				return this.continueRequest(continueParams);
+			},
+			failure: async (errorReason) => {
+				return this.failRequest({requestId, errorReason});
+			},
+		});
+	}
+
+	private async triggerResponseBreakpoint(pausedResponse: ResponsePausedEvent, action: BreakpointRuleAction) {
+		const {requestId} = pausedResponse;
+
+		if (!action.response) {
+			await this.continueRequest({requestId});
+			return;
+		}
+
 		const {body, base64Encoded} = await this.getResponseBody(pausedResponse.requestId);
-		const breakpoint = ResponseBuilder.compileBreakpoint(pausedResponse, body, base64Encoded);
-		this.events.requestBreakpoint.emit(breakpoint);
+		const data = ResponseBuilder.compileBreakpoint(pausedResponse, body, base64Encoded);
+		this.events.requestBreakpoint.emit({
+			stage: 'Response',
+			requestId,
+			data,
+			fulfill: async (params) => {
+				const builder = ResponseBuilder.asBreakpointExecute(requestId, params);
+				const fulfilParams = await builder.build();
+				return this.fulfillRequest(fulfilParams);
+			},
+		});
 	}
 
-	private async processRequestFailure(requestId: string, action: FailureAction) {
+	private async processRequestFailure(requestId: string, action: FailureRuleAction) {
 		const errorReason = action.reason;
 		await this.failRequest({requestId, errorReason});
 	}
@@ -165,25 +204,11 @@ export class FetchDevtools {
 		await this.continueRequest(continueParams);
 	}
 
-	private async processResponse(pausedRequest: RequestPausedEvent, rule: Rule) {
-		switch (rule.action.type) {
-			case RuleActionsType.Breakpoint:
-				// TODO FUTURE
-				break;
-
-			case RuleActionsType.Mutation:
-				this.processResponseMutation(pausedRequest, rule.action, rule.id);
-				break;
-		}
-	}
-
 	private async processResponseMutation(
-		pausedRequest: RequestPausedEvent,
+		pausedResponse: ResponsePausedEvent,
 		action: MutationRuleAction,
 		ruleId: string,
 	) {
-		const {requestId, request, resourceType} = pausedRequest;
-	private async processResponseMutation(pausedResponse: ResponsePausedEvent, action: MutationAction, ruleId: string) {
 		const {requestId, request, resourceType} = pausedResponse;
 		const {statusCode, setHeaders, dropHeaders, body} = action.response;
 
@@ -198,7 +223,7 @@ export class FetchDevtools {
 
 		const mutation = {...action.response};
 
-		// If a body value is not defined by the rule, get an original body, because response body if required to fullfill request
+		// If a body value is not defined by the rule, get an original body, because response body if required to fulfill request
 		if (!mutation.body) {
 			const {body: value, base64Encoded} = await this.getResponseBody(requestId);
 			mutation.body = {
@@ -208,8 +233,7 @@ export class FetchDevtools {
 		}
 
 		// Build the response from the original response data and patch from the rule
-		const builder = ResponseBuilder.asResponsePatch(pausedRequest, mutation);
-		const builder = ResponseBuilder.asResponsePatch(pausedResponse, action);
+		const builder = ResponseBuilder.asResponsePatch(pausedResponse, mutation);
 		const fulfilParams = await builder.build();
 		await this.fulfillRequest(fulfilParams);
 
@@ -229,6 +253,11 @@ export class FetchDevtools {
 		return this.devtools.sendCommand<{}, GetResponseBodyResponse>('Fetch.getResponseBody', {requestId});
 	}
 
+	/**
+	 * Continue request
+	 * Can be passed only requestId without other params to continue the request without changes,
+	 * in this case it can be used to continue request on response stage too
+	 */
 	private async continueRequest(params: ContinueRequestRequest) {
 		this.log('continue request with params %o', params);
 		await this.devtools.sendCommand('Fetch.continueRequest', params);
@@ -237,7 +266,7 @@ export class FetchDevtools {
 	private async fulfillRequest(params: FulfillRequestRequest) {
 		this.log('fulfill request with params %o', params);
 
-		// Using custom status codes phrase map because build  in dictionary is too poor and throws exception when user pass unknown status code
+		// Using custom status codes phrase map because build in dictionary is too poor and throws exception when user pass unknown status code
 		params.responsePhrase = params.responsePhrase || StatusCode[params.responseCode] || 'UNKNOWN';
 		await this.devtools.sendCommand('Fetch.fulfillRequest', params);
 	}
@@ -245,10 +274,6 @@ export class FetchDevtools {
 	private async failRequest(params: FailRequestRequest) {
 		this.log('fail request with params %o', params);
 		await this.devtools.sendCommand('Fetch.failRequest', params);
-	}
-
-	private async getResponseBody(requestId: string) {
-		return this.devtools.sendCommand<{}, GetResponseBodyResponse>('Fetch.getResponseBody', {requestId});
 	}
 
 	private log(message: string, ...data: any[]) {

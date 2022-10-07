@@ -9,6 +9,7 @@
 		<button onClick="fetchText()">Fetch text</button>
 		<button onClick="fetchJSON()">Fetch JSON</button>
 		<button onClick="postText()">Post text</button>
+		<button onClick="postFile()">Post File</button>
 		<button onClick="postTextMultipartForm()">Post Multipart form</button>
 		<button onClick="postBlobMultipartForm()">Post Multipart blob form</button>
 		<form target="ifr" method="post" action="./test.txt?urlencoded-form">
@@ -64,6 +65,13 @@
 
 			function postText() {
 				fetch('./test.txt', {method: 'POST', body: 'Secret | Секрет | 👻'})
+					.then(logResponse)
+					.then(resp => resp.text())
+					.then(appendTextResult);
+			}
+
+			function postFile() {
+				fetch('./test.txt?file', {method: 'POST', body: new File(['Post data file ❤️'], 'file with love.txt') })
 					.then(logResponse)
 					.then(resp => resp.text())
 					.then(appendTextResult);

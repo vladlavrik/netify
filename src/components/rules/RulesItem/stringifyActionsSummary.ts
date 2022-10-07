@@ -8,11 +8,9 @@ export function stringifyActionsSummary(action: RuleAction) {
 		case RuleActionsType.Breakpoint:
 			if (action.request && action.response) {
 				actions.push('Breakpoint on request and response');
-			}
-			if (action.request) {
+			} else if (action.request) {
 				actions.push('Breakpoint on request');
-			}
-			if (action.response) {
+			} else if (action.response) {
 				actions.push('Breakpoint on response');
 			}
 			break;

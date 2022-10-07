@@ -35,6 +35,7 @@ export class PanelApplicationManager {
 		this.actualizeDebuggerState();
 
 		// Provide communication between internal services and external environment
+		this.listenBreakpoints();
 		this.listenLogs();
 		this.listenTabOriginChange();
 		this.listenExtensionEvents();
@@ -149,6 +150,25 @@ export class PanelApplicationManager {
 		this.fetchDevtools.events.requestProcessed.on((log) => {
 			this.rootStore.logsStore.addLogEntry(log);
 		});
+	}
+
+	/**
+	 * Listen request breakpoints emit to show it in the UI.
+	 * Also listen debugger
+	 */
+	private listenBreakpoints() {
+		this.fetchDevtools.events.requestBreakpoint.on((breakpoint) => {
+			this.rootStore.breakpointsStore.addBreakpoint(breakpoint);
+		});
+
+		reaction(
+			() => this.rootStore.debuggerStateStore.active,
+			(isActive) => {
+				if (!isActive && this.rootStore.breakpointsStore.hasBreakpoint) {
+					this.rootStore.breakpointsStore.resetList();
+				}
+			},
+		);
 	}
 
 	/**

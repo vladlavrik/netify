@@ -1,111 +1,134 @@
-import React, {memo} from 'react';
-import {ResponseBreakpoint} from '@/interfaces/breakpoint';
-import {HeadersArray} from '@/interfaces/headers';
+import React, {useCallback, useEffect, useMemo} from 'react';
+import {FormikProvider, useFormik} from 'formik';
+import {toJS} from 'mobx';
+import {observer} from 'mobx-react-lite';
+import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {ResponseBody} from '@/interfaces/body';
-import {ResponseBodyType, responseBodyTypesList} from '@/constants/ResponseBodyType';
-import {formSchema} from '@/forms/b/responseForm';
-import {Button} from '@/components/@common/buttons/Button';
-import {TextareaField} from '@/components/@common/forms/TextareaField';
+import {ResponseBreakpoint} from '@/interfaces/breakpoint';
+import {IconButton} from '@/components/@common/buttons/IconButton';
 import {KeyValueArrayField} from '@/components/@common/forms/KeyValueArrayField';
-import {TextField} from '@/components/@common/forms/TextField';
-import {RadioTabs} from '@/components/@common/forms/RadioTabs';
-import {FileField} from '@/components/@common/forms/FileField';
-import {FieldError} from '@/components/@common/forms/FieldError';
-import {FieldRow} from '@/components/forms/common/FieldRow';
-import {BreakpointForm} from '../BreakpointForm';
-import styles from './BreakpointResponse.css';
+import {ResponseBodyField} from '@/components/@common/formsKit/ResponseBodyField';
+import {StatusCodeField} from '@/components/@common/formsKit/StatusCodeField';
+import {useStores} from '@/stores/useStores';
+import {BreakpointResponseFormSchema, breakpointResponseFormSchema} from './breakpointResponseFormSchema';
+import ExecuteIcon from './icons/execute.svg';
+import styles from './breakpointResponse.css';
 
-interface Props {
-	data: ResponseBreakpoint;
-	onExecute(mutatedData: ResponseBreakpoint): void;
-	onAbort(breakpoint: ResponseBreakpoint): void;
+interface BreakpointResponseProps {
+	breakpoint: ResponseBreakpoint;
 }
 
-interface BreakpointFormData {
-	requestId: string;
-	url: string;
-	statusCode: number;
-	headers: HeadersArray;
-	body: Omit<ResponseBody, 'type'> & {type?: ResponseBodyType | ''};
-}
+export const BreakpointResponse = observer<BreakpointResponseProps>((props) => {
+	const {breakpoint} = props;
+	const {breakpointsStore} = useStores();
 
-const bodyTypeOptions = responseBodyTypesList.map(type => ({
-	value: type,
-	title: type,
-}));
-
-const bodyTypeOptionsWithEmpty = [{value: '', title: 'Original'}, ...bodyTypeOptions];
-
-export const BreakpointResponse = memo(({data, onExecute, onAbort}: Props) => {
-	const parsedData = React.useMemo<BreakpointFormData>(
-		() => ({
-			...data,
-			headers: [...data.headers, {name: '', value: ''}],
+	const initialValues = useMemo<BreakpointResponseFormSchema>(() => {
+		const {statusCode, headers, body} = breakpoint.data;
+		return {
+			statusCode,
+			headers: toJS(headers),
 			body: {
-				...data.body,
-				type: data.body.type || '',
+				type: body.type,
+				textValue:
+					body.type === ResponseBodyType.Text || body.type === ResponseBodyType.Base64 ? body.value : '',
+				fileValue: body.type === ResponseBodyType.File ? body.value : undefined,
 			},
-		}),
-		[data],
+		};
+	}, [breakpoint.requestId, breakpoint.stage]);
+
+	const handleSubmit = useCallback(
+		(valueSource: BreakpointResponseFormSchema) => {
+			const {statusCode, headers, body: bodySource} = breakpointResponseFormSchema.cast(valueSource);
+
+			let body: ResponseBody;
+
+			switch (bodySource.type) {
+				case ResponseBodyType.File:
+					body = {
+						type: bodySource.type,
+						value: bodySource.fileValue!,
+					};
+					break;
+				case ResponseBodyType.Text:
+				case ResponseBodyType.Base64:
+					body = {
+						type: bodySource.type,
+						value: bodySource.textValue,
+					};
+					break;
+				default:
+					body = {
+						type: ResponseBodyType.Text,
+						value: '',
+					};
+					break;
+			}
+
+			breakpointsStore.removeBreakpoint(breakpoint);
+			breakpoint.fulfill({statusCode, headers, body});
+		},
+		[breakpoint.requestId],
 	);
 
-	const handleAbort = React.useCallback(() => onAbort(data), [data, onAbort]);
+	const form = useFormik({
+		validationSchema: breakpointResponseFormSchema,
+		initialValues,
+		onSubmit: handleSubmit,
+	});
+
+	// Update content type and content length headers on a file value change
+	useEffect(() => {
+		if (!form.values.body.fileValue || form.values.body.fileValue === initialValues.body.fileValue) {
+			return;
+		}
+
+		const setHeader = (name: string, value: string) => {
+			const headerIndex = form.values.headers.findIndex((item) => item.name.toLowerCase() === name.toLowerCase());
+			if (headerIndex !== -1) {
+				form.setFieldValue(`headers.${headerIndex}.value`, value);
+			} else {
+				form.setFieldValue(`headers.${form.values.headers.length}`, {name, value});
+			}
+		};
+
+		const {type, size} = form.values.body.fileValue;
+		setHeader('Content-Type', type);
+		setHeader('Content-Length', size.toString());
+	}, [form.values.body.fileValue]);
+
+	// TODO UPDATE content length on text content change
+	// TODO UPDATE content type on type change
 
 	return (
-		<BreakpointForm<ResponseBreakpoint>
-			data={parsedData}
-			validationSchema={formSchema}
-			title='Request breakpoint'
-			requestId={parsedData.requestId}
-			controls={
-				<>
-					<Button className={styles.buttonExecute} withIcon type='submit'>
-						Execute
-					</Button>
-					<Button className={styles.buttonAbort} withIcon onClick={handleAbort}>
-						Abort
-					</Button>
-				</>
-			}
-			onSubmit={onExecute}>
-			<FieldRow title='Endpoint:'>
-				<TextField className={styles.urlField} name='url' readOnly />
-			</FieldRow>
-			<FieldRow title='Status code:'>
-				<div>
-					{/*TODO type number*/}
-					<TextField className={styles.statusCode} name='statusCode' maxLength={3} />
-					<FieldError name='statusCode' />
+		<FormikProvider value={form}>
+			<form className={styles.root} onSubmit={form.handleSubmit}>
+				<div className={styles.controls}>
+					<IconButton className={styles.control} icon={<ExecuteIcon />} outline type='submit'>
+						Send response
+					</IconButton>
 				</div>
-			</FieldRow>
-			<FieldRow title='Headers:'>
-				<KeyValueArrayField
-					name='headers'
-					keyNameSuffix='name'
-					valueNameSuffix='value'
-					keyPlaceholder='Header name'
-					valuePlaceholder='Header value'
-				/>
-			</FieldRow>
-			<FieldRow title='Body:'>
-				<RadioTabs radioName='body.type' tabs={data.body.type ? bodyTypeOptions : bodyTypeOptionsWithEmpty}>
-					{(tabName: string) => {
-						switch (tabName) {
-							case ResponseBodyType.Text:
-							case ResponseBodyType.Base64:
-								return (
-									<TextareaField className={styles.bodyTextField} name={'body.textValue'} rows={10} />
-								);
 
-							case ResponseBodyType.File:
-								return <FileField name='body.fileValue' />;
-
-							default:
-								return null;
-						}
-					}}
-				</RadioTabs>
-			</FieldRow>
-		</BreakpointForm>
+				<div className={styles.row}>
+					<p className={styles.rowTitle}>Endpoint:</p>
+					<StatusCodeField name='statusCode' />
+				</div>
+				<div className={styles.row}>
+					<p className={styles.rowTitle}>Headers:</p>
+					<KeyValueArrayField
+						name='headers'
+						keyNameSuffix='name'
+						valueNameSuffix='value'
+						keyPlaceholder='Header name'
+						valuePlaceholder='Header value'
+					/>
+				</div>
+				<div className={styles.row}>
+					<p className={styles.rowTitle}>Body:</p>
+					<ResponseBodyField name='body' />
+				</div>
+			</form>
+		</FormikProvider>
 	);
 });
+
+BreakpointResponse.displayName = 'BreakpointResponse';

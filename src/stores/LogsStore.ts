@@ -23,6 +23,17 @@ export class LogsStore {
 	}
 
 	addLogEntry(logEntry: LogEntry) {
+		if (logEntry.interceptStage === 'Response') {
+			const existingEntry = this.list.find(
+				(item) => item.requestId === logEntry.requestId && item.interceptStage === 'Request',
+			);
+
+			if (existingEntry) {
+				existingEntry.interceptStage = 'Both';
+				return;
+			}
+		}
+
 		this.list.push(logEntry);
 	}
 

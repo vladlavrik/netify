@@ -1,0 +1,40 @@
+.root {
+	min-width: 320px;
+}
+
+.controls {
+	display: flex;
+	flex-wrap: wrap;
+	padding: 12px 12px 12px 100px;
+}
+
+.control {
+	margin-right: 12px;
+}
+
+.row {
+	display: flex;
+	align-items: flex-start;
+	padding: 8px;
+}
+
+.rowTitle {
+	flex-shrink: 0;
+	width: 92px;
+	line-height: 20px;
+	font-size: 12px;
+	color: var(--color-main);
+}
+
+.endpointColumn {
+	flex-grow: 1;
+}
+
+.endpointField {
+	width: 100%;
+	margin-bottom: 4px;
+}
+
+.bodyPlaceholder {
+	line-height: 20px;
+}
