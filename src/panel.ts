@@ -15,7 +15,7 @@ import '@/style/page.css';
 	const fetchDevtools = new FetchDevtools(devtoolsConnector, fetchRulesStore);
 
 	// Require the current browser's tab hostname
-	const {origin: tabOrigin} = await tab.getPageUrl(); // TODO use devtools method
+	const {origin: tabOrigin} = await tab.getPageUrl();
 
 	// Prepare database and initialize data mappers
 	let db: IDBDatabase | undefined;
@@ -52,7 +52,7 @@ import '@/style/page.css';
 		document.body.innerHTML = `
 			<h1 style="color: #de0101; font-size: 22px; margin: 16px 12px;">Crash on initialization.</h1>
 			<p style="color: #df0e0e; font-size: 12px; margin: 16px 12px; white-space: pre;">${error}</p>
-			<a style="color: #4672d1; margin: 0 12px;" href="https://github.com/vladlavrik/netify/issues" target=_blank">Click here to report.</a>
+			<a style="color: #4672d1; margin: 0 12px;" href="https://github.com/vladlavrik/netify/issues" target=_blank">Follow link to report.</a>
 		`;
 		throw error;
 	}

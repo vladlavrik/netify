@@ -232,6 +232,7 @@
 					[
 						"react",
 						"react-dom",
+						"^@[\\w-]+(/[\\w-]+)*$", // Other npm modules
 						"^[\\w-]+$", // Other npm modules
 						"^@\\/constants\\/",
 						"^@\\/interfaces\\/",

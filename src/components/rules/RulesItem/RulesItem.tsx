@@ -7,7 +7,7 @@ import {ResourceType} from '@/constants/ResourceType';
 import {Rule} from '@/interfaces/rule';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {Checkbox} from '@/components/@common/forms/Checkbox';
-import {Dropdown, useDropdownExpansion} from '@/components/@common/misc/Dropdown';
+import {Dropdown, DropdownRef} from '@/components/@common/misc/Dropdown';
 import {PopUpConfirm} from '@/components/@common/popups/PopUpConfirm';
 import {useStores} from '@/stores/useStores';
 import {RulesControl} from '../RulesControl';
@@ -57,7 +57,7 @@ export const RulesItem = observer<RulesItemProps>((props) => {
 
 	const actionsSummary = useMemo(() => stringifyActionsSummary(action), [action]);
 
-	const [controlDDExpanded, controlDDActions] = useDropdownExpansion();
+	const dropdownRef = useRef<DropdownRef>(null);
 
 	const handleShowDetails = () => {
 		rulesStore.showDetails(ruleId);
@@ -79,7 +79,7 @@ export const RulesItem = observer<RulesItemProps>((props) => {
 
 	const handleEdit = useCallback(() => {
 		rulesStore.showEditor(ruleId);
-		controlDDActions.handleCollapse();
+		dropdownRef.current!.collapse();
 	}, [ruleId]);
 
 	const handleActiveToggle = useCallback(async () => {
@@ -92,7 +92,7 @@ export const RulesItem = observer<RulesItemProps>((props) => {
 
 	const handleRemove = useCallback(() => {
 		setShowRemoveAsk(true);
-		controlDDActions.handleCollapse();
+		dropdownRef.current!.collapse();
 	}, []);
 
 	const handleRemoveCancel = () => {
@@ -158,21 +158,22 @@ export const RulesItem = observer<RulesItemProps>((props) => {
 
 			{!isExportMode && (
 				<Dropdown
+					ref={dropdownRef}
 					className={styles.control}
-					expanded={controlDDExpanded}
-					target={<IconButton icon={<MoreIcon />} onClick={controlDDActions.handleExpansionSwitch} />}
+					render={(dropdownProps) => <IconButton {...dropdownProps} icon={<MoreIcon />} />}
 					preferExpansionAlignX='start'
-					onCollapse={controlDDActions.handleCollapse}>
-					<RulesControl
-						ruleIsActive={active}
-						allowMoveAbove={!isStartEdgePosition && false /* TODO implement the feature */}
-						allowMoveBelow={!isEndEdgePosition && false}
-						onActiveToggle={handleActiveToggle}
-						onMove={handleMove}
-						onEdit={handleEdit}
-						onRemove={handleRemove}
-					/>
-				</Dropdown>
+					content={
+						<RulesControl
+							ruleIsActive={active}
+							allowMoveAbove={!isStartEdgePosition && false /* TODO implement the feature */}
+							allowMoveBelow={!isEndEdgePosition && false}
+							onActiveToggle={handleActiveToggle}
+							onMove={handleMove}
+							onEdit={handleEdit}
+							onRemove={handleRemove}
+						/>
+					}
+				/>
 			)}
 
 			{showRemoveAsk && (

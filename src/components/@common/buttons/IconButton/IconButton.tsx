@@ -1,4 +1,4 @@
-import React, {FC, ReactNode} from 'react';
+import React, {forwardRef, ReactNode} from 'react';
 import cn from 'classnames';
 import {WithTooltip} from '../../misc/WithTooltip';
 import styles from './iconButton.css';
@@ -11,12 +11,13 @@ export interface IconButtonProps extends Omit<NativeButtonProps, 'ref'> {
 	outline?: boolean;
 }
 
-export const IconButton: FC<IconButtonProps> = (props) => {
+export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>((props, ref) => {
 	const {className, icon, tooltip, disabled, outline, children, ...nativeProps} = props;
 
 	return (
 		<WithTooltip disabled={disabled} tooltip={tooltip}>
 			<button
+				ref={ref}
 				className={cn(styles.root, outline && styles.isOutline, className)}
 				type='button'
 				disabled={disabled}
@@ -26,6 +27,6 @@ export const IconButton: FC<IconButtonProps> = (props) => {
 			</button>
 		</WithTooltip>
 	);
-};
+});
 
 IconButton.displayName = 'IconButton';

@@ -1,12 +1,12 @@
 import {DevtoolsConnector} from '@/services/devtools';
-import {Event} from '@/helpers/Events';
+import {EventBus} from '@/helpers/EventsBus';
 
 type EventParams = Record<string, any>;
 type EventCallback = (params: EventParams) => void;
 
 export class ExtensionDevtoolsConnector implements DevtoolsConnector {
 	readonly debuggerVersion = '1.3';
-	readonly userDetachEvent = new Event<void>();
+	readonly userDetachEvent = new EventBus<void>();
 	private readonly eventListeners: Record<string, EventCallback[]> = {};
 
 	isAttached = false;

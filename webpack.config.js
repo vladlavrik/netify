@@ -21,8 +21,10 @@ module.exports = (env, {mode} = {}) => ({
 	},
 	stats: {
 		all: false,
+		timings: true,
 		builtAt: true,
 		errors: true,
+		errorDetails: true,
 		warnings: true,
 		performance: true,
 	},
@@ -45,6 +47,7 @@ module.exports = (env, {mode} = {}) => ({
 					{
 						loader: 'css-loader',
 						options: {
+							importLoaders: 1,
 							modules: {
 								mode: 'local',
 								localIdentName: '[name]__[local]-[hash:base64:5]',
@@ -93,7 +96,9 @@ module.exports = (env, {mode} = {}) => ({
 			filename: '[name].css',
 			chunkFilename: '[name]-[id].css',
 		}),
-		new CopyWebpackPlugin(['./src/manifest.json', {from: './src/style/icons', to: 'icons'}]),
+		new CopyWebpackPlugin({
+			patterns: ['./src/manifest.json', {from: './src/style/icons', to: 'icons'}],
+		}),
 		...(mode === 'production'
 			? [new CleanWebpackPlugin(), new GitRevisionPlugin(), new ZipPlugin({filename: 'netify'})]
 			: []),

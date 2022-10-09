@@ -14,7 +14,7 @@ import {
 	Rule,
 } from '@/interfaces/rule';
 import {DevtoolsConnector} from '@/services/devtools';
-import {Event} from '@/helpers/Events';
+import {EventBus} from '@/helpers/EventsBus';
 import {FetchRuleStore} from './FetchRuleStore';
 import {RequestBuilder} from './RequestBuilder';
 import {ResponseBuilder, ResponsePausedEvent} from './ResponseBuilder';
@@ -33,8 +33,8 @@ type FailRequestRequest = Protocol.Fetch.FailRequestRequest;
  */
 export class FetchDevtools {
 	readonly events = {
-		requestProcessed: new Event<LogEntry>(),
-		requestBreakpoint: new Event<Breakpoint>(),
+		requestProcessed: new EventBus<LogEntry>(),
+		requestBreakpoint: new EventBus<Breakpoint>(),
 	};
 
 	private enabled = false;

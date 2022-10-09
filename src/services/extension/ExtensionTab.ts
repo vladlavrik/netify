@@ -1,9 +1,9 @@
-import {Event} from '@/helpers/Events';
+import {EventBus} from '@/helpers/EventsBus';
 
 export class ExtensionTab {
 	private currentPageUrl?: URL;
 
-	readonly pageUrlChangeEvent = new Event<{url: URL; originChanged: boolean}>();
+	readonly pageUrlChangeEvent = new EventBus<{url: URL; originChanged: boolean}>();
 
 	constructor(private readonly tabId: number) {
 		chrome.tabs.onUpdated.addListener((changedTabId, {status, url: urlString}) => {

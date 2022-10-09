@@ -1,4 +1,5 @@
 import React, {FC, ReactNode} from 'react';
+import {useGlobalHotkey} from '@/hooks/useGlobalHotkey';
 import {Button} from '@/components/@common/buttons/Button';
 import {PopUp} from '@/components/@common/popups/PopUp';
 import styles from './popUpConfirm.css';
@@ -9,7 +10,11 @@ interface PopUpConfirmProps {
 	children: ReactNode;
 }
 
-export const PopUpConfirm: FC<PopUpConfirmProps> = ({onConfirm, onCancel, children}) => {
+export const PopUpConfirm: FC<PopUpConfirmProps> = (props) => {
+	const {onConfirm, onCancel, children} = props;
+
+	useGlobalHotkey('Escape', onCancel);
+
 	return (
 		<PopUp className={styles.root}>
 			<div className={styles.content}>{children}</div>

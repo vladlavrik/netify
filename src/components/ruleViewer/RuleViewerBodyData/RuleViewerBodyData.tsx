@@ -37,7 +37,9 @@ export const RuleViewerBodyData = observer<RuleViewerBodyDataProps>(({body}) => 
 					<TextButton onClick={handleExpand}>Show all</TextButton>
 				</>
 			) : (
-				<p className={styles.textContent}>{value}</p>
+				<p className={styles.textContent}>
+					{value || <span className={styles.textPlaceholder}>&lt;empty&gt;</span>}
+				</p>
 			);
 		}
 

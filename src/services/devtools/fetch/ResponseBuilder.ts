@@ -59,7 +59,8 @@ export class ResponseBuilder {
 	): ResponseBreakpointInput {
 		const {request, responseHeaders, responseStatusCode} = pausedResponse;
 		let body: ResponseBody | undefined;
-		const contentType = new Headers(responseHeaders.map(({name, value}) => [name, value])).get('content-type');
+		const contentType = //
+			new Headers(responseHeaders.map<[string, string]>(({name, value}) => [name, value])).get('content-type');
 
 		if (!bodySource) {
 			body = {

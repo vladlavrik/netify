@@ -3,7 +3,7 @@ import {useField} from 'formik';
 import {TextButton} from '@/components/@common/buttons/TextButton';
 import {FieldError} from '@/components/@common/forms/FieldError';
 import {TextField} from '@/components/@common/forms/TextField';
-import {Dropdown, useDropdownExpansion} from '@/components/@common/misc/Dropdown';
+import {Dropdown} from '@/components/@common/misc/Dropdown';
 import styles from './ruleEndpointField.css';
 
 interface RuleEndpointFieldProps {
@@ -11,8 +11,6 @@ interface RuleEndpointFieldProps {
 }
 
 export const RuleEndpointField = memo<RuleEndpointFieldProps>(({name}) => {
-	const [macrosDDExpanded, macrosDDActions] = useDropdownExpansion();
-
 	const [field, , {setValue}] = useField(name);
 
 	const endpointFieldRef = useRef<HTMLInputElement>(null);
@@ -43,50 +41,47 @@ export const RuleEndpointField = memo<RuleEndpointFieldProps>(({name}) => {
 				suffixChildren={
 					<Dropdown
 						className={styles.macros}
-						expanded={macrosDDExpanded}
-						target={
-							<TextButton
-								className={styles.macrosButton}
-								tabIndex={-1}
-								onClick={macrosDDActions.handleExpansionSwitch}>
-								{macrosDDExpanded ? 'close' : 'add macros'}
+						render={(dropdownProps, {expanded}) => (
+							<TextButton {...dropdownProps} className={styles.macrosButton} tabIndex={-1}>
+								{expanded ? 'close' : 'add macros'}
 							</TextButton>
-						}
+						)}
 						preferExpansionAlignX='start'
-						onCollapse={macrosDDActions.handleCollapse}>
-						<div className={styles.macrosPicker}>
-							<TextButton
-								className={styles.macrosOption}
-								data-value='[protocol]'
-								onClick={handleMacrosInsert}>
-								Protocol
-							</TextButton>
-							<TextButton
-								className={styles.macrosOption}
-								data-value='[hostname]'
-								onClick={handleMacrosInsert}>
-								Hostname
-							</TextButton>
-							<TextButton
-								className={styles.macrosOption}
-								data-value='[port]'
-								onClick={handleMacrosInsert}>
-								Port
-							</TextButton>
-							<TextButton
-								className={styles.macrosOption}
-								data-value='[path]'
-								onClick={handleMacrosInsert}>
-								Path
-							</TextButton>
-							<TextButton
-								className={styles.macrosOption}
-								data-value='[query]'
-								onClick={handleMacrosInsert}>
-								Query
-							</TextButton>
-						</div>
-					</Dropdown>
+						content={
+							<div className={styles.macrosPicker}>
+								<TextButton
+									className={styles.macrosOption}
+									data-value='[protocol]'
+									onClick={handleMacrosInsert}>
+									Protocol
+								</TextButton>
+								<TextButton
+									className={styles.macrosOption}
+									data-value='[hostname]'
+									onClick={handleMacrosInsert}>
+									Hostname
+								</TextButton>
+								<TextButton
+									className={styles.macrosOption}
+									data-value='[port]'
+									onClick={handleMacrosInsert}>
+									Port
+								</TextButton>
+								<TextButton
+									className={styles.macrosOption}
+									data-value='[path]'
+									onClick={handleMacrosInsert}>
+									Path
+								</TextButton>
+								<TextButton
+									className={styles.macrosOption}
+									data-value='[query]'
+									onClick={handleMacrosInsert}>
+									Query
+								</TextButton>
+							</div>
+						}
+					/>
 				}
 				{...field}
 			/>
