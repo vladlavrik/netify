@@ -85,6 +85,7 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 					body: deserializeRequestBody(request.body),
 				},
 				response: {
+					delay: response.delay,
 					statusCode: response.statusCode ? Number(response.statusCode) : undefined,
 					setHeaders: request.setHeaders,
 					dropHeaders: response.dropHeaders,
@@ -95,10 +96,11 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 		}
 
 		case RuleActionsType.LocalResponse: {
-			const {statusCode, headers, body} = actionConfigs[RuleActionsType.LocalResponse];
+			const {delay, statusCode, headers, body} = actionConfigs[RuleActionsType.LocalResponse];
 
 			action = {
 				type: RuleActionsType.LocalResponse,
+				delay,
 				statusCode: Number(statusCode),
 				headers,
 				body: deserializeResponseBody(body)!,

@@ -24,6 +24,7 @@ export const RuleViewerActionMutation = observer<RuleViewerActionMutationProps>(
 			body: !!request.body,
 		},
 		response: {
+			delay: !!response.delay,
 			statusCode: !!response.statusCode,
 			setHeaders: response.setHeaders.length > 0,
 			dropHeaders: response.dropHeaders.length > 0,
@@ -39,6 +40,8 @@ export const RuleViewerActionMutation = observer<RuleViewerActionMutationProps>(
 			shownRows.request.dropHeaders ||
 			shownRows.request.body,
 		response:
+			shownRows.response.delay ||
+			shownRows.response.statusCode ||
 			shownRows.response.statusCode ||
 			shownRows.response.setHeaders ||
 			shownRows.response.dropHeaders ||
@@ -97,6 +100,7 @@ export const RuleViewerActionMutation = observer<RuleViewerActionMutationProps>(
 								Response
 							</td>
 						</tr>
+						{shownRows.response.delay && <RuleViewerRow title='Delay:'>{response.delay} ms</RuleViewerRow>}
 						{shownRows.response.statusCode && (
 							<RuleViewerRow title='Status code:'>{response.statusCode}</RuleViewerRow>
 						)}

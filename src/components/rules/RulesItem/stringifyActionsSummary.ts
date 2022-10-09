@@ -32,7 +32,10 @@ export function stringifyActionsSummary(action: RuleAction) {
 				}
 			}
 			if (action.response) {
-				const {statusCode, setHeaders, dropHeaders, body} = action.response;
+				const {delay, statusCode, setHeaders, dropHeaders, body} = action.response;
+				if (delay) {
+					actions.push('Response delay');
+				}
 				if (statusCode) {
 					actions.push('Response status code replace');
 				}

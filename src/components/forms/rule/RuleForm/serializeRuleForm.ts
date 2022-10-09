@@ -34,6 +34,7 @@ export function serializeRuleForm(rule: Rule) {
 					},
 				},
 				response: {
+					delay: undefined,
 					statusCode: undefined,
 					setHeaders: [{name: '', value: ''}],
 					dropHeaders: [''],
@@ -45,6 +46,7 @@ export function serializeRuleForm(rule: Rule) {
 				},
 			},
 			[RuleActionsType.LocalResponse]: {
+				delay: undefined,
 				statusCode: 200,
 				headers: [{name: '', value: ''}],
 				body: {
@@ -99,6 +101,7 @@ export function serializeRuleForm(rule: Rule) {
 				}
 			}
 
+			responseValue.delay = response.delay;
 			responseValue.statusCode = response.statusCode;
 			responseValue.setHeaders.unshift(...response.setHeaders);
 			responseValue.dropHeaders.unshift(...response.dropHeaders);
@@ -119,9 +122,10 @@ export function serializeRuleForm(rule: Rule) {
 		}
 
 		case RuleActionsType.LocalResponse: {
-			const {statusCode, headers, body} = action;
+			const {delay, statusCode, headers, body} = action;
 			const responseValue = value.actionConfigs[RuleActionsType.LocalResponse];
 
+			responseValue.delay = delay;
 			responseValue.statusCode = statusCode;
 			responseValue.headers.unshift(...headers);
 

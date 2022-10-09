@@ -6,6 +6,7 @@ import {ResponseBodyField} from '@/components/@common/formsKit/ResponseBodyField
 import {SetHeadersField} from '@/components/@common/formsKit/SetHeadersField';
 import {StatusCodeField} from '@/components/@common/formsKit/StatusCodeField';
 import {RuleDropHeadersField} from '@/components/forms/rule/RuleDropHeadersField';
+import {RuleDelayField} from '../RuleDelayField';
 import {RuleEndpointField} from '../RuleEndpointField';
 import {RuleRow} from '../RuleRow';
 import RequestIcon from './icons/request.svg';
@@ -42,6 +43,9 @@ export const RuleActionMutation = memo(() => {
 			<RuleRow title={<strong>Stage</strong>}>
 				<ResponseIcon className={styles.stageIcon} />
 				<span className={styles.stageName}>Response</span>
+			</RuleRow>
+			<RuleRow title='Delay (ms):'>
+				<RuleDelayField name={`${namePrefix}.response.delay`} />
 			</RuleRow>
 			<RuleRow title='Status code:'>
 				<StatusCodeField name={`${namePrefix}.response.statusCode`} />

@@ -1,4 +1,4 @@
-import {array, InferType, mixed, object, string} from 'yup';
+import {array, InferType, mixed, number, object, string} from 'yup';
 import {BreakpointStage, breakpointStagesList} from '@/constants/BreakpointStage';
 import {RequestMethod, requestMethodsList} from '@/constants/RequestMethod';
 import {ResourceType, resourceTypesList} from '@/constants/ResourceType';
@@ -9,6 +9,12 @@ import {requestMethodSchema} from '@/components/@common/formsKit/RequestMethodFi
 import {responseBodySchema} from '@/components/@common/formsKit/ResponseBodyField';
 import {setHeadersSchema} from '@/components/@common/formsKit/SetHeadersField';
 import {statusCodeSchema} from '@/components/@common/formsKit/StatusCodeField';
+
+const delaySchema = number()
+	.typeError('Should be a number')
+	.min(0, 'Should be s positive')
+	.max(60000, 'Max value is 60000 (60s)')
+	.notRequired();
 
 export const ruleFormSchema = object({
 	label: string().notRequired(),
@@ -36,6 +42,7 @@ export const ruleFormSchema = object({
 				body: requestBodySchema,
 			}),
 			response: object({
+				delay: delaySchema,
 				statusCode: statusCodeSchema.notRequired(),
 				setHeaders: setHeadersSchema,
 				dropHeaders: array()
@@ -45,6 +52,7 @@ export const ruleFormSchema = object({
 			}),
 		}).required(),
 		[RuleActionsType.LocalResponse]: object({
+			delay: delaySchema,
 			statusCode: statusCodeSchema.required('Status code is required'),
 			headers: setHeadersSchema,
 			body: responseBodySchema,

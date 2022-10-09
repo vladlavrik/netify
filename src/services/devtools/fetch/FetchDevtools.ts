@@ -195,6 +195,9 @@ export class FetchDevtools {
 	private async processLocalResponse(requestId: string, action: LocalResponseRuleAction) {
 		const builder = ResponseBuilder.asLocalResponse(requestId, action);
 		const fulfilParams = await builder.build();
+		if (action.delay) {
+			await new Promise((resolve) => setTimeout(resolve, action.delay));
+		}
 		await this.fulfillRequest(fulfilParams);
 	}
 
@@ -210,9 +213,9 @@ export class FetchDevtools {
 		ruleId: string,
 	) {
 		const {requestId, request, resourceType} = pausedResponse;
-		const {statusCode, setHeaders, dropHeaders, body} = action.response;
+		const {delay, statusCode, setHeaders, dropHeaders, body} = action.response;
 
-		const noChanges = !statusCode && setHeaders.length === 0 && dropHeaders.length === 0 && !body;
+		const noChanges = !delay && !statusCode && setHeaders.length === 0 && dropHeaders.length === 0 && !body;
 
 		if (noChanges) {
 			// "continueRequest" can also be used to send a response,
@@ -235,7 +238,6 @@ export class FetchDevtools {
 		// Build the response from the original response data and patch from the rule
 		const builder = ResponseBuilder.asResponsePatch(pausedResponse, mutation);
 		const fulfilParams = await builder.build();
-		await this.fulfillRequest(fulfilParams);
 
 		// Report to UI logger about the new handled response
 		this.events.requestProcessed.emit({
@@ -247,6 +249,13 @@ export class FetchDevtools {
 			method: request.method as RequestMethod,
 			resourceType: resourceType as ResourceType,
 		});
+
+		// Apply the response delay
+		if (delay) {
+			await new Promise((resolve) => setTimeout(resolve, delay));
+		}
+
+		await this.fulfillRequest(fulfilParams);
 	}
 
 	private async getResponseBody(requestId: string) {

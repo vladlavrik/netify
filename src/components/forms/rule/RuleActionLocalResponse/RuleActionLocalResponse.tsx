@@ -3,6 +3,7 @@ import {RuleActionsType} from '@/constants/RuleActionsType';
 import {ResponseBodyField} from '@/components/@common/formsKit/ResponseBodyField';
 import {SetHeadersField} from '@/components/@common/formsKit/SetHeadersField';
 import {StatusCodeField} from '@/components/@common/formsKit/StatusCodeField';
+import {RuleDelayField} from '../RuleDelayField';
 import {RuleRow} from '../RuleRow';
 
 export const RuleActionLocalResponse = memo(() => {
@@ -10,6 +11,9 @@ export const RuleActionLocalResponse = memo(() => {
 
 	return (
 		<div>
+			<RuleRow title='Delay (ms):'>
+				<RuleDelayField name={`${namePrefix}.delay`} />
+			</RuleRow>
 			<RuleRow title='Status code:'>
 				<StatusCodeField name={`${namePrefix}.statusCode`} />
 			</RuleRow>
