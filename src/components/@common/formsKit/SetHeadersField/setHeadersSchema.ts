@@ -7,11 +7,11 @@ interface HeaderRecord {
 
 export const setHeadersSchema = array()
 	.of(
-		object<HeaderRecord>({
+		object({
 			name: string()
 				.trim()
 				.when('value', {
-					is(value) {
+					is(value: string) {
 						return !value;
 					},
 					then: string(),
@@ -21,5 +21,5 @@ export const setHeadersSchema = array()
 		}),
 	)
 	.transform((value: HeaderRecord[]) => {
-		return value.filter((item) => !!item.name && !!item.value);
+		return value.filter((item) => !!item.value);
 	});

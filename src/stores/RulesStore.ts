@@ -54,6 +54,10 @@ export class RulesStore {
 		return undefined;
 	}
 
+	get hasSelectedRules() {
+		return this.selectedIds.length !== 0;
+	}
+
 	get selectedRules() {
 		const {selectedIds} = this;
 		return this.list.filter((rule) => selectedIds.includes(rule.id));
@@ -79,6 +83,7 @@ export class RulesStore {
 			originToFilter: computed,
 			detailedRule: computed,
 			editingRule: computed,
+			hasSelectedRules: computed,
 			selectedRules: computed,
 			isAllRulesSelected: computed,
 			setRules: action('setRules'),
@@ -158,6 +163,7 @@ export class RulesStore {
 
 	initExport() {
 		this.exportMode = true;
+		this.selectedIds = this.list.map((rule) => rule.id);
 	}
 
 	finishExport() {

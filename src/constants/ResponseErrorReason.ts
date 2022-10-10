@@ -1,4 +1,4 @@
-export enum ResponseErrorReason { // TODO RequestErrorReason
+export enum ResponseErrorReason {
 	Failed = 'Failed',
 	Aborted = 'Aborted',
 	TimedOut = 'TimedOut',
@@ -35,7 +35,7 @@ export const responseErrorReasonsList = [
 export const responseErrorReasonsHumanTitles: Record<ResponseErrorReason, string> = {
 	[ResponseErrorReason.Failed]: 'Failed',
 	[ResponseErrorReason.Aborted]: 'Aborted',
-	[ResponseErrorReason.TimedOut]: 'Access denied',
+	[ResponseErrorReason.TimedOut]: 'Timed out',
 	[ResponseErrorReason.AccessDenied]: 'Access denied',
 	[ResponseErrorReason.ConnectionClosed]: 'Connection closed',
 	[ResponseErrorReason.ConnectionReset]: 'Connection reset',

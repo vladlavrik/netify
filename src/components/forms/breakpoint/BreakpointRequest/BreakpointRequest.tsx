@@ -69,7 +69,7 @@ export const BreakpointRequest = observer<BreakpointRequestProps>((props) => {
 					};
 					break;
 			}
-			console.log('((', body, bodySource);
+
 			breakpointsStore.removeBreakpoint(breakpoint);
 			breakpoint.continue({url: endpoint, method, headers, body});
 		},

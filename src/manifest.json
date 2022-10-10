@@ -24,7 +24,6 @@
 	},
 	"permissions": [
 		"debugger",
-		"tabs",
-		"notifications"
+		"tabs"
 	]
 }

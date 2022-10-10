@@ -38,7 +38,7 @@ export const Breakpoint = observer(() => {
 				{list.length === 1 && activeBreakpoint ? (
 					<>
 						<p className={styles.title}>
-							Intercepted {activeBreakpoint.stage === 'Request' ? 'request' : 'Response'}:
+							Intercepted {activeBreakpoint.stage === 'Request' ? 'request' : 'response'}:
 						</p>
 						<p className={styles.requestInfo} title={activeBreakpoint.data.url}>
 							{getRelativeUrl(activeBreakpoint.data.url)}

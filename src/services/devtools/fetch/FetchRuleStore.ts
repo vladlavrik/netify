@@ -135,6 +135,8 @@ export class FetchRuleStore {
 			}
 
 			if (filter.methods.length && !filter.methods.includes(requestMethod)) {
+				// TODO FIXME: when the rule has filter by a method and the rule's action changes the request method,
+				//  - the response will not be handled
 				return false;
 			}
 

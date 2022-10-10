@@ -18,6 +18,7 @@ export const RulesHeader = observer(() => {
 	const {appUiStore, rulesStore} = useStores();
 	const secondarySectionCollapsed = appUiStore.secondarySectionCollapsed;
 	const hasRules = rulesStore.hasActiveRules;
+	const hasSelected = rulesStore.hasSelectedRules;
 	const isAllSelected = rulesStore.isAllRulesSelected;
 	const exportMode = rulesStore.exportMode;
 
@@ -74,7 +75,11 @@ export const RulesHeader = observer(() => {
 				}>
 				{exportMode ? (
 					<Fragment key={'export-controls' /* The key used to avoid miss focus after cancel export mode */}>
-						<IconButton className={styles.control} icon={<DoneIcon />} onClick={handleExportCommit}>
+						<IconButton
+							className={styles.control}
+							icon={<DoneIcon />}
+							disabled={!hasSelected}
+							onClick={handleExportCommit}>
 							Export
 						</IconButton>
 						<IconButton className={styles.control} icon={<CancelIcon />} onClick={handleExportCancel}>

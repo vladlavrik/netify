@@ -87,7 +87,7 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 				response: {
 					delay: response.delay,
 					statusCode: response.statusCode ? Number(response.statusCode) : undefined,
-					setHeaders: request.setHeaders,
+					setHeaders: response.setHeaders,
 					dropHeaders: response.dropHeaders,
 					body: deserializeResponseBody(response.body),
 				},

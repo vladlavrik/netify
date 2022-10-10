@@ -18,7 +18,7 @@
 		outline: var(--color-focus) solid 1px;
 	}
 
-	&:hover {
+	&:not(:disabled):hover {
 		color: var(--color-content);
 	}
 
@@ -38,7 +38,7 @@
 	fill: var(--color-icon-regular);
 }
 
-.root:hover .icon {
+.root:not(:disabled):hover .icon {
 	fill: var(--color-icon-hover);
 }
 

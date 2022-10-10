@@ -43,7 +43,7 @@ export const ruleFormSchema = object({
 			}),
 			response: object({
 				delay: delaySchema,
-				statusCode: statusCodeSchema.notRequired(),
+				statusCode: statusCodeSchema.notRequired(), // TODO FIXME an error on clear defined before this field
 				setHeaders: setHeadersSchema,
 				dropHeaders: array()
 					.of(string().trim())
