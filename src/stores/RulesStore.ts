@@ -2,6 +2,7 @@ import {action, computed, makeObservable, observable, toJS} from 'mobx';
 import {Rule} from '@/interfaces/rule';
 import {RulesExporter, RulesImporter} from '@/services/rulesImportExport';
 import {RulesMapper} from '@/services/rulesMapper';
+import {RootStore} from './RootStore';
 
 export class RulesStore {
 	list: Rule[] = [];
@@ -67,7 +68,7 @@ export class RulesStore {
 		return this.list.length === this.selectedIds.length;
 	}
 
-	constructor(private rulesMapper: RulesMapper) {
+	constructor(private rootStore: RootStore, private rulesMapper: RulesMapper) {
 		makeObservable(this, {
 			list: observable,
 			filterByOrigin: observable,
@@ -232,12 +233,16 @@ export class RulesStore {
 		try {
 			importResult = await new RulesImporter().import(file);
 		} catch (error) {
-			console.error(error);
-			return;
+			importResult = {
+				success: false as const,
+				error,
+			};
 		}
 
 		if (!importResult.success) {
+			console.log('Import rules error');
 			console.error(importResult.error);
+			this.rootStore.attentionsStore.push("Can't import rules, probably the selected file is not invalid");
 			return;
 		}
 
@@ -248,12 +253,13 @@ export class RulesStore {
 			saveResult = await this.rulesMapper.saveNewMultipleItems(rules, this.currentOrigin);
 		} catch (error) {
 			console.error(error);
+			this.rootStore.attentionsStore.push(`Can't save imported rules due ${error}`);
 			return;
 		}
 
 		// Report failed rules import
 		if (saveResult.some((result) => result.status === 'rejected')) {
-			console.group('Can`t save some imported rule due an error');
+			console.group("Can't save some imported rule due an error");
 			saveResult.forEach((result, index) => {
 				if (result.status === 'rejected') {
 					console.log('Rule source', rules[index]);
@@ -261,6 +267,7 @@ export class RulesStore {
 				}
 			});
 			console.groupEnd();
+			this.rootStore.attentionsStore.push('Some of the imported rules are not saved');
 		}
 
 		const saveResultStatuses = saveResult.map((result) => result.status);
@@ -274,14 +281,17 @@ export class RulesStore {
 		try {
 			saveResult = await new RulesExporter().export(this.selectedRules);
 		} catch (error) {
-			console.log('Can`t export rules due uncaught error');
-			console.error(error);
-			return;
+			saveResult = {
+				success: false as const,
+				error,
+			};
 		}
 
 		if (!saveResult.success) {
-			console.log('Can`t export rules error');
+			console.log('Export rules error');
 			console.error(saveResult.error);
+
+			this.rootStore.attentionsStore.push(`Can't export rules list due ${saveResult.error}`);
 			return;
 		}
 

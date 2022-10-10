@@ -35,6 +35,12 @@ import '@/style/page.css';
 		(window as any).__store = rootStore;
 	}
 
+	if (!db) {
+		rootStore.attentionsStore.push(
+			'Persistent database (IndexedDB) is not available, rules list will be cleared after session ends',
+		);
+	}
+
 	// Create the panel application manager
 	const panelApplicationManager = new PanelApplicationManager(
 		tab,

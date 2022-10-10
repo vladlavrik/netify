@@ -1,6 +1,5 @@
 import {action, computed, makeObservable, observable} from 'mobx';
 import {Breakpoint} from '@/interfaces/breakpoint';
-import {RootStore} from './RootStore';
 
 export class BreakpointsStore {
 	list: Breakpoint[] = [];
@@ -14,7 +13,7 @@ export class BreakpointsStore {
 		return this.list[this.activeBreakpointIndex];
 	}
 
-	constructor(private rootStore: RootStore) {
+	constructor() {
 		makeObservable(this, {
 			list: observable,
 			activeBreakpointIndex: observable,
