@@ -2,7 +2,7 @@ const path = require('path');
 const http = require('http');
 const nodeStatic = require('node-static');
 
-const port = 7000;
+const port = 8000;
 
 const staticServer = new nodeStatic.Server(path.join(__dirname, './assets'), {
 	headers: {

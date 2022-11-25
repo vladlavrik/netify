@@ -63,6 +63,7 @@ export class FetchRuleStore {
 						!!request.body;
 
 					const hasResponseMutation =
+						!!response.delay ||
 						!!response.statusCode ||
 						response.setHeaders.length > 0 ||
 						response.dropHeaders.length > 0 ||
