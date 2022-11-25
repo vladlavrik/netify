@@ -6,15 +6,15 @@ export enum RuleActionsType {
 }
 
 export const ruleActionsTypesList = [
-	RuleActionsType.Breakpoint,
 	RuleActionsType.Mutation,
+	RuleActionsType.Breakpoint,
 	RuleActionsType.LocalResponse,
 	RuleActionsType.Failure,
 ];
 
 export const ruleActionsTypeHumanTitles: Record<RuleActionsType, string> = {
-	[RuleActionsType.Breakpoint]: 'Breakpoint',
 	[RuleActionsType.Mutation]: 'Mutation',
+	[RuleActionsType.Breakpoint]: 'Breakpoint',
 	[RuleActionsType.LocalResponse]: 'Local response',
 	[RuleActionsType.Failure]: 'Failure',
 };

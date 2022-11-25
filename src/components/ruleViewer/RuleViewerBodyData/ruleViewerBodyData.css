@@ -16,6 +16,10 @@
 	word-break: break-word;
 }
 
+.textPlaceholder {
+	color: var(--color-main);
+}
+
 .indented {
 	margin-left: 8px;
 }

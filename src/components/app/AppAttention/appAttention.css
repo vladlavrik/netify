@@ -1,0 +1,31 @@
+.root {
+	display: flex;
+	align-items: center;
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	min-height: 28px;
+	border-top: var(--color-brd-attention) 1px solid;
+	z-index: 10;
+	background: var(--color-bg-attention);
+}
+
+.icon {
+	flex-shrink: 0;
+	margin: 0 4px;
+}
+
+.body {
+	flex-grow: 1;
+	max-height: 24px;
+	margin: 4px 0;
+	overflow-y: auto;
+	line-height: 12px;
+	color: var(--color-content-attention);
+}
+
+.clearButton {
+	flex-shrink: 0;
+	margin: 0 6px;
+}

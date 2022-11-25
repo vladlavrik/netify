@@ -1,0 +1,38 @@
+.root {
+	padding: 6px;
+	color: var(--color-main);
+}
+
+.title {
+	margin: 16px 4px 8px;
+	font-size: 11px;
+
+	&:first-child {
+		margin-top: 6px;
+	}
+}
+
+.subtitle {
+	margin: 6px 4px;
+	font-size: 10px;
+}
+
+.linkEntry {
+	display: flex;
+	align-items: center;
+	height: 28px;
+	margin-top: 4px;
+	padding: 0 6px;
+	border-radius: 4px;
+	white-space: nowrap;
+	text-decoration: none;
+	color: var(--color-content);
+
+	&:hover {
+		background: var(--color-bg-lite);
+	}
+}
+
+.linkEntryIcon {
+	margin-right: 8px;
+}

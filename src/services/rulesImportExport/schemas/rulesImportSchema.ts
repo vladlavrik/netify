@@ -74,6 +74,7 @@ export const rulesImportSchema = z.object({
 						body: requestBodySchema.optional(),
 					}),
 					response: z.object({
+						delay: z.number().optional(),
 						statusCode: z.number().optional(),
 						setHeaders: headersListSchema,
 						dropHeaders: z.array(z.string()),
@@ -82,6 +83,7 @@ export const rulesImportSchema = z.object({
 				}),
 				z.object({
 					type: z.literal(RuleActionsType.LocalResponse),
+					delay: z.number().optional(),
 					statusCode: z.number(),
 					headers: headersListSchema,
 					body: responseBodySchema,

@@ -11,7 +11,7 @@ interface RuleViewerActionLocalResponseProps {
 }
 
 export const RuleViewerActionLocalResponse = observer<RuleViewerActionLocalResponseProps>((props) => {
-	const {statusCode, headers, body} = props.action;
+	const {delay, statusCode, headers, body} = props.action;
 
 	return (
 		<table className={styles.root}>
@@ -21,6 +21,8 @@ export const RuleViewerActionLocalResponse = observer<RuleViewerActionLocalRespo
 			</colgroup>
 			<tbody>
 				<RuleViewerRow title='Status code:'>{statusCode}</RuleViewerRow>
+
+				{delay && <RuleViewerRow title='Delay:'>{delay} ms</RuleViewerRow>}
 
 				{headers.length > 0 && (
 					<RuleViewerRow title='Headers:'>

@@ -6,7 +6,7 @@
 	position: relative;
 	box-sizing: border-box;
 	height: 64px;
-	padding: 12px 16px;
+	padding: 6px 16px;
 	cursor: pointer;
 	user-select: none;
 }
@@ -36,11 +36,12 @@
 
 .title {
 	line-height: 18px;
+	text-align: center;
 	color: var(--color-placeholder);
 }
 
 .value {
-	max-width: 300px;
+	max-width: min(300px, calc(100% - 32px));
 	overflow: hidden;
 	line-height: 18px;
 	white-space: nowrap;
@@ -49,7 +50,9 @@
 }
 
 .note {
-	line-height: 18px;
+	margin: 3px 0;
+	line-height: 12px;
 	font-size: 11px;
+	text-align: center;
 	color: var(--color-main);
 }

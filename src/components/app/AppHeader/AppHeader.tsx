@@ -4,12 +4,15 @@ import {useCompactModeCondition} from '@/hooks/useCompactModeCondition';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {IconFileButton} from '@/components/@common/buttons/IconFileButton';
 import {Checkbox} from '@/components/@common/forms/Checkbox';
+import {Dropdown} from '@/components/@common/misc/Dropdown';
 import {WithTooltip} from '@/components/@common/misc/WithTooltip';
 import {useStores} from '@/stores/useStores';
+import {AppRateBanner} from '../AppRateBanner';
 import ExportIcon from './icons/export.svg';
 import ImportIcon from './icons/import.svg';
 import ListeningActiveIcon from './icons/listening-active.svg';
 import ListeningInactiveIcon from './icons/listening-inactive.svg';
+import RateIcon from './icons/rate.svg';
 import styles from './appHeader.css';
 
 export const AppHeader = observer(() => {
@@ -117,6 +120,16 @@ export const AppHeader = observer(() => {
 				tooltip='Export rules'
 				onClick={handleInitExport}
 			/>
+
+			<div className={styles.tail}>
+				<Dropdown
+					render={(dropdownProps) => (
+						<IconButton {...dropdownProps} icon={<RateIcon />} tooltip={'Rate and support us'} />
+					)}
+					preferExpansionAlignX='end'
+					content={<AppRateBanner />}
+				/>
+			</div>
 		</header>
 	);
 });

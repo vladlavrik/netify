@@ -13,7 +13,7 @@ export const LogsList = observer(() => {
 	) : (
 		<ul className={styles.list}>
 			{list.map((log) => (
-				<LogsItem key={`${log.requestId}-${log.interceptStage}`} data={log} />
+				<LogsItem key={`${log.requestId}-${log.interceptStage}-${log.url}`} data={log} />
 			))}
 		</ul>
 	);

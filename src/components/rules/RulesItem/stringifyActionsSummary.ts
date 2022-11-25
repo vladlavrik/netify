@@ -8,11 +8,9 @@ export function stringifyActionsSummary(action: RuleAction) {
 		case RuleActionsType.Breakpoint:
 			if (action.request && action.response) {
 				actions.push('Breakpoint on request and response');
-			}
-			if (action.request) {
+			} else if (action.request) {
 				actions.push('Breakpoint on request');
-			}
-			if (action.response) {
+			} else if (action.response) {
 				actions.push('Breakpoint on response');
 			}
 			break;
@@ -34,7 +32,10 @@ export function stringifyActionsSummary(action: RuleAction) {
 				}
 			}
 			if (action.response) {
-				const {statusCode, setHeaders, dropHeaders, body} = action.response;
+				const {delay, statusCode, setHeaders, dropHeaders, body} = action.response;
+				if (delay) {
+					actions.push('Response delay');
+				}
 				if (statusCode) {
 					actions.push('Response status code replace');
 				}

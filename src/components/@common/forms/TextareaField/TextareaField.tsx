@@ -1,35 +1,20 @@
 import React, {FC} from 'react';
 import cn from 'classnames';
-import {useField} from 'formik';
 import styles from './textareaField.css';
 
-interface TextareaFieldProps {
-	className?: string;
+type TextAreaNativeProps = React.DetailedHTMLProps<
+	React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+	HTMLTextAreaElement
+>;
+
+interface TextareaFieldProps extends TextAreaNativeProps {
 	name: string;
-	placeholder?: string;
-	rows?: number;
-	maxlength?: number;
-	disabled?: boolean;
 }
 
 export const TextareaField: FC<TextareaFieldProps> = (props) => {
-	const {className, name, placeholder, rows = 4, maxlength, disabled} = props;
-	const [{value, onChange, onBlur}] = useField<string>(name);
+	const {className, name, ...nativeProps} = props;
 
-	return (
-		<textarea
-			className={cn(styles.root, className)}
-			name={name}
-			disabled={disabled}
-			placeholder={placeholder}
-			maxLength={maxlength}
-			rows={rows}
-			spellCheck={false}
-			value={value}
-			onChange={onChange}
-			onBlur={onBlur}
-		/>
-	);
+	return <textarea className={cn(styles.root, className)} name={name} spellCheck={false} {...nativeProps} />;
 };
 
 TextareaField.displayName = 'TextareaField';

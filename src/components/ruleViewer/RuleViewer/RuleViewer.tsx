@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {observer} from 'mobx-react-lite';
 import {RuleActionsType, ruleActionsTypeHumanTitles} from '@/constants/RuleActionsType';
 import {useStores} from '@/stores/useStores';
+import {RuleViewerActionBreakpoint} from '../RuleViewerActionBreakpoint';
 import {RuleViewerActionFailure} from '../RuleViewerActionFailure';
 import {RuleViewerActionLocalResponse} from '../RuleViewerActionLocalResponse';
 import {RuleViewerActionMutation} from '../RuleViewerActionMutation';
@@ -51,6 +52,8 @@ export const RuleViewer = observer(() => {
 				</h2>
 
 				{action.type === RuleActionsType.Mutation && <RuleViewerActionMutation action={action} />}
+
+				{action.type === RuleActionsType.Breakpoint && <RuleViewerActionBreakpoint action={action} />}
 
 				{action.type === RuleActionsType.LocalResponse && <RuleViewerActionLocalResponse action={action} />}
 

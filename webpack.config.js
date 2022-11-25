@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-const GitRevisionPlugin = require('git-revision-webpack-plugin');
+const {GitRevisionPlugin} = require('git-revision-webpack-plugin');
 const ZipPlugin = require('zip-webpack-plugin');
 
 module.exports = (env, {mode} = {}) => ({
@@ -21,9 +21,10 @@ module.exports = (env, {mode} = {}) => ({
 	},
 	stats: {
 		all: false,
+		timings: true,
 		builtAt: true,
 		errors: true,
-		warnings: true,
+		errorDetails: true,
 		performance: true,
 	},
 	module: {
@@ -45,6 +46,7 @@ module.exports = (env, {mode} = {}) => ({
 					{
 						loader: 'css-loader',
 						options: {
+							importLoaders: 1,
 							modules: {
 								mode: 'local',
 								localIdentName: '[name]__[local]-[hash:base64:5]',
@@ -93,7 +95,9 @@ module.exports = (env, {mode} = {}) => ({
 			filename: '[name].css',
 			chunkFilename: '[name]-[id].css',
 		}),
-		new CopyWebpackPlugin(['./src/manifest.json', {from: './src/style/icons', to: 'icons'}]),
+		new CopyWebpackPlugin({
+			patterns: ['./src/manifest.json', {from: './src/style/icons', to: 'icons'}],
+		}),
 		...(mode === 'production'
 			? [new CleanWebpackPlugin(), new GitRevisionPlugin(), new ZipPlugin({filename: 'netify'})]
 			: []),

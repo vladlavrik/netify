@@ -63,6 +63,7 @@ export class FetchRuleStore {
 						!!request.body;
 
 					const hasResponseMutation =
+						!!response.delay ||
 						!!response.statusCode ||
 						response.setHeaders.length > 0 ||
 						response.dropHeaders.length > 0 ||
@@ -135,6 +136,8 @@ export class FetchRuleStore {
 			}
 
 			if (filter.methods.length && !filter.methods.includes(requestMethod)) {
+				// TODO FIXME: when the rule has filter by a method and the rule's action changes the request method,
+				//  - the response will not be handled
 				return false;
 			}
 

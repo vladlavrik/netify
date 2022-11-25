@@ -21,6 +21,7 @@ export interface MutationRuleAction {
 		body?: RequestBody;
 	};
 	response: {
+		delay?: number;
 		statusCode?: number;
 		setHeaders: HeadersArray;
 		dropHeaders: string[];
@@ -30,6 +31,7 @@ export interface MutationRuleAction {
 
 export interface LocalResponseRuleAction {
 	type: RuleActionsType.LocalResponse;
+	delay?: number;
 	statusCode: number;
 	headers: HeadersArray;
 	body: ResponseBody;

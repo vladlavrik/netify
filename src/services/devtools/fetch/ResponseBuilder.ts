@@ -1,13 +1,23 @@
 import {Protocol} from 'devtools-protocol';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {ResponseBody} from '@/interfaces/body';
+import {ResponseBreakpointInput} from '@/interfaces/breakpoint';
+import {HeadersArray} from '@/interfaces/headers';
 import {LocalResponseRuleAction, MutationRuleAction} from '@/interfaces/rule';
 import {patchHeaders} from './helpers/headers';
-import {buildResponseBodyFromBase64, buildResponseBodyFromFile, buildResponseBodyFromText} from './helpers/response';
+import {
+	buildResponseBodyFromBase64,
+	buildResponseBodyFromFile,
+	buildResponseBodyFromText,
+	parseBlobBodyFromBase64EncodedBody,
+	parseTextBodyFromBase64,
+} from './helpers/response';
 
-type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
 type FulfillRequestRequest = Protocol.Fetch.FulfillRequestRequest;
 type HeaderEntry = Protocol.Fetch.HeaderEntry;
+type RequestPausedEvent = RequiredProps<Protocol.Fetch.RequestPausedEvent, 'responseStatusCode' | 'responseHeaders'>;
+
+export type ResponsePausedEvent = RequiredProps<RequestPausedEvent, 'responseStatusCode' | 'responseHeaders'>;
 
 /**
  * Response handler provides processing the paused response to:
@@ -17,8 +27,8 @@ type HeaderEntry = Protocol.Fetch.HeaderEntry;
  */
 
 export class ResponseBuilder {
-	static asResponsePatch(pausedRequest: RequestPausedEvent, mutation: MutationRuleAction['response']) {
-		const {requestId, responseStatusCode, responseHeaders} = pausedRequest;
+	static asResponsePatch(pausedResponse: ResponsePausedEvent, mutation: MutationRuleAction['response']) {
+		const {requestId, responseStatusCode, responseHeaders} = pausedResponse;
 
 		let statusCode = responseStatusCode!;
 		if (mutation.statusCode) {
@@ -35,12 +45,58 @@ export class ResponseBuilder {
 		return new this(requestId, statusCode, headers, body);
 	}
 
-	static asBreakpointExecute() {
-		// TODO FUTURE
+	static asBreakpointExecute(
+		requestId: string,
+		{statusCode, headers, body}: {statusCode: number; headers: HeadersArray; body: ResponseBody},
+	) {
+		return new this(requestId, statusCode, headers, body);
 	}
 
-	static compileBreakpoint() {
-		// TODO FUTURE
+	static compileBreakpoint(
+		pausedResponse: ResponsePausedEvent,
+		bodySource: string,
+		base64Encoded: boolean,
+	): ResponseBreakpointInput {
+		const {request, responseHeaders, responseStatusCode} = pausedResponse;
+		let body: ResponseBody | undefined;
+		const contentType = //
+			new Headers(responseHeaders.map<[string, string]>(({name, value}) => [name, value])).get('content-type');
+
+		if (!bodySource) {
+			body = {
+				type: ResponseBodyType.Text,
+				value: '',
+			};
+		} else if (!base64Encoded) {
+			body = {
+				type: ResponseBodyType.Text,
+				value: bodySource,
+			};
+		} else if (contentType && (contentType.startsWith('text/') || contentType.startsWith('application/json'))) {
+			try {
+				body = {
+					type: ResponseBodyType.Text,
+					value: parseTextBodyFromBase64(bodySource),
+				};
+			} catch (error) {
+				console.error(error);
+			}
+		}
+
+		if (!body) {
+			const fileName = new URL(request.url).pathname.split('/').pop() || 'response';
+			body = {
+				type: ResponseBodyType.File,
+				value: parseBlobBodyFromBase64EncodedBody(bodySource, fileName),
+			};
+		}
+
+		return {
+			url: request.url,
+			statusCode: responseStatusCode,
+			headers: responseHeaders,
+			body,
+		};
 	}
 
 	private constructor(
