@@ -4,7 +4,7 @@ import styles from './ruleRow.css';
 
 interface RuleRowProps {
 	className?: string;
-	title: ReactNode;
+	title: string;
 	children?: ReactNode;
 }
 
