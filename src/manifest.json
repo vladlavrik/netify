@@ -9,6 +9,7 @@
 		"48": "icons/logo-48.png",
 		"128": "icons/logo-128.png"
 	},
+	"default_locale": "en",
 	"minimum_chrome_version": "88.0.0.0",
 	"devtools_page": "devtool.html",
 	"action":  {
