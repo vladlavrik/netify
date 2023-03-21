@@ -18,49 +18,49 @@ export const RuleActionMutation = memo(() => {
 
 	return (
 		<div>
-			<RuleRow title={<strong>Stage</strong>}>
+			<RuleRow strong title={chrome.i18n.getMessage('stage2')}>
 				<RequestIcon className={styles.stageIcon} />
 				<span className={styles.stageName}>Request</span>
 			</RuleRow>
 
-			<RuleRow title='Endpoint:'>
+			<RuleRow title={chrome.i18n.getMessage('endpoint')}>
 				<RuleEndpointField name={`${namePrefix}.request.endpoint`} />
 			</RuleRow>
-			<RuleRow title='Method:'>
+			<RuleRow title={chrome.i18n.getMessage('method')}>
 				<RequestMethodField name={`${namePrefix}.request.method`} allowEmpty />
 			</RuleRow>
-			<RuleRow title='Set headers:'>
+			<RuleRow title={chrome.i18n.getMessage('setHeaders')}>
 				<SetHeadersField name={`${namePrefix}.request.setHeaders`} />
 			</RuleRow>
-			<RuleRow title='Drop headers:'>
+			<RuleRow title={chrome.i18n.getMessage('dropHeaders')}>
 				<RuleDropHeadersField name={`${namePrefix}.request.dropHeaders`} />
 			</RuleRow>
-			<RuleRow title='Body:'>
+			<RuleRow title={chrome.i18n.getMessage('body')}>
 				<RequestBodyField name={`${namePrefix}.request.body`} allowOrigin />
 			</RuleRow>
 			<div className={styles.separator} />
 
-			<RuleRow title={<strong>Stage</strong>}>
+			<RuleRow strong title={chrome.i18n.getMessage('stage2')}>
 				<ResponseIcon className={styles.stageIcon} />
 				<span className={styles.stageName}>Response</span>
 			</RuleRow>
-			<RuleRow title='Delay (ms):'>
+			<RuleRow title={chrome.i18n.getMessage('delayMs')}>
 				<RuleDelayField name={`${namePrefix}.response.delay`} />
 			</RuleRow>
-			<RuleRow title='Status code:'>
+			<RuleRow title={chrome.i18n.getMessage('statusCode')}>
 				<StatusCodeField name={`${namePrefix}.response.statusCode`} />
 			</RuleRow>
-			<RuleRow title='Set headers:'>
+			<RuleRow title={chrome.i18n.getMessage('setHeaders')}>
 				<SetHeadersField name={`${namePrefix}.response.setHeaders`} />
 			</RuleRow>
-			<RuleRow title='Drop headers:'>
+			<RuleRow title={chrome.i18n.getMessage('dropHeaders')}>
 				<RuleDropHeadersField name={`${namePrefix}.response.dropHeaders`} />
 			</RuleRow>
-			<RuleRow title='Body:'>
+			<RuleRow title={chrome.i18n.getMessage('body')}>
 				<ResponseBodyField
 					name={`${namePrefix}.response.body`}
 					allowOrigin
-					fileFieldNote='Body replacing will also rewrites "Content-Type" header'
+					fileFieldNote={chrome.i18n.getMessage('bodyReplacingContentTypeHeader')}
 				/>
 			</RuleRow>
 		</div>

@@ -11,7 +11,7 @@ export const RuleActionSwitcher = memo(() => {
 	const [field] = useField(name);
 
 	return (
-		<RuleRow className={styles.root} title='Action:'>
+		<RuleRow className={styles.root} title={chrome.i18n.getMessage('action')}>
 			<ul className={styles.list}>
 				{Object.entries(ruleActionsTypeHumanTitles).map(([value, title]) => (
 					<div key={value} className={cn(styles.entry, field.value === value && styles.current)}>

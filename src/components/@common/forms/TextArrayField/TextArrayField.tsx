@@ -15,7 +15,12 @@ interface TextArrayFieldProps {
 }
 
 export const TextArrayField = memo<TextArrayFieldProps>((props) => {
-	const {name, placeholder, addControlTitle = 'Add new one', removeControlTitle = 'Remove item'} = props;
+	const {
+		name,
+		placeholder,
+		addControlTitle = chrome.i18n.getMessage('addNewOne'),
+		removeControlTitle = chrome.i18n.getMessage('removeItem'),
+	} = props;
 
 	return (
 		<ul className={styles.root}>

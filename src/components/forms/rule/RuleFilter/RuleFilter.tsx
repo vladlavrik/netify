@@ -18,16 +18,16 @@ export const RuleFilter = memo(() => {
 	const handleUrlHintHide = () => setUrlHintShown(false);
 
 	return (
-		<RuleRow className={styles.root} title='Request filter:'>
+		<RuleRow className={styles.root} title={chrome.i18n.getMessage('requestFilter')}>
 			<div className={styles.fields}>
 				<TextField
 					className={styles.urlField}
-					placeholder='Url'
+					placeholder={chrome.i18n.getMessage('url2')}
 					suffixChildren={
 						<IconButton
 							className={styles.urlInfoButton}
 							icon={<InfoIcon />}
-							tooltip='Url pattern hint'
+							tooltip={chrome.i18n.getMessage('urlPatternHint')}
 							tabIndex={-1}
 							onClick={handleUrlHintShow}
 						/>
@@ -40,29 +40,31 @@ export const RuleFilter = memo(() => {
 					name='filter.resourceTypes'
 					options={resourceTypesList}
 					multiple
-					placeholder='Any resource'
+					placeholder={chrome.i18n.getMessage('anyResource')}
 				/>
 				<MultiselectField
 					className={styles.methodsField}
 					name='filter.methods'
 					options={requestMethodsList}
 					multiple
-					placeholder='Any method'
+					placeholder={chrome.i18n.getMessage('anyMethod')}
 				/>
 
 				{urlHintShown && (
 					<PopUpAlert onClose={handleUrlHintHide}>
 						<p className={styles.urlInfoText}>
-							You can use a pathname only value starting with &quot;/&quot; for the current domain urls.
+							{chrome.i18n.getMessage('youCanUsePathname')}
 							<br />
-							Otherwise, you must specify the full address value, including a protocol name.
+							{chrome.i18n.getMessage('otherwiseYouMustSpecifyFullAddress')}
 							<br />
 							<br />
-							You can also use special marks:
+							{chrome.i18n.getMessage('youCanAlsoUseSpecialMarks')}
 							<br />
-							<span className={styles.urlInfoMark}>?</span> - matches any single character
+							<span className={styles.urlInfoMark}>?</span> -{' '}
+							{chrome.i18n.getMessage('matchesAnySingleCharacter')}
 							<br />
-							<span className={styles.urlInfoMark}>*</span> - matches any zero or more characters
+							<span className={styles.urlInfoMark}>*</span> -{' '}
+							{chrome.i18n.getMessage('matchesAnyZeroOrMoreCharacters')}
 						</p>
 					</PopUpAlert>
 				)}

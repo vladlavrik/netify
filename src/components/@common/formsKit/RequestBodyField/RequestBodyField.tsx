@@ -39,8 +39,8 @@ export const RequestBodyField = memo<RequestMethodFieldProps>(({name, allowOrigi
 					name={`${name}.formValue`}
 					keyNameSuffix='key'
 					valueNameSuffix='value'
-					keyPlaceholder='Key'
-					valuePlaceholder='Value'
+					keyPlaceholder={chrome.i18n.getMessage('key')}
+					valuePlaceholder={chrome.i18n.getMessage('value')}
 				/>
 			)}
 		</div>

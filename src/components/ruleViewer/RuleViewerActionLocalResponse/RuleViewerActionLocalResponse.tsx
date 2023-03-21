@@ -20,17 +20,17 @@ export const RuleViewerActionLocalResponse = observer<RuleViewerActionLocalRespo
 				<col />
 			</colgroup>
 			<tbody>
-				<RuleViewerRow title='Status code:'>{statusCode}</RuleViewerRow>
+				<RuleViewerRow title={chrome.i18n.getMessage('statusCode')}>{statusCode}</RuleViewerRow>
 
-				{delay && <RuleViewerRow title='Delay:'>{delay} ms</RuleViewerRow>}
+				{delay && <RuleViewerRow title={chrome.i18n.getMessage('delay')}>{delay} ms</RuleViewerRow>}
 
 				{headers.length > 0 && (
-					<RuleViewerRow title='Headers:'>
+					<RuleViewerRow title={chrome.i18n.getMessage('headers')}>
 						<RuleViewerDataTable values={headers.map(({name, value}) => [name, value])} />
 					</RuleViewerRow>
 				)}
 
-				<RuleViewerRow title='Body:'>
+				<RuleViewerRow title={chrome.i18n.getMessage('body')}>
 					<RuleViewerBodyData body={body} />
 				</RuleViewerRow>
 			</tbody>

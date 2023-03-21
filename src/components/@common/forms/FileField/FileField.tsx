@@ -31,7 +31,7 @@ export const FileField = memo<FileFieldProps>((props) => {
 					{note && <p className={styles.note}>{note}</p>}
 				</>
 			) : (
-				<p className={styles.title}>Click to choice a file or drag-n-drop it here</p>
+				<p className={styles.title}>{chrome.i18n.getMessage('clickChoiceFileOrDragHere')}</p>
 			)}
 			<div className={styles.filler} />
 		</label>

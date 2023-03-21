@@ -6,7 +6,7 @@ interface RuleDropHeadersFieldProps {
 }
 
 export const RuleDropHeadersField = memo<RuleDropHeadersFieldProps>(({name}) => {
-	return <TextArrayField name={name} placeholder='Header name' />;
+	return <TextArrayField name={name} placeholder={chrome.i18n.getMessage('headerName')} />;
 });
 
 RuleDropHeadersField.displayName = 'RuleDropHeadersField';

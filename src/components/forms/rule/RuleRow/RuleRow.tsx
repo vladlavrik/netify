@@ -4,13 +4,14 @@ import styles from './ruleRow.css';
 
 interface RuleRowProps {
 	className?: string;
+	strong?: boolean;
 	title: string;
 	children?: ReactNode;
 }
 
-export const RuleRow: FC<RuleRowProps> = ({className, title, children}) => (
+export const RuleRow: FC<RuleRowProps> = ({className, strong, title, children}) => (
 	<div className={cn(styles.root, className)}>
-		<p className={styles.title}>{title}</p>
+		<p className={styles.title}>{strong ? <strong>{title}</strong> : title}</p>
 		{children}
 	</div>
 );

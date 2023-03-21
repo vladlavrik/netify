@@ -15,7 +15,9 @@ export const RuleViewerActionFailure = observer<RuleViewerActionFailureProps>((p
 	return (
 		<table className={styles.root}>
 			<tbody>
-				<RuleViewerRow title='Error reason:'>{responseErrorReasonsHumanTitles[reason]}</RuleViewerRow>
+				<RuleViewerRow title={chrome.i18n.getMessage('errorReason')}>
+					{responseErrorReasonsHumanTitles[reason]}
+				</RuleViewerRow>
 			</tbody>
 		</table>
 	);

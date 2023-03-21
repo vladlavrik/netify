@@ -1,0 +1,212 @@
+{
+	"action": {
+		"message": "Action:"
+	},
+	"addNewOne": {
+		"message": "Add new one"
+	},
+	"addNewRule": {
+		"message": "Add a new rule"
+	},
+	"allRequest": {
+		"message": "All request"
+	},
+	"anyMethod": {
+		"message": "Any method"
+	},
+	"anyResource": {
+		"message": "Any resource"
+	},
+	"body": {
+		"message": "Body:"
+	},
+	"bodyReplacingContentTypeHeader": {
+		"message": "Body replacing will also rewrites \"Content-Type\" header"
+	},
+	"cancel": {
+		"message": "Cancel"
+	},
+	"clearAllRules": {
+		"message": "Clear all rules"
+	},
+	"clearLog": {
+		"message": "Clear log"
+	},
+	"clickChoiceFileOrDragHere": {
+		"message": "Click to choice a file or drag-n-drop it here"
+	},
+	"close": {
+		"message": "Close"
+	},
+	"closeDetails": {
+		"message": "Close details"
+	},
+	"confirm": {
+		"message": "Confirm"
+	},
+	"delay": {
+		"message": "Delay:"
+	},
+	"delayMs": {
+		"message": "Delay (ms):"
+	},
+	"download": {
+		"message": "Download"
+	},
+	"dropHeaders": {
+		"message": "Drop headers:"
+	},
+	"empty": {
+		"message": "empty"
+	},
+	"endpoint": {
+		"message": "Endpoint:"
+	},
+	"endpointUrl": {
+		"message": "Endpoint(url):"
+	},
+	"errorReason": {
+		"message": "Error reason:"
+	},
+	"export": {
+		"message": "Export"
+	},
+	"filter": {
+		"message": "Filter"
+	},
+	"headerName": {
+		"message": "Header name"
+	},
+	"headerValue": {
+		"message": "Header value"
+	},
+	"headers": {
+		"message": "Headers:"
+	},
+	"hostname": {
+		"message": "Hostname"
+	},
+	"intercepted": {
+		"message": "Intercepted"
+	},
+	"interceptedRequests": {
+		"message": "Intercepted requests:"
+	},
+	"key": {
+		"message": "Key"
+	},
+	"label": {
+		"message": "Label:"
+	},
+	"labelPlaceholder": {
+		"message": "The rule label (optional)"
+	},
+	"logs": {
+		"message": "Logs"
+	},
+	"matchesAnySingleCharacter": {
+		"message": "matches any single character"
+	},
+	"matchesAnyZeroOrMoreCharacters": {
+		"message": "matches any zero or more characters"
+	},
+	"method": {
+		"message": "Method:"
+	},
+	"noChanges": {
+		"message": "No changes"
+	},
+	"otherwiseYouMustSpecifyFullAddress": {
+		"message": "Otherwise, you must specify the full address value, including a protocol name."
+	},
+	"path": {
+		"message": "Path"
+	},
+	"port": {
+		"message": "Port"
+	},
+	"protocol": {
+		"message": "Protocol"
+	},
+	"query": {
+		"message": "Query"
+	},
+	"questionClearAllRulesForever": {
+		"message": "Clear all rules forever?"
+	},
+	"reason": {
+		"message": "Reason:"
+	},
+	"redirectRequestByNewUrl": {
+		"message": "Redirect a request by the new url"
+	},
+	"removeItem": {
+		"message": "Remove item"
+	},
+	"request": {
+		"message": "Request"
+	},
+	"requestFilter": {
+		"message": "Request filter:"
+	},
+	"requestMethod": {
+		"message": "Request method:"
+	},
+	"resourceType": {
+		"message": "Resource type:"
+	},
+	"response": {
+		"message": "Response"
+	},
+	"ruleDetails": {
+		"message": "Rule details"
+	},
+	"rules": {
+		"message": "Rules"
+	},
+	"save": {
+		"message": "Save"
+	},
+	"selectAll": {
+		"message": "Select all"
+	},
+	"setHeaders": {
+		"message": "Set headers:"
+	},
+	"show": {
+		"message": "Show"
+	},
+	"showAll": {
+		"message": "Show all"
+	},
+	"stage": {
+		"message": "Stage:"
+	},
+	"stage2": {
+		"message": "Stage"
+	},
+	"statusCode": {
+		"message": "Status code:"
+	},
+	"unselectAll": {
+		"message": "Unselect all"
+	},
+	"url": {
+		"message": "Url:"
+	},
+	"url2": {
+		"message": "Url"
+	},
+	"urlPatternHint": {
+		"message": "Url pattern hint"
+	},
+	"value": {
+		"message": "Value"
+	},
+	"youCanAlsoUseSpecialMarks": {
+		"message": "You can also use special marks:"
+	},
+	"youCanUsePathname": {
+		"message": "You can use a pathname only value starting with \"/\" for the current domain urls."
+	}
+}

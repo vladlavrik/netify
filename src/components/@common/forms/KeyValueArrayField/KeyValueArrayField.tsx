@@ -24,8 +24,8 @@ export const KeyValueArrayField = memo<KeyValueArrayFieldProps>((props) => {
 		valueNameSuffix,
 		keyPlaceholder,
 		valuePlaceholder,
-		addControlTitle = 'Add new one',
-		removeControlTitle = 'Remove item',
+		addControlTitle = chrome.i18n.getMessage('addNewOne'),
+		removeControlTitle = chrome.i18n.getMessage('removeItem'),
 	} = props;
 
 	return (

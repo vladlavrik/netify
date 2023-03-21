@@ -38,7 +38,8 @@ export const Breakpoint = observer(() => {
 				{list.length === 1 && activeBreakpoint ? (
 					<>
 						<p className={styles.title}>
-							Intercepted {activeBreakpoint.stage === 'Request' ? 'request' : 'response'}:
+							{chrome.i18n.getMessage('intercepted')}{' '}
+							{activeBreakpoint.stage === 'Request' ? 'request' : 'response'}:
 						</p>
 						<p className={styles.requestInfo} title={activeBreakpoint.data.url}>
 							{getRelativeUrl(activeBreakpoint.data.url)}
@@ -46,7 +47,7 @@ export const Breakpoint = observer(() => {
 					</>
 				) : (
 					<>
-						<p className={styles.title}>Intercepted requests:</p>
+						<p className={styles.title}>{chrome.i18n.getMessage('interceptedRequests')}</p>
 						<SelectField
 							className={styles.requestSelect}
 							options={list.map((item, index) => index.toString())}

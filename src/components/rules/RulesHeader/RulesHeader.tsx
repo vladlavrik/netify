@@ -66,11 +66,11 @@ export const RulesHeader = observer(() => {
 						<span className={styles.activeTitle}>
 							Select rules to export{' '}
 							<TextButton onClick={handleSelectAllSwitch}>
-								{isAllSelected ? 'Unselect all' : 'Select all'}
+								chrome.i18n.getMessage({isAllSelected ? 'unselectAll' : 'selectAll'})
 							</TextButton>
 						</span>
 					) : (
-						'Rules'
+						chrome.i18n.getMessage('rules')
 					)
 				}>
 				{exportMode ? (
@@ -80,10 +80,10 @@ export const RulesHeader = observer(() => {
 							icon={<DoneIcon />}
 							disabled={!hasSelected}
 							onClick={handleExportCommit}>
-							Export
+							{chrome.i18n.getMessage('export')}
 						</IconButton>
 						<IconButton className={styles.control} icon={<CancelIcon />} onClick={handleExportCancel}>
-							Cancel
+							{chrome.i18n.getMessage('cancel')}
 						</IconButton>
 					</Fragment>
 				) : (
@@ -91,13 +91,13 @@ export const RulesHeader = observer(() => {
 						<IconButton
 							className={styles.control}
 							icon={<AddIcon />}
-							tooltip='Add a new rule'
+							tooltip={chrome.i18n.getMessage('addNewRule')}
 							onClick={handleComposeShow}
 						/>
 						<IconButton
 							className={styles.control}
 							icon={<ClearIcon />}
-							tooltip='Clear all rules'
+							tooltip={chrome.i18n.getMessage('clearAllRules')}
 							disabled={!hasRules}
 							onClick={handleRemoveAllAsk}
 						/>
@@ -119,7 +119,7 @@ export const RulesHeader = observer(() => {
 
 			{showRemoveAllAsk && (
 				<PopUpConfirm onConfirm={handleRemoveAllConfirm} onCancel={handleRemoveAllCancel}>
-					Clear all rules forever?
+					{chrome.i18n.getMessage('questionClearAllRulesForever')}
 				</PopUpConfirm>
 			)}
 		</>

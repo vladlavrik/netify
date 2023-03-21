@@ -12,7 +12,7 @@ export const RuleActionFailure = memo(() => {
 	const [field] = useField(`actionConfigs.${RuleActionsType.Failure}.reason`);
 
 	return (
-		<RuleRow title='Reason:'>
+		<RuleRow title={chrome.i18n.getMessage('reason')}>
 			<SelectField
 				className={styles.field}
 				options={responseErrorReasonsList}

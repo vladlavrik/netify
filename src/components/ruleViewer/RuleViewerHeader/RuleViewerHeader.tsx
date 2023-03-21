@@ -16,10 +16,10 @@ export const RuleViewerHeader = memo(() => {
 			<IconButton
 				className={styles.closeButton}
 				icon={<CloseIcon />}
-				tooltip='Close details'
+				tooltip={chrome.i18n.getMessage('closeDetails')}
 				onClick={handleClose}
 			/>
-			<p className={styles.title}>Rule details</p>
+			<p className={styles.title}>Rule details{chrome.i18n.getMessage('ruleDetails')}</p>
 		</div>
 	);
 });

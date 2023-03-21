@@ -14,8 +14,13 @@ export const LogsHeader = observer(() => {
 	};
 
 	return (
-		<SectionHeader title='Logs'>
-			<IconButton icon={<ClearIcon />} tooltip='Clear log' disabled={!hasLogs} onClick={handleClean} />
+		<SectionHeader title={chrome.i18n.getMessage('log')}>
+			<IconButton
+				icon={<ClearIcon />}
+				tooltip={chrome.i18n.getMessage('clearLog')}
+				disabled={!hasLogs}
+				onClick={handleClean}
+			/>
 		</SectionHeader>
 	);
 });
