@@ -20,7 +20,7 @@ export const RuleActionMutation = memo(() => {
 		<div>
 			<RuleRow strong title={chrome.i18n.getMessage('stage2')}>
 				<RequestIcon className={styles.stageIcon} />
-				<span className={styles.stageName}>Request</span>
+				<span className={styles.stageName}>{chrome.i18n.getMessage('request')}</span>
 			</RuleRow>
 
 			<RuleRow title={chrome.i18n.getMessage('endpoint')}>
@@ -42,7 +42,7 @@ export const RuleActionMutation = memo(() => {
 
 			<RuleRow strong title={chrome.i18n.getMessage('stage2')}>
 				<ResponseIcon className={styles.stageIcon} />
-				<span className={styles.stageName}>Response</span>
+				<span className={styles.stageName}>{chrome.i18n.getMessage('response')}</span>
 			</RuleRow>
 			<RuleRow title={chrome.i18n.getMessage('delayMs')}>
 				<RuleDelayField name={`${namePrefix}.response.delay`} />

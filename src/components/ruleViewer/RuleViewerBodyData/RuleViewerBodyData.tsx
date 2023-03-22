@@ -62,7 +62,9 @@ export const RuleViewerBodyData = observer<RuleViewerBodyDataProps>(({body}) => 
 		case RequestBodyType.MultipartFromData:
 			return (
 				<>
-					<p className={styles.additionalInfo}>{responseBodyTypesHumanTitles[body.type]}</p>
+					<p className={styles.additionalInfo}>
+						{chrome.i18n.getMessage(responseBodyTypesHumanTitles[body.type])}
+					</p>
 					<RuleViewerDataTable values={body.value.map(({key, value}) => [key, value])} />
 				</>
 			);

@@ -12,7 +12,7 @@ export const responseBodyTypesList = [
 ];
 
 export const responseBodyTypesHumanTitles: Record<ResponseBodyType, string> = {
-	[ResponseBodyType.Text]: 'Text',
-	[ResponseBodyType.Base64]: 'Base 64',
-	[ResponseBodyType.File]: 'File',
+	[ResponseBodyType.Text]: 'text',
+	[ResponseBodyType.Base64]: 'base64',
+	[ResponseBodyType.File]: 'file',
 };

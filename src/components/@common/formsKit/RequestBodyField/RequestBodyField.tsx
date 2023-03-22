@@ -8,10 +8,10 @@ import styles from './requestBodyField.css';
 
 function typeTitleGetter(type: 'Original' | RequestBodyType) {
 	if (type === 'Original') {
-		return 'Original';
+		return chrome.i18n.getMessage('original');
 	}
 
-	return responseBodyTypesHumanTitles[type];
+	return chrome.i18n.getMessage(responseBodyTypesHumanTitles[type]);
 }
 
 interface RequestMethodFieldProps {

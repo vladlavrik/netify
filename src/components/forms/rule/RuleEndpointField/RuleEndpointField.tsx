@@ -43,7 +43,7 @@ export const RuleEndpointField = memo<RuleEndpointFieldProps>(({name}) => {
 						className={styles.macros}
 						render={(dropdownProps, {expanded}) => (
 							<TextButton {...dropdownProps} className={styles.macrosButton} tabIndex={-1}>
-								{expanded ? 'close' : 'add macros'}
+								{chrome.i18n.getMessage(expanded ? 'close2' : 'addMacros')}
 							</TextButton>
 						)}
 						preferExpansionAlignX='start'

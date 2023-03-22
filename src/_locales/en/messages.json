@@ -2,6 +2,9 @@
 	"action": {
 		"message": "Action:"
 	},
+	"addMacros": {
+		"message": "add macros"
+	},
 	"addNewOne": {
 		"message": "Add new one"
 	},
@@ -19,6 +22,9 @@
 	},
 	"anyURL": {
 		"message": "Any url"
+	},
+	"base64": {
+		"message": "Base 64"
 	},
 	"body": {
 		"message": "Body:"
@@ -43,6 +49,9 @@
 	},
 	"close": {
 		"message": "Close"
+	},
+	"close2": {
+		"message": "close"
 	},
 	"closeDetails": {
 		"message": "Close details"
@@ -85,6 +94,9 @@
 	},
 	"failure": {
 		"message": "Failure"
+	},
+	"file": {
+		"message": "File"
 	},
 	"filter": {
 		"message": "Filter"
@@ -152,6 +164,9 @@
 	"method": {
 		"message": "Method:"
 	},
+	"multipartFromData": {
+		"message": "Multipart from data"
+	},
 	"mutation": {
 		"message": "Mutation"
 	},
@@ -169,6 +184,9 @@
 	},
 	"notJustThoseAffectedByTheRules": {
 		"message": "not just those affected by the rules."
+	},
+	"original": {
+		"message": "Original"
 	},
 	"otherwiseYouMustSpecifyFullAddress": {
 		"message": "Otherwise, you must specify the full address value, including a protocol name."
@@ -263,6 +281,9 @@
 	"stopping": {
 		"message": "Stopping"
 	},
+	"text": {
+		"message": "Text"
+	},
 	"theCurrentPageOriginWillBeShown": {
 		"message": "the current page origin will be shown"
 	},
@@ -274,6 +295,9 @@
 	},
 	"url2": {
 		"message": "Url"
+	},
+	"urlEncodedForm": {
+		"message": "Url encoded form"
 	},
 	"urlPatternHint": {
 		"message": "Url pattern hint"

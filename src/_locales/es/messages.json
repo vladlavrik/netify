@@ -2,6 +2,9 @@
 	"action": {
 		"message": "Acción:"
 	},
+	"addMacros": {
+		"message": "añadir macros"
+	},
 	"addNewOne": {
 		"message": "Agregar nuevo"
 	},
@@ -19,6 +22,9 @@
 	},
 	"anyURL": {
 		"message": "Cualquier URL"
+	},
+	"base64": {
+		"message": "Base 64"
 	},
 	"body": {
 		"message": "Cuerpo:"
@@ -43,6 +49,9 @@
 	},
 	"close": {
 		"message": "Cerrar"
+	},
+	"close2": {
+		"message": "cerrar"
 	},
 	"closeDetails": {
 		"message": "Cerrar detalles"
@@ -85,6 +94,9 @@
 	},
 	"failure": {
 		"message": "Fallo"
+	},
+	"file": {
+		"message": "Archivo"
 	},
 	"filter": {
 		"message": "Filtrar"
@@ -152,6 +164,9 @@
 	"method": {
 		"message": "Método:"
 	},
+	"multipartFromData": {
+		"message": "Formulario multipart"
+	},
 	"mutation": {
 		"message": "Mutación"
 	},
@@ -169,6 +184,9 @@
 	},
 	"notJustThoseAffectedByTheRules": {
 		"message": "no solo aquellas afectadas por las reglas."
+	},
+	"original": {
+		"message": "Original"
 	},
 	"otherwiseYouMustSpecifyFullAddress": {
 		"message": "De lo contrario, debe especificar el valor de la dirección completa, incluyendo el nombre del protocolo."
@@ -263,6 +281,9 @@
 	"stopping": {
 		"message": "Deteniendo"
 	},
+	"text": {
+		"message": "Texto"
+	},
 	"theCurrentPageOriginWillBeShown": {
 		"message": "el origen de la página actual se mostrará"
 	},
@@ -274,6 +295,9 @@
 	},
 	"url2": {
 		"message": "URL"
+	},
+	"urlEncodedForm": {
+		"message": "Formulario codificado en URL"
 	},
 	"urlPatternHint": {
 		"message": "Indicación del patrón de URL"

@@ -11,7 +11,7 @@ export const requestBodyTypesList = [
 ];
 
 export const responseBodyTypesHumanTitles: Record<RequestBodyType, string> = {
-	[RequestBodyType.Text]: 'Text',
-	[RequestBodyType.UrlEncodedForm]: 'Url encoded form',
-	[RequestBodyType.MultipartFromData]: 'Multipart from data',
+	[RequestBodyType.Text]: 'text',
+	[RequestBodyType.UrlEncodedForm]: 'urlEncodedForm',
+	[RequestBodyType.MultipartFromData]: 'multipartFromData',
 };
