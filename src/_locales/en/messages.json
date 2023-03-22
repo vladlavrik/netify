@@ -17,11 +17,17 @@
 	"anyResource": {
 		"message": "Any resource"
 	},
+	"anyURL": {
+		"message": "Any url"
+	},
 	"body": {
 		"message": "Body:"
 	},
 	"bodyReplacingContentTypeHeader": {
 		"message": "Body replacing will also rewrites \"Content-Type\" header"
+	},
+	"breakpoint": {
+		"message": "Breakpoint"
 	},
 	"cancel": {
 		"message": "Cancel"
@@ -40,6 +46,9 @@
 	},
 	"closeDetails": {
 		"message": "Close details"
+	},
+	"composeFirstRule": {
+		"message": "Compose a first rule"
 	},
 	"confirm": {
 		"message": "Confirm"
@@ -71,6 +80,12 @@
 	"export": {
 		"message": "Export"
 	},
+	"exportRules": {
+		"message": "Export rules"
+	},
+	"failure": {
+		"message": "Failure"
+	},
 	"filter": {
 		"message": "Filter"
 	},
@@ -85,6 +100,21 @@
 	},
 	"hostname": {
 		"message": "Hostname"
+	},
+	"ifCheckedOnlyRulesCreatedWithin": {
+		"message": "If checked - only rules created within"
+	},
+	"ifCheckedRequestsWillBeLogged": {
+		"message": "If checked - all requests will be logged,"
+	},
+	"importRules": {
+		"message": "Import rules"
+	},
+	"inTheListOfRules": {
+		"message": "in the list of rules."
+	},
+	"inactive": {
+		"message": "Inactive"
 	},
 	"intercepted": {
 		"message": "Intercepted"
@@ -101,6 +131,15 @@
 	"labelPlaceholder": {
 		"message": "The rule label (optional)"
 	},
+	"listening": {
+		"message": "Listening"
+	},
+	"localResponse": {
+		"message": "Local response"
+	},
+	"logAllRequests": {
+		"message": "Log all requests"
+	},
 	"logs": {
 		"message": "Logs"
 	},
@@ -113,8 +152,23 @@
 	"method": {
 		"message": "Method:"
 	},
+	"mutation": {
+		"message": "Mutation"
+	},
+	"noActions": {
+		"message": "No actions"
+	},
 	"noChanges": {
 		"message": "No changes"
+	},
+	"noLogsHere": {
+		"message": "No logs here"
+	},
+	"noRulesYet": {
+		"message": "No rules yet"
+	},
+	"notJustThoseAffectedByTheRules": {
+		"message": "not just those affected by the rules."
 	},
 	"otherwiseYouMustSpecifyFullAddress": {
 		"message": "Otherwise, you must specify the full address value, including a protocol name."
@@ -134,6 +188,9 @@
 	"questionClearAllRulesForever": {
 		"message": "Clear all rules forever?"
 	},
+	"rateAndSupportUs": {
+		"message": "Rate and support us"
+	},
 	"reason": {
 		"message": "Reason:"
 	},
@@ -142,6 +199,9 @@
 	},
 	"removeItem": {
 		"message": "Remove item"
+	},
+	"removeTheRuleForever": {
+		"message": "Remove the rule forever?"
 	},
 	"request": {
 		"message": "Request"
@@ -164,6 +224,9 @@
 	"rules": {
 		"message": "Rules"
 	},
+	"rulesPerSite": {
+		"message": "Rules per site"
+	},
 	"save": {
 		"message": "Save"
 	},
@@ -185,8 +248,23 @@
 	"stage2": {
 		"message": "Stage"
 	},
+	"startRequestsListening": {
+		"message": "Start requests listening"
+	},
+	"starting": {
+		"message": "Starting"
+	},
 	"statusCode": {
 		"message": "Status code:"
+	},
+	"stopRequestsListening": {
+		"message": "Stop requests listening"
+	},
+	"stopping": {
+		"message": "Stopping"
+	},
+	"theCurrentPageOriginWillBeShown": {
+		"message": "the current page origin will be shown"
 	},
 	"unselectAll": {
 		"message": "Unselect all"

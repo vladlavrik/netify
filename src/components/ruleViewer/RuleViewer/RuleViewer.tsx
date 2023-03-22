@@ -51,7 +51,9 @@ export const RuleViewer = observer(() => {
 
 				<h2 className={styles.header}>
 					<span className={styles.headerTitle}>{chrome.i18n.getMessage('action')}</span>
-					<span className={styles.headerData}>{ruleActionsTypeHumanTitles[action.type]}</span>
+					<span className={styles.headerData}>
+						{chrome.i18n.getMessage(ruleActionsTypeHumanTitles[action.type])}
+					</span>
 				</h2>
 
 				{action.type === RuleActionsType.Mutation && <RuleViewerActionMutation action={action} />}

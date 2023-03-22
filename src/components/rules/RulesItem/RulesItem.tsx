@@ -149,11 +149,15 @@ export const RulesItem = observer<RulesItemProps>((props) => {
 					)}
 
 					<span className={cn(styles.url, !url && styles.placeholder)} title={url && url.toString()}>
-						{url || 'Any url'}
+						{url || chrome.i18n.getMessage('anyURL')}
 					</span>
 				</div>
 
-				<p className={styles.actionsSummary}>{active ? actionsSummary || 'No actions' : 'Inactive'}</p>
+				<p className={styles.actionsSummary}>
+					{active
+						? actionsSummary || chrome.i18n.getMessage('noActions')
+						: chrome.i18n.getMessage('inactive')}
+				</p>
 			</div>
 
 			{!isExportMode && (
@@ -178,7 +182,7 @@ export const RulesItem = observer<RulesItemProps>((props) => {
 
 			{showRemoveAsk && (
 				<PopUpConfirm onConfirm={handleRemoveConfirm} onCancel={handleRemoveCancel}>
-					Remove the rule forever?
+					{chrome.i18n.getMessage('removeTheRuleForever')}
 				</PopUpConfirm>
 			)}
 		</li>

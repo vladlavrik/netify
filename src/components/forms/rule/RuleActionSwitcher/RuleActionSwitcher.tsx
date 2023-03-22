@@ -16,7 +16,7 @@ export const RuleActionSwitcher = memo(() => {
 				{Object.entries(ruleActionsTypeHumanTitles).map(([value, title]) => (
 					<div key={value} className={cn(styles.entry, field.value === value && styles.current)}>
 						<RadioButton {...field} value={value} checked={field.value === value}>
-							{title}
+							{chrome.i18n.getMessage(title)}
 						</RadioButton>
 					</div>
 				))}

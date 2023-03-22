@@ -19,9 +19,9 @@ export const RulesList = observer(() => {
 
 	return rulesCount === 0 ? (
 		<div className={styles.placeholder}>
-			No rules yet
+			{chrome.i18n.getMessage('noRulesYet')}
 			<Button className={styles.composeButton} onClick={handleShowCompose}>
-				Compose a first rule
+				{chrome.i18n.getMessage('composeFirstRule')}
 			</Button>
 		</div>
 	) : (

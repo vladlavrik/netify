@@ -17,11 +17,17 @@
 	"anyResource": {
 		"message": "Cualquier recurso"
 	},
+	"anyURL": {
+		"message": "Cualquier URL"
+	},
 	"body": {
 		"message": "Cuerpo:"
 	},
 	"bodyReplacingContentTypeHeader": {
 		"message": "La sustitución del cuerpo también reescribirá el encabezado \"Content-Type\""
+	},
+	"breakpoint": {
+		"message": "Punto de interrupción"
 	},
 	"cancel": {
 		"message": "Cancelar"
@@ -40,6 +46,9 @@
 	},
 	"closeDetails": {
 		"message": "Cerrar detalles"
+	},
+	"composeFirstRule": {
+		"message": "Componer una primera regla"
 	},
 	"confirm": {
 		"message": "Confirmar"
@@ -71,6 +80,12 @@
 	"export": {
 		"message": "Exportar"
 	},
+	"exportRules": {
+		"message": "Exportar reglas"
+	},
+	"failure": {
+		"message": "Fallo"
+	},
 	"filter": {
 		"message": "Filtrar"
 	},
@@ -85,6 +100,21 @@
 	},
 	"hostname": {
 		"message": "Nombre de host"
+	},
+	"ifCheckedOnlyRulesCreatedWithin": {
+		"message": "Si está marcado, solo se mostrarán las reglas creadas dentro de"
+	},
+	"ifCheckedRequestsWillBeLogged": {
+		"message": "Si está marcado, se registrarán todas las solicitudes,"
+	},
+	"importRules": {
+		"message": "Importar reglas"
+	},
+	"inTheListOfRules": {
+		"message": "en la lista de reglas."
+	},
+	"inactive": {
+		"message": "Inactivo"
 	},
 	"intercepted": {
 		"message": "Interceptado"
@@ -101,6 +131,15 @@
 	"labelPlaceholder": {
 		"message": "La etiqueta de la regla (opcional)"
 	},
+	"listening": {
+		"message": "Escuchando"
+	},
+	"localResponse": {
+		"message": "Respuesta local"
+	},
+	"logAllRequests": {
+		"message": "Registrar todas las solicitudes"
+	},
 	"logs": {
 		"message": "Registros"
 	},
@@ -113,8 +152,23 @@
 	"method": {
 		"message": "Método:"
 	},
+	"mutation": {
+		"message": "Mutación"
+	},
+	"noActions": {
+		"message": "Sin acciones"
+	},
 	"noChanges": {
 		"message": "Sin cambios"
+	},
+	"noLogsHere": {
+		"message": "No hay registros aquí"
+	},
+	"noRulesYet": {
+		"message": "Aún no hay reglas"
+	},
+	"notJustThoseAffectedByTheRules": {
+		"message": "no solo aquellas afectadas por las reglas."
 	},
 	"otherwiseYouMustSpecifyFullAddress": {
 		"message": "De lo contrario, debe especificar el valor de la dirección completa, incluyendo el nombre del protocolo."
@@ -134,6 +188,9 @@
 	"questionClearAllRulesForever": {
 		"message": "¿Borrar todas las reglas para siempre?"
 	},
+	"rateAndSupportUs": {
+		"message": "Califica y apóyanos"
+	},
 	"reason": {
 		"message": "Razón:"
 	},
@@ -142,6 +199,9 @@
 	},
 	"removeItem": {
 		"message": "Eliminar elemento"
+	},
+	"removeTheRuleForever": {
+		"message": "¿Eliminar la regla para siempre?"
 	},
 	"request": {
 		"message": "Solicitud"
@@ -164,6 +224,9 @@
 	"rules": {
 		"message": "Reglas"
 	},
+	"rulesPerSite": {
+		"message": "Reglas por sitio"
+	},
 	"save": {
 		"message": "Guardar"
 	},
@@ -185,8 +248,23 @@
 	"stage2": {
 		"message": "Etapa"
 	},
+	"startRequestsListening": {
+		"message": "Comenzar a escuchar solicitudes"
+	},
+	"starting": {
+		"message": "Comenzando"
+	},
 	"statusCode": {
 		"message": "Código de estado:"
+	},
+	"stopRequestsListening": {
+		"message": "Detener la escucha de solicitudes"
+	},
+	"stopping": {
+		"message": "Deteniendo"
+	},
+	"theCurrentPageOriginWillBeShown": {
+		"message": "el origen de la página actual se mostrará"
 	},
 	"unselectAll": {
 		"message": "Deseleccionar todo"

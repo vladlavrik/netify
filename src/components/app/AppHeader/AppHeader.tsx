@@ -55,13 +55,13 @@ export const AppHeader = observer(() => {
 			<IconButton
 				className={styles.debuggerSwitcher}
 				disabled={!hasActiveRules}
-				tooltip={debuggingActive ? 'Stop requests listening' : 'Start requests listening'}
+				tooltip={chrome.i18n.getMessage(debuggingActive ? 'stopRequestsListening' : 'startRequestsListening')}
 				icon={debuggingActive ? <ListeningActiveIcon /> : <ListeningInactiveIcon />}
 				onClick={handleToggleEnabled}>
-				{!debuggingSwitching && debuggingActive && 'Listening'}
-				{!debuggingSwitching && !debuggingActive && 'Inactive'}
-				{debuggingSwitching && debuggingActive && 'Stopping'}
-				{debuggingSwitching && !debuggingActive && 'Starting'}
+				{!debuggingSwitching && debuggingActive && chrome.i18n.getMessage('listening')}
+				{!debuggingSwitching && !debuggingActive && chrome.i18n.getMessage('inactive')}
+				{debuggingSwitching && debuggingActive && chrome.i18n.getMessage('stopping')}
+				{debuggingSwitching && !debuggingActive && chrome.i18n.getMessage('starting')}
 			</IconButton>
 
 			<div className={styles.separator} />
@@ -69,18 +69,18 @@ export const AppHeader = observer(() => {
 			<WithTooltip
 				tooltip={
 					<span>
-						If checked - only rules created within
+						{chrome.i18n.getMessage('ifCheckedOnlyRulesCreatedWithin')}
 						<br />
-						the current page origin will be shown
+						{chrome.i18n.getMessage('theCurrentPageOriginWillBeShown')}
 						<br />
-						in the list of rules.
+						{chrome.i18n.getMessage('inTheListOfRules')}
 					</span>
 				}>
 				<Checkbox
 					className={styles.mainControl}
 					checked={useRulesPerDomain}
 					onChange={handleToggleFilterByOrigin}>
-					Rules per site
+					{chrome.i18n.getMessage('rulesPerSite')}
 				</Checkbox>
 			</WithTooltip>
 
@@ -88,16 +88,16 @@ export const AppHeader = observer(() => {
 				<WithTooltip
 					tooltip={
 						<span>
-							If checked - all requests will be logged,
+							{chrome.i18n.getMessage('ifCheckedRequestsWillBeLogged')}
 							<br />
-							not just those affected by the rules.
+							{chrome.i18n.getMessage('notJustThoseAffectedByTheRules')}
 						</span>
 					}>
 					<Checkbox
 						className={styles.mainControl}
 						checked={logAllRequest}
 						onChange={handleToggleLogAllRequest}>
-						Log all requests
+						{chrome.i18n.getMessage('logAllRequests')}
 					</Checkbox>
 				</WithTooltip>
 			)}
@@ -108,7 +108,7 @@ export const AppHeader = observer(() => {
 				className={styles.additionalControl}
 				icon={<ImportIcon />}
 				disabled={isExportMode}
-				tooltip='Import rules'
+				tooltip={chrome.i18n.getMessage('importRules')}
 				accept='.json'
 				onFileSelect={handleImport}
 			/>
@@ -117,14 +117,18 @@ export const AppHeader = observer(() => {
 				className={styles.additionalControl}
 				icon={<ExportIcon />}
 				disabled={isExportMode || !hasAnyRules}
-				tooltip='Export rules'
+				tooltip={chrome.i18n.getMessage('exportRules')}
 				onClick={handleInitExport}
 			/>
 
 			<div className={styles.tail}>
 				<Dropdown
 					render={(dropdownProps) => (
-						<IconButton {...dropdownProps} icon={<RateIcon />} tooltip={'Rate and support us'} />
+						<IconButton
+							{...dropdownProps}
+							icon={<RateIcon />}
+							tooltip={chrome.i18n.getMessage('rateAndSupportUs')}
+						/>
 					)}
 					preferExpansionAlignX='end'
 					content={<AppRateBanner />}
