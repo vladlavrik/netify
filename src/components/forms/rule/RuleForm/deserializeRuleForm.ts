@@ -121,7 +121,7 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 		label,
 		active,
 		filter: {
-			url: filter.url,
+			url: filter.url.trim(),
 			resourceTypes: filter.resourceTypes,
 			methods: filter.methods,
 		},
