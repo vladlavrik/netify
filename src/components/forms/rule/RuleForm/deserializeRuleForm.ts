@@ -10,6 +10,7 @@ import {
 	MutationRuleAction,
 	Rule,
 	RuleAction,
+	ScriptRuleAction,
 } from '@/interfaces/rule';
 import {RequestBodySchema, ResponseBodySchema, RuleFormSchema} from './ruleFormSchema';
 
@@ -113,6 +114,13 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 				type: RuleActionsType.Failure,
 				reason: actionConfigs[RuleActionsType.Failure].reason,
 			} as FailureRuleAction;
+			break;
+		case RuleActionsType.Script:
+			action = {
+				type: RuleActionsType.Script,
+				request: actionConfigs[RuleActionsType.Script].request,
+				response: actionConfigs[RuleActionsType.Script].response,
+			} as ScriptRuleAction;
 			break;
 	}
 

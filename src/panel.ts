@@ -2,17 +2,20 @@ import {FetchDevtools, FetchRuleStore} from '@/services/devtools/fetch';
 import {ExtensionDevtoolsConnector, ExtensionIcon, ExtensionTab} from '@/services/extension';
 import {openIDB} from '@/services/indexedDB';
 import {RulesDatabaseMapper, RulesLocalMapper} from '@/services/rulesMapper';
+import {Sandbox} from '@/services/sandbox';
 import {RootStore} from '@/stores/RootStore';
 import {PanelApplicationManager} from './PanelApplicationManager';
 import '@/style/page.css';
 
 (async () => {
+	const sandboxIframe = document.getElementById('netify-sandbox-iframe') as HTMLIFrameElement;
+	const sandbox = new Sandbox(sandboxIframe);
 	const {tabId} = chrome.devtools.inspectedWindow;
 	const tab = new ExtensionTab(tabId);
 	const extensionIcon = new ExtensionIcon(tabId, 'Netify');
 	const devtoolsConnector = new ExtensionDevtoolsConnector(tabId);
 	const fetchRulesStore = new FetchRuleStore();
-	const fetchDevtools = new FetchDevtools(devtoolsConnector, fetchRulesStore);
+	const fetchDevtools = new FetchDevtools(devtoolsConnector, fetchRulesStore, sandbox);
 
 	// Require the current browser's tab hostname
 	const {origin: tabOrigin} = await tab.getPageUrl();

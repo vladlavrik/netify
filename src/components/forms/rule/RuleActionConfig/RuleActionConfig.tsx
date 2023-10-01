@@ -5,6 +5,7 @@ import {RuleActionBreakpoint} from '../RuleActionBreakpoint';
 import {RuleActionFailure} from '../RuleActionFailure';
 import {RuleActionLocalResponse} from '../RuleActionLocalResponse';
 import {RuleActionMutation} from '../RuleActionMutation';
+import {RuleActionScript} from '../RuleActionScript';
 
 export const RuleActionConfig = memo(() => {
 	const [field] = useField<RuleActionsType>('actionType');
@@ -21,6 +22,9 @@ export const RuleActionConfig = memo(() => {
 
 		case RuleActionsType.Failure:
 			return <RuleActionFailure />;
+
+		case RuleActionsType.Script:
+			return <RuleActionScript />;
 	}
 });
 

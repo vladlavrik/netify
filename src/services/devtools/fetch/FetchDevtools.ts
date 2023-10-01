@@ -12,10 +12,20 @@ import {
 	LocalResponseRuleAction,
 	MutationRuleAction,
 	Rule,
+	ScriptRuleAction,
 } from '@/interfaces/rule';
-import {DevtoolsConnector} from '@/services/devtools';
+import type {DevtoolsConnector} from '@/services/devtools';
+import type {Sandbox} from '@/services/sandbox';
 import {EventBus} from '@/helpers/EventsBus';
-import {FetchRuleStore} from './FetchRuleStore';
+import type {FetchRuleStore} from './FetchRuleStore';
+import {
+	makeRequestScriptCode,
+	makeRequestScriptScope,
+	makeResponseScriptCode,
+	makeResponseScriptScope,
+	requestScriptResultSchema,
+	responseScriptResultSchema,
+} from './helpers/scripting';
 import {RequestBuilder} from './RequestBuilder';
 import {ResponseBuilder, ResponsePausedEvent} from './ResponseBuilder';
 
@@ -40,7 +50,11 @@ export class FetchDevtools {
 	private enabled = false;
 	private unsubscribeDevtoolsEvents?: () => void;
 
-	constructor(private readonly devtools: DevtoolsConnector, private readonly rulesStore: FetchRuleStore) {}
+	constructor(
+		private readonly devtools: DevtoolsConnector,
+		private readonly rulesStore: FetchRuleStore,
+		private readonly sandbox: Sandbox,
+	) {}
 
 	async enable() {
 		this.enabled = true;
@@ -127,6 +141,11 @@ export class FetchDevtools {
 			case RuleActionsType.Failure:
 				await this.processRequestFailure(requestId, rule.action);
 				break;
+
+			// Script request
+			case RuleActionsType.Script:
+				await this.processRequestScript(pausedRequest, rule.action);
+				break;
 		}
 	}
 
@@ -138,6 +157,10 @@ export class FetchDevtools {
 
 			case RuleActionsType.Mutation:
 				await this.processResponseMutation(pausedResponse, rule.action, rule.id);
+				break;
+
+			case RuleActionsType.Script:
+				await this.processResponseScript(pausedResponse, rule.action);
 				break;
 		}
 	}
@@ -192,6 +215,90 @@ export class FetchDevtools {
 		await this.failRequest({requestId, errorReason});
 	}
 
+	private async processRequestScript(pausedRequest: RequestPausedEvent, action: ScriptRuleAction) {
+		const {requestId} = pausedRequest;
+
+		// Prepare executable code and scope
+		const scriptScope = makeRequestScriptScope(pausedRequest);
+		const code = makeRequestScriptCode(action.request);
+
+		let result;
+		try {
+			result = await this.sandbox.execute(code, true, scriptScope);
+		} catch (error) {
+			console.warn('Fetch devtools: execute request script handler error');
+			console.error(error);
+			// TODO log error to ui
+			await this.continueRequest({requestId});
+			return;
+		}
+
+		const parsedResult = requestScriptResultSchema.safeParse(result);
+
+		if (!parsedResult.success) {
+			console.warn('Fetch devtools: the returned value from script handler is invalid');
+			console.log(parsedResult.error);
+			// TODO log error to ui
+			await this.continueRequest({requestId});
+			return;
+		}
+
+		switch (parsedResult.data.type) {
+			case 'continue': {
+				const builder = RequestBuilder.asScriptResult(requestId, parsedResult.data.patch);
+				const continueParams = builder.build();
+				await this.continueRequest(continueParams);
+				return;
+			}
+			case 'response': {
+				const builder = ResponseBuilder.asScriptResult(pausedRequest, parsedResult.data.response);
+				const fulfillParams = await builder.build();
+				await this.fulfillRequest(fulfillParams);
+				return;
+			}
+			case 'failure':
+				await this.failRequest({requestId, errorReason: parsedResult.data.reason});
+		}
+	}
+
+	private async processResponseScript(pausedResponse: ResponsePausedEvent, action: ScriptRuleAction) {
+		const {requestId} = pausedResponse;
+
+		// Read the response body
+		const body = await this.getResponseBody(pausedResponse.requestId);
+
+		// Prepare executable code and scope
+		const scriptScope = makeResponseScriptScope(pausedResponse, body);
+		const code = makeResponseScriptCode(action.response);
+
+		let result;
+		try {
+			result = await this.sandbox.execute(code, true, scriptScope);
+		} catch (error) {
+			console.warn('RESPONSE CODE EXECUTE ERROR');
+			console.error(error);
+			// TODO LOG ERROR
+			await this.continueRequest({requestId});
+			return;
+		}
+
+		const parsedResult = responseScriptResultSchema.safeParse(result);
+
+		if (!parsedResult.success) {
+			console.warn('Fetch devtools: the returned value from script handler is invalid');
+			console.log(parsedResult.error);
+			// TODO log error to ui
+			await this.continueRequest({requestId});
+			return;
+		}
+
+		console.log('RESPONSE CODE RESPONSE', result, parsedResult.data);
+
+		const builder = ResponseBuilder.asScriptResult(pausedResponse, parsedResult.data.patch);
+		const fulfillParams = await builder.build();
+		await this.fulfillRequest(fulfillParams);
+	}
+
 	private async processLocalResponse(requestId: string, action: LocalResponseRuleAction) {
 		const builder = ResponseBuilder.asLocalResponse(requestId, action);
 		const fulfilParams = await builder.build();
@@ -240,6 +347,7 @@ export class FetchDevtools {
 		const fulfilParams = await builder.build();
 
 		// Report to UI logger about the new handled response
+		// TODO move this to "processResponse"
 		this.events.requestProcessed.emit({
 			requestId,
 			interceptStage: 'Response',

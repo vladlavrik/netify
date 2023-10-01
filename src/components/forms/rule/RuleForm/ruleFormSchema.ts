@@ -60,6 +60,10 @@ export const ruleFormSchema = object({
 		[RuleActionsType.Failure]: object({
 			reason: mixed<ResponseErrorReason>().oneOf(responseErrorReasonsList),
 		}),
+		[RuleActionsType.Script]: object({
+			request: string().trim(),
+			response: string().trim(),
+		}),
 	}).required(),
 }).required();
 

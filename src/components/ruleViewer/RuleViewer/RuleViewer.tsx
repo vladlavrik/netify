@@ -6,6 +6,7 @@ import {RuleViewerActionBreakpoint} from '../RuleViewerActionBreakpoint';
 import {RuleViewerActionFailure} from '../RuleViewerActionFailure';
 import {RuleViewerActionLocalResponse} from '../RuleViewerActionLocalResponse';
 import {RuleViewerActionMutation} from '../RuleViewerActionMutation';
+import {RuleViewerActionScript} from '../RuleViewerActionScript';
 import {RuleViewerFilter} from '../RuleViewerFilter';
 import {RuleViewerHeader} from '../RuleViewerHeader';
 import styles from './ruleViewer.css';
@@ -58,6 +59,8 @@ export const RuleViewer = observer(() => {
 				{action.type === RuleActionsType.LocalResponse && <RuleViewerActionLocalResponse action={action} />}
 
 				{action.type === RuleActionsType.Failure && <RuleViewerActionFailure action={action} />}
+
+				{action.type === RuleActionsType.Script && <RuleViewerActionScript action={action} />}
 			</div>
 		</div>
 	);

@@ -142,7 +142,7 @@
 
 		// Stylistic Issues section
 		"func-name-matching": "error",
-		"capitalized-comments": ["error", "always", {"ignorePattern": "prettier-ignore"}],
+		"capitalized-comments": ["error", "always", {"ignorePattern": "prettier-ignore|noinspection|webpack|languag"}],
 		"lines-around-comment": [
 			"error",
 			{

@@ -83,6 +83,15 @@ export class FetchRuleStore {
 				case RuleActionsType.Failure:
 					stages.push('Request');
 					break;
+
+				case RuleActionsType.Script:
+					if (action.request) {
+						stages.push('Request');
+					}
+					if (action.response) {
+						stages.push('Response');
+					}
+					break;
 			}
 
 			const urlPattern = filter.url.startsWith('/')

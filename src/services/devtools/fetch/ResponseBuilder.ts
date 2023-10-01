@@ -4,7 +4,7 @@ import {ResponseBody} from '@/interfaces/body';
 import {ResponseBreakpointInput} from '@/interfaces/breakpoint';
 import {HeadersArray} from '@/interfaces/headers';
 import {LocalResponseRuleAction, MutationRuleAction} from '@/interfaces/rule';
-import {patchHeaders} from './helpers/headers';
+import {headersMapToArray, patchHeaders} from './helpers/headers';
 import {
 	buildResponseBodyFromBase64,
 	buildResponseBodyFromFile,
@@ -15,7 +15,7 @@ import {
 
 type FulfillRequestRequest = Protocol.Fetch.FulfillRequestRequest;
 type HeaderEntry = Protocol.Fetch.HeaderEntry;
-type RequestPausedEvent = RequiredProps<Protocol.Fetch.RequestPausedEvent, 'responseStatusCode' | 'responseHeaders'>;
+type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
 
 export type ResponsePausedEvent = RequiredProps<RequestPausedEvent, 'responseStatusCode' | 'responseHeaders'>;
 
@@ -43,6 +43,31 @@ export class ResponseBuilder {
 	static asLocalResponse(requestId: string, action: LocalResponseRuleAction) {
 		const {statusCode, headers, body} = action;
 		return new this(requestId, statusCode, headers, body);
+	}
+
+	static asScriptResult(
+		pausedRequest: RequestPausedEvent,
+		response: {statusCode?: number; headers?: Record<string, any>; body?: string | Blob},
+	) {
+		const statusCode = response.statusCode ?? pausedRequest.responseStatusCode ?? 200;
+		const headers = response.headers ? headersMapToArray(response.headers) : pausedRequest.responseHeaders || [];
+
+		let body: ResponseBody | undefined;
+		if (response.body) {
+			if (response.body instanceof Blob) {
+				body = {
+					type: ResponseBodyType.File,
+					value: response.body instanceof File ? response.body : new File([response.body], 'filename'),
+				};
+			} else {
+				body = {
+					type: ResponseBodyType.Text,
+					value: response.body,
+				};
+			}
+		}
+
+		return new this(pausedRequest.requestId, statusCode, headers, body);
 	}
 
 	static asBreakpointExecute(

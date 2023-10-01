@@ -22,6 +22,12 @@
 	"background": {
 		"service_worker": "background.js"
 	},
+	"content_security_policy": {
+		"sandbox": "sandbox allow-scripts; default-src 'self'; child-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+	},
+	"sandbox": {
+		"pages": ["sandbox.html"]
+	},
 	"permissions": [
 		"debugger",
 		"tabs"

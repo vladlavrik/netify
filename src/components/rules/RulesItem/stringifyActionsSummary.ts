@@ -54,6 +54,11 @@ export function stringifyActionsSummary(action: RuleAction) {
 
 		case RuleActionsType.Failure:
 			actions.push('Failure');
+			break;
+
+		case RuleActionsType.Script:
+			actions.push('Script');
+			break;
 	}
 
 	return actions.join(', ');

@@ -12,6 +12,7 @@ module.exports = (env, {mode} = {}) => ({
 	entry: {
 		background: './src/background.ts',
 		devtool: './src/devtool.ts',
+		sandbox: './src/sandbox.ts',
 		panel: './src/panel.ts',
 	},
 	output: {
@@ -90,6 +91,11 @@ module.exports = (env, {mode} = {}) => ({
 			template: './src/panel.html',
 			filename: 'panel.html',
 			chunks: ['panel'],
+		}),
+		new HtmlWebpackPlugin({
+			template: './src/sandbox.html',
+			filename: 'sandbox.html',
+			chunks: ['sandbox'],
 		}),
 		new MiniCssExtractPlugin({
 			filename: '[name].css',

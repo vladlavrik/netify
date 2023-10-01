@@ -52,6 +52,11 @@ export const rulesExportSchema = z.object({
 					type: z.literal(RuleActionsType.Failure),
 					reason: z.nativeEnum(ResponseErrorReason),
 				}),
+				z.object({
+					type: z.literal(RuleActionsType.Script),
+					request: z.string(),
+					response: z.string(),
+				}),
 			]),
 		}),
 	),

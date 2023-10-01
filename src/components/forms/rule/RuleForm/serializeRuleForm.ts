@@ -6,6 +6,56 @@ import {RuleActionsType} from '@/constants/RuleActionsType';
 import {Rule} from '@/interfaces/rule';
 import {RuleFormSchema} from './ruleFormSchema';
 
+// language=js
+const defaultRequestScript = `
+/**
+ * @callback nextCallback
+ * @param {Object} patch
+ * @param {string} patch.method - method name in UPPER CASE
+ * @param {Object} patch.headers - key-value headers
+ * @param {string} patch.body
+ */
+
+/** @param {Object} request
+ * @param {number} request.statusCode
+ * @param {Object} request.headers - key-value headers
+ * @param {string} request.body
+ * @param {nextCallback} next
+ */
+function request(request, next) {
+  return next({
+  	method: request.method,
+  	headers: request.headers,
+  	body: request.body,
+  });
+}
+`.trim();
+
+// language=js
+const defaultResponseScript = `
+/**
+ * @callback nextCallback
+ * @param {Object} patch
+ * @param {number} patch.statusCode
+ * @param {Object} patch.headers - key-value headers
+ * @param {(string|Blob)} patch.body
+ */
+
+ /** @param {Object} response
+ * @param {number} response.statusCode
+ * @param {Object} response.headers - key-value headers
+ * @param {Blob} response.body
+ * @param {nextCallback} next
+ */
+function response(response, next) {
+  return next({
+    statusCode: response.statusCode,
+    headers: response.headers,
+    body: response.body,
+  });
+}
+`.trim();
+
 export function serializeRuleForm(rule: Rule) {
 	const {label, filter, action} = rule;
 
@@ -57,6 +107,10 @@ export function serializeRuleForm(rule: Rule) {
 			},
 			[RuleActionsType.Failure]: {
 				reason: ResponseErrorReason.Failed,
+			},
+			[RuleActionsType.Script]: {
+				request: defaultRequestScript,
+				response: defaultResponseScript,
 			},
 		},
 	};
@@ -145,6 +199,12 @@ export function serializeRuleForm(rule: Rule) {
 
 		case RuleActionsType.Failure: {
 			value.actionConfigs[RuleActionsType.Failure].reason = action.reason;
+			break;
+		}
+
+		case RuleActionsType.Script: {
+			value.actionConfigs[RuleActionsType.Script].request = action.request || defaultRequestScript;
+			value.actionConfigs[RuleActionsType.Script].response = action.response || defaultResponseScript;
 			break;
 		}
 	}
