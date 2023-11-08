@@ -1,6 +1,6 @@
 import React, {memo, useMemo} from 'react';
 import {RuleActionsType} from '@/constants/RuleActionsType';
-import {Rule} from '@/interfaces/Rule';
+import {Rule} from '@/interfaces/rule';
 import {randomHex} from '@/helpers/random';
 import {useStores} from '@/stores/useStores';
 import {RuleForm} from '../RuleForm';

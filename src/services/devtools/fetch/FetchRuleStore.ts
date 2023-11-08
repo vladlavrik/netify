@@ -2,7 +2,7 @@ import {Protocol} from 'devtools-protocol';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {RuleActionsType} from '@/constants/RuleActionsType';
-import {Rule} from '@/interfaces/Rule';
+import {Rule} from '@/interfaces/rule';
 
 type RequestStage = Protocol.Fetch.RequestStage;
 type RequestPattern = Protocol.Fetch.RequestPattern;
