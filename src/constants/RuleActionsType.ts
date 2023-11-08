@@ -13,8 +13,8 @@ export const ruleActionsTypesList = [
 ];
 
 export const ruleActionsTypeHumanTitles: Record<RuleActionsType, string> = {
-	[RuleActionsType.Mutation]: 'Mutation',
-	[RuleActionsType.Breakpoint]: 'Breakpoint',
-	[RuleActionsType.LocalResponse]: 'Local response',
-	[RuleActionsType.Failure]: 'Failure',
+	[RuleActionsType.Mutation]: 'mutation',
+	[RuleActionsType.Breakpoint]: 'breakpoint',
+	[RuleActionsType.LocalResponse]: 'localResponse',
+	[RuleActionsType.Failure]: 'failure',
 };

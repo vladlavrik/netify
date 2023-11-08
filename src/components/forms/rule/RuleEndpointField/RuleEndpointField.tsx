@@ -37,13 +37,13 @@ export const RuleEndpointField = memo<RuleEndpointFieldProps>(({name}) => {
 			<TextField
 				ref={endpointFieldRef}
 				className={styles.field}
-				placeholder='Redirect a request by the new url'
+				placeholder={chrome.i18n.getMessage('redirectRequestByNewUrl')}
 				suffixChildren={
 					<Dropdown
 						className={styles.macros}
 						render={(dropdownProps, {expanded}) => (
 							<TextButton {...dropdownProps} className={styles.macrosButton} tabIndex={-1}>
-								{expanded ? 'close' : 'add macros'}
+								{chrome.i18n.getMessage(expanded ? 'close2' : 'addMacros')}
 							</TextButton>
 						)}
 						preferExpansionAlignX='start'
@@ -53,31 +53,31 @@ export const RuleEndpointField = memo<RuleEndpointFieldProps>(({name}) => {
 									className={styles.macrosOption}
 									data-value='[protocol]'
 									onClick={handleMacrosInsert}>
-									Protocol
+									{chrome.i18n.getMessage('protocol')}
 								</TextButton>
 								<TextButton
 									className={styles.macrosOption}
 									data-value='[hostname]'
 									onClick={handleMacrosInsert}>
-									Hostname
+									{chrome.i18n.getMessage('hostname')}
 								</TextButton>
 								<TextButton
 									className={styles.macrosOption}
 									data-value='[port]'
 									onClick={handleMacrosInsert}>
-									Port
+									{chrome.i18n.getMessage('port')}
 								</TextButton>
 								<TextButton
 									className={styles.macrosOption}
 									data-value='[path]'
 									onClick={handleMacrosInsert}>
-									Path
+									{chrome.i18n.getMessage('path')}
 								</TextButton>
 								<TextButton
 									className={styles.macrosOption}
 									data-value='[query]'
 									onClick={handleMacrosInsert}>
-									Query
+									{chrome.i18n.getMessage('query')}
 								</TextButton>
 							</div>
 						}

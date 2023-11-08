@@ -1,0 +1,314 @@
+{
+	"action": {
+		"message": "Action:"
+	},
+	"addMacros": {
+		"message": "add macros"
+	},
+	"addNewOne": {
+		"message": "Add new one"
+	},
+	"addNewRule": {
+		"message": "Add a new rule"
+	},
+	"allRequest": {
+		"message": "All request"
+	},
+	"anyMethod": {
+		"message": "Any method"
+	},
+	"anyResource": {
+		"message": "Any resource"
+	},
+	"anyURL": {
+		"message": "Any url"
+	},
+	"base64": {
+		"message": "Base 64"
+	},
+	"body": {
+		"message": "Body:"
+	},
+	"bodyReplacingContentTypeHeader": {
+		"message": "Body replacing will also rewrites \"Content-Type\" header"
+	},
+	"breakpoint": {
+		"message": "Breakpoint"
+	},
+	"cancel": {
+		"message": "Cancel"
+	},
+	"clearAllRules": {
+		"message": "Clear all rules"
+	},
+	"clearLog": {
+		"message": "Clear log"
+	},
+	"clickChoiceFileOrDragHere": {
+		"message": "Click to choice a file or drag-n-drop it here"
+	},
+	"close": {
+		"message": "Close"
+	},
+	"close2": {
+		"message": "close"
+	},
+	"closeDetails": {
+		"message": "Close details"
+	},
+	"composeFirstRule": {
+		"message": "Compose a first rule"
+	},
+	"confirm": {
+		"message": "Confirm"
+	},
+	"delay": {
+		"message": "Delay:"
+	},
+	"delayMs": {
+		"message": "Delay (ms):"
+	},
+	"download": {
+		"message": "Download"
+	},
+	"dropHeaders": {
+		"message": "Drop headers:"
+	},
+	"empty": {
+		"message": "empty"
+	},
+	"endpoint": {
+		"message": "Endpoint:"
+	},
+	"endpointUrl": {
+		"message": "Endpoint(url):"
+	},
+	"errorReason": {
+		"message": "Error reason:"
+	},
+	"export": {
+		"message": "Export"
+	},
+	"exportRules": {
+		"message": "Export rules"
+	},
+	"failure": {
+		"message": "Failure"
+	},
+	"file": {
+		"message": "File"
+	},
+	"filter": {
+		"message": "Filter"
+	},
+	"headerName": {
+		"message": "Header name"
+	},
+	"headerValue": {
+		"message": "Header value"
+	},
+	"headers": {
+		"message": "Headers:"
+	},
+	"hostname": {
+		"message": "Hostname"
+	},
+	"ifCheckedOnlyRulesCreatedWithin": {
+		"message": "If checked - only rules created within"
+	},
+	"ifCheckedRequestsWillBeLogged": {
+		"message": "If checked - all requests will be logged,"
+	},
+	"importRules": {
+		"message": "Import rules"
+	},
+	"inTheListOfRules": {
+		"message": "in the list of rules."
+	},
+	"inactive": {
+		"message": "Inactive"
+	},
+	"intercepted": {
+		"message": "Intercepted"
+	},
+	"interceptedRequests": {
+		"message": "Intercepted requests:"
+	},
+	"key": {
+		"message": "Key"
+	},
+	"label": {
+		"message": "Label:"
+	},
+	"labelPlaceholder": {
+		"message": "The rule label (optional)"
+	},
+	"listening": {
+		"message": "Listening"
+	},
+	"localResponse": {
+		"message": "Local response"
+	},
+	"logAllRequests": {
+		"message": "Log all requests"
+	},
+	"logs": {
+		"message": "Logs"
+	},
+	"matchesAnySingleCharacter": {
+		"message": "matches any single character"
+	},
+	"matchesAnyZeroOrMoreCharacters": {
+		"message": "matches any zero or more characters"
+	},
+	"method": {
+		"message": "Method:"
+	},
+	"multipartFromData": {
+		"message": "Multipart from data"
+	},
+	"mutation": {
+		"message": "Mutation"
+	},
+	"noActions": {
+		"message": "No actions"
+	},
+	"noChanges": {
+		"message": "No changes"
+	},
+	"noLogsHere": {
+		"message": "No logs here"
+	},
+	"noRulesYet": {
+		"message": "No rules yet"
+	},
+	"notJustThoseAffectedByTheRules": {
+		"message": "not just those affected by the rules."
+	},
+	"original": {
+		"message": "Original"
+	},
+	"otherwiseYouMustSpecifyFullAddress": {
+		"message": "Otherwise, you must specify the full address value, including a protocol name."
+	},
+	"path": {
+		"message": "Path"
+	},
+	"port": {
+		"message": "Port"
+	},
+	"protocol": {
+		"message": "Protocol"
+	},
+	"query": {
+		"message": "Query"
+	},
+	"questionClearAllRulesForever": {
+		"message": "Clear all rules forever?"
+	},
+	"rateAndSupportUs": {
+		"message": "Rate and support us"
+	},
+	"reason": {
+		"message": "Reason:"
+	},
+	"redirectRequestByNewUrl": {
+		"message": "Redirect a request by the new url"
+	},
+	"removeItem": {
+		"message": "Remove item"
+	},
+	"removeTheRuleForever": {
+		"message": "Remove the rule forever?"
+	},
+	"request": {
+		"message": "Request"
+	},
+	"requestFilter": {
+		"message": "Request filter:"
+	},
+	"requestMethod": {
+		"message": "Request method:"
+	},
+	"resourceType": {
+		"message": "Resource type:"
+	},
+	"response": {
+		"message": "Response"
+	},
+	"ruleDetails": {
+		"message": "Rule details"
+	},
+	"rules": {
+		"message": "Rules"
+	},
+	"rulesPerSite": {
+		"message": "Rules per site"
+	},
+	"save": {
+		"message": "Save"
+	},
+	"selectAll": {
+		"message": "Select all"
+	},
+	"setHeaders": {
+		"message": "Set headers:"
+	},
+	"show": {
+		"message": "Show"
+	},
+	"showAll": {
+		"message": "Show all"
+	},
+	"stage": {
+		"message": "Stage:"
+	},
+	"stage2": {
+		"message": "Stage"
+	},
+	"startRequestsListening": {
+		"message": "Start requests listening"
+	},
+	"starting": {
+		"message": "Starting"
+	},
+	"statusCode": {
+		"message": "Status code:"
+	},
+	"stopRequestsListening": {
+		"message": "Stop requests listening"
+	},
+	"stopping": {
+		"message": "Stopping"
+	},
+	"text": {
+		"message": "Text"
+	},
+	"theCurrentPageOriginWillBeShown": {
+		"message": "the current page origin will be shown"
+	},
+	"unselectAll": {
+		"message": "Unselect all"
+	},
+	"url": {
+		"message": "Url:"
+	},
+	"url2": {
+		"message": "Url"
+	},
+	"urlEncodedForm": {
+		"message": "Url encoded form"
+	},
+	"urlPatternHint": {
+		"message": "Url pattern hint"
+	},
+	"value": {
+		"message": "Value"
+	},
+	"youCanAlsoUseSpecialMarks": {
+		"message": "You can also use special marks:"
+	},
+	"youCanUsePathname": {
+		"message": "You can use a pathname only value starting with \"/\" for the current domain urls."
+	}
+}

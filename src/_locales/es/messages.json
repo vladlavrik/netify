@@ -1,0 +1,314 @@
+{
+	"action": {
+		"message": "Acción:"
+	},
+	"addMacros": {
+		"message": "añadir macros"
+	},
+	"addNewOne": {
+		"message": "Agregar nuevo"
+	},
+	"addNewRule": {
+		"message": "Agregar nueva regla"
+	},
+	"allRequest": {
+		"message": "Todas las solicitudes"
+	},
+	"anyMethod": {
+		"message": "Cualquier método"
+	},
+	"anyResource": {
+		"message": "Cualquier recurso"
+	},
+	"anyURL": {
+		"message": "Cualquier URL"
+	},
+	"base64": {
+		"message": "Base 64"
+	},
+	"body": {
+		"message": "Cuerpo:"
+	},
+	"bodyReplacingContentTypeHeader": {
+		"message": "La sustitución del cuerpo también reescribirá el encabezado \"Content-Type\""
+	},
+	"breakpoint": {
+		"message": "Punto de interrupción"
+	},
+	"cancel": {
+		"message": "Cancelar"
+	},
+	"clearAllRules": {
+		"message": "Borrar todas las reglas"
+	},
+	"clearLog": {
+		"message": "Borrar registro"
+	},
+	"clickChoiceFileOrDragHere": {
+		"message": "Haga clic para seleccionar un archivo o arrástrelo aquí"
+	},
+	"close": {
+		"message": "Cerrar"
+	},
+	"close2": {
+		"message": "cerrar"
+	},
+	"closeDetails": {
+		"message": "Cerrar detalles"
+	},
+	"composeFirstRule": {
+		"message": "Componer una primera regla"
+	},
+	"confirm": {
+		"message": "Confirmar"
+	},
+	"delay": {
+		"message": "Retraso:"
+	},
+	"delayMs": {
+		"message": "Retraso (ms):"
+	},
+	"download": {
+		"message": "Descargar"
+	},
+	"dropHeaders": {
+		"message": "Eliminar encabezados:"
+	},
+	"empty": {
+		"message": "vacío"
+	},
+	"endpoint": {
+		"message": "Punto final:"
+	},
+	"endpointUrl": {
+		"message": "URL de punto final:"
+	},
+	"errorReason": {
+		"message": "Motivo del error:"
+	},
+	"export": {
+		"message": "Exportar"
+	},
+	"exportRules": {
+		"message": "Exportar reglas"
+	},
+	"failure": {
+		"message": "Fallo"
+	},
+	"file": {
+		"message": "Archivo"
+	},
+	"filter": {
+		"message": "Filtrar"
+	},
+	"headerName": {
+		"message": "Nombre del encabezado"
+	},
+	"headerValue": {
+		"message": "Valor del encabezado"
+	},
+	"headers": {
+		"message": "Encabezados:"
+	},
+	"hostname": {
+		"message": "Nombre de host"
+	},
+	"ifCheckedOnlyRulesCreatedWithin": {
+		"message": "Si está marcado, solo se mostrarán las reglas creadas dentro de"
+	},
+	"ifCheckedRequestsWillBeLogged": {
+		"message": "Si está marcado, se registrarán todas las solicitudes,"
+	},
+	"importRules": {
+		"message": "Importar reglas"
+	},
+	"inTheListOfRules": {
+		"message": "en la lista de reglas."
+	},
+	"inactive": {
+		"message": "Inactivo"
+	},
+	"intercepted": {
+		"message": "Interceptado"
+	},
+	"interceptedRequests": {
+		"message": "Solicitudes interceptadas:"
+	},
+	"key": {
+		"message": "Clave"
+	},
+	"label": {
+		"message": "Etiqueta:"
+	},
+	"labelPlaceholder": {
+		"message": "La etiqueta de la regla (opcional)"
+	},
+	"listening": {
+		"message": "Escuchando"
+	},
+	"localResponse": {
+		"message": "Respuesta local"
+	},
+	"logAllRequests": {
+		"message": "Registrar todas las solicitudes"
+	},
+	"logs": {
+		"message": "Registros"
+	},
+	"matchesAnySingleCharacter": {
+		"message": "coincide con cualquier carácter individual"
+	},
+	"matchesAnyZeroOrMoreCharacters": {
+		"message": "coincide con cualquier cantidad de caracteres"
+	},
+	"method": {
+		"message": "Método:"
+	},
+	"multipartFromData": {
+		"message": "Formulario multipart"
+	},
+	"mutation": {
+		"message": "Mutación"
+	},
+	"noActions": {
+		"message": "Sin acciones"
+	},
+	"noChanges": {
+		"message": "Sin cambios"
+	},
+	"noLogsHere": {
+		"message": "No hay registros aquí"
+	},
+	"noRulesYet": {
+		"message": "Aún no hay reglas"
+	},
+	"notJustThoseAffectedByTheRules": {
+		"message": "no solo aquellas afectadas por las reglas."
+	},
+	"original": {
+		"message": "Original"
+	},
+	"otherwiseYouMustSpecifyFullAddress": {
+		"message": "De lo contrario, debe especificar el valor de la dirección completa, incluyendo el nombre del protocolo."
+	},
+	"path": {
+		"message": "Ruta"
+	},
+	"port": {
+		"message": "Puerto"
+	},
+	"protocol": {
+		"message": "Protocolo"
+	},
+	"query": {
+		"message": "Consulta"
+	},
+	"questionClearAllRulesForever": {
+		"message": "¿Borrar todas las reglas para siempre?"
+	},
+	"rateAndSupportUs": {
+		"message": "Califica y apóyanos"
+	},
+	"reason": {
+		"message": "Razón:"
+	},
+	"redirectRequestByNewUrl": {
+		"message": "Redirigir una solicitud por la nueva URL"
+	},
+	"removeItem": {
+		"message": "Eliminar elemento"
+	},
+	"removeTheRuleForever": {
+		"message": "¿Eliminar la regla para siempre?"
+	},
+	"request": {
+		"message": "Solicitud"
+	},
+	"requestFilter": {
+		"message": "Filtro de solicitud:"
+	},
+	"requestMethod": {
+		"message": "Método de solicitud:"
+	},
+	"resourceType": {
+		"message": "Tipo de recurso:"
+	},
+	"response": {
+		"message": "Respuesta"
+	},
+	"ruleDetails": {
+		"message": "Detalles de la regla"
+	},
+	"rules": {
+		"message": "Reglas"
+	},
+	"rulesPerSite": {
+		"message": "Reglas por sitio"
+	},
+	"save": {
+		"message": "Guardar"
+	},
+	"selectAll": {
+		"message": "Seleccionar todo"
+	},
+	"setHeaders": {
+		"message": "Establecer encabezados:"
+	},
+	"show": {
+		"message": "Mostrar"
+	},
+	"showAll": {
+		"message": "Mostrar todo"
+	},
+	"stage": {
+		"message": "Etapa:"
+	},
+	"stage2": {
+		"message": "Etapa"
+	},
+	"startRequestsListening": {
+		"message": "Comenzar a escuchar solicitudes"
+	},
+	"starting": {
+		"message": "Comenzando"
+	},
+	"statusCode": {
+		"message": "Código de estado:"
+	},
+	"stopRequestsListening": {
+		"message": "Detener la escucha de solicitudes"
+	},
+	"stopping": {
+		"message": "Deteniendo"
+	},
+	"text": {
+		"message": "Texto"
+	},
+	"theCurrentPageOriginWillBeShown": {
+		"message": "el origen de la página actual se mostrará"
+	},
+	"unselectAll": {
+		"message": "Deseleccionar todo"
+	},
+	"url": {
+		"message": "URL:"
+	},
+	"url2": {
+		"message": "URL"
+	},
+	"urlEncodedForm": {
+		"message": "Formulario codificado en URL"
+	},
+	"urlPatternHint": {
+		"message": "Indicación del patrón de URL"
+	},
+	"value": {
+		"message": "Valor"
+	},
+	"youCanAlsoUseSpecialMarks": {
+		"message": "También puede usar marcas especiales:"
+	},
+	"youCanUsePathname": {
+		"message": "Puede usar solo el valor del pathname que comienza con \"/\" para las URL del dominio actual."
+	}
+}

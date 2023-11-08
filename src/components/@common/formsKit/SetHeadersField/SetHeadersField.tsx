@@ -10,8 +10,8 @@ export const SetHeadersField = memo<SetHeadersFieldProps>(({name}) => (
 		name={name}
 		keyNameSuffix='name'
 		valueNameSuffix='value'
-		keyPlaceholder='Header name'
-		valuePlaceholder='Header value'
+		keyPlaceholder={chrome.i18n.getMessage('headerName')}
+		valuePlaceholder={chrome.i18n.getMessage('headerValue')}
 	/>
 ));
 

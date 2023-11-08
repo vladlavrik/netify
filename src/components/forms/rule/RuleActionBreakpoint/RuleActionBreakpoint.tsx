@@ -17,7 +17,7 @@ export const RuleActionBreakpoint = memo(() => {
 	const [field] = useField(name);
 
 	return (
-		<RuleRow className={styles.root} title='Stage:'>
+		<RuleRow className={styles.root} title={chrome.i18n.getMessage('stage')}>
 			{Object.values(BreakpointStage).map((value) => (
 				<RadioButton
 					key={value}

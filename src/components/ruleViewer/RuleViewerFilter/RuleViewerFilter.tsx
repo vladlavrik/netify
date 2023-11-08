@@ -14,11 +14,15 @@ export const RuleViewerFilter = observer<RuleViewerRowProps>((props) => {
 	return (
 		<table className={styles.root}>
 			<tbody>
-				{!!url && <RuleViewerRow title='Url:'>{url}</RuleViewerRow>}
+				{!!url && <RuleViewerRow title={chrome.i18n.getMessage('url')}>{url}</RuleViewerRow>}
 				{resourceTypes.length !== 0 && (
-					<RuleViewerRow title='Resource type:'>{resourceTypes.join(', ')}</RuleViewerRow>
+					<RuleViewerRow title={chrome.i18n.getMessage('resourceType')}>
+						{resourceTypes.join(', ')}
+					</RuleViewerRow>
 				)}
-				{methods.length !== 0 && <RuleViewerRow title='Request method:'>{methods.join(', ')}</RuleViewerRow>}
+				{methods.length !== 0 && (
+					<RuleViewerRow title={chrome.i18n.getMessage('requestMethod')}>{methods.join(', ')}</RuleViewerRow>
+				)}
 			</tbody>
 		</table>
 	);

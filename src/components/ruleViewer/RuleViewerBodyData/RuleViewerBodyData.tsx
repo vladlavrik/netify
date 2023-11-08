@@ -34,11 +34,11 @@ export const RuleViewerBodyData = observer<RuleViewerBodyDataProps>(({body}) => 
 				// Show trimmed body by default
 				<>
 					<p className={styles.textContent}>{value.slice(0, compactBodyLength)}...</p>
-					<TextButton onClick={handleExpand}>Show all</TextButton>
+					<TextButton onClick={handleExpand}>{chrome.i18n.getMessage('showAll')}</TextButton>
 				</>
 			) : (
 				<p className={styles.textContent}>
-					{value || <span className={styles.textPlaceholder}>&lt;empty&gt;</span>}
+					{value || <span className={styles.textPlaceholder}>&lt;{chrome.i18n.getMessage('empty')}&gt;</span>}
 				</p>
 			);
 		}
@@ -50,7 +50,7 @@ export const RuleViewerBodyData = observer<RuleViewerBodyDataProps>(({body}) => 
 						<span className={styles.additionalInfo}>Base 64 encoded content</span>
 						{!expanded && (
 							<TextButton className={styles.indented} onClick={handleExpand}>
-								Show
+								{chrome.i18n.getMessage('show')}
 							</TextButton>
 						)}
 					</p>
@@ -62,7 +62,9 @@ export const RuleViewerBodyData = observer<RuleViewerBodyDataProps>(({body}) => 
 		case RequestBodyType.MultipartFromData:
 			return (
 				<>
-					<p className={styles.additionalInfo}>{responseBodyTypesHumanTitles[body.type]}</p>
+					<p className={styles.additionalInfo}>
+						{chrome.i18n.getMessage(responseBodyTypesHumanTitles[body.type])}
+					</p>
 					<RuleViewerDataTable values={body.value.map(({key, value}) => [key, value])} />
 				</>
 			);
@@ -72,7 +74,7 @@ export const RuleViewerBodyData = observer<RuleViewerBodyDataProps>(({body}) => 
 				<p>
 					{body.value.name} <span className={styles.additionalInfo}>({body.value.size} bytes)</span>
 					<a className={styles.downloadLink} href={fileUrl} download={body.value.name}>
-						Download
+						{chrome.i18n.getMessage('download')}
 					</a>
 				</p>
 			);

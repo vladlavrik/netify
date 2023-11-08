@@ -96,7 +96,11 @@ module.exports = (env, {mode} = {}) => ({
 			chunkFilename: '[name]-[id].css',
 		}),
 		new CopyWebpackPlugin({
-			patterns: ['./src/manifest.json', {from: './src/style/icons', to: 'icons'}],
+			patterns: [
+				'./src/manifest.json',
+				{from: './src/style/icons', to: 'icons'},
+				{from: './src/_locales', to: '_locales'},
+			],
 		}),
 		...(mode === 'production'
 			? [new CleanWebpackPlugin(), new GitRevisionPlugin(), new ZipPlugin({filename: 'netify'})]

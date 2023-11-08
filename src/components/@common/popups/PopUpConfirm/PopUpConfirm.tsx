@@ -20,10 +20,10 @@ export const PopUpConfirm: FC<PopUpConfirmProps> = (props) => {
 			<div className={styles.content}>{children}</div>
 			<div className={styles.buttons}>
 				<Button className={styles.button} onClick={onConfirm}>
-					Confirm
+					{chrome.i18n.getMessage('confirm')}
 				</Button>
 				<Button className={styles.button} styleType='light' onClick={onCancel}>
-					Cancel
+					{chrome.i18n.getMessage('cancel')}
 				</Button>
 			</div>
 		</PopUp>

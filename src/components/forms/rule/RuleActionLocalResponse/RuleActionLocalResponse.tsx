@@ -11,19 +11,19 @@ export const RuleActionLocalResponse = memo(() => {
 
 	return (
 		<div>
-			<RuleRow title='Delay (ms):'>
+			<RuleRow title={chrome.i18n.getMessage('delayMs')}>
 				<RuleDelayField name={`${namePrefix}.delay`} />
 			</RuleRow>
-			<RuleRow title='Status code:'>
+			<RuleRow title={chrome.i18n.getMessage('statusCode')}>
 				<StatusCodeField name={`${namePrefix}.statusCode`} />
 			</RuleRow>
-			<RuleRow title='Set headers:'>
+			<RuleRow title={chrome.i18n.getMessage('setHeaders')}>
 				<SetHeadersField name={`${namePrefix}.headers`} />
 			</RuleRow>
-			<RuleRow title='Body:'>
+			<RuleRow title={chrome.i18n.getMessage('body')}>
 				<ResponseBodyField
 					name={`${namePrefix}.body`}
-					fileFieldNote='Body replacing will also rewrites "Content-Type" header'
+					fileFieldNote={chrome.i18n.getMessage('bodyReplacingContentTypeHeader')}
 				/>
 			</RuleRow>
 		</div>

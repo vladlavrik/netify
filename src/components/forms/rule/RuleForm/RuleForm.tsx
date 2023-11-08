@@ -50,9 +50,9 @@ export const RuleForm = memo<RuleFormProps>(({initialRule, onSave, onCancel}) =>
 
 					<div className={styles.controls}>
 						<Button className={styles.saveButton} styleType='dark' type='submit'>
-							Save
+							{chrome.i18n.getMessage('save')}
 						</Button>
-						<Button onClick={onCancel}>Cancel</Button>
+						<Button onClick={onCancel}>{chrome.i18n.getMessage('cancel')}</Button>
 					</div>
 				</Form>
 			</FormikProvider>

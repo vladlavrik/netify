@@ -8,10 +8,10 @@ import styles from './requestBodyField.css';
 
 function typeTitleGetter(type: 'Original' | RequestBodyType) {
 	if (type === 'Original') {
-		return 'Original';
+		return chrome.i18n.getMessage('original');
 	}
 
-	return responseBodyTypesHumanTitles[type];
+	return chrome.i18n.getMessage(responseBodyTypesHumanTitles[type]);
 }
 
 interface RequestMethodFieldProps {
@@ -39,8 +39,8 @@ export const RequestBodyField = memo<RequestMethodFieldProps>(({name, allowOrigi
 					name={`${name}.formValue`}
 					keyNameSuffix='key'
 					valueNameSuffix='value'
-					keyPlaceholder='Key'
-					valuePlaceholder='Value'
+					keyPlaceholder={chrome.i18n.getMessage('key')}
+					valuePlaceholder={chrome.i18n.getMessage('value')}
 				/>
 			)}
 		</div>

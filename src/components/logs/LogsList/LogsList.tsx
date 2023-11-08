@@ -9,7 +9,7 @@ export const LogsList = observer(() => {
 	const {list} = logsStore;
 
 	return list.length === 0 ? (
-		<p className={styles.placeholder}>No logs here</p>
+		<p className={styles.placeholder}>{chrome.i18n.getMessage('noLogsHere')}</p>
 	) : (
 		<ul className={styles.list}>
 			{list.map((log) => (

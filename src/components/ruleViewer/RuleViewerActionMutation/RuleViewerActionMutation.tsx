@@ -49,7 +49,7 @@ export const RuleViewerActionMutation = observer<RuleViewerActionMutationProps>(
 	};
 
 	if (!shownSections.request && !shownSections.response) {
-		return <p className={styles.placeholder}>No changes</p>;
+		return <p className={styles.placeholder}>{chrome.i18n.getMessage('noChanges')}</p>;
 	}
 
 	return (
@@ -64,29 +64,33 @@ export const RuleViewerActionMutation = observer<RuleViewerActionMutationProps>(
 						<tr>
 							<td className={styles.sectionTitle} colSpan={2}>
 								<RequestIcon className={styles.sectionIcon} />
-								Request
+								{chrome.i18n.getMessage('request')}
 							</td>
 						</tr>
 						{shownRows.request.endpoint && (
-							<RuleViewerRow title='Endpoint(url):'>{request.endpoint}</RuleViewerRow>
+							<RuleViewerRow title={chrome.i18n.getMessage('endpointUrl')}>
+								{request.endpoint}
+							</RuleViewerRow>
 						)}
 						{shownRows.request.method && (
-							<RuleViewerRow title='Method:'>
+							<RuleViewerRow title={chrome.i18n.getMessage('method')}>
 								<strong>{request.method}</strong>
 							</RuleViewerRow>
 						)}
 						{shownRows.request.setHeaders && (
-							<RuleViewerRow title='Set headers:'>
+							<RuleViewerRow title={chrome.i18n.getMessage('setHeaders')}>
 								<RuleViewerDataTable
 									values={request.setHeaders.map(({name, value}) => [name, value])}
 								/>
 							</RuleViewerRow>
 						)}
 						{shownRows.request.dropHeaders && (
-							<RuleViewerRow title='Drop headers:'>{request.dropHeaders.join(', ')}</RuleViewerRow>
+							<RuleViewerRow title={chrome.i18n.getMessage('dropHeaders')}>
+								{request.dropHeaders.join(', ')}
+							</RuleViewerRow>
 						)}
 						{shownRows.request.body && (
-							<RuleViewerRow title='Body:'>
+							<RuleViewerRow title={chrome.i18n.getMessage('body')}>
 								<RuleViewerBodyData body={request.body!} />
 							</RuleViewerRow>
 						)}
@@ -97,29 +101,33 @@ export const RuleViewerActionMutation = observer<RuleViewerActionMutationProps>(
 						<tr>
 							<td className={styles.sectionTitle} colSpan={2}>
 								<ResponseIcon className={styles.sectionIcon} />
-								Response
+								{chrome.i18n.getMessage('response')}
 							</td>
 						</tr>
-						{shownRows.response.delay && <RuleViewerRow title='Delay:'>{response.delay} ms</RuleViewerRow>}
+						{shownRows.response.delay && (
+							<RuleViewerRow title={chrome.i18n.getMessage('delay')}>{response.delay} ms</RuleViewerRow>
+						)}
 						{shownRows.response.statusCode && (
-							<RuleViewerRow title='Status code:'>{response.statusCode}</RuleViewerRow>
+							<RuleViewerRow title={chrome.i18n.getMessage('statusCode')}>
+								{response.statusCode}
+							</RuleViewerRow>
 						)}
 						{shownRows.response.setHeaders && (
-							<RuleViewerRow title='Set headers:'>
+							<RuleViewerRow title={chrome.i18n.getMessage('setHeaders')}>
 								<RuleViewerDataTable
 									values={response.setHeaders.map(({name, value}) => [name, value])}
 								/>
 							</RuleViewerRow>
 						)}
 						{shownRows.response.dropHeaders && (
-							<RuleViewerRow title='Drop headers:'>
+							<RuleViewerRow title={chrome.i18n.getMessage('dropHeaders')}>
 								{response.dropHeaders.map((name, index) => (
 									<p key={name + index.toString()}>{name}</p>
 								))}
 							</RuleViewerRow>
 						)}
 						{shownRows.response.body && (
-							<RuleViewerRow title='Body:'>
+							<RuleViewerRow title={chrome.i18n.getMessage('body')}>
 								<RuleViewerBodyData body={response.body!} />
 							</RuleViewerRow>
 						)}

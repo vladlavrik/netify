@@ -12,7 +12,7 @@ export const PopUpAlert: FC<PopUpAlertProps> = ({onClose, children}) => {
 	return (
 		<PopUp className={styles.root}>
 			<div className={styles.content}>{children}</div>
-			<Button onClick={onClose}>Close</Button>
+			<Button onClick={onClose}>{chrome.i18n.getMessage('close')}</Button>
 		</PopUp>
 	);
 };

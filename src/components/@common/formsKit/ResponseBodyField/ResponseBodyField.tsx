@@ -9,9 +9,9 @@ import styles from './responseBodyField.css';
 
 function typeTitleGetter(type: 'Original' | ResponseBodyType) {
 	if (type === 'Original') {
-		return 'Original';
+		return chrome.i18n.getMessage('original');
 	}
-	return responseBodyTypesHumanTitles[type];
+	return chrome.i18n.getMessage(responseBodyTypesHumanTitles[type]);
 }
 
 interface ResponseBodyFieldProps {

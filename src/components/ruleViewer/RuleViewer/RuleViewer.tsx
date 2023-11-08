@@ -35,20 +35,25 @@ export const RuleViewer = observer(() => {
 			<div className={styles.body}>
 				{label && (
 					<h2 className={styles.header}>
-						<span className={styles.headerTitle}>Label:</span>
+						<span className={styles.headerTitle}>{chrome.i18n.getMessage('label')}</span>
 						<span className={styles.headerData}>{label}</span>
 					</h2>
 				)}
 
 				<h2 className={styles.header}>
-					<span className={styles.headerTitle}>Filter{!hasFilter && ':'}</span>
-					{!hasFilter && <span>All request</span>}
+					<span className={styles.headerTitle}>
+						{chrome.i18n.getMessage('filter')}
+						{!hasFilter && ':'}
+					</span>
+					{!hasFilter && <span>{chrome.i18n.getMessage('allRequest')}</span>}
 				</h2>
 				{hasFilter && <RuleViewerFilter filter={filter} />}
 
 				<h2 className={styles.header}>
-					<span className={styles.headerTitle}>Action:</span>
-					<span className={styles.headerData}>{ruleActionsTypeHumanTitles[action.type]}</span>
+					<span className={styles.headerTitle}>{chrome.i18n.getMessage('action')}</span>
+					<span className={styles.headerData}>
+						{chrome.i18n.getMessage(ruleActionsTypeHumanTitles[action.type])}
+					</span>
 				</h2>
 
 				{action.type === RuleActionsType.Mutation && <RuleViewerActionMutation action={action} />}

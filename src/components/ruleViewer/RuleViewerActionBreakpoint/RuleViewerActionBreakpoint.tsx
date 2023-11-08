@@ -14,7 +14,7 @@ export const RuleViewerActionBreakpoint = observer<RuleViewerActionBreakpointPro
 	return (
 		<table className={styles.root}>
 			<tbody>
-				<RuleViewerRow title='Stage:'>
+				<RuleViewerRow title={chrome.i18n.getMessage('stage2')}>
 					{request && response && 'on request and response'}
 					{request && !response && 'on request'}
 					{!request && response && 'on response'}
