@@ -12,7 +12,7 @@ export function serializeRuleForm(rule: Rule) {
 	const value: RuleFormSchema = {
 		label,
 		filter: {
-			url: filter.url,
+			url: filter.url.trim(),
 			resourceTypes: filter.resourceTypes,
 			methods: filter.methods,
 		},
