@@ -109,8 +109,14 @@ export function serializeRuleForm(rule: Rule) {
 				reason: ResponseErrorReason.Failed,
 			},
 			[RuleActionsType.Script]: {
-				request: defaultRequestScript,
-				response: defaultResponseScript,
+				request: {
+					enabled: false,
+					code: defaultRequestScript,
+				},
+				response: {
+					enabled: false,
+					code: defaultResponseScript,
+				},
 			},
 		},
 	};
@@ -203,8 +209,12 @@ export function serializeRuleForm(rule: Rule) {
 		}
 
 		case RuleActionsType.Script: {
-			value.actionConfigs[RuleActionsType.Script].request = action.request || defaultRequestScript;
-			value.actionConfigs[RuleActionsType.Script].response = action.response || defaultResponseScript;
+			value.actionConfigs[RuleActionsType.Script].request = action.request
+				? {enabled: true, code: action.request}
+				: {enabled: false, code: defaultRequestScript};
+			value.actionConfigs[RuleActionsType.Script].response = action.response
+				? {enabled: true, code: action.response}
+				: {enabled: false, code: defaultResponseScript};
 			break;
 		}
 	}

@@ -56,9 +56,17 @@ export function stringifyActionsSummary(action: RuleAction) {
 			actions.push('Failure');
 			break;
 
-		case RuleActionsType.Script:
-			actions.push('Script');
+		case RuleActionsType.Script: {
+			const {request, response} = action;
+			if (request && response) {
+				actions.push('Request and reponse handler script');
+			} else if (request) {
+				actions.push('Request handler script');
+			} else if (response) {
+				actions.push('response handler script');
+			}
 			break;
+		}
 	}
 
 	return actions.join(', ');

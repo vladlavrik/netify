@@ -74,8 +74,20 @@ export class PanelApplicationManager {
 		document.querySelector('body')!.classList.add(`platform-${platform}`);
 
 		// Define a theme
-		if ((chrome.devtools.panels as any).themeName === 'dark') {
-			document.documentElement.classList.add('dark-theme');
+		const setTheme = () => {
+			const {themeName} = chrome.devtools.panels;
+			if (themeName === 'dark') {
+				document.documentElement.classList.add('dark-theme');
+			} else {
+				document.documentElement.classList.remove('dark-theme');
+			}
+
+			this.rootStore.appUiStore.setThemeName(themeName);
+		};
+
+		setTheme();
+		if ('setThemeChangeHandler' in chrome.devtools.panels) {
+			(chrome.devtools.panels as any).setThemeChangeHandler(setTheme);
 		}
 	}
 
