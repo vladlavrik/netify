@@ -1,11 +1,12 @@
 import {Protocol} from 'devtools-protocol';
+import {fromZodError} from 'zod-validation-error';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {StatusCode} from '@/constants/StatusCode';
 import {Breakpoint} from '@/interfaces/breakpoint';
-import {LogEntry} from '@/interfaces/log';
+import {NetworkLogEntry} from '@/interfaces/networkLog';
 import {
 	BreakpointRuleAction,
 	FailureRuleAction,
@@ -43,8 +44,9 @@ type FailRequestRequest = Protocol.Fetch.FailRequestRequest;
  */
 export class FetchDevtools {
 	readonly events = {
-		requestProcessed: new EventBus<LogEntry>(),
+		requestProcessed: new EventBus<NetworkLogEntry>(),
 		requestBreakpoint: new EventBus<Breakpoint>(),
+		requestScriptHandleException: new EventBus<{title: string; error: unknown}>(),
 	};
 
 	private enabled = false;
@@ -228,7 +230,7 @@ export class FetchDevtools {
 		} catch (error) {
 			console.warn('Fetch devtools: execute request script handler error');
 			console.error(error);
-			// TODO log error to ui
+			this.events.requestScriptHandleException.emit({title: 'Execute request handling script exception', error});
 			await this.continueRequest({requestId});
 			return;
 		}
@@ -238,7 +240,10 @@ export class FetchDevtools {
 		if (!parsedResult.success) {
 			console.warn('Fetch devtools: the returned value from script handler is invalid');
 			console.log(parsedResult.error);
-			// TODO log error to ui
+			this.events.requestScriptHandleException.emit({
+				title: 'Invalid request handler function result returned',
+				error: fromZodError(parsedResult.error),
+			});
 			await this.continueRequest({requestId});
 			return;
 		}
@@ -277,7 +282,7 @@ export class FetchDevtools {
 		} catch (error) {
 			console.warn('RESPONSE CODE EXECUTE ERROR');
 			console.error(error);
-			// TODO LOG ERROR
+			this.events.requestScriptHandleException.emit({title: 'Execute response handling script exception', error});
 			await this.continueRequest({requestId});
 			return;
 		}
@@ -287,7 +292,10 @@ export class FetchDevtools {
 		if (!parsedResult.success) {
 			console.warn('Fetch devtools: the returned value from script handler is invalid');
 			console.log(parsedResult.error);
-			// TODO log error to ui
+			this.events.requestScriptHandleException.emit({
+				title: 'Invalid response handler function result returned',
+				error: fromZodError(parsedResult.error),
+			});
 			await this.continueRequest({requestId});
 			return;
 		}

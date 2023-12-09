@@ -51,7 +51,7 @@ export class PanelApplicationManager {
 	}
 
 	/**
-	 * Fetch  to the store the rules list from a persistence storage
+	 * Fetch to the store the rules list from a persistence storage
 	 */
 	private async fetchRulesFromDatabase() {
 		await this.rootStore.rulesStore.fetchRules();
@@ -160,7 +160,11 @@ export class PanelApplicationManager {
 	 */
 	private listenLogs() {
 		this.fetchDevtools.events.requestProcessed.on((log) => {
-			this.rootStore.logsStore.addLogEntry(log);
+			this.rootStore.networkLogsStore.addLogEntry(log);
+		});
+
+		this.fetchDevtools.events.requestScriptHandleException.on(({title, error}) => {
+			this.rootStore.errorLogsStore.addLogEntry({title: `[Script execution error] ${title}`, error});
 		});
 	}
 

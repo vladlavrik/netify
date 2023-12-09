@@ -1,8 +1,8 @@
 import {action, computed, makeObservable, observable} from 'mobx';
-import {LogEntry} from '@/interfaces/log';
+import {NetworkLogEntry} from '@/interfaces/networkLog';
 
-export class LogsStore {
-	list: LogEntry[] = [];
+export class NetworkLogsStore {
+	list: NetworkLogEntry[] = [];
 
 	/** Log not only mutated request; TODO for future */
 	logAllRequest = false;
@@ -22,7 +22,7 @@ export class LogsStore {
 		});
 	}
 
-	addLogEntry(logEntry: LogEntry) {
+	addLogEntry(logEntry: NetworkLogEntry) {
 		if (logEntry.interceptStage === 'Response') {
 			const existingEntry = this.list.find(
 				(item) => item.requestId === logEntry.requestId && item.interceptStage === 'Request',

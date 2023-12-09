@@ -16,7 +16,7 @@ import RateIcon from './icons/rate.svg';
 import styles from './appHeader.css';
 
 export const AppHeader = observer(() => {
-	const {debuggerStateStore, rulesStore, logsStore} = useStores();
+	const {debuggerStateStore, rulesStore, networkLogsStore} = useStores();
 
 	const debuggingActive = debuggerStateStore.active;
 	const debuggingSwitching = debuggerStateStore.switching;
@@ -24,7 +24,7 @@ export const AppHeader = observer(() => {
 	const hasActiveRules = rulesStore.hasActiveRules;
 	const isExportMode = rulesStore.exportMode;
 	const useRulesPerDomain = rulesStore.filterByOrigin;
-	const logAllRequest = logsStore.logAllRequest;
+	const logAllRequest = networkLogsStore.logAllRequest;
 
 	const isCompactMode = useCompactModeCondition();
 
@@ -47,7 +47,7 @@ export const AppHeader = observer(() => {
 	}, []);
 
 	const handleToggleLogAllRequest = () => {
-		logsStore.toggleLogAllRequest();
+		networkLogsStore.toggleLogAllRequest();
 	};
 
 	return (

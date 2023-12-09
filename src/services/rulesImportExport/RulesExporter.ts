@@ -1,3 +1,4 @@
+import {fromZodError} from 'zod-validation-error';
 import {Rule} from '@/interfaces/rule';
 import {downloadFileFromString} from '@/helpers/downloadFileFromString';
 import {RuleExportInputSchema, rulesExportSchema} from './schemas/rulesExportSchema';
@@ -20,7 +21,7 @@ export class RulesExporter {
 		if (!contentOutput.success) {
 			return {
 				success: false,
-				error: contentOutput.error,
+				error: fromZodError(contentOutput.error),
 			};
 		}
 

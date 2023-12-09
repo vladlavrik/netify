@@ -1,6 +1,6 @@
 import React from 'react';
 import {observer} from 'mobx-react-lite';
-import {LogEntry} from '@/interfaces/log';
+import {NetworkLogEntry} from '@/interfaces/networkLog';
 import {formatFullTime, formatTime} from '@/helpers/dateFormat';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {WithTooltip} from '@/components/@common/misc/WithTooltip';
@@ -9,9 +9,9 @@ import BothIcon from './icons/both.svg';
 import FollowIcon from './icons/follow.svg';
 import RequestIcon from './icons/request.svg';
 import ResponseIcon from './icons/response.svg';
-import styles from './logsItem.css';
+import styles from './networkLogsItem.css';
 
-type InterceptStage = LogEntry['interceptStage'];
+type InterceptStage = NetworkLogEntry['interceptStage'];
 
 const stageTitle: Record<InterceptStage, string> = {
 	Request: 'On request stage',
@@ -19,11 +19,11 @@ const stageTitle: Record<InterceptStage, string> = {
 	Both: 'On request and response stages',
 };
 
-interface LogsItemProps {
-	data: LogEntry;
+interface NetworkLogsItemProps {
+	data: NetworkLogEntry;
 }
 
-export const LogsItem = observer<LogsItemProps>((props) => {
+export const NetworkLogsItem = observer<NetworkLogsItemProps>((props) => {
 	const {data} = props;
 	const {ruleId, url, resourceType, method, interceptStage, timestamp} = data;
 
@@ -62,4 +62,4 @@ export const LogsItem = observer<LogsItemProps>((props) => {
 	);
 });
 
-LogsItem.displayName = 'LogsItem';
+NetworkLogsItem.displayName = 'NetworkLogsItem';

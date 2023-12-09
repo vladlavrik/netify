@@ -13,6 +13,7 @@
 	--color-main: #5a5a5a;
 	--color-content-accent: #222;
 	--color-content-attention: #5c3c00;
+	--color-content-error: #fcebeb;
 	--color-content: #303942;
 	--color-focus: #0e639c;
 	--color-inside-focus: #d5d5d5;
@@ -47,6 +48,7 @@ dialog::backdrop {
 	--color-main: #a5a5a5;
 	--color-content-accent: #d5d5d5;
 	--color-content-attention: #f2ab26;
+	--color-content-error: #4e3534;
 	--color-content: #bdc6cf;
 	--color-focus: #0e639c;
 	--color-inside-focus: #d5d5d5;

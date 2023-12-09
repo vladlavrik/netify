@@ -5,19 +5,19 @@ import {SectionHeader} from '@/components/@common/misc/SectionHeader';
 import {useStores} from '@/stores/useStores';
 import ClearIcon from './icons/clear.svg';
 
-export const LogsHeader = observer(() => {
-	const {logsStore} = useStores();
-	const {hasLogs} = logsStore;
+export const ErrorLogsHeader = observer(() => {
+	const {errorLogsStore} = useStores();
+	const {hasLogs} = errorLogsStore;
 
 	const handleClean = () => {
-		logsStore.cleanList();
+		errorLogsStore.cleanList();
 	};
 
 	return (
-		<SectionHeader title='Logs'>
+		<SectionHeader title='Error log'>
 			<IconButton icon={<ClearIcon />} tooltip='Clear log' disabled={!hasLogs} onClick={handleClean} />
 		</SectionHeader>
 	);
 });
 
-LogsHeader.displayName = 'LogsHeader';
+ErrorLogsHeader.displayName = 'ErrorLogsHeader';

@@ -22,12 +22,13 @@ import '@/style/page.css';
 
 	// Prepare database and initialize data mappers
 	let db: IDBDatabase | undefined;
+	let dbError: unknown;
 	try {
 		db = await openIDB();
 	} catch (error) {
 		console.info('IndexedDB open error, switch to a local data storing mode');
 		console.error(error);
-		// TODO report to the UI
+		dbError = error;
 	}
 
 	const rulesMapper = db ? new RulesDatabaseMapper(db) : new RulesLocalMapper();
@@ -38,10 +39,12 @@ import '@/style/page.css';
 		(window as any).__store = rootStore;
 	}
 
+	// Report database initialization error
 	if (!db) {
-		rootStore.attentionsStore.push(
-			'Persistent database (IndexedDB) is not available, rules list will be cleared after session ends',
-		);
+		rootStore.errorLogsStore.addLogEntry({
+			title: 'Persistent database (IndexedDB) is not available, rules list will be cleared after session ends',
+			error: dbError,
+		});
 	}
 
 	// Create the panel application manager

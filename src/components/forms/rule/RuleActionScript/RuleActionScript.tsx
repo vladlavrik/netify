@@ -15,8 +15,12 @@ export const RuleActionScript = memo(() => {
 		name: `actionConfigs.${RuleActionsType.Script}.response.enabled`,
 		type: 'checkbox',
 	});
-	const [requestCodeField] = useField(`actionConfigs.${RuleActionsType.Script}.request.code`);
-	const [responseCodeField] = useField(`actionConfigs.${RuleActionsType.Script}.response.code`);
+	const [requestCodeField, , {setValue: setRequestCodeField}] = useField(
+		`actionConfigs.${RuleActionsType.Script}.request.code`,
+	);
+	const [responseCodeField, , {setValue: setResponseCodeField}] = useField(
+		`actionConfigs.${RuleActionsType.Script}.response.code`,
+	);
 
 	return (
 		<>
@@ -29,7 +33,7 @@ export const RuleActionScript = memo(() => {
 						<CodeEditor
 							className={styles.codeField}
 							value={requestCodeField.value}
-							onChange={requestCodeField.onChange}
+							onChange={setRequestCodeField}
 						/>
 					)}
 				</div>
@@ -43,7 +47,7 @@ export const RuleActionScript = memo(() => {
 						<CodeEditor
 							className={styles.codeField}
 							value={responseCodeField.value}
-							onChange={responseCodeField.onChange}
+							onChange={setResponseCodeField}
 						/>
 					)}
 				</div>
