@@ -1,8 +1,8 @@
 import {Protocol} from 'devtools-protocol';
-import {fromZodError} from 'zod-validation-error';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
+import {ResponseErrorReason, responseErrorReasonsList} from '@/constants/ResponseErrorReason';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {StatusCode} from '@/constants/StatusCode';
 import {Breakpoint} from '@/interfaces/breakpoint';
@@ -24,8 +24,8 @@ import {
 	makeRequestScriptScope,
 	makeResponseScriptCode,
 	makeResponseScriptScope,
-	requestScriptResultSchema,
-	responseScriptResultSchema,
+	RequestScriptResult,
+	ResponseScriptResult,
 } from './helpers/scripting';
 import {RequestBuilder} from './RequestBuilder';
 import {ResponseBuilder, ResponsePausedEvent} from './ResponseBuilder';
@@ -226,7 +226,7 @@ export class FetchDevtools {
 
 		let result;
 		try {
-			result = await this.sandbox.execute(code, true, scriptScope);
+			result = await this.sandbox.execute<RequestScriptResult>(code, true, scriptScope);
 		} catch (error) {
 			console.warn('Fetch devtools: execute request script handler error');
 			console.error(error);
@@ -235,34 +235,31 @@ export class FetchDevtools {
 			return;
 		}
 
-		const parsedResult = requestScriptResultSchema.safeParse(result);
+		this.log('request script handled with result %o', result);
 
-		if (!parsedResult.success) {
-			console.warn('Fetch devtools: the returned value from script handler is invalid');
-			console.log(parsedResult.error);
-			this.events.requestScriptHandleException.emit({
-				title: 'Invalid request handler function result returned',
-				error: fromZodError(parsedResult.error),
-			});
-			await this.continueRequest({requestId});
-			return;
-		}
-
-		switch (parsedResult.data.type) {
-			case 'continue': {
-				const builder = RequestBuilder.asScriptResult(requestId, parsedResult.data.patch);
+		switch (result?.type) {
+			case 'patch': {
+				const builder = RequestBuilder.asScriptResult(requestId, result.patch);
 				const continueParams = builder.build();
 				await this.continueRequest(continueParams);
 				return;
 			}
 			case 'response': {
-				const builder = ResponseBuilder.asScriptResult(pausedRequest, parsedResult.data.response);
+				const builder = ResponseBuilder.asScriptResult(pausedRequest, result.response);
 				const fulfillParams = await builder.build();
 				await this.fulfillRequest(fulfillParams);
 				return;
 			}
-			case 'failure':
-				await this.failRequest({requestId, errorReason: parsedResult.data.reason});
+			case 'failure': {
+				const reason =
+					result.reason && (responseErrorReasonsList as string[]).includes(result.reason)
+						? (result.reason as ResponseErrorReason)
+						: ResponseErrorReason.Failed;
+				await this.failRequest({requestId, errorReason: reason});
+				break;
+			}
+			default:
+				await this.continueRequest({requestId});
 		}
 	}
 
@@ -278,7 +275,7 @@ export class FetchDevtools {
 
 		let result;
 		try {
-			result = await this.sandbox.execute(code, true, scriptScope);
+			result = await this.sandbox.execute<ResponseScriptResult>(code, true, scriptScope);
 		} catch (error) {
 			console.warn('RESPONSE CODE EXECUTE ERROR');
 			console.error(error);
@@ -287,24 +284,15 @@ export class FetchDevtools {
 			return;
 		}
 
-		const parsedResult = responseScriptResultSchema.safeParse(result);
-
-		if (!parsedResult.success) {
-			console.warn('Fetch devtools: the returned value from script handler is invalid');
-			console.log(parsedResult.error);
-			this.events.requestScriptHandleException.emit({
-				title: 'Invalid response handler function result returned',
-				error: fromZodError(parsedResult.error),
-			});
-			await this.continueRequest({requestId});
+		this.log('response script handled with result %o', result);
+		if (result?.type === 'patch') {
+			const builder = ResponseBuilder.asScriptResult(pausedResponse, result.patch);
+			const fulfillParams = await builder.build();
+			await this.fulfillRequest(fulfillParams);
 			return;
 		}
 
-		console.log('RESPONSE CODE RESPONSE', result, parsedResult.data);
-
-		const builder = ResponseBuilder.asScriptResult(pausedResponse, parsedResult.data.patch);
-		const fulfillParams = await builder.build();
-		await this.fulfillRequest(fulfillParams);
+		await this.continueRequest({requestId});
 	}
 
 	private async processLocalResponse(requestId: string, action: LocalResponseRuleAction) {

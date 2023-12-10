@@ -42,10 +42,10 @@ export class Sandbox {
 	 * @param async wait to promise resolve
 	 * @param scope used to pass some data into the script, allowed to access inside a script by __scope__
 	 */
-	async execute(code: string, async = false, scope: Record<string, any>) {
+	async execute<Result = unknown>(code: string, async = false, scope: Record<string, any>) {
 		const requestId = this.requestIdScope++;
 
-		return new Promise((resolve, reject) => {
+		return new Promise<Result>((resolve, reject) => {
 			this.pendingRequests[requestId] = {resolve, reject};
 
 			this.postMessageToExecutor({

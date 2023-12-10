@@ -8,51 +8,44 @@ import {RuleFormSchema} from './ruleFormSchema';
 
 // language=js
 const defaultRequestScript = `
-/**
- * @callback nextCallback
- * @param {Object} patch
- * @param {string} patch.method - method name in UPPER CASE
- * @param {Object} patch.headers - key-value headers
- * @param {string} patch.body
- */
-
 /** @param {Object} request
- * @param {number} request.statusCode
+ * @param {number} request.url
  * @param {Object} request.headers - key-value headers
- * @param {string} request.body
- * @param {nextCallback} next
+ * @param {Blob} request.body
+ * @param {Object} actions
+ * @param {Function} actions.setUrl
+ * @param {Function} actions.setHeader
+ * @param {Function} actions.dropHeader
+ * @param {Function} actions.resetHeaders
+ * @param {Function} actions.setBody
+ * @param {Function} actions.failure
+ * @param {Function} actions.response
  */
-function request(request, next) {
-  return next({
-  	method: request.method,
-  	headers: request.headers,
-  	body: request.body,
-  });
+async function handler(request, actions) {
+	
 }
 `.trim();
 
 // language=js
 const defaultResponseScript = `
-/**
- * @callback nextCallback
- * @param {Object} patch
- * @param {number} patch.statusCode
- * @param {Object} patch.headers - key-value headers
- * @param {(string|Blob)} patch.body
- */
-
- /** @param {Object} response
+ /**
+ * @param {Object} response
  * @param {number} response.statusCode
  * @param {Object} response.headers - key-value headers
  * @param {Blob} response.body
- * @param {nextCallback} next
+ * @param {Object} response.request
+ * @param {number} response.request.url
+ * @param {Object} response.request.headers - key-value headers
+ * @param {Blob} response.request.body
+ * @param {Object} actions
+ * @param {Function} actions.setStatusCode
+ * @param {Function} actions.setHeader
+ * @param {Function} actions.setHeaders
+ * @param {Function} actions.dropHeader
+ * @param {Function} actions.setBody
  */
-function response(response, next) {
-  return next({
-    statusCode: response.statusCode,
-    headers: response.headers,
-    body: response.body,
-  });
+async function handler(response, actions) {
+  	
 }
 `.trim();
 

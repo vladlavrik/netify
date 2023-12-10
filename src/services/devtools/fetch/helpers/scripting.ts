@@ -1,11 +1,42 @@
 import {toByteArray} from 'base64-js';
-import {z} from 'zod';
-import {RequestMethod, requestMethodsList} from '@/constants/RequestMethod';
-import {ResponseErrorReason, responseErrorReasonsList} from '@/constants/ResponseErrorReason';
 import type {Protocol} from 'devtools-protocol';
 
 type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
 type ResponsePausedEvent = RequiredProps<RequestPausedEvent, 'responseStatusCode' | 'responseHeaders'>;
+
+export type RequestScriptResult =
+	| {
+			type: 'failure';
+			reason: string;
+	  }
+	| {
+			type: 'response';
+			response: {
+				statusCode?: number;
+				headers?: Record<string, string>;
+				body?: string | Blob;
+			};
+	  }
+	| {
+			type: 'patch';
+			patch: {
+				url?: string;
+				headers?: Record<string, string>;
+				body?: string;
+			};
+	  }
+	| undefined;
+
+export type ResponseScriptResult =
+	| {
+			type: 'patch';
+			patch: {
+				statusCode?: number;
+				headers?: Record<string, string>;
+				body?: string | Blob;
+			};
+	  }
+	| undefined;
 
 export const makeRequestScriptScope = ({request}: RequestPausedEvent) => {
 	return {
@@ -13,7 +44,7 @@ export const makeRequestScriptScope = ({request}: RequestPausedEvent) => {
 			url: request.url,
 			method: request.method,
 			headers: request.headers,
-			postData: request.postData ? new Blob([request.postData]) : request.postData,
+			body: request.postData ? new Blob([request.postData]) : request.postData,
 		},
 	};
 };
@@ -42,7 +73,7 @@ export const makeResponseScriptScope = (
 				url: request.url,
 				method: request.method,
 				headers: request.headers,
-				postData: request.postData ? new Blob([request.postData]) : request.postData,
+				body: request.postData ? new Blob([request.postData]) : request.postData,
 			},
 			statusCode: responseStatusCode,
 			headers: Object.fromEntries(responseHeaders.map(({name, value}) => [name, value])),
@@ -54,38 +85,117 @@ export const makeResponseScriptScope = (
 export const makeRequestScriptCode = (handlerCode: string) => {
 	// language=js
 	return `
-		(function(){
+		(async function(){
+			'use strict';
 			${handlerCode};
 
-			/**
-			 * @param {Object} requestPatch
-			 * @param {string} [requestPatch.url]
-			 * @param {string} [requestPatch.method]
-			 * @param {Object} [requestPatch.headers]
-			 * @param {string|Blob} [requestPatch.body]
-			 */
-			function next(requestPatch) {
-				return {type: 'continue', patch: requestPatch};
-			}
-
-			/**
-			 * @param {Object} response
-			 * @param {number} [response.statusCode]
-			 * @param {Object} [response.headers]
-			 * @param {string|Blob} [response.body]
-			 */
-			next.response = function response(response) {
-				return {type: 'response', response};
-			};
-
-			/**
-			 * @param {string} [reason]
-			 */
-			next.failure = function failure(reason) {
-				return {type: 'failure', reason};
+			const __request = __scope__.request;
+			const __result = {
+				failureReason: undefined,
+				responseData: undefined,
+				patch: {},
 			};
 			
-			return request(__scope__.request, next);
+			const __validateHeaders = (headers) => {
+				for (const [name, value] of Object.entries(headers)) {
+					const valueType = typeof value;
+					if (valueType === 'number') {
+						headers[name] = value.toString();
+					} else if (valueType !== 'string') {
+						throw new Error('Invalid header value by "' + name  + '", must be a string or number');
+					}
+				}
+			}
+		
+			const __actions = {
+		  		setUrl(newUrl) {
+					__result.patch.url = newUrl;
+				},
+				setHeader(name, value) {
+					if (
+						!name ||
+						typeof name !== 'string' ||
+						!(typeof value === 'string' || typeof value === 'number')
+					) {
+						throw new Error('"setHeader" function failed due invalid param "name"/"value" receiving');
+					}
+					__result.patch.headers = __result.patch.headers || {...__request.headers};
+					__result.patch.headers[name] = value.toString();
+				},
+				setHeaders(headers) {
+					__validateHeaders(headers);
+					__result.patch.headers = {...(__result.patch.headers || __request.headers), ...headers};
+				},
+				dropHeader(name) {
+			  		if (!name || typeof name !== 'string') {
+				  		throw new Error('"dropHeader" function failed due invalid param "name" receiving');
+					}
+					__result.patch.headers = __result.patch.headers || {...__request.headers};
+					const originalName = Object.keys(__result.patch.headers).find(item => item.toLowerCase() === name.toLowerCase());
+					if (originalName) {
+						delete __result.patch.headers[originalName];
+					}
+				},
+				resetHeaders(newHeaders) {
+					__result.patch.headers = {};
+					if (newHeaders) {
+						__actions.setHeaders(newHeaders);
+					}
+				},
+				setBody(newBody) {
+					if (typeof newBody !== 'string') {
+						throw new Error('"setBody" function failed due invalid post data receiving, must be a string');
+					}
+					__result.patch.body = newBody;
+				},
+				failure(reason) {
+					__result.failureReason = reason || 'Failed';
+				},
+				response({statusCode, headers, body} = {}) {
+					__result.responseData = {};
+					if (typeof statusCode === 'number' && statusCode >= 0 && statusCode < 600) {
+						__result.responseData.statusCode = statusCode;
+					} else if (statusCode !== undefined) {
+						throw new Error('"response" function failed due invalid "statusCode" receiving, must be a number between 0 an 599');
+					}
+				
+			  		if (headers && typeof headers === 'object') {
+						__validateHeaders(headers);
+						__result.responseData.headers = {...headers};
+					} else if (headers) {
+						throw new Error('"response" function failed due invalid "headers" receiving, must be a key value object');
+					}
+				
+			  		if (body && (typeof body === 'string' || body instanceof Blob)) {
+						__result.responseData.body = body;
+					} else if (body) {
+						throw new Error('"response" function failed due invalid "body" receiving, must be a string or Blob');
+					}
+				}
+			}
+
+			await handler(__request, __actions);
+		  
+			if (__result.failureReason) {
+				return {
+					type: 'failure',
+					reason: __result.failureReason,
+				};
+			}
+		  
+			if (__result.responseData) {
+				return {
+					type: 'response',
+					response: __result.responseData,
+				};
+			}
+		  
+			if (Object.keys(__result.patch).length) {
+				return {
+					type: 'patch',
+					patch: __result.patch,
+				};
+			}
 		})()
 	`;
 };
@@ -93,95 +203,77 @@ export const makeRequestScriptCode = (handlerCode: string) => {
 export const makeResponseScriptCode = (handlerCode: string) => {
 	// language=js
 	return `
-		(function(){
+		(async function(){
 			${handlerCode};
 
-			/**
-			 * @param {Object} responsePatch
-			 * @param {number} [responsePatch.statusCode]
-			 * @param {Object} [responsePatch.headers]
-			 * @param {string|Blob} [responsePatch.body]
-			 */
-			function next(responsePatch) {
-				return {
-					patch: responsePatch,
-				};
+			const __response = __scope__.response;
+			const __result = {
+				patch: {},
+			};
+
+			const __actions = {
+				setStatusCode(statusCode) {
+					if (typeof statusCode === 'number') {
+						__result.patch.statusCode = statusCode;
+					} else {
+						throw new Error('"response" function failed due invalid "statusCode" receiving, must be a string');
+					}
+				},
+				setHeader(name, value) {
+					if (
+						!name ||
+						typeof name !== 'string' ||
+						!(typeof value === 'string' || typeof value === 'number')
+					) {
+						throw new Error('"setHeader" function failed due invalid param "name"/"value" receiving')
+					}
+					__result.patch.headers = __result.patch.headers || {...__response.headers};
+					__result.patch.headers[name] = value.toString();
+				},
+				setHeaders(headers) {
+					for (const [name, value] of Object.entries(headers)) {
+						const valueType = typeof value;
+						if (valueType === 'number') {
+							headers[name] = value.toString();
+						} else if (valueType !== 'string') {
+							throw new Error('Invalid header value by "' + name  + '", must be a string or number');
+						}
+					}
+					__result.patch.headers = {...(__result.patch.headers || __response.headers), ...headers}
+				},
+				dropHeader(name) {
+					if (!name || typeof name !== 'string') {
+						throw new Error('"dropHeader" function failed due invalid param "name" receiving')
+					}
+					__result.patch.headers = __result.patch.headers || {...__response.headers};
+					const originalName = Object.keys(__result.patch.headers).find(item => item.toLowerCase() === name.toLowerCase());
+					if (originalName) {
+						delete __result.patch.headers[originalName];
+					}
+				},
+				resetHeaders(newHeaders) {
+					__result.patch.headers = {};
+					if (newHeaders) {
+						__actions.setHeaders(newHeaders);
+					}
+				},
+				setBody(newBody) {
+					if (typeof newBody !== 'string' && !(newBody instanceof Blob)) {
+						throw new Error('"setBody" function failed due invalid body receiving, must be a string or Blob');
+					}
+					__result.patch.body = newBody;
+				},
+				
 			}
 
-			return response(__scope__.response, next);
+			await handler(__response, __actions);
+
+			if (Object.keys(__result.patch).length) {
+				return {
+					type: 'patch',
+				  	patch: __result.patch,
+				};
+			}
 		})()
 	`;
 };
-
-/* eslint-disable @typescript-eslint/naming-convention */
-// TODO improve error messages
-export const requestScriptResultSchema = z.union(
-	[
-		z.object({
-			type: z.literal('continue'),
-			patch: z.object({
-				url: z.string().url('Invalid endpoint url, must be a valid URL').optional(),
-				method: z
-					.nativeEnum(RequestMethod, {
-						invalid_type_error: `Invalid method, must be a one of: ${requestMethodsList.join(', ')}`,
-					})
-					.optional(),
-				headers: z
-					.record(z.string(), {invalid_type_error: 'Invalid headers, must be a plain key-value object'})
-					.optional(),
-				body: z.string({invalid_type_error: 'Invalid body, must be a string'}).optional(),
-			}),
-		}),
-		z.object({
-			type: z.literal('response'),
-			response: z.object({
-				statusCode: z
-					.number({invalid_type_error: 'Invalid status code, must be a number'})
-					.min(100, 'Invalid status code, must be a number between 100 and 599')
-					.max(599, 'Invalid status code, must be a number between 100 and 599')
-					.default(200),
-				headers: z
-					.record(z.string(), {invalid_type_error: 'Invalid headers, must be a plain key-value object'})
-					.default({}),
-				body: z
-					.union([z.string(), z.instanceof(Blob)], {
-						invalid_type_error: 'Invalid body, must be a string or Blob',
-					})
-					.default(''),
-			}),
-		}),
-		z.object({
-			type: z.literal('failure', {invalid_type_error: 'Object must be returned!!!'}),
-			reason: z
-				.nativeEnum(ResponseErrorReason, {
-					invalid_type_error: `Invalid fail reason, must be a one of: ${responseErrorReasonsList.join(', ')}`,
-				})
-				.default(ResponseErrorReason.Aborted),
-		}),
-	],
-	{
-		errorMap() {
-			return {
-				message:
-					'Invalid script returned type, must be returned result of "next" function with object argument, e.g. "return next({ /* patch...*/})"',
-			};
-		},
-	},
-);
-
-export const responseScriptResultSchema = z.object({
-	patch: z.object({
-		statusCode: z
-			.number({invalid_type_error: 'Invalid status code, must be a number'})
-			.min(100, 'Invalid status code, must be a number between 100 and 599')
-			.max(599, 'Invalid status code, must be a number between 100 and 599')
-			.optional(),
-		headers: z
-			.record(z.string(), {invalid_type_error: 'Invalid headers, must be a plain key-value object'})
-			.optional(),
-		body: z
-			.union([z.string(), z.instanceof(Blob)], {invalid_type_error: 'Invalid body, must be a string or Blob'})
-			.optional(),
-	}),
-});
-/* eslint-enable @typescript-eslint/naming-convention */
