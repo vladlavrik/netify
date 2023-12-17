@@ -8,6 +8,7 @@
 	overflow: auto;
 	z-index: 10;
 	background: var(--color-bg-lite);
+	scrollbar-gutter: stable;
 }
 
 .form {

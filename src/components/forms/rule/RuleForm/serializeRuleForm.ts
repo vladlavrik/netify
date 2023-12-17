@@ -8,13 +8,17 @@ import {RuleFormSchema} from './ruleFormSchema';
 
 // language=js
 const defaultRequestScript = `
-/** @param {Object} request
+/**
+ * @param {Object} request
  * @param {number} request.url
+ * @param {string} request.method
  * @param {Object} request.headers - key-value headers
  * @param {Blob} request.body
  * @param {Object} actions
  * @param {Function} actions.setUrl
+ * @param {Function} actions.setMethod
  * @param {Function} actions.setHeader
+ * @param {Function} actions.setHeaders
  * @param {Function} actions.dropHeader
  * @param {Function} actions.resetHeaders
  * @param {Function} actions.setBody
@@ -22,7 +26,7 @@ const defaultRequestScript = `
  * @param {Function} actions.response
  */
 async function handler(request, actions) {
-	
+  
 }
 `.trim();
 
@@ -34,7 +38,8 @@ const defaultResponseScript = `
  * @param {Object} response.headers - key-value headers
  * @param {Blob} response.body
  * @param {Object} response.request
- * @param {number} response.request.url
+ * @param {string} response.request.url
+ * @param {string} response.request.method
  * @param {Object} response.request.headers - key-value headers
  * @param {Blob} response.request.body
  * @param {Object} actions
@@ -42,10 +47,11 @@ const defaultResponseScript = `
  * @param {Function} actions.setHeader
  * @param {Function} actions.setHeaders
  * @param {Function} actions.dropHeader
+ * @param {Function} actions.resetHeaders
  * @param {Function} actions.setBody
  */
 async function handler(response, actions) {
-  	
+  
 }
 `.trim();
 

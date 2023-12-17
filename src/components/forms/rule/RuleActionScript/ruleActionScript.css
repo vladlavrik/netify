@@ -1,5 +1,6 @@
 .main {
-    flex-grow: 1;
+	flex-grow: 1;
+	overflow: hidden;
 }
 
 .primaryRow {
@@ -7,8 +8,10 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	padding-right: 12px;
 }
 
 .codeField {
-    margin-top: 12px;
+	width: 100%;
+	margin: 12px 0 24px;
 }

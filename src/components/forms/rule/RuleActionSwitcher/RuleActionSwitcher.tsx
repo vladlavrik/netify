@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import cn from 'classnames';
 import {useField} from 'formik';
-import {ruleActionsTypeHumanTitles} from '@/constants/RuleActionsType';
+import {RuleActionsType, ruleActionsTypeHumanTitles} from '@/constants/RuleActionsType';
 import {RadioButton} from '@/components/@common/forms/RadioButton';
 import {RuleRow} from '../RuleRow';
 import styles from './ruleActionSwitcher.css';
@@ -16,7 +16,7 @@ export const RuleActionSwitcher = memo(() => {
 				{Object.entries(ruleActionsTypeHumanTitles).map(([value, title]) => (
 					<div key={value} className={cn(styles.entry, field.value === value && styles.current)}>
 						<RadioButton {...field} value={value} checked={field.value === value}>
-							{title}
+							{value === RuleActionsType.Script ? `${title} (beta)` : title}
 						</RadioButton>
 					</div>
 				))}

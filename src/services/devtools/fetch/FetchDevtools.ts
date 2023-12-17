@@ -220,6 +220,11 @@ export class FetchDevtools {
 	private async processRequestScript(pausedRequest: RequestPausedEvent, action: ScriptRuleAction) {
 		const {requestId} = pausedRequest;
 
+		if (!action.request) {
+			await this.continueRequest({requestId});
+			return;
+		}
+
 		// Prepare executable code and scope
 		const scriptScope = makeRequestScriptScope(pausedRequest);
 		const code = makeRequestScriptCode(action.request);
@@ -265,6 +270,11 @@ export class FetchDevtools {
 
 	private async processResponseScript(pausedResponse: ResponsePausedEvent, action: ScriptRuleAction) {
 		const {requestId} = pausedResponse;
+
+		if (!action.response) {
+			await this.continueRequest({requestId});
+			return;
+		}
 
 		// Read the response body
 		const body = await this.getResponseBody(pausedResponse.requestId);

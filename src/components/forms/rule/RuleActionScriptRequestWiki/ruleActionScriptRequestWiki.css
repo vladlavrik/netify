@@ -1,0 +1,25 @@
+.root {
+	margin: 12px 0 24px;
+	padding: 4px 6px;
+	color: var(--color-content);
+	background: var(--color-bg-main);
+}
+
+.article {
+	margin: 8px 0 0 8px;
+	font-size: 12px;
+	letter-spacing: 0.25px;
+}
+
+.snippet {
+	margin: 8px 0;
+	display: flex;
+	padding-right: 8px;
+	max-width: calc(100% - 16px);
+}
+
+.highlighted {
+	font-family: monospace;
+	font-style: italic;
+	color: var(--color-content-accent)
+}

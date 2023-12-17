@@ -1,4 +1,5 @@
 import {toByteArray} from 'base64-js';
+import {RequestMethod} from '@/constants/RequestMethod';
 import type {Protocol} from 'devtools-protocol';
 
 type RequestPausedEvent = Protocol.Fetch.RequestPausedEvent;
@@ -21,6 +22,7 @@ export type RequestScriptResult =
 			type: 'patch';
 			patch: {
 				url?: string;
+				method?: RequestMethod;
 				headers?: Record<string, string>;
 				body?: string;
 			};
@@ -95,6 +97,8 @@ export const makeRequestScriptCode = (handlerCode: string) => {
 				responseData: undefined,
 				patch: {},
 			};
+			Object.freeze(__request);
+			Object.freeze(__request.headers);
 			
 			const __validateHeaders = (headers) => {
 				for (const [name, value] of Object.entries(headers)) {
@@ -110,6 +114,15 @@ export const makeRequestScriptCode = (handlerCode: string) => {
 			const __actions = {
 		  		setUrl(newUrl) {
 					__result.patch.url = newUrl;
+				},
+		  		setMethod(newMethod) {
+					const caseCorrectNewMethod = newMethod.toUpperCase();
+					const supportedMethods = "${Object.values(RequestMethod).join(',')}".split(',')
+					if (supportedMethods.includes(caseCorrectNewMethod)) {
+						__result.patch.method = caseCorrectNewMethod;
+					} else {
+						throw new Error('"setMethod" function failed due invalid method name set attempt. Supported ' + supportedMethods.join(', ') + ', but received: ' + newMethod);
+					}
 				},
 				setHeader(name, value) {
 					if (
@@ -204,12 +217,19 @@ export const makeResponseScriptCode = (handlerCode: string) => {
 	// language=js
 	return `
 		(async function(){
+			'use strict';
 			${handlerCode};
 
 			const __response = __scope__.response;
 			const __result = {
 				patch: {},
 			};
+
+			Object.freeze(__response);
+			Object.freeze(__response.headers);
+			Object.freeze(__response.request);
+			Object.freeze(__response.request.headers);
+
 
 			const __actions = {
 				setStatusCode(statusCode) {

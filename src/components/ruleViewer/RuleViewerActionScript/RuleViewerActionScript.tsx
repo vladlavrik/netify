@@ -1,7 +1,7 @@
 import React from 'react';
 import {observer} from 'mobx-react-lite';
 import {ScriptRuleAction} from '@/interfaces/rule';
-import {CodeEditor} from '@/components/@common/forms/CodeEditor';
+import {CodePreview} from '@/components/@common/misc/CodePreview';
 import {RuleViewerRow} from '../RuleViewerRow';
 import styles from './ruleViewerActionScript.css';
 
@@ -17,12 +17,12 @@ export const RuleViewerActionScript = observer<RuleViewerActionFailureProps>((pr
 			<tbody>
 				{!!request && (
 					<RuleViewerRow title='Request:'>
-						<CodeEditor readonly value={request} />
+						<CodePreview value={request} />
 					</RuleViewerRow>
 				)}
 				{!!response && (
 					<RuleViewerRow title='Response:'>
-						<CodeEditor readonly value={response} />
+						<CodePreview value={response} />
 					</RuleViewerRow>
 				)}
 			</tbody>

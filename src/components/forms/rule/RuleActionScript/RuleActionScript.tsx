@@ -1,8 +1,12 @@
 import React, {memo} from 'react';
 import {useField} from 'formik';
 import {RuleActionsType} from '@/constants/RuleActionsType';
+import {useToggle} from '@/hooks/useToggle';
+import {TextButton} from '@/components/@common/buttons/TextButton';
 import {Checkbox} from '@/components/@common/forms/Checkbox';
-import {CodeEditor} from '@/components/@common/forms/CodeEditor';
+import {CodeEditor} from '@/components/@common/misc/CodeEditor';
+import {RuleActionScriptRequestWiki} from '../RuleActionScriptRequestWiki';
+import {RuleActionScriptResponseWiki} from '../RuleActionScriptResponseWiki';
 import {RuleRow} from '../RuleRow';
 import styles from './ruleActionScript.css';
 
@@ -22,13 +26,18 @@ export const RuleActionScript = memo(() => {
 		`actionConfigs.${RuleActionsType.Script}.response.code`,
 	);
 
+	const [requestWikiShown, toggleRequestWikiShown] = useToggle(false);
+	const [responseWikiShown, toggleResponseWikiShown] = useToggle(false);
+
 	return (
 		<>
 			<RuleRow title='Request:'>
 				<div className={styles.main}>
 					<div className={styles.primaryRow}>
 						<Checkbox {...requestEnabledField}>Enabled</Checkbox>
+						<TextButton onClick={toggleRequestWikiShown}>Wiki</TextButton>
 					</div>
+					{requestWikiShown && <RuleActionScriptRequestWiki />}
 					{requestEnabledField.checked && (
 						<CodeEditor
 							className={styles.codeField}
@@ -42,7 +51,9 @@ export const RuleActionScript = memo(() => {
 				<div className={styles.main}>
 					<div className={styles.primaryRow}>
 						<Checkbox {...responseEnabledField}>Enabled</Checkbox>
+						<TextButton onClick={toggleResponseWikiShown}>Wiki</TextButton>
 					</div>
+					{responseWikiShown && <RuleActionScriptResponseWiki />}
 					{responseEnabledField.checked && (
 						<CodeEditor
 							className={styles.codeField}
