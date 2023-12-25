@@ -1,4 +1,4 @@
-import {array, InferType, mixed, number, object, string} from 'yup';
+import {array, boolean, InferType, mixed, number, object, string} from 'yup';
 import {BreakpointStage, breakpointStagesList} from '@/constants/BreakpointStage';
 import {RequestMethod, requestMethodsList} from '@/constants/RequestMethod';
 import {ResourceType, resourceTypesList} from '@/constants/ResourceType';
@@ -59,6 +59,16 @@ export const ruleFormSchema = object({
 		}),
 		[RuleActionsType.Failure]: object({
 			reason: mixed<ResponseErrorReason>().oneOf(responseErrorReasonsList),
+		}),
+		[RuleActionsType.Script]: object({
+			request: object({
+				enabled: boolean(),
+				code: string().trim(),
+			}),
+			response: object({
+				enabled: boolean(),
+				code: string().trim(),
+			}),
 		}),
 	}).required(),
 }).required();

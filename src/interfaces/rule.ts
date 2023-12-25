@@ -42,7 +42,18 @@ export interface FailureRuleAction {
 	reason: ResponseErrorReason;
 }
 
-export type RuleAction = BreakpointRuleAction | MutationRuleAction | LocalResponseRuleAction | FailureRuleAction;
+export interface ScriptRuleAction {
+	type: RuleActionsType.Script;
+	request: string;
+	response: string;
+}
+
+export type RuleAction =
+	| BreakpointRuleAction
+	| MutationRuleAction
+	| LocalResponseRuleAction
+	| FailureRuleAction
+	| ScriptRuleAction;
 
 export interface Rule {
 	id: string;

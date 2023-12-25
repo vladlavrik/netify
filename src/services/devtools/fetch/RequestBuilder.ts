@@ -57,6 +57,16 @@ export class RequestBuilder {
 		return new this(requestId, url, method, headers, patch.body);
 	}
 
+	static asScriptResult(
+		requestId: string,
+		patch: {url?: string; method?: RequestMethod; headers?: Record<string, string>; body?: string},
+	) {
+		const {url, method} = patch;
+		const headers = patch.headers ? headersMapToArray(patch.headers) : undefined;
+		const body: RequestBody | undefined = patch.body ? {type: RequestBodyType.Text, value: patch.body} : undefined;
+		return new this(requestId, url, method, headers, body);
+	}
+
 	static asBreakpointExecute(
 		requestId: string,
 		{url, method, headers, body}: {url: string; method: RequestMethod; headers: HeadersArray; body?: RequestBody},

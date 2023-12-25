@@ -51,7 +51,7 @@ export class PanelApplicationManager {
 	}
 
 	/**
-	 * Fetch  to the store the rules list from a persistence storage
+	 * Fetch to the store the rules list from a persistence storage
 	 */
 	private async fetchRulesFromDatabase() {
 		await this.rootStore.rulesStore.fetchRules();
@@ -74,8 +74,20 @@ export class PanelApplicationManager {
 		document.querySelector('body')!.classList.add(`platform-${platform}`);
 
 		// Define a theme
-		if ((chrome.devtools.panels as any).themeName === 'dark') {
-			document.documentElement.classList.add('dark-theme');
+		const setTheme = () => {
+			const {themeName} = chrome.devtools.panels;
+			if (themeName === 'dark') {
+				document.documentElement.classList.add('dark-theme');
+			} else {
+				document.documentElement.classList.remove('dark-theme');
+			}
+
+			this.rootStore.appUiStore.setThemeName(themeName);
+		};
+
+		setTheme();
+		if ('setThemeChangeHandler' in chrome.devtools.panels) {
+			(chrome.devtools.panels as any).setThemeChangeHandler(setTheme);
 		}
 	}
 
@@ -148,7 +160,11 @@ export class PanelApplicationManager {
 	 */
 	private listenLogs() {
 		this.fetchDevtools.events.requestProcessed.on((log) => {
-			this.rootStore.logsStore.addLogEntry(log);
+			this.rootStore.networkLogsStore.addLogEntry(log);
+		});
+
+		this.fetchDevtools.events.requestScriptHandleException.on(({title, error}) => {
+			this.rootStore.errorLogsStore.addLogEntry({title: `[Script execution error] ${title}`, error});
 		});
 	}
 

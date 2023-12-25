@@ -2,20 +2,31 @@ import {Protocol} from 'devtools-protocol';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
+import {ResponseErrorReason, responseErrorReasonsList} from '@/constants/ResponseErrorReason';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {StatusCode} from '@/constants/StatusCode';
 import {Breakpoint} from '@/interfaces/breakpoint';
-import {LogEntry} from '@/interfaces/log';
+import {NetworkLogEntry} from '@/interfaces/networkLog';
 import {
 	BreakpointRuleAction,
 	FailureRuleAction,
 	LocalResponseRuleAction,
 	MutationRuleAction,
 	Rule,
+	ScriptRuleAction,
 } from '@/interfaces/rule';
-import {DevtoolsConnector} from '@/services/devtools';
+import type {DevtoolsConnector} from '@/services/devtools';
+import type {Sandbox} from '@/services/sandbox';
 import {EventBus} from '@/helpers/EventsBus';
-import {FetchRuleStore} from './FetchRuleStore';
+import type {FetchRuleStore} from './FetchRuleStore';
+import {
+	makeRequestScriptCode,
+	makeRequestScriptScope,
+	makeResponseScriptCode,
+	makeResponseScriptScope,
+	RequestScriptResult,
+	ResponseScriptResult,
+} from './helpers/scripting';
 import {RequestBuilder} from './RequestBuilder';
 import {ResponseBuilder, ResponsePausedEvent} from './ResponseBuilder';
 
@@ -33,14 +44,19 @@ type FailRequestRequest = Protocol.Fetch.FailRequestRequest;
  */
 export class FetchDevtools {
 	readonly events = {
-		requestProcessed: new EventBus<LogEntry>(),
+		requestProcessed: new EventBus<NetworkLogEntry>(),
 		requestBreakpoint: new EventBus<Breakpoint>(),
+		requestScriptHandleException: new EventBus<{title: string; error: unknown}>(),
 	};
 
 	private enabled = false;
 	private unsubscribeDevtoolsEvents?: () => void;
 
-	constructor(private readonly devtools: DevtoolsConnector, private readonly rulesStore: FetchRuleStore) {}
+	constructor(
+		private readonly devtools: DevtoolsConnector,
+		private readonly rulesStore: FetchRuleStore,
+		private readonly sandbox: Sandbox,
+	) {}
 
 	async enable() {
 		this.enabled = true;
@@ -127,6 +143,11 @@ export class FetchDevtools {
 			case RuleActionsType.Failure:
 				await this.processRequestFailure(requestId, rule.action);
 				break;
+
+			// Script request
+			case RuleActionsType.Script:
+				await this.processRequestScript(pausedRequest, rule.action);
+				break;
 		}
 	}
 
@@ -138,6 +159,10 @@ export class FetchDevtools {
 
 			case RuleActionsType.Mutation:
 				await this.processResponseMutation(pausedResponse, rule.action, rule.id);
+				break;
+
+			case RuleActionsType.Script:
+				await this.processResponseScript(pausedResponse, rule.action);
 				break;
 		}
 	}
@@ -192,6 +217,94 @@ export class FetchDevtools {
 		await this.failRequest({requestId, errorReason});
 	}
 
+	private async processRequestScript(pausedRequest: RequestPausedEvent, action: ScriptRuleAction) {
+		const {requestId} = pausedRequest;
+
+		if (!action.request) {
+			await this.continueRequest({requestId});
+			return;
+		}
+
+		// Prepare executable code and scope
+		const scriptScope = makeRequestScriptScope(pausedRequest);
+		const code = makeRequestScriptCode(action.request);
+
+		let result;
+		try {
+			result = await this.sandbox.execute<RequestScriptResult>(code, true, scriptScope);
+		} catch (error) {
+			console.warn('Fetch devtools: execute request script handler error');
+			console.error(error);
+			this.events.requestScriptHandleException.emit({title: 'Execute request handling script exception', error});
+			await this.continueRequest({requestId});
+			return;
+		}
+
+		this.log('request script handled with result %o', result);
+
+		switch (result?.type) {
+			case 'patch': {
+				const builder = RequestBuilder.asScriptResult(requestId, result.patch);
+				const continueParams = builder.build();
+				await this.continueRequest(continueParams);
+				return;
+			}
+			case 'response': {
+				const builder = ResponseBuilder.asScriptResult(pausedRequest, result.response);
+				const fulfillParams = await builder.build();
+				await this.fulfillRequest(fulfillParams);
+				return;
+			}
+			case 'failure': {
+				const reason =
+					result.reason && (responseErrorReasonsList as string[]).includes(result.reason)
+						? (result.reason as ResponseErrorReason)
+						: ResponseErrorReason.Failed;
+				await this.failRequest({requestId, errorReason: reason});
+				break;
+			}
+			default:
+				await this.continueRequest({requestId});
+		}
+	}
+
+	private async processResponseScript(pausedResponse: ResponsePausedEvent, action: ScriptRuleAction) {
+		const {requestId} = pausedResponse;
+
+		if (!action.response) {
+			await this.continueRequest({requestId});
+			return;
+		}
+
+		// Read the response body
+		const body = await this.getResponseBody(pausedResponse.requestId);
+
+		// Prepare executable code and scope
+		const scriptScope = makeResponseScriptScope(pausedResponse, body);
+		const code = makeResponseScriptCode(action.response);
+
+		let result;
+		try {
+			result = await this.sandbox.execute<ResponseScriptResult>(code, true, scriptScope);
+		} catch (error) {
+			console.warn('RESPONSE CODE EXECUTE ERROR');
+			console.error(error);
+			this.events.requestScriptHandleException.emit({title: 'Execute response handling script exception', error});
+			await this.continueRequest({requestId});
+			return;
+		}
+
+		this.log('response script handled with result %o', result);
+		if (result?.type === 'patch') {
+			const builder = ResponseBuilder.asScriptResult(pausedResponse, result.patch);
+			const fulfillParams = await builder.build();
+			await this.fulfillRequest(fulfillParams);
+			return;
+		}
+
+		await this.continueRequest({requestId});
+	}
+
 	private async processLocalResponse(requestId: string, action: LocalResponseRuleAction) {
 		const builder = ResponseBuilder.asLocalResponse(requestId, action);
 		const fulfilParams = await builder.build();
@@ -240,6 +353,7 @@ export class FetchDevtools {
 		const fulfilParams = await builder.build();
 
 		// Report to UI logger about the new handled response
+		// TODO move this to "processResponse"
 		this.events.requestProcessed.emit({
 			requestId,
 			interceptStage: 'Response',

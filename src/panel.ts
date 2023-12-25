@@ -2,29 +2,33 @@ import {FetchDevtools, FetchRuleStore} from '@/services/devtools/fetch';
 import {ExtensionDevtoolsConnector, ExtensionIcon, ExtensionTab} from '@/services/extension';
 import {openIDB} from '@/services/indexedDB';
 import {RulesDatabaseMapper, RulesLocalMapper} from '@/services/rulesMapper';
+import {Sandbox} from '@/services/sandbox';
 import {RootStore} from '@/stores/RootStore';
 import {PanelApplicationManager} from './PanelApplicationManager';
 import '@/style/page.css';
 
 (async () => {
+	const sandboxIframe = document.getElementById('netify-sandbox-iframe') as HTMLIFrameElement;
+	const sandbox = new Sandbox(sandboxIframe);
 	const {tabId} = chrome.devtools.inspectedWindow;
 	const tab = new ExtensionTab(tabId);
 	const extensionIcon = new ExtensionIcon(tabId, 'Netify');
 	const devtoolsConnector = new ExtensionDevtoolsConnector(tabId);
 	const fetchRulesStore = new FetchRuleStore();
-	const fetchDevtools = new FetchDevtools(devtoolsConnector, fetchRulesStore);
+	const fetchDevtools = new FetchDevtools(devtoolsConnector, fetchRulesStore, sandbox);
 
 	// Require the current browser's tab hostname
 	const {origin: tabOrigin} = await tab.getPageUrl();
 
 	// Prepare database and initialize data mappers
 	let db: IDBDatabase | undefined;
+	let dbError: unknown;
 	try {
 		db = await openIDB();
 	} catch (error) {
 		console.info('IndexedDB open error, switch to a local data storing mode');
 		console.error(error);
-		// TODO report to the UI
+		dbError = error;
 	}
 
 	const rulesMapper = db ? new RulesDatabaseMapper(db) : new RulesLocalMapper();
@@ -35,10 +39,12 @@ import '@/style/page.css';
 		(window as any).__store = rootStore;
 	}
 
+	// Report database initialization error
 	if (!db) {
-		rootStore.attentionsStore.push(
-			'Persistent database (IndexedDB) is not available, rules list will be cleared after session ends',
-		);
+		rootStore.errorLogsStore.addLogEntry({
+			title: 'Persistent database (IndexedDB) is not available, rules list will be cleared after session ends',
+			error: dbError,
+		});
 	}
 
 	// Create the panel application manager

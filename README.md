@@ -15,7 +15,8 @@ Netify is a debugging proxy that will allow you to intercept and mutate your req
 - Replacing a response body with a text value, Base64, or file's content.
 - Adding an extra response delay
 - Cancel requests on the client.  
-- The above changes can be made according to predefined rules or by making changes to an intercepted request (like breakpoint).
+- The above changes can be made according to predefined rules, by script or by making changes to an intercepted request (like breakpoint).
 ----
 
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/vladlavrik)
+Netify is fully free and open source. You can thank the author by making a small donation  
+[!["Donate with PayPal"](screenshots/donate-button.png)](https://www.paypal.com/donate/?hosted_button_id=49WGRXS8GF9PU)

@@ -6,6 +6,55 @@ import {RuleActionsType} from '@/constants/RuleActionsType';
 import {Rule} from '@/interfaces/rule';
 import {RuleFormSchema} from './ruleFormSchema';
 
+// language=js
+const defaultRequestScript = `
+/**
+ * @param {Object} request
+ * @param {number} request.url
+ * @param {string} request.method
+ * @param {Object} request.headers - key-value headers
+ * @param {Blob} request.body
+ * @param {Object} actions
+ * @param {Function} actions.setUrl
+ * @param {Function} actions.setMethod
+ * @param {Function} actions.setHeader
+ * @param {Function} actions.setHeaders
+ * @param {Function} actions.dropHeader
+ * @param {Function} actions.resetHeaders
+ * @param {Function} actions.setBody
+ * @param {Function} actions.failure
+ * @param {Function} actions.response
+ */
+async function handler(request, actions) {
+  
+}
+`.trim();
+
+// language=js
+const defaultResponseScript = `
+ /**
+ * @param {Object} response
+ * @param {number} response.statusCode
+ * @param {Object} response.headers - key-value headers
+ * @param {Blob} response.body
+ * @param {Object} response.request
+ * @param {string} response.request.url
+ * @param {string} response.request.method
+ * @param {Object} response.request.headers - key-value headers
+ * @param {Blob} response.request.body
+ * @param {Object} actions
+ * @param {Function} actions.setStatusCode
+ * @param {Function} actions.setHeader
+ * @param {Function} actions.setHeaders
+ * @param {Function} actions.dropHeader
+ * @param {Function} actions.resetHeaders
+ * @param {Function} actions.setBody
+ */
+async function handler(response, actions) {
+  
+}
+`.trim();
+
 export function serializeRuleForm(rule: Rule) {
 	const {label, filter, action} = rule;
 
@@ -57,6 +106,16 @@ export function serializeRuleForm(rule: Rule) {
 			},
 			[RuleActionsType.Failure]: {
 				reason: ResponseErrorReason.Failed,
+			},
+			[RuleActionsType.Script]: {
+				request: {
+					enabled: false,
+					code: defaultRequestScript,
+				},
+				response: {
+					enabled: false,
+					code: defaultResponseScript,
+				},
 			},
 		},
 	};
@@ -145,6 +204,16 @@ export function serializeRuleForm(rule: Rule) {
 
 		case RuleActionsType.Failure: {
 			value.actionConfigs[RuleActionsType.Failure].reason = action.reason;
+			break;
+		}
+
+		case RuleActionsType.Script: {
+			value.actionConfigs[RuleActionsType.Script].request = action.request
+				? {enabled: true, code: action.request}
+				: {enabled: false, code: defaultRequestScript};
+			value.actionConfigs[RuleActionsType.Script].response = action.response
+				? {enabled: true, code: action.response}
+				: {enabled: false, code: defaultResponseScript};
 			break;
 		}
 	}

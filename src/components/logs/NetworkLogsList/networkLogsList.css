@@ -1,0 +1,8 @@
+.placeholder {
+	position: relative;
+	top: calc(50% - 8px);
+	margin: 0;
+	font-size: 12px;
+	text-align: center;
+	color: var(--color-placeholder);
+}

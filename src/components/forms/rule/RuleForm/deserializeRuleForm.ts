@@ -3,14 +3,7 @@ import {RequestBodyType} from '@/constants/RequestBodyType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {RequestBody, ResponseBody} from '@/interfaces/body';
-import {
-	BreakpointRuleAction,
-	FailureRuleAction,
-	LocalResponseRuleAction,
-	MutationRuleAction,
-	Rule,
-	RuleAction,
-} from '@/interfaces/rule';
+import {BreakpointRuleAction, Rule, RuleAction} from '@/interfaces/rule';
 import {RequestBodySchema, ResponseBodySchema, RuleFormSchema} from './ruleFormSchema';
 
 function deserializeRequestBody({type, textValue, formValue}: RequestBodySchema): RequestBody | undefined {
@@ -91,7 +84,7 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 					dropHeaders: response.dropHeaders,
 					body: deserializeResponseBody(response.body),
 				},
-			} as MutationRuleAction;
+			};
 			break;
 		}
 
@@ -104,7 +97,7 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 				statusCode: Number(statusCode),
 				headers,
 				body: deserializeResponseBody(body)!,
-			} as LocalResponseRuleAction;
+			};
 			break;
 		}
 
@@ -112,8 +105,17 @@ export function deserializeRuleForm(form: RuleFormSchema, id: string, active: bo
 			action = {
 				type: RuleActionsType.Failure,
 				reason: actionConfigs[RuleActionsType.Failure].reason,
-			} as FailureRuleAction;
+			};
 			break;
+		case RuleActionsType.Script: {
+			const {request, response} = actionConfigs[RuleActionsType.Script];
+			action = {
+				type: RuleActionsType.Script,
+				request: request.enabled ? request.code : '',
+				response: response.enabled ? response.code : '',
+			};
+			break;
+		}
 	}
 
 	return {

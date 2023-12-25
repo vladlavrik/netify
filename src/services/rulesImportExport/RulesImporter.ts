@@ -1,3 +1,4 @@
+import {fromZodError} from 'zod-validation-error';
 import {Rule} from '@/interfaces/rule';
 import {rulesImportSchema} from '@/services/rulesImportExport/schemas/rulesImportSchema';
 
@@ -25,7 +26,7 @@ export class RulesImporter {
 		const parseResult = rulesImportSchema.safeParse(contentSource);
 		if (!parseResult.success) {
 			console.error(parseResult.error);
-			return {success: false, error: parseResult.error};
+			return {success: false, error: fromZodError(parseResult.error)};
 		}
 
 		const content = parseResult.data;

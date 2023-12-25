@@ -1,25 +1,25 @@
 import type {RulesMapper} from '@/services/rulesMapper';
 import {AppUiStore} from './AppUiStore';
-import {AttentionsStore} from './AttentionsStore';
 import {BreakpointsStore} from './BreakpointsStore';
 import {DebuggerStateStore} from './DebuggerStateStore';
-import {LogsStore} from './LogsStore';
+import {ErrorLogsStore} from './ErrorLogsStore';
+import {NetworkLogsStore} from './NetworkLogsStore';
 import {RulesStore} from './RulesStore';
 
 export class RootStore {
 	appUiStore: AppUiStore;
-	attentionsStore: AttentionsStore;
 	debuggerStateStore: DebuggerStateStore;
 	breakpointsStore: BreakpointsStore;
 	rulesStore: RulesStore;
-	logsStore: LogsStore;
+	networkLogsStore: NetworkLogsStore;
+	errorLogsStore: ErrorLogsStore;
 
 	constructor({rulesMapper}: {rulesMapper: RulesMapper}) {
 		this.appUiStore = new AppUiStore();
-		this.attentionsStore = new AttentionsStore();
 		this.debuggerStateStore = new DebuggerStateStore();
 		this.rulesStore = new RulesStore(this, rulesMapper);
 		this.breakpointsStore = new BreakpointsStore();
-		this.logsStore = new LogsStore();
+		this.networkLogsStore = new NetworkLogsStore();
+		this.errorLogsStore = new ErrorLogsStore();
 	}
 }

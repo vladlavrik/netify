@@ -7,7 +7,6 @@ import {Logs} from '@/components/logs';
 import {Rules} from '@/components/rules';
 import {RuleViewer} from '@/components/ruleViewer';
 import {useStores} from '@/stores/useStores';
-import {AppAttention} from '../AppAttention';
 import {AppHeader} from '../AppHeader';
 import {AppSections} from '../AppSections';
 import styles from './app.css';
@@ -33,8 +32,6 @@ export const App = observer(() => {
 					floatingSection={detailsShown ? <RuleViewer /> : null}
 				/>
 			</div>
-
-			<AppAttention />
 
 			{composeShown && createPortal(<RuleCompose />, modalTarget)}
 

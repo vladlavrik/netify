@@ -9,6 +9,12 @@ body {
 	background: var(--color-bg-main);
 }
 
+:global(#netify-sandbox-iframe) {
+	position: absolute;
+	left: -1000000px;
+	top: -100000px;
+}
+
 /* stylelint-disable selector-no-qualifying-type */
 :global body.platform-linux {
 	font-family: Roboto, Ubuntu, Arial, sans-serif;

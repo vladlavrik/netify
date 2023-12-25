@@ -242,7 +242,10 @@ export class RulesStore {
 		if (!importResult.success) {
 			console.log('Import rules error');
 			console.error(importResult.error);
-			this.rootStore.attentionsStore.push("Can't import rules, probably the selected file is not invalid");
+			this.rootStore.errorLogsStore.addLogEntry({
+				title: "Can't import rules, probably the selected file is not invalid",
+				error: importResult.error,
+			});
 			return;
 		}
 
@@ -253,12 +256,19 @@ export class RulesStore {
 			saveResult = await this.rulesMapper.saveNewMultipleItems(rules, this.currentOrigin);
 		} catch (error) {
 			console.error(error);
-			this.rootStore.attentionsStore.push(`Can't save imported rules due ${error}`);
+			this.rootStore.errorLogsStore.addLogEntry({
+				title: "Can't save imported rules",
+				error,
+			});
 			return;
 		}
 
 		// Report failed rules import
-		if (saveResult.some((result) => result.status === 'rejected')) {
+		const firstFailedResult = saveResult.find(
+			(result) => result.status === 'rejected',
+		) as PromiseRejectedResult | void;
+
+		if (firstFailedResult) {
 			console.group("Can't save some imported rule due an error");
 			saveResult.forEach((result, index) => {
 				if (result.status === 'rejected') {
@@ -267,7 +277,10 @@ export class RulesStore {
 				}
 			});
 			console.groupEnd();
-			this.rootStore.attentionsStore.push('Some of the imported rules are not saved');
+			this.rootStore.errorLogsStore.addLogEntry({
+				title: 'Some of the imported rules are not saved',
+				error: firstFailedResult.reason,
+			});
 		}
 
 		const saveResultStatuses = saveResult.map((result) => result.status);
@@ -291,7 +304,10 @@ export class RulesStore {
 			console.log('Export rules error');
 			console.error(saveResult.error);
 
-			this.rootStore.attentionsStore.push(`Can't export rules list due ${saveResult.error}`);
+			this.rootStore.errorLogsStore.addLogEntry({
+				title: "Can't export rules lis",
+				error: saveResult.error,
+			});
 			return;
 		}
 
