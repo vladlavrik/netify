@@ -49,6 +49,7 @@ module.exports = (env, {mode} = {}) => ({
 						options: {
 							importLoaders: 1,
 							modules: {
+								namedExport: false,
 								mode: 'local',
 								localIdentName: '[name]__[local]-[hash:base64:5]',
 							},
@@ -61,7 +62,7 @@ module.exports = (env, {mode} = {}) => ({
 			},
 			{
 				test: /\.svg$/,
-				loader: 'svg-react-loader',
+				loader: '@svgr/webpack',
 				options: {
 					name: 'Icon',
 				},

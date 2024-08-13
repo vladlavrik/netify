@@ -4,9 +4,11 @@ import {requestMethodSchema} from '@/components/@common/formsKit/RequestMethodFi
 import {setHeadersSchema} from '@/components/@common/formsKit/SetHeadersField';
 
 export const breakpointRequestFormSchema = object({
-	endpoint: string().matches(/^https?:\/\/.+/, 'The endpoint url should be started with a http(s) protocol'),
-	method: requestMethodSchema,
-	headers: setHeadersSchema,
+	endpoint: string()
+		.matches(/^https?:\/\/.+/, 'The endpoint url should be started with a http(s) protocol')
+		.required(),
+	method: requestMethodSchema.required(),
+	headers: setHeadersSchema.required(),
 	body: requestBodySchema,
 }).required();
 

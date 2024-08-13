@@ -1,6 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {reaction, toJS} from 'mobx';
+import {createRoot} from 'react-dom/client';
+import {autorun, reaction, toJS} from 'mobx';
 import {Rule} from '@/interfaces/rule';
 import {FetchDevtools, FetchRuleStore} from '@/services/devtools/fetch';
 import {ExtensionDevtoolsConnector, ExtensionIcon, ExtensionTab} from '@/services/extension';
@@ -92,9 +92,12 @@ export class PanelApplicationManager {
 	}
 
 	private renderUI() {
+		const rootContainer = document.getElementById('app-root')!;
+		const root = createRoot(rootContainer);
+
 		const appElement = React.createElement(App);
 		const appWithStore = React.createElement(StoresContext.Provider, {value: this.rootStore}, appElement);
-		ReactDOM.render(appWithStore, document.getElementById('app-root'));
+		root.render(appWithStore);
 	}
 
 	/**

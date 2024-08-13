@@ -13,17 +13,16 @@ import {statusCodeSchema} from '@/components/@common/formsKit/StatusCodeField';
 const delaySchema = number()
 	.typeError('Should be a number')
 	.min(0, 'Should be s positive')
-	.max(60000, 'Max value is 60000 (60s)')
-	.notRequired();
+	.max(60000, 'Max value is 60000 (60s)');
 
 export const ruleFormSchema = object({
-	label: string().notRequired(),
+	label: string(),
 	filter: object({
-		url: string(),
-		resourceTypes: array().of(mixed<ResourceType>().oneOf(resourceTypesList)),
-		methods: array().of(mixed<RequestMethod>().oneOf(requestMethodsList)),
-	}),
-	actionType: mixed<RuleActionsType>().oneOf(ruleActionsTypesList),
+		url: string().trim().default(''),
+		resourceTypes: array().of(mixed<ResourceType>().oneOf(resourceTypesList).defined()).default([]),
+		methods: array().of(mixed<RequestMethod>().oneOf(requestMethodsList).defined()).default([]),
+	}).defined(),
+	actionType: mixed<RuleActionsType>().oneOf(ruleActionsTypesList).required(),
 	actionConfigs: object({
 		[RuleActionsType.Breakpoint]: object({
 			stage: mixed<BreakpointStage>().oneOf(breakpointStagesList).default(BreakpointStage.Both),
@@ -34,40 +33,42 @@ export const ruleFormSchema = object({
 					/^((https?:)|(\[protocol]))\/\/.+/,
 					'The endpoint url should be started with a protocol (or suitable macros) and have a hostname',
 				),
-				method: requestMethodSchema.notRequired(),
-				setHeaders: setHeadersSchema,
+				method: requestMethodSchema,
+				setHeaders: setHeadersSchema.defined(),
 				dropHeaders: array()
-					.of(string().trim())
+					.of(string().trim().defined())
+					.defined()
 					.transform((value: string[]) => value.filter((item) => item && item.trim())),
-				body: requestBodySchema,
+				body: requestBodySchema.defined(),
 			}),
 			response: object({
 				delay: delaySchema,
-				statusCode: statusCodeSchema.notRequired(), // TODO FIXME an error on clear defined before this field
-				setHeaders: setHeadersSchema,
+				statusCode: statusCodeSchema, // TODO FIXME an error on clear defined before this field
+				setHeaders: setHeadersSchema.defined(),
 				dropHeaders: array()
-					.of(string().trim())
+					.of(string().trim().defined())
+					.defined()
 					.transform((value: string[]) => value.filter((item) => item && item.trim())),
-				body: responseBodySchema,
+				body: responseBodySchema.defined(),
 			}),
 		}).required(),
 		[RuleActionsType.LocalResponse]: object({
 			delay: delaySchema,
 			statusCode: statusCodeSchema.required('Status code is required'),
-			headers: setHeadersSchema,
-			body: responseBodySchema,
+			headers: setHeadersSchema.defined(),
+			body: responseBodySchema.defined(),
 		}),
 		[RuleActionsType.Failure]: object({
-			reason: mixed<ResponseErrorReason>().oneOf(responseErrorReasonsList),
+			reason: mixed<ResponseErrorReason>().oneOf(responseErrorReasonsList).defined(),
 		}),
 		[RuleActionsType.Script]: object({
 			request: object({
-				enabled: boolean(),
-				code: string().trim(),
+				enabled: boolean().defined(),
+				code: string().trim().defined(),
 			}),
 			response: object({
-				enabled: boolean(),
-				code: string().trim(),
+				enabled: boolean().defined(),
+				code: string().trim().defined(),
 			}),
 		}),
 	}).required(),

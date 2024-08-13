@@ -4,8 +4,8 @@ import {setHeadersSchema} from '@/components/@common/formsKit/SetHeadersField';
 import {statusCodeSchema} from '@/components/@common/formsKit/StatusCodeField';
 
 export const breakpointResponseFormSchema = object({
-	statusCode: statusCodeSchema,
-	headers: setHeadersSchema,
+	statusCode: statusCodeSchema.required(),
+	headers: setHeadersSchema.required(),
 	body: responseBodySchema,
 }).required();
 

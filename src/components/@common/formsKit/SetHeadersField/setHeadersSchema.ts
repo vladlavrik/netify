@@ -9,17 +9,22 @@ export const setHeadersSchema = array()
 	.of(
 		object({
 			name: string()
+				.defined()
 				.trim()
 				.when('value', {
 					is(value: string) {
 						return !value;
 					},
-					then: string(),
-					otherwise: string().required('Name is required when the value is not empty'),
+					then: (schema) => schema,
+					otherwise: (schema) => schema.required('Name is required when the value is not empty'),
 				}),
-			value: string(),
+			value: string().default(''),
 		}),
 	)
-	.transform((value: HeaderRecord[]) => {
-		return value.filter((item) => !!item.value);
+	.defined()
+	.transform(function (value) {
+		if (this.isType(value)) {
+			return value.filter((item) => !!item.name || !!item.value) as HeaderRecord[];
+		}
+		return value;
 	});
