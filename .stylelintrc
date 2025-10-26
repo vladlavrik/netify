@@ -29,11 +29,8 @@
     "no-unknown-animations": true,
     "color-hex-length": "short",
     "function-name-case": "lower",
-    "function-whitespace-after": "always",
     "function-url-quotes": "always",
     "value-keyword-case": "lower",
-    "media-feature-range-operator-space-before": "always",
-    "media-feature-range-operator-space-after": "always",
     "comment-empty-line-before": ["always", {"except": ["first-nested"]}],
     "comment-whitespace-inside": "always",
 
@@ -65,7 +62,7 @@
       },
       {
         "groupName": "Position",
-        "properties": ["position", "left", "right", "top", "bottom"]
+        "properties": ["position", "anchor-name", "position-anchor", "inset-area", "position-area", "position-try-options", "position-try-fallbacks", "left", "right", "top", "bottom"]
       },
       {
         "groupName": "Size",

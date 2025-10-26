@@ -29,6 +29,7 @@
 	"rules": {
 		// Rewrite for eslitnrecommended
 		"no-prototype-builtins": "off",
+		"no-unused-vars": "off",
 
 		// Rewrite for @typescript-eslint/recommended
 		"@typescript-eslint/explicit-function-return-type": "off", // To no write manually return types of React functional components
@@ -37,19 +38,10 @@
 		"@typescript-eslint/no-non-null-assertion": "off",
 		"@typescript-eslint/no-parameter-properties": "off",
 		"@typescript-eslint/no-explicit-any": "off",
-		"@typescript-eslint/ban-types": [
-			"error",
-			{
-				"types": {
-					"{}": false
-				}
-			}
-		],
 
 		// Rest rules of "@typescript-eslint" except included in the "@typescript-eslint/recommended"
 		"@typescript-eslint/await-thenable": "error",
 		"@typescript-eslint/ban-ts-comment": "error",
-		"@typescript-eslint/func-call-spacing": "error",
 		"@typescript-eslint/member-ordering": [
 			"error",
 			{
@@ -100,6 +92,10 @@
 			{
 				"selector": "typeLike",
 				"format": ["PascalCase"]
+			},
+			{
+				"selector": "import",
+				"format": ["camelCase", "PascalCase"]
 			}
 		],
 		"@typescript-eslint/no-extraneous-class": "error",
@@ -110,6 +106,7 @@
 		"@typescript-eslint/no-unnecessary-qualifier": "error", // Insignificantly
 		"@typescript-eslint/no-unnecessary-type-assertion": "off", // Temporary disabled by reason: https://github.com/typescript-eslint/typescript-eslint/issues/532
 		"@typescript-eslint/no-useless-constructor": "error",
+		"@typescript-eslint/no-unused-vars": ["error", {"caughtErrorsIgnorePattern": "^_"}],
 		"@typescript-eslint/prefer-for-of": "error", // Insignificantly
 		"@typescript-eslint/prefer-function-type": "error", // Insignificantly
 		"@typescript-eslint/prefer-includes": "error",
@@ -142,7 +139,13 @@
 
 		// Stylistic Issues section
 		"func-name-matching": "error",
-		"capitalized-comments": ["error", "always", {"ignorePattern": "prettier-ignore|noinspection|webpack|languag"}],
+		"capitalized-comments": [
+			"error",
+			"always", {
+				"ignorePattern": "prettier-ignore|noinspection|webpack|languag",
+				"ignoreConsecutiveComments": true
+			}
+		],
 		"lines-around-comment": [
 			"error",
 			{
@@ -239,6 +242,7 @@
 						"^@\\/services\\/",
 						"^@\\/helpers\\/",
 						"^@\\/hooks\\/",
+						"^@\\/stores\\/",
 						"^@\\/components\\/",
 						"^@\\/style\\/",
 						"^",
