@@ -52,15 +52,17 @@ export const RuleViewer = observer(() => {
 					<span className={styles.headerData}>{ruleActionsTypeHumanTitles[action.type]}</span>
 				</h2>
 
-				{action.type === RuleActionsType.Mutation && <RuleViewerActionMutation action={action} />}
+				<div>
+					{action.type === RuleActionsType.Mutation && <RuleViewerActionMutation action={action} />}
 
-				{action.type === RuleActionsType.Breakpoint && <RuleViewerActionBreakpoint action={action} />}
+					{action.type === RuleActionsType.Breakpoint && <RuleViewerActionBreakpoint action={action} />}
 
-				{action.type === RuleActionsType.LocalResponse && <RuleViewerActionLocalResponse action={action} />}
+					{action.type === RuleActionsType.LocalResponse && <RuleViewerActionLocalResponse action={action} />}
 
-				{action.type === RuleActionsType.Failure && <RuleViewerActionFailure action={action} />}
+					{action.type === RuleActionsType.Failure && <RuleViewerActionFailure action={action} />}
 
-				{action.type === RuleActionsType.Script && <RuleViewerActionScript action={action} />}
+					{action.type === RuleActionsType.Script && <RuleViewerActionScript action={action} />}
+				</div>
 			</div>
 		</div>
 	);

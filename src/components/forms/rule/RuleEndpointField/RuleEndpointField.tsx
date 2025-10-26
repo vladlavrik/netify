@@ -1,6 +1,6 @@
 import React, {memo, useCallback, useRef} from 'react';
 import {useField} from 'formik';
-import {TextButton} from '@/components/@common/buttons/TextButton';
+import {InlineButton} from '@/components/@common/buttons/InlineButton';
 import {FieldError} from '@/components/@common/forms/FieldError';
 import {TextField} from '@/components/@common/forms/TextField';
 import {Dropdown} from '@/components/@common/misc/Dropdown';
@@ -40,45 +40,44 @@ export const RuleEndpointField = memo<RuleEndpointFieldProps>(({name}) => {
 				placeholder='Redirect a request by the new url'
 				suffixChildren={
 					<Dropdown
-						className={styles.macros}
+						className={styles.macrosButton}
 						render={(dropdownProps, {expanded}) => (
-							<TextButton {...dropdownProps} className={styles.macrosButton} tabIndex={-1}>
+							<InlineButton {...dropdownProps} tabIndex={-1}>
 								{expanded ? 'close' : 'add macros'}
-							</TextButton>
+							</InlineButton>
 						)}
-						preferExpansionAlignX='start'
 						content={
 							<div className={styles.macrosPicker}>
-								<TextButton
+								<InlineButton
 									className={styles.macrosOption}
-									data-value='[protocol]'
+									data-value='[protocol]//'
 									onClick={handleMacrosInsert}>
 									Protocol
-								</TextButton>
-								<TextButton
+								</InlineButton>
+								<InlineButton
 									className={styles.macrosOption}
 									data-value='[hostname]'
 									onClick={handleMacrosInsert}>
 									Hostname
-								</TextButton>
-								<TextButton
+								</InlineButton>
+								<InlineButton
 									className={styles.macrosOption}
 									data-value='[port]'
 									onClick={handleMacrosInsert}>
 									Port
-								</TextButton>
-								<TextButton
+								</InlineButton>
+								<InlineButton
 									className={styles.macrosOption}
 									data-value='[path]'
 									onClick={handleMacrosInsert}>
 									Path
-								</TextButton>
-								<TextButton
+								</InlineButton>
+								<InlineButton
 									className={styles.macrosOption}
 									data-value='[query]'
 									onClick={handleMacrosInsert}>
 									Query
-								</TextButton>
+								</InlineButton>
 							</div>
 						}
 					/>

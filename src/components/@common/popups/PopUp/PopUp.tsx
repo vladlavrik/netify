@@ -1,26 +1,26 @@
 import React, {FC, ReactNode, useEffect, useRef} from 'react';
-import ReactDOM from 'react-dom';
 import cn from 'classnames';
 import styles from './popUp.css';
 
 interface PopUpProps {
 	className?: string;
+	onClose(): void;
 	children?: ReactNode;
 }
 
-export const PopUp: FC<PopUpProps> = ({className, children}) => {
+export const PopUp: FC<PopUpProps> = (props) => {
+	const {className, onClose, children} = props;
 	const modalRef = useRef<HTMLDialogElement>(null);
-	const attachTargetRef = useRef<HTMLElement>(document.getElementById('modal-root')!);
 
 	useEffect(() => {
-		(modalRef.current! as any).showModal(); // TODO fix types
+		modalRef.current!.showModal();
+		modalRef.current!.addEventListener('close', onClose);
 	}, []);
 
-	return ReactDOM.createPortal(
+	return (
 		<dialog ref={modalRef} className={cn(styles.root, className)}>
 			{children}
-		</dialog>,
-		attachTargetRef.current,
+		</dialog>
 	);
 };
 

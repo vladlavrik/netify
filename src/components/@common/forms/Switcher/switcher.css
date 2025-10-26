@@ -1,0 +1,24 @@
+.root {
+	position: relative;
+	width: 20px;
+	height: 12px;
+	overflow: hidden;
+}
+
+.input {
+	appearance: none;
+	position: absolute;
+}
+
+.imitator {
+	display: block;
+	fill: var(--color-content-accent);
+}
+
+.circle {
+	transition: transform 0.16s ease-in-out;
+
+	.input:checked + .label & {
+		transform: translateX(8px);
+	}
+}

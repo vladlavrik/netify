@@ -1,0 +1,14 @@
+.root {
+	margin: 4px 0;
+	padding: 4px;
+	border-radius: 3px;
+	color: var(--color-content-accent);
+	background: var(--color-content-error);
+	cursor: default;
+}
+
+.error {
+	font-size: 11px;
+	word-break: break-word;
+	white-space: pre-wrap;
+}

@@ -12,14 +12,14 @@
 }
 
 .snippet {
-	margin: 8px 0;
 	display: flex;
-	padding-right: 8px;
 	max-width: calc(100% - 16px);
+	margin: 8px 0;
+	padding-right: 8px;
 }
 
 .highlighted {
 	font-family: monospace;
 	font-style: italic;
-	color: var(--color-content-accent)
+	color: var(--color-content-accent);
 }

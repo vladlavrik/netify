@@ -4,6 +4,7 @@ import {defaultHighlightStyle, syntaxHighlighting} from '@codemirror/language';
 import {EditorState} from '@codemirror/state';
 import {oneDark} from '@codemirror/theme-one-dark';
 import {EditorView} from '@codemirror/view';
+import {isUIColorThemeDark} from '@/helpers/isUIColorThemeDark';
 import {useStores} from '@/stores/useStores';
 
 interface CodePreviewProps {
@@ -15,7 +16,7 @@ export const CodePreview = memo<CodePreviewProps>((props) => {
 	const {className, value} = props;
 
 	const rootRef = useRef<HTMLDivElement>(null);
-	const {appUiStore} = useStores();
+	const {settingsStore} = useStores();
 
 	useEffect(() => {
 		const startState = EditorState.create({
@@ -25,7 +26,7 @@ export const CodePreview = memo<CodePreviewProps>((props) => {
 				javascript(),
 				EditorView.lineWrapping,
 				EditorView.editable.of(false),
-				...(appUiStore.themeName === 'dark' ? [oneDark] : []),
+				...(isUIColorThemeDark(settingsStore.uiTheme) ? [oneDark] : []),
 			],
 		});
 

@@ -3,14 +3,20 @@ import styles from './sectionHeader.css';
 
 interface SectionHeaderProps {
 	title: ReactNode;
-	children?: ReactNode;
+	leading?: ReactNode;
+	trailing?: ReactNode;
 }
 
-export const SectionHeader: FC<SectionHeaderProps> = ({title, children}) => {
+export const SectionHeader: FC<SectionHeaderProps> = (props) => {
+	const {title, leading, trailing} = props;
+
 	return (
 		<div className={styles.root}>
-			<h1 className={styles.title}>{title}</h1>
-			{children}
+			<div className={styles.leading}>
+				<h1 className={styles.title}>{title}</h1>
+				{leading}
+			</div>
+			{trailing}
 		</div>
 	);
 };

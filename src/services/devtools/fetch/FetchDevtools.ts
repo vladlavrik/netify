@@ -40,7 +40,7 @@ type FailRequestRequest = Protocol.Fetch.FailRequestRequest;
 /**
  * The service provides requests interception by rule filters and:
  * - patching them by the rules
- * - triggering breakpoints and continue them with a mutated data
+ * - triggering breakpoints and continue them with mutated data
  */
 export class FetchDevtools {
 	readonly events = {
@@ -49,7 +49,8 @@ export class FetchDevtools {
 		requestScriptHandleException: new EventBus<{title: string; error: unknown}>(),
 	};
 
-	private enabled = false;
+	enabled = false;
+
 	private unsubscribeDevtoolsEvents?: () => void;
 
 	constructor(
@@ -59,11 +60,11 @@ export class FetchDevtools {
 	) {}
 
 	async enable() {
+		this.log('enabling...');
 		this.enabled = true;
-
 		const patterns = this.rulesStore.getRequestPatterns();
-		await this.devtools.sendCommand<EnableRequest>('Fetch.enable', {patterns});
 
+		await this.devtools.sendCommand<EnableRequest>('Fetch.enable', {patterns});
 		this.unsubscribeDevtoolsEvents = this.devtools.listenEvent<RequestPausedEvent>(
 			'Fetch.requestPaused',
 			this.process.bind(this),
@@ -73,23 +74,16 @@ export class FetchDevtools {
 	}
 
 	async disable() {
+		this.log('disabling...');
 		this.enabled = false;
-
-		if (this.devtools.isAttached) {
-			await this.devtools.sendCommand('Fetch.disable');
-		}
 		if (this.unsubscribeDevtoolsEvents) {
 			this.unsubscribeDevtoolsEvents();
 		}
 
-		this.log('disabled');
-	}
-
-	async restart() {
-		if (this.enabled) {
-			await this.disable();
-			await this.enable();
+		if (this.devtools.status.type === 'connected') {
+			await this.devtools.sendCommand('Fetch.disable');
 		}
+		this.log('disabled');
 	}
 
 	private async process(pausedRequest: RequestPausedEvent) {
@@ -178,6 +172,7 @@ export class FetchDevtools {
 		this.events.requestBreakpoint.emit({
 			stage: 'Request',
 			requestId,
+			timestamp: Date.now(),
 			data,
 			continue: async (params) => {
 				const builder = RequestBuilder.asBreakpointExecute(requestId, params);
@@ -203,6 +198,7 @@ export class FetchDevtools {
 		this.events.requestBreakpoint.emit({
 			stage: 'Response',
 			requestId,
+			timestamp: Date.now(),
 			data,
 			fulfill: async (params) => {
 				const builder = ResponseBuilder.asBreakpointExecute(requestId, params);
@@ -373,7 +369,7 @@ export class FetchDevtools {
 	}
 
 	private async getResponseBody(requestId: string) {
-		return this.devtools.sendCommand<{}, GetResponseBodyResponse>('Fetch.getResponseBody', {requestId});
+		return this.devtools.sendCommand<object, GetResponseBodyResponse>('Fetch.getResponseBody', {requestId});
 	}
 
 	/**

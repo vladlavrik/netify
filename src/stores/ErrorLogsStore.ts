@@ -1,22 +1,16 @@
-import {action, computed, makeObservable, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {ErrorLogEntry} from '@/interfaces/errorLog';
 
 export class ErrorLogsStore {
-	list: ErrorLogEntry[] = [];
+	@observable
+	accessor list: ErrorLogEntry[] = [];
 
+	@computed
 	get hasLogs() {
 		return this.list.length !== 0;
 	}
 
-	constructor() {
-		makeObservable(this, {
-			list: observable,
-			hasLogs: computed,
-			addLogEntry: action('addLogEntry'),
-			cleanList: action('cleanList'),
-		});
-	}
-
+	@action('addLogEntry')
 	addLogEntry(data: ErrorLogEntry & {error?: any}) {
 		const {error, ...logEntry} = data;
 		if (!logEntry.details && error && typeof error === 'object') {
@@ -25,6 +19,7 @@ export class ErrorLogsStore {
 		this.list.push(logEntry);
 	}
 
+	@action('cleanList')
 	cleanList() {
 		this.list = [];
 	}

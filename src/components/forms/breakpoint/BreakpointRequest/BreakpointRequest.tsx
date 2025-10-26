@@ -7,7 +7,7 @@ import {requestMethodsList} from '@/constants/RequestMethod';
 import {ResponseErrorReason} from '@/constants/ResponseErrorReason';
 import {RequestBody} from '@/interfaces/body';
 import {RequestBreakpoint} from '@/interfaces/breakpoint';
-import {IconButton} from '@/components/@common/buttons/IconButton';
+import {InlineButton} from '@/components/@common/buttons/InlineButton';
 import {TextButton} from '@/components/@common/buttons/TextButton';
 import {FieldError} from '@/components/@common/forms/FieldError';
 import {KeyValueArrayField} from '@/components/@common/forms/KeyValueArrayField';
@@ -16,8 +16,8 @@ import {TextField} from '@/components/@common/forms/TextField';
 import {RequestBodyField} from '@/components/@common/formsKit/RequestBodyField';
 import {useStores} from '@/stores/useStores';
 import {BreakpointRequestFormSchema, breakpointRequestFormSchema} from './breakpointRequestFormSchema';
-import AbortIcon from './icons/abort.svg';
-import ExecuteIcon from './icons/execute.svg';
+import AbortIcon from '@/assets/icons/close.svg';
+import ExecuteIcon from '@/assets/icons/execute.svg';
 import styles from './breakpointRequest.css';
 
 interface BreakpointRequestProps {
@@ -95,12 +95,22 @@ export const BreakpointRequest = observer<BreakpointRequestProps>((props) => {
 		<FormikProvider value={form}>
 			<form className={styles.root} onSubmit={form.handleSubmit}>
 				<div className={styles.controls}>
-					<IconButton className={styles.control} icon={<ExecuteIcon />} type='submit' outline>
+					<TextButton
+						icon={<ExecuteIcon />}
+						styleType='outlined'
+						iconStyleType='accept'
+						type='submit'
+						outline>
 						Send to server
-					</IconButton>
-					<IconButton className={styles.control} icon={<AbortIcon />} outline onClick={handleFailure}>
+					</TextButton>
+					<TextButton
+						icon={<AbortIcon />}
+						styleType='outlined'
+						iconStyleType='dangerous'
+						outline
+						onClick={handleFailure}>
 						Abort
-					</IconButton>
+					</TextButton>
 					{/* TODO add the local response feature*/}
 				</div>
 
@@ -143,7 +153,7 @@ export const BreakpointRequest = observer<BreakpointRequestProps>((props) => {
 					{form.values.body.type === 'Original' ? (
 						<p className={styles.bodyPlaceholder}>
 							The body can&apos;t be shown.{' '}
-							<TextButton onClick={handleUnlockBody}>Set the body</TextButton>
+							<InlineButton onClick={handleUnlockBody}>Set the body</InlineButton>
 						</p>
 					) : (
 						<RequestBodyField name='body' />

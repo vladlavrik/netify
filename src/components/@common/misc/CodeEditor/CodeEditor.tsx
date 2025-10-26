@@ -6,6 +6,7 @@ import {EditorState} from '@codemirror/state';
 import {oneDark} from '@codemirror/theme-one-dark';
 import {EditorView, highlightActiveLine, lineNumbers} from '@codemirror/view';
 import {minimalSetup} from 'codemirror';
+import {isUIColorThemeDark} from '@/helpers/isUIColorThemeDark';
 import {useStores} from '@/stores/useStores';
 
 interface CodeEditorProps {
@@ -18,7 +19,7 @@ export const CodeEditor = memo<CodeEditorProps>((props) => {
 	const {className, value, onChange} = props;
 
 	const rootRef = useRef<HTMLDivElement>(null);
-	const {appUiStore} = useStores();
+	const {settingsStore} = useStores();
 
 	useEffect(() => {
 		const startState = EditorState.create({
@@ -37,7 +38,7 @@ export const CodeEditor = memo<CodeEditorProps>((props) => {
 						onChange(update.state.doc.toString());
 					}
 				}),
-				...(appUiStore.themeName === 'dark' ? [oneDark] : []),
+				...(isUIColorThemeDark(settingsStore.uiTheme) ? [oneDark] : []),
 			],
 		});
 

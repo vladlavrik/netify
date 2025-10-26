@@ -8,7 +8,7 @@
 	margin: 2.5px;
 }
 
-:global(.dark-theme) {
+:global(.theme-dark) {
 	& .input {
 		filter: invert(80%);
 	}

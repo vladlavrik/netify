@@ -42,11 +42,17 @@ export const NetworkLogsItem = observer<NetworkLogsItemProps>((props) => {
 			<span className={styles.time} title={fullDate}>
 				{formattedTime}
 			</span>
-			<WithTooltip className={styles.stage} tooltip={stageTitle[interceptStage]}>
-				{interceptStage === 'Both' && <BothIcon />}
-				{interceptStage === 'Request' && <RequestIcon />}
-				{interceptStage === 'Response' && <ResponseIcon />}
-			</WithTooltip>
+			<WithTooltip
+				className={styles.stage}
+				tooltip={stageTitle[interceptStage]}
+				render={(tooltipTargetProps) => (
+					<div {...tooltipTargetProps}>
+						{interceptStage === 'Both' && <BothIcon />}
+						{interceptStage === 'Request' && <RequestIcon />}
+						{interceptStage === 'Response' && <ResponseIcon />}
+					</div>
+				)}
+			/>
 			<span className={styles.method}>{method}</span>
 			<span className={styles.type}>{resourceType}</span>
 			<span className={styles.url} title={url}>

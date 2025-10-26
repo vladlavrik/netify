@@ -12,8 +12,8 @@ module.exports = (env, {mode} = {}) => ({
 	entry: {
 		background: './src/background.ts',
 		devtool: './src/devtool.ts',
+		application: './src/application.ts',
 		sandbox: './src/sandbox.ts',
-		panel: './src/panel.ts',
 	},
 	output: {
 		publicPath: '/',
@@ -89,9 +89,9 @@ module.exports = (env, {mode} = {}) => ({
 			chunks: ['devtool'],
 		}),
 		new HtmlWebpackPlugin({
-			template: './src/panel.html',
-			filename: 'panel.html',
-			chunks: ['panel'],
+			template: './src/application.html',
+			filename: 'application.html',
+			chunks: ['application'],
 		}),
 		new HtmlWebpackPlugin({
 			template: './src/sandbox.html',

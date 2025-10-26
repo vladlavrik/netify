@@ -1,0 +1,19 @@
+.root {
+	position: relative;
+	padding: 4px;
+}
+
+.control {
+	width: 100%;
+	margin: 4px 0;
+}
+
+.hiddenFileInput {
+	position: absolute;
+	left: -1000px;
+	top: -1000px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	visibility: hidden;
+}

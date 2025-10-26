@@ -1,0 +1,19 @@
+.root {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+
+	&.isDisabled {
+		cursor: default;
+	}
+}
+
+.switcher {
+	flex-shrink: 0;
+}
+
+.label {
+	padding-left: 8px;
+	font-size: 12px;
+	font-weight: 700;
+}

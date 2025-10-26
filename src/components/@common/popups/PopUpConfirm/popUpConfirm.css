@@ -4,6 +4,7 @@
 
 .content {
 	padding-bottom: 16px;
+	font-size: 12px;
 	text-align: center;
 	color: var(--color-main);
 }

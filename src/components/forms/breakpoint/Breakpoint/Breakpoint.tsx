@@ -1,26 +1,34 @@
 import React from 'react';
 import {observer} from 'mobx-react-lite';
 import {SelectField} from '@/components/@common/forms/SelectField';
+import {Modal} from '@/components/@common/popups/Modal';
 import {useStores} from '@/stores/useStores';
 import {BreakpointRequest} from '../BreakpointRequest';
 import {BreakpointResponse} from '../BreakpointResponse';
 import styles from './breakpoint.css';
 
 export const Breakpoint = observer(() => {
-	const {rulesStore, breakpointsStore} = useStores();
+	const {tabStore, breakpointsStore} = useStores();
 
-	const {currentOrigin} = rulesStore;
+	const {targetTabUrlOrigin} = tabStore;
 	const list = breakpointsStore.list;
 	const activeBreakpoint = breakpointsStore.activeBreakpoint;
 
 	const getRelativeUrl = (absoluteUrl: string) => {
-		return absoluteUrl.startsWith(currentOrigin) ? absoluteUrl.substring(currentOrigin.length) : absoluteUrl;
+		return targetTabUrlOrigin && absoluteUrl.startsWith(targetTabUrlOrigin)
+			? absoluteUrl.substring(targetTabUrlOrigin.length)
+			: absoluteUrl;
 	};
 
 	const getBreakpointTitle = (index: string) => {
 		const breakpoint = list[Number(index)]!;
+		const time = new Date(breakpoint.timestamp).toLocaleTimeString('en-GB', {
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+		});
 		const url = getRelativeUrl(breakpoint.data.url || '');
-		return `${breakpoint.stage === 'Request' ? '⇨' : '⇦'} #${breakpoint.requestId} ${url}`;
+		return `${breakpoint.stage === 'Request' ? '⇨' : '⇦'} [${time}] ${url}`;
 	};
 
 	const handleActiveBreakpointChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -32,38 +40,41 @@ export const Breakpoint = observer(() => {
 		return null;
 	}
 
+	// TODO add feature to hide (minimize) active intercepted request
 	return (
-		<div className={styles.root}>
-			<div className={styles.header}>
-				{list.length === 1 && activeBreakpoint ? (
-					<>
-						<p className={styles.title}>
+		<Modal
+			styleType='attention'
+			title={
+				<>
+					{list.length === 1 && activeBreakpoint ? (
+						<p className={styles.headerContent}>
 							Intercepted {activeBreakpoint.stage === 'Request' ? 'request' : 'response'}:
+							<span className={styles.requestInfo} title={activeBreakpoint.data.url}>
+								{getRelativeUrl(activeBreakpoint.data.url)}
+							</span>
 						</p>
-						<p className={styles.requestInfo} title={activeBreakpoint.data.url}>
-							{getRelativeUrl(activeBreakpoint.data.url)}
-						</p>
-					</>
-				) : (
-					<>
-						<p className={styles.title}>Intercepted requests:</p>
-						<SelectField
-							className={styles.requestSelect}
-							options={list.map((item, index) => index.toString())}
-							optionTitleGetter={getBreakpointTitle}
-							onChange={handleActiveBreakpointChange}
-						/>
-					</>
+					) : (
+						<div className={styles.headerContent}>
+							Intercepted requests:
+							<SelectField
+								className={styles.requestSelect}
+								options={list.map((item, index) => index.toString())}
+								optionTitleGetter={getBreakpointTitle}
+								onChange={handleActiveBreakpointChange}
+							/>
+						</div>
+					)}
+				</>
+			}>
+			<>
+				{activeBreakpoint?.stage === 'Request' && (
+					<BreakpointRequest key={activeBreakpoint.requestId} breakpoint={activeBreakpoint} />
 				)}
-			</div>
-
-			{activeBreakpoint?.stage === 'Request' && (
-				<BreakpointRequest key={activeBreakpoint.requestId} breakpoint={activeBreakpoint} />
-			)}
-			{activeBreakpoint?.stage === 'Response' && (
-				<BreakpointResponse key={activeBreakpoint.requestId} breakpoint={activeBreakpoint} />
-			)}
-		</div>
+				{activeBreakpoint?.stage === 'Response' && (
+					<BreakpointResponse key={activeBreakpoint.requestId} breakpoint={activeBreakpoint} />
+				)}
+			</>
+		</Modal>
 	);
 });
 

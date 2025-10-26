@@ -1,203 +1,235 @@
-import {action, computed, makeObservable, observable, toJS} from 'mobx';
+import {action, computed, observable, toJS} from 'mobx';
 import {Rule} from '@/interfaces/rule';
 import {RulesExporter, RulesImporter} from '@/services/rulesImportExport';
 import {RulesMapper} from '@/services/rulesMapper';
 import {RootStore} from './RootStore';
 
 export class RulesStore {
-	list: Rule[] = [];
+	@observable
+	accessor list: Rule[] = [];
 
-	/** If checked - only rules created within the current page origin will be shown in the list of rules */
-	filterByOrigin = true;
+	/** If checked - only rules created within the current page origin are shown in the list of rules */
+	@observable
+	accessor filterByOrigin = true;
 
 	/** Show a rule details on the secondary panel */
-	detailsShownFor: null | string = null;
-	composeShown = false;
-	editorShownFor: null | string = null;
+	@observable
+	accessor detailsShownFor: null | string = null;
 
-	currentOrigin = '';
+	@observable
+	accessor composeShown = false;
 
-	exportMode = false;
+	@observable
+	accessor editorShownFor: null | string = null;
 
-	selectedIds: Rule['id'][] = [];
+	@observable
+	accessor removeConfirmShownFor: null | string[] | 'all' = null;
 
-	/** Active (not disabled) rules from actual rules list */
+	@observable
+	accessor multiselectMode = false;
+
+	@observable
+	accessor selectedIds = new Set<Rule['id']>();
+
+	listFetching = false;
+
+	/** Active (not disabled) rules from an actual rules list */
+	@computed
 	get activeRules() {
 		return this.list.filter((rule) => rule.active);
 	}
 
+	@computed
 	get hasActiveRules() {
 		return this.activeRules.length !== 0;
 	}
 
+	@computed
 	get hasAnyRules() {
 		return this.list.length !== 0;
 	}
 
-	/** Returns the origin by which the rules should be filtered, if the filter by page origin option is active */
+	/**
+	 * Returns the origin by which the rules should be filtered if the filter by page origin option is active.
+	 * It returns a special value "[empty origin]" when the filter by origin is active, but the selected tab origin is not defined
+	 */
 	get originToFilter() {
-		return this.filterByOrigin ? this.currentOrigin : undefined;
+		return this.filterByOrigin ? (this.rootStore.tabStore.targetTabUrlOrigin ?? '[empty origin]') : undefined;
 	}
 
+	@computed
 	get detailedRule() {
 		const ruleId = this.detailsShownFor;
 		if (ruleId) {
-			return this.list.find((rule) => rule.id === ruleId);
+			return this.getById(ruleId);
 		}
 		return undefined;
 	}
 
+	@computed
 	get editingRule() {
 		const ruleId = this.editorShownFor;
 		if (ruleId) {
-			return this.list.find((rule) => rule.id === ruleId);
+			return this.getById(ruleId);
 		}
 		return undefined;
 	}
 
+	@computed
 	get hasSelectedRules() {
-		return this.selectedIds.length !== 0;
+		return this.selectedIds.size !== 0;
 	}
 
+	@computed
 	get selectedRules() {
 		const {selectedIds} = this;
-		return this.list.filter((rule) => selectedIds.includes(rule.id));
+		return this.list.filter((rule) => selectedIds.has(rule.id));
 	}
 
+	@computed
 	get isAllRulesSelected() {
-		return this.list.length === this.selectedIds.length;
+		return this.list.length === this.selectedIds.size;
 	}
 
-	constructor(private rootStore: RootStore, private rulesMapper: RulesMapper) {
-		makeObservable(this, {
-			list: observable,
-			filterByOrigin: observable,
-			detailsShownFor: observable,
-			composeShown: observable,
-			editorShownFor: observable,
-			currentOrigin: observable,
-			exportMode: observable,
-			selectedIds: observable,
-			activeRules: computed,
-			hasActiveRules: computed,
-			hasAnyRules: computed,
-			originToFilter: computed,
-			detailedRule: computed,
-			editingRule: computed,
-			hasSelectedRules: computed,
-			selectedRules: computed,
-			isAllRulesSelected: computed,
-			setRules: action('setRules'),
-			addRules: action('addRules'),
-			patchRule: action('patchRule'),
-			unsetRule: action('unsetRule'),
-			setCurrentOrigin: action('setCurrentOrigin'),
-			showDetails: action('showDetails'),
-			closeDetails: action('closeDetails'),
-			showCompose: action('showCompose'),
-			closeCompose: action('closeCompose'),
-			showEditor: action('showEditor'),
-			closeEditor: action('closeEditor'),
-			toggleFilterByOrigin: action('toggleFilterByOrigin'),
-			initExport: action('initExport'),
-			finishExport: action('cancelExport'),
-			selectItem: action('selectItem'),
-			unselectItem: action('unselectItem'),
-			selectAll: action('selectAll'),
-			unselectAll: action('unselectAll'),
-		});
+	@computed
+	get isSelectedHasActive() {
+		return this.selectedRules.some((item) => item.active);
 	}
 
-	setRules(rules: Rule[]) {
+	@computed
+	get isSelectedHasInactive() {
+		return this.selectedRules.some((item) => !item.active);
+	}
+
+	constructor(
+		private rootStore: RootStore,
+		private rulesMapper: RulesMapper,
+	) {}
+
+	private getById(ruleId: string) {
+		return this.list.find((rule) => rule.id === ruleId);
+	}
+
+	@action('private')
+	private setRules(rules: Rule[]) {
 		this.list = rules;
 	}
 
-	addRules(rules: Rule[]) {
+	@action('private')
+	private addRules(rules: Rule[]) {
 		this.list.unshift(...rules);
 	}
 
-	patchRule(data: Rule) {
-		const rule = this.list.find((item) => item.id === data.id);
+	@action('private')
+	private patchRule(data: Rule) {
+		const rule = this.getById(data.id);
 		if (rule) {
 			Object.assign(rule, data);
 		}
 	}
 
-	unsetRule(ruleId: string) {
+	@action('private')
+	private unsetRule(ruleId: string) {
 		const index = this.list.findIndex((item) => item.id === ruleId);
 		if (index !== -1) {
 			this.list.splice(index, 1);
 		}
 	}
 
-	setCurrentOrigin(currentOrigin: string) {
-		this.currentOrigin = currentOrigin;
-	}
-
+	@action('showDetails')
 	showDetails(ruleId: string) {
 		this.detailsShownFor = ruleId;
 	}
 
+	@action('closeDetails')
 	closeDetails() {
 		this.detailsShownFor = null;
 	}
 
+	@action('showCompose')
 	showCompose() {
 		this.composeShown = true;
 	}
 
+	@action('closeCompose')
 	closeCompose() {
 		this.composeShown = false;
 	}
 
+	@action('showEditor')
 	showEditor(ruleId: string) {
 		this.editorShownFor = ruleId;
 	}
 
+	@action('closeEditor')
 	closeEditor() {
 		this.editorShownFor = null;
 	}
 
+	@action('toggleFilterByOrigin')
 	toggleFilterByOrigin() {
 		this.filterByOrigin = !this.filterByOrigin;
 	}
 
-	initExport() {
-		this.exportMode = true;
-		this.selectedIds = this.list.map((rule) => rule.id);
+	@action('initRemoveConfirm')
+	initRemoveConfirm(ruleIds: string[]) {
+		this.removeConfirmShownFor = ruleIds;
 	}
 
-	finishExport() {
-		this.exportMode = false;
-		this.selectedIds = [];
+	@action('initRemoveAllConfirm')
+	initRemoveAllConfirm() {
+		this.removeConfirmShownFor = 'all';
 	}
 
-	selectItem(ruleId: string) {
-		this.selectedIds.push(ruleId);
+	@action('finishRemoveConfirm')
+	finishRemoveConfirm() {
+		this.removeConfirmShownFor = null;
 	}
 
-	unselectItem(ruleId: string) {
-		const index = this.selectedIds.indexOf(ruleId);
-		if (index !== -1) {
-			this.selectedIds.splice(index, 1);
+	@action('initMultiselect')
+	initMultiselect() {
+		this.multiselectMode = true;
+	}
+
+	@action('finishMultiselect')
+	finishMultiselect() {
+		this.multiselectMode = false;
+		this.selectedIds = new Set();
+	}
+
+	@action('selectItems')
+	selectItems(ruleIds: string[]) {
+		for (const rule of ruleIds) {
+			this.selectedIds.add(rule);
 		}
 	}
 
-	selectAll() {
-		this.selectedIds = this.list.map((item) => item.id);
+	@action('unselectItems')
+	unselectItems(ruleIds: string[]) {
+		const removeRuleIds = new Set(ruleIds);
+		this.selectedIds = this.selectedIds.difference(removeRuleIds);
 	}
 
+	@action('selectAll')
+	selectAll() {
+		this.selectedIds = new Set(this.list.map((item) => item.id));
+	}
+
+	@action('unselectAll')
 	unselectAll() {
-		this.selectedIds = [];
+		this.selectedIds.clear();
 	}
 
 	async fetchRules() {
+		this.listFetching = true;
 		let list;
 		try {
 			list = await this.rulesMapper.getList(this.originToFilter);
 		} catch (error) {
 			console.error(error);
 			return;
+		} finally {
+			this.listFetching = false;
 		}
 
 		this.setRules(list);
@@ -205,8 +237,10 @@ export class RulesStore {
 	}
 
 	async createRule(rule: Rule) {
+		const currentOrigin = this.rootStore.tabStore.targetTabUrlOrigin!;
+
 		try {
-			await this.rulesMapper.saveNewItem(rule, this.currentOrigin);
+			await this.rulesMapper.saveNewItem(rule, currentOrigin);
 		} catch (error) {
 			console.error(error);
 			return;
@@ -225,7 +259,13 @@ export class RulesStore {
 		}
 
 		this.patchRule(rule);
-		this.closeEditor();
+	}
+
+	async updateRuleActive(ruleId: string, active: boolean) {
+		const rule = this.getById(ruleId);
+		if (rule) {
+			return this.updateRule({...toJS(rule), active});
+		}
 	}
 
 	async importRules(file: File) {
@@ -249,11 +289,12 @@ export class RulesStore {
 			return;
 		}
 
-		let rules = importResult.rules;
+		const currentOrigin = this.rootStore.tabStore.targetTabUrlOrigin!;
+		const importedRules = importResult.rules;
 
 		let saveResult;
 		try {
-			saveResult = await this.rulesMapper.saveNewMultipleItems(rules, this.currentOrigin);
+			saveResult = await this.rulesMapper.saveNewMultipleItems(importedRules, currentOrigin);
 		} catch (error) {
 			console.error(error);
 			this.rootStore.errorLogsStore.addLogEntry({
@@ -272,7 +313,7 @@ export class RulesStore {
 			console.group("Can't save some imported rule due an error");
 			saveResult.forEach((result, index) => {
 				if (result.status === 'rejected') {
-					console.log('Rule source', rules[index]);
+					console.log('Rule source', importedRules[index]);
 					console.error(result.reason);
 				}
 			});
@@ -284,15 +325,15 @@ export class RulesStore {
 		}
 
 		const saveResultStatuses = saveResult.map((result) => result.status);
-		rules = rules.filter((_, index) => saveResultStatuses[index] === 'fulfilled');
+		const savedRules = importedRules.filter((_, index) => saveResultStatuses[index] === 'fulfilled');
 
-		this.addRules(rules);
+		this.addRules(savedRules);
 	}
 
-	async exportRules() {
+	async exportRules(rules: Rule[]) {
 		let saveResult;
 		try {
-			saveResult = await new RulesExporter().export(this.selectedRules);
+			saveResult = await new RulesExporter().export(rules);
 		} catch (error) {
 			saveResult = {
 				success: false as const,
@@ -308,22 +349,25 @@ export class RulesStore {
 				title: "Can't export rules lis",
 				error: saveResult.error,
 			});
-			return;
 		}
 
-		this.finishExport();
+		return {success: saveResult.success};
 	}
 
-	async removeRule(ruleId: string) {
+	async removeRules(ruleIds: string[]) {
 		try {
-			await this.rulesMapper.removeItem(ruleId);
+			await this.rulesMapper.removeItems(ruleIds);
 		} catch (error) {
 			console.error(error);
 			return;
 		}
 
-		this.unsetRule(ruleId);
-		if (this.detailsShownFor === ruleId) {
+		this.finishRemoveConfirm();
+		for (const ruleId of ruleIds) {
+			this.unsetRule(ruleId);
+		}
+
+		if (this.detailsShownFor && ruleIds.includes(this.detailsShownFor)) {
 			this.closeDetails();
 		}
 	}
@@ -336,6 +380,8 @@ export class RulesStore {
 			return;
 		}
 
+		this.finishRemoveConfirm();
+		this.unselectAll();
 		this.setRules([]);
 		this.closeDetails();
 	}

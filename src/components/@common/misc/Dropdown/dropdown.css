@@ -1,28 +1,32 @@
-.root {
-	position: relative;
+.target {
+	&.isExpanded {
+		anchor-name: --droprown-ancher;
+	}
 }
 
-.content {
-	position: absolute;
+.popover {
+	position-anchor: --droprown-ancher;
+	inset-area: bottom span-right; /* Legacy option of position-area */
+	position-area: bottom span-right;
+	position-try-options:  /* Legacy option of position-try-fallbacks */
+		flip-block,
+		flip-inline,
+		flip-block flip-inline;
+	position-try-fallbacks:
+		flip-block,
+		flip-inline,
+		flip-block flip-inline;
+	width: min-content;
+	margin: 4px 0 0;
+	padding: 0;
 	border: var(--color-brd-outline) 1px solid;
 	border-radius: 3px;
-	z-index: 100;
+	color: inherit;
 	background: var(--color-bg-main);
 	box-shadow: 0 1px 3px 1px var(--color-shadow-overlay-lite);
 
-	&.expand-x-to-start {
-		right: 0;
-	}
-
-	&.expand-x-to-end {
-		left: 0;
-	}
-
-	&.expand-y-to-start {
-		bottom: calc(100% + 1px);
-	}
-
-	&.expand-y-to-end {
-		top: calc(100% + 1px);
+	&.preferAlignLeft {
+		inset-area: bottom span-left; /* Legacy option of position-area */
+		position-area: bottom span-right;
 	}
 }

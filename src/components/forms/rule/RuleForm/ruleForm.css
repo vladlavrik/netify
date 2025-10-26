@@ -1,16 +1,3 @@
-.root {
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
-	box-sizing: border-box;
-	overflow: auto;
-	z-index: 10;
-	background: var(--color-bg-lite);
-	scrollbar-gutter: stable;
-}
-
 .form {
 	min-width: 320px;
 }
@@ -19,13 +6,12 @@
 	padding-top: 12px;
 }
 
-.controls {
+.footerControls {
 	display: flex;
-	margin-top: 12px;
-	padding: 12px 8px 24px 118px;
-	border-top: var(--color-brd-lite) 1px solid;
-}
+	margin-left: 110px;
+	column-gap: 8px;
 
-.saveButton {
-	margin-right: 8px;
+	@media (width <= 640px) {
+		margin-left: 90px;
+	}
 }

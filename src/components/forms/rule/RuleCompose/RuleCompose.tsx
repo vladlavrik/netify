@@ -40,7 +40,7 @@ export const RuleCompose = memo(() => {
 		[],
 	);
 
-	return <RuleForm initialRule={ruleValue} onSave={handleCreate} onCancel={handleClose} />;
+	return <RuleForm mode='create' initialRule={ruleValue} onSave={handleCreate} onCancel={handleClose} />;
 });
 
 RuleCompose.displayName = 'RuleCompose';

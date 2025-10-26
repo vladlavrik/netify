@@ -1,6 +1,16 @@
-@keyframes show-floating-section {
+@keyframes show-horizontal-floating-section {
 	from {
 		transform: translateX(100%);
+	}
+
+	to {
+		transform: translateX(0);
+	}
+}
+
+@keyframes show-vertical-floating-section {
+	from {
+		transform: translateY(100%);
 	}
 
 	to {
@@ -12,58 +22,70 @@
 	display: flex;
 	position: relative;
 	height: 100%;
+
+	&.isVerticalLayout {
+		flex-direction: column;
+	}
 }
 
 .section {
-	flex-shrink: 0;
 	position: relative;
 	height: 100%;
+	z-index: 0;
 
 	&.main {
+		flex-basis: 0;
 		flex-grow: 1;
-		flex-shrink: 10000;
-		min-width: min(300px, 100%);
+
+		.root.isHorizontalLayout & {
+			min-width: 300px;
+		}
+
+		.root.isVerticalLayout & {
+			min-height: 60px;
+		}
 	}
 
 	&.secondary {
-		min-width: 100px;
-		max-width: calc(100% - 300px);
+		.root.isHorizontalLayout & {
+			min-width: 200px;
+		}
+
+		.root.isVerticalLayout & {
+			min-height: 60px;
+		}
 	}
 }
 
 .floatingSection {
 	position: absolute;
-	right: 0;
-	top: 0;
-	bottom: 0;
-	min-width: 100px;
-	max-width: calc(100% - 300px);
-	border-left: var(--color-brd-strong) 1px solid;
+	border: var(--color-brd-strong) 0 solid;
+	z-index: 10;
 	background: var(--color-bg-main);
 	box-shadow: 0 10px 10px 1px var(--color-shadow-overlay-strong);
-	animation: show-floating-section 0.12s ease-out;
+	inset: 0;
 
-	&.overlay {
-		min-width: min(calc(100vw - 24px), 320px);
+	.root.isHorizontalLayout & {
+		border-left: 1px;
+		animation: show-horizontal-floating-section 0.12s ease-out;
+	}
+
+	.root.isVerticalLayout & {
+		border-top: 1px;
+		animation: show-vertical-floating-section 0.12s ease-out;
 	}
 }
 
 .separator {
 	flex-shrink: 0;
 	position: relative;
-	width: 1px;
 	z-index: 1;
 	background: var(--color-brd-strong);
-	cursor: col-resize;
 
 	&::before {
 		content: '';
 		display: block;
 		position: absolute;
-		left: -2px;
-		right: -2px;
-		top: 0;
-		bottom: 0;
 	}
 
 	&:hover::before {
@@ -74,5 +96,43 @@
 	&:active::before {
 		left: -10000px;
 		right: -10000px;
+	}
+
+	.root.isHorizontalLayout & {
+		width: 1px;
+		cursor: col-resize;
+
+		&::before {
+			inset: 0 -2px;
+		}
+
+		&:hover::before {
+			left: -6px;
+			right: -6px;
+		}
+
+		&:active::before {
+			left: -10000px;
+			right: -10000px;
+		}
+	}
+
+	.root.isVerticalLayout & {
+		height: 1px;
+		cursor: row-resize;
+
+		&::before {
+			inset: -2px 0;
+		}
+
+		&:hover::before {
+			top: -6px;
+			bottom: -6px;
+		}
+
+		&:active::before {
+			top: -10000px;
+			bottom: -10000px;
+		}
 	}
 }

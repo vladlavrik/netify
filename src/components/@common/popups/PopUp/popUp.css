@@ -1,5 +1,5 @@
 .root {
-	top: 50vh;
+	top: min(50vh, 200px);
 	box-sizing: border-box;
 	min-width: 220px;
 	max-width: calc(100vw - 16px);
@@ -12,4 +12,8 @@
 	background: var(--color-bg-main);
 	box-shadow: 0 0 6px 2px var(--color-shadow-overlay-main);
 	transform: translateY(-50%);
+
+	&::backdrop {
+		background: var(--color-dialog-backdrop);
+	}
 }

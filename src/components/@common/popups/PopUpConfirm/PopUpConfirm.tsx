@@ -1,6 +1,6 @@
 import React, {FC, ReactNode} from 'react';
 import {useGlobalHotkey} from '@/hooks/useGlobalHotkey';
-import {Button} from '@/components/@common/buttons/Button';
+import {TextButton} from '@/components/@common/buttons/TextButton';
 import {PopUp} from '@/components/@common/popups/PopUp';
 import styles from './popUpConfirm.css';
 
@@ -16,15 +16,15 @@ export const PopUpConfirm: FC<PopUpConfirmProps> = (props) => {
 	useGlobalHotkey('Escape', onCancel);
 
 	return (
-		<PopUp className={styles.root}>
+		<PopUp className={styles.root} onClose={onCancel}>
 			<div className={styles.content}>{children}</div>
 			<div className={styles.buttons}>
-				<Button className={styles.button} onClick={onConfirm}>
+				<TextButton className={styles.button} styleType='raised' onClick={onConfirm}>
 					Confirm
-				</Button>
-				<Button className={styles.button} styleType='light' onClick={onCancel}>
+				</TextButton>
+				<TextButton className={styles.button} styleType='secondary' onClick={onCancel}>
 					Cancel
-				</Button>
+				</TextButton>
 			</div>
 		</PopUp>
 	);

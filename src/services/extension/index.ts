@@ -1,3 +1,3 @@
 export * from './ExtensionDevtoolsConnector';
-export * from './ExtensionTab';
+export * from './ExtensionTabManager';
 export * from './ExtensionIcon';

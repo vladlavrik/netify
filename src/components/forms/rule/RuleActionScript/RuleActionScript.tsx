@@ -2,7 +2,7 @@ import React, {memo} from 'react';
 import {useField} from 'formik';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {useToggle} from '@/hooks/useToggle';
-import {TextButton} from '@/components/@common/buttons/TextButton';
+import {InlineButton} from '@/components/@common/buttons/InlineButton';
 import {Checkbox} from '@/components/@common/forms/Checkbox';
 import {CodeEditor} from '@/components/@common/misc/CodeEditor';
 import {RuleActionScriptRequestWiki} from '../RuleActionScriptRequestWiki';
@@ -35,7 +35,7 @@ export const RuleActionScript = memo(() => {
 				<div className={styles.main}>
 					<div className={styles.primaryRow}>
 						<Checkbox {...requestEnabledField}>Enabled</Checkbox>
-						<TextButton onClick={toggleRequestWikiShown}>Wiki</TextButton>
+						<InlineButton onClick={toggleRequestWikiShown}>Wiki</InlineButton>
 					</div>
 					{requestWikiShown && <RuleActionScriptRequestWiki />}
 					{requestEnabledField.checked && (
@@ -51,7 +51,7 @@ export const RuleActionScript = memo(() => {
 				<div className={styles.main}>
 					<div className={styles.primaryRow}>
 						<Checkbox {...responseEnabledField}>Enabled</Checkbox>
-						<TextButton onClick={toggleResponseWikiShown}>Wiki</TextButton>
+						<InlineButton onClick={toggleResponseWikiShown}>Wiki</InlineButton>
 					</div>
 					{responseWikiShown && <RuleActionScriptResponseWiki />}
 					{responseEnabledField.checked && (

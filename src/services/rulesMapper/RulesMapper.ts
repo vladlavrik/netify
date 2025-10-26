@@ -12,7 +12,7 @@ export interface RulesMapper {
 
 	updateItem(rule: Rule): Promise<void>;
 
-	removeItem(ruleId: string): Promise<void>;
+	removeItems(ruleIds: string[]): Promise<void>;
 
 	removeAll(perOrigin?: string): Promise<void>;
 }

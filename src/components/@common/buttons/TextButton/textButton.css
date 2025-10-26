@@ -1,16 +1,107 @@
 .root {
-	padding: 0;
-	border: transparent solid;
-	border-width: 1px 0;
-	border-bottom-color: currentcolor;
-	line-height: 14px;
-	font-size: 11px;
-	color: var(--color-content);
-	background: transparent;
+	display: flex;
+	align-items: center;
+	position: relative;
+	box-sizing: border-box;
+	width: auto;
+	height: 26px;
+	padding: 2px 4px;
+	border: none;
+	border-radius: 6px;
+	text-align: left;
+	color: inherit;
+	background: none;
+	transition: background 0.1s ease-out;
 	cursor: pointer;
+	user-select: none;
+
+	&:disabled {
+		opacity: 0.6;
+		cursor: default;
+	}
 
 	&:focus {
-		border-bottom-color: var(--color-focus);
 		outline: none;
 	}
+
+	&:focus-visible {
+		outline: var(--color-focus) solid 1px;
+	}
+
+	&.styleRegular {
+		border: none;
+		font-weight: 600;
+		color: var(--color-content);
+
+		&:hover {
+			background: var(--color-bg-hover);
+		}
+	}
+
+	&.styleOutlined {
+		border: var(--color-brd-strong) 1px solid;
+		font-weight: 600;
+		color: var(--color-content);
+
+		&:hover {
+			background: var(--color-bg-hover);
+		}
+	}
+
+	&.styleSecondary {
+		border: var(--color-brd-strong) 1px solid;
+		font-weight: 500;
+		color: var(--color-main);
+
+		&:hover {
+			background: var(--color-bg-hover);
+		}
+	}
+
+	&.styleRaised {
+		border: none;
+		font-weight: 500;
+		color: #fff;
+		background: var(--color-accent);
+
+		&::before {
+			content: '';
+			position: absolute;
+			opacity: 0;
+			background: var(--color-bg-hover);
+			transition: opacity 0.12s;
+			inset: 0;
+		}
+
+		&:hover::before {
+			opacity: 1;
+		}
+	}
+}
+
+.icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	width: 20px;
+	height: 20px;
+
+	&.iconStyleRegular {
+		fill: var(--color-icon-regular);
+	}
+
+	&.iconStyleDangerous {
+		fill: var(--color-icon-dangerous);
+	}
+
+	&.iconStyleAccept {
+		fill: var(--color-icon-accept);
+	}
+}
+
+.title {
+	position: relative;
+	margin: 0 6px;
+	white-space: nowrap;
 }

@@ -74,7 +74,7 @@
 	border-radius: 2px;
 	line-height: 16px;
 	font-weight: 700;
-	background: #444;
+	background: var(--color-bg-accent);
 }
 
 .labelBox {
@@ -113,6 +113,11 @@
 
 .control {
 	flex-shrink: 0;
-	margin: 0 4px;
-	padding: 0 4px; /* To correct dropdown position */
+	margin: 0 8px;
+	opacity: 0;
+
+	.root:hover &,
+	.root:focus-within & {
+		opacity: 1;
+	}
 }

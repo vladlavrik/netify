@@ -1,12 +1,12 @@
 import React, {useMemo} from 'react';
 import {createPortal} from 'react-dom';
 import {observer} from 'mobx-react-lite';
+import {useStores} from '@/stores/useStores';
 import {Breakpoint} from '@/components/forms/breakpoint';
 import {RuleCompose, RuleEditor} from '@/components/forms/rule';
 import {Logs} from '@/components/logs';
 import {Rules} from '@/components/rules';
 import {RuleViewer} from '@/components/ruleViewer';
-import {useStores} from '@/stores/useStores';
 import {AppHeader} from '../AppHeader';
 import {AppSections} from '../AppSections';
 import styles from './app.css';

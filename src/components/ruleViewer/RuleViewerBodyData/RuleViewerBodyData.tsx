@@ -3,7 +3,7 @@ import {observer} from 'mobx-react-lite';
 import {RequestBodyType, responseBodyTypesHumanTitles} from '@/constants/RequestBodyType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {RequestBody, ResponseBody} from '@/interfaces/body';
-import {TextButton} from '@/components/@common/buttons/TextButton';
+import {InlineButton} from '@/components/@common/buttons/InlineButton';
 import {RuleViewerDataTable} from '../RuleViewerDataTable';
 import styles from './ruleViewerBodyData.css';
 
@@ -34,7 +34,7 @@ export const RuleViewerBodyData = observer<RuleViewerBodyDataProps>(({body}) => 
 				// Show trimmed body by default
 				<>
 					<p className={styles.textContent}>{value.slice(0, compactBodyLength)}...</p>
-					<TextButton onClick={handleExpand}>Show all</TextButton>
+					<InlineButton onClick={handleExpand}>Show all</InlineButton>
 				</>
 			) : (
 				<p className={styles.textContent}>
@@ -49,9 +49,9 @@ export const RuleViewerBodyData = observer<RuleViewerBodyDataProps>(({body}) => 
 					<p>
 						<span className={styles.additionalInfo}>Base 64 encoded content</span>
 						{!expanded && (
-							<TextButton className={styles.indented} onClick={handleExpand}>
+							<InlineButton className={styles.indented} onClick={handleExpand}>
 								Show
-							</TextButton>
+							</InlineButton>
 						)}
 					</p>
 					{expanded && <p className={styles.base64Content}>{body.value}</p>}

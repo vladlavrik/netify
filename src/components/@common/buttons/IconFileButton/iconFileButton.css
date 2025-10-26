@@ -1,7 +1,0 @@
-.field {
-	position: fixed;
-	left: -1000px;
-	top: -1000px;
-	opacity: 0;
-	z-index: -1000;
-}

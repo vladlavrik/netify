@@ -20,6 +20,7 @@ export interface ResponseBreakpointInput {
 export interface RequestBreakpoint {
 	stage: 'Request';
 	requestId: string;
+	timestamp: number;
 	data: RequestBreakpointInput;
 	continue(params: {url: string; method: RequestMethod; headers: HeadersArray; body?: RequestBody}): Promise<void>;
 	failure(reason: ResponseErrorReason): void;
@@ -28,6 +29,7 @@ export interface RequestBreakpoint {
 export interface ResponseBreakpoint {
 	stage: 'Response';
 	requestId: string;
+	timestamp: number;
 	data: ResponseBreakpointInput;
 	fulfill(params: {statusCode: number; headers: HeadersArray; body: ResponseBody}): Promise<void>;
 }

@@ -31,10 +31,12 @@ export class RulesLocalMapper implements RulesMapper {
 		}
 	}
 
-	async removeItem(ruleId: string) {
-		const itemIndex = this.list.findIndex((item) => item.rule.id === ruleId);
-		if (itemIndex) {
-			this.list.splice(itemIndex, 1);
+	async removeItems(ruleIds: string[]) {
+		for (const ruleId of ruleIds) {
+			const itemIndex = this.list.findIndex((item) => item.rule.id === ruleId);
+			if (itemIndex) {
+				this.list.splice(itemIndex, 1);
+			}
 		}
 	}
 

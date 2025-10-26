@@ -1,59 +1,112 @@
-import React, {FC, ReactNode, useCallback, useRef, useState} from 'react';
+import React, {FC, ReactNode, useCallback, useEffect, useMemo, useRef} from 'react';
 import cn from 'classnames';
-import {useDropdownAutoPosition} from '@/hooks/useDropdownAutoPosition';
+import {pseudoRandomHex} from '@/helpers/random';
 import styles from './withTooltip.css';
+
+const showTimeout = 600;
+
+export interface WithTooltipRenderTargetProps {
+	id: string;
+	className?: string;
+	'aria-labelledby': string;
+	onMouseEnter?(): void;
+	onMouseLeave?(): void;
+}
 
 interface WithTooltipProps {
 	className?: string;
-	tooltip?: any;
+	id?: string;
+	tooltip?: ReactNode;
+	tooltipStyled?: boolean;
 	disabled?: boolean;
-	children: ReactNode;
+	render?(props: WithTooltipRenderTargetProps): ReactNode;
+	children?: ReactNode;
 }
 
 export const WithTooltip: FC<WithTooltipProps> = (props) => {
-	const {className, tooltip, disabled, children} = props;
+	const {id: propId, className, tooltip, tooltipStyled = true, disabled, render, children} = props;
 
-	const [expanded, setExpanded] = useState(false);
+	const id = useMemo(() => {
+		return propId || `id-with-tooltip-${pseudoRandomHex(8)}`;
+	}, [propId]);
 
-	const targetRef = useRef<HTMLDivElement>(null);
-	const contentRef = useRef<HTMLParagraphElement>(null);
+	const tooltipId = `${id}-tooltip`;
+
+	const tooltipRef = useRef<HTMLParagraphElement | HTMLDivElement | null>(null);
+	const showTimeoutId = useRef(0);
 
 	const handleExpand = useCallback(() => {
-		if (!disabled && tooltip) {
-			setExpanded(true);
+		showTimeoutId.current = window.setTimeout(() => {
+			showTimeoutId.current = 0;
+			tooltipRef.current?.showPopover();
+		}, showTimeout);
+	}, []);
+
+	const handleCollapse = useCallback(() => {
+		if (showTimeoutId.current) {
+			clearTimeout(showTimeoutId.current);
 		}
-	}, [disabled, !!tooltip]);
+		tooltipRef.current?.hidePopover();
+	}, []);
 
-	const handleCollapse = useCallback(() => setExpanded(false), []);
+	// Hide popover on become disabled
+	useEffect(() => {
+		if (disabled && showTimeoutId.current) {
+			clearTimeout(showTimeoutId.current);
+		}
+		if (disabled && tooltipRef.current?.matches(':popover-open')) {
+			clearTimeout(showTimeoutId.current);
+		}
+	}, [disabled]);
 
-	const [[expandXTo, expandYTo], [contentMaxWidth, contentMaxHeight]] = useDropdownAutoPosition({
-		targetRef,
-		contentRef,
-		checkByY: true,
-		checkByX: true,
-		expanded,
-	});
+	// Unset timeout on unmount
+	useEffect(() => {
+		return () => {
+			if (showTimeoutId.current) {
+				clearTimeout(showTimeoutId.current);
+			}
+		};
+	}, []);
 
 	return (
-		<div
-			ref={targetRef}
-			className={cn(styles.root, className)}
-			onPointerEnter={handleExpand}
-			onPointerLeave={handleCollapse}>
-			{children}
-			{expanded && (
-				<p
-					ref={contentRef}
-					className={cn(
-						styles.tooltip,
-						styles[`expand-x-to-${expandXTo}`],
-						styles[`expand-y-to-${expandYTo}`],
+		<>
+			{tooltip && !disabled && (
+				<>
+					{tooltipStyled ? (
+						<p
+							ref={tooltipRef}
+							className={cn(styles.tooltip, styles.isStyled)}
+							id={tooltipId}
+							{...{popover: 'manual'}}>
+							{tooltip}
+						</p>
+					) : (
+						<div ref={tooltipRef} className={styles.tooltip} id={tooltipId} {...{popover: 'manual'}}>
+							{tooltip}
+						</div>
 					)}
-					style={{maxWidth: contentMaxWidth, maxHeight: contentMaxHeight}}>
-					{tooltip}
-				</p>
+				</>
 			)}
-		</div>
+
+			{render ? (
+				render({
+					id,
+					className: cn(styles.target, className),
+					'aria-labelledby': tooltipId,
+					onMouseEnter: disabled ? undefined : handleExpand,
+					onMouseLeave: disabled ? undefined : handleCollapse,
+				})
+			) : (
+				<div
+					className={cn(styles.target, className)}
+					id={id}
+					aria-labelledby={tooltipId}
+					onMouseEnter={disabled ? undefined : handleExpand}
+					onMouseLeave={disabled ? undefined : handleCollapse}>
+					{children}
+				</div>
+			)}
+		</>
 	);
 };
 

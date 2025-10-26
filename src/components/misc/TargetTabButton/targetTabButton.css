@@ -1,0 +1,33 @@
+.hint {
+	max-width: min(360px, calc(100vw - 120px));
+	padding: 4px 6px 6px;
+	white-space: normal;
+}
+
+.hintIntro {
+	margin: 0 0 6px;
+	font-weight: 600;
+	color: var(--color-content-accent);
+}
+
+.hintTabBlock {
+	display: flex;
+	align-items: flex-start;
+}
+
+.hintTabIcon {
+	width: 16px;
+	height: 16px;
+	margin-right: 10px;
+}
+
+.hintTabValue {
+	margin: 4px 0 0;
+	line-height: 12px;
+	font-size: 11px;
+	overflow-wrap: break-word;
+
+	&:first-child {
+		margin-top: 0;
+	}
+}

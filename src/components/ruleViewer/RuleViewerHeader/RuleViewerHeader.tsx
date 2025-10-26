@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {useStores} from '@/stores/useStores';
-import CloseIcon from './icons/close.svg';
+import CloseIcon from '@/assets/icons/close.svg';
 import styles from './ruleViewerHeader.css';
 
 export const RuleViewerHeader = memo(() => {

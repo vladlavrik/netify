@@ -1,0 +1,32 @@
+.root {
+	width: 400px;
+	max-width: calc(100vw - 70px);
+	overflow: hidden;
+}
+
+.header {
+	display: flex;
+	align-items: center;
+	column-gap: 4px;
+	height: 30px;
+	padding: 0 6px;
+	border-bottom: var(--color-brd-separator) 1px solid;
+}
+
+.title {
+	flex-grow: 1;
+	margin-right: 12px;
+	font-weight: 500;
+	color: var(--color-content-accent);
+}
+
+.tailButton {
+	flex-shrink: 0;
+}
+
+.list {
+	box-sizing: border-box;
+	max-height: calc(100vh - 68px);
+	padding: 0 6px;
+	overflow: auto;
+}

@@ -1,15 +1,22 @@
 .root {
 	display: flex;
 	align-items: center;
-	min-height: 28px;
+	min-height: 30px;
 	padding: 1px 6px 0 8px;
 	border-bottom: var(--color-brd-main) 1px solid;
 	background: var(--color-bg-lite);
 }
 
-.title {
+.leading {
+	display: flex;
+	align-items: center;
 	flex-grow: 1;
 	flex-shrink: 1;
+}
+
+.title {
+	flex-shrink: 1;
+	margin-right: 8px;
 	padding: 2px 0;
 	overflow: hidden;
 	font-size: 12px;

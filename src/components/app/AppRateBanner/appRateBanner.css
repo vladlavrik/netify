@@ -1,10 +1,11 @@
 .root {
+	width: 180px;
 	padding: 6px;
 	color: var(--color-main);
 }
 
 .title {
-	margin: 16px 4px 8px;
+	margin: 12px 4px 8px;
 	font-size: 11px;
 
 	&:first-child {
@@ -29,7 +30,7 @@
 	color: var(--color-content);
 
 	&:hover {
-		background: var(--color-bg-lite);
+		background: var(--color-bg-hover);
 	}
 }
 
@@ -39,4 +40,10 @@
 
 .donateButton {
 	margin: 10px 0 0 4px;
+}
+
+.donateSubmit {
+	min-width: 74px;
+	min-height: 21px;
+	background: url('./icons/pp-donate.gif') no-repeat;
 }

@@ -16,7 +16,7 @@ export const RuleActionSwitcher = memo(() => {
 				{Object.entries(ruleActionsTypeHumanTitles).map(([value, title]) => (
 					<div key={value} className={cn(styles.entry, field.value === value && styles.current)}>
 						<RadioButton {...field} value={value} checked={field.value === value}>
-							{value === RuleActionsType.Script ? `${title} (beta)` : title}
+							{title}
 						</RadioButton>
 					</div>
 				))}

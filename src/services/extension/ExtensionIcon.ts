@@ -1,20 +1,26 @@
+import {RuntimeMode} from '@/interfaces/runtimeMode';
 import activeIcon from '@/style/icons/logo-32.png';
 import inactiveIcon from '@/style/icons/logo-inactive-32.png';
 
 export class ExtensionIcon {
-	constructor(private readonly tabId: number, private readonly extName: string) {}
+	private readonly extName = 'Netify';
+
+	constructor(
+		private readonly tabId: number,
+		private runtimeMode: RuntimeMode,
+	) {}
 
 	makeActive() {
-		const {tabId, extName} = this;
-		const title = `${extName} (Active)`;
-		chrome.action.setIcon({tabId, path: activeIcon});
-		chrome.action.setTitle({tabId, title});
+		const {extName, tabId, runtimeMode} = this;
+		const title = `${extName} (${runtimeMode === 'devtools' ? 'Active in devtools' : 'Active'})`;
+		chrome.action.setIcon({path: activeIcon, tabId});
+		chrome.action.setTitle({title, tabId});
 	}
 
 	makeInactive() {
-		const {tabId, extName} = this;
+		const {extName, tabId} = this;
 		const title = `${extName} (Inactive)`;
-		chrome.action.setIcon({tabId, path: inactiveIcon});
-		chrome.action.setTitle({tabId, title});
+		chrome.action.setIcon({path: inactiveIcon, tabId});
+		chrome.action.setTitle({title, tabId});
 	}
 }

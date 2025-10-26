@@ -32,6 +32,7 @@ export const AppRateBanner: FC = () => {
 			<form className={styles.donateButton} action='https://www.paypal.com/donate' method='post' target='_blank'>
 				<input type='hidden' name='hosted_button_id' value='49WGRXS8GF9PU' />
 				<input
+					className={styles.donateSubmit}
 					type='image'
 					src='https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif'
 					style={{border: 0}}

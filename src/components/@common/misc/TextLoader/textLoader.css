@@ -1,0 +1,18 @@
+.root {
+	width: 24px;
+	height: 24px;
+
+	&.withDelay {
+		animation: loader-fade-in 0 ease-out 0.3s backwards;
+	}
+}
+
+@keyframes loader-fade-in {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}

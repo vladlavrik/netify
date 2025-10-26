@@ -1,5 +1,5 @@
 import React, {FC, ReactNode} from 'react';
-import {Button} from '@/components/@common/buttons/Button';
+import {TextButton} from '@/components/@common/buttons/TextButton';
 import {PopUp} from '@/components/@common/popups/PopUp';
 import styles from './popUpAlert.css';
 
@@ -10,9 +10,11 @@ interface PopUpAlertProps {
 
 export const PopUpAlert: FC<PopUpAlertProps> = ({onClose, children}) => {
 	return (
-		<PopUp className={styles.root}>
+		<PopUp className={styles.root} onClose={onClose}>
 			<div className={styles.content}>{children}</div>
-			<Button onClick={onClose}>Close</Button>
+			<TextButton className={styles.closeButton} styleType='raised' onClick={onClose}>
+				Close
+			</TextButton>
 		</PopUp>
 	);
 };

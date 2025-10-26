@@ -1,6 +1,6 @@
 .root {
 	display: flex;
-	padding: 8px;
+	padding: 8px 8px 8px 12px;
 }
 
 .title {
@@ -11,7 +11,7 @@
 	color: var(--color-main);
 }
 
-@media (max-width: 640px) {
+@media (width <= 640px) {
 	.title {
 		flex-basis: 90px;
 	}

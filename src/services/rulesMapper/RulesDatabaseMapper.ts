@@ -12,10 +12,12 @@ interface RuleItem {
  * Network debugging rules data mapper with data storing in the indexed db
  */
 export class RulesDatabaseMapper implements RulesMapper {
-	constructor(private db: IDBDatabase) {}
+	private readonly storeName = 'rules';
+
+	constructor(private readonly db: IDBDatabase) {}
 
 	async getList(perOrigin?: string) {
-		const store = this.db.transaction(['rules'], 'readonly').objectStore('rules');
+		const store = this.db.transaction([this.storeName], 'readonly').objectStore(this.storeName);
 
 		const items = await promisifyIDBRequest<RuleItem[]>(
 			perOrigin
@@ -36,7 +38,7 @@ export class RulesDatabaseMapper implements RulesMapper {
 
 	async saveNewItem(rule: Rule, origin: string) {
 		await promisifyIDBRequest(
-			this.db.transaction(['rules'], 'readwrite').objectStore('rules').add({
+			this.db.transaction([this.storeName], 'readwrite').objectStore(this.storeName).add({
 				timestamp: Date.now(),
 				origin,
 				rule,
@@ -45,7 +47,7 @@ export class RulesDatabaseMapper implements RulesMapper {
 	}
 
 	async saveNewMultipleItems(rules: Rule[], origin: string) {
-		const store = this.db.transaction(['rules'], 'readwrite').objectStore('rules');
+		const store = this.db.transaction([this.storeName], 'readwrite').objectStore(this.storeName);
 
 		return Promise.allSettled<void>(
 			rules.map((rule) =>
@@ -61,18 +63,27 @@ export class RulesDatabaseMapper implements RulesMapper {
 	}
 
 	async updateItem(rule: Rule) {
-		const store = this.db.transaction(['rules'], 'readwrite').objectStore('rules');
+		const store = this.db.transaction([this.storeName], 'readwrite').objectStore(this.storeName);
 		const item = await promisifyIDBRequest(store.get(rule.id));
 		item.rule = rule;
 		await promisifyIDBRequest(store.put(item));
 	}
 
-	async removeItem(ruleId: string) {
-		await promisifyIDBRequest(this.db.transaction(['rules'], 'readwrite').objectStore('rules').delete(ruleId));
+	async removeItems(ruleIds: string[]) {
+		const transaction = this.db.transaction([this.storeName], 'readwrite');
+		const store = transaction.objectStore(this.storeName);
+		for (const ruleId of ruleIds) {
+			store.delete(ruleId);
+		}
+
+		return new Promise<void>((resolve, reject) => {
+			transaction.oncomplete = () => resolve();
+			transaction.onerror = () => reject(transaction.error);
+		});
 	}
 
 	async removeAll(perOrigin?: string) {
-		const store = this.db.transaction(['rules'], 'readwrite').objectStore('rules');
+		const store = this.db.transaction([this.storeName], 'readwrite').objectStore(this.storeName);
 
 		const cursorRequest = perOrigin
 			? store.index('origin').openKeyCursor(IDBKeyRange.only(perOrigin))

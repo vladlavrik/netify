@@ -38,7 +38,7 @@ interface RequestAction {
   dropHeader(name: string): void;
 
   // Reset an all headers from the request and set a new one optionally
-  // NOTE: not all request can be removed updated
+  // NOTE: not all request can be removed and updated
   // due to limitations of Chrome Devtools
   resetHeaders(headers?: Record<string, string | number>): void;
 

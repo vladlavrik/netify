@@ -4,21 +4,6 @@
 	height: 100%;
 }
 
-.section {
-	display: flex;
-	flex-direction: column;
-	overflow: hidden;
-
-	&.isPrimary {
-		flex-grow: 1;
-	}
-
-	&.isSecondary {
-		flex-shrink: 0;
-		max-height: 50%;
-	}
-}
-
 .header {
 	flex-shrink: 0;
 }

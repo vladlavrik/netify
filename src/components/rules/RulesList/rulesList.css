@@ -1,12 +1,8 @@
-.list {
-	height: 100%;
-	overflow: auto;
-}
-
 .placeholder {
 	position: relative;
-	top: calc(50% - 30px);
+	top: clamp(0px, calc(50% - 40px), 250px);
 	margin: 0;
+	padding: 10px 0;
 	font-size: 12px;
 	text-align: center;
 	color: var(--color-placeholder);

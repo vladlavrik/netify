@@ -1,6 +1,6 @@
 .placeholder {
 	position: relative;
-	top: calc(50% - 8px);
+	top: min(calc(50% - 8px), 250px);
 	margin: 0;
 	font-size: 12px;
 	text-align: center;

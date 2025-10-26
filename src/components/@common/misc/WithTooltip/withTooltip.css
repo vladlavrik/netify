@@ -1,3 +1,44 @@
+.target {
+	&:hover {
+		anchor-name: --with-tooltip-ancher;
+	}
+}
+
+.tooltip {
+	position: absolute;
+	position-anchor: --with-tooltip-ancher;
+	inset-area: bottom span-right; /* Legacy option of position-area */
+	position-area: bottom span-right;
+	position-try-options:  /* Legacy option of position-try-fallbacks */
+		flip-block,
+		flip-inline,
+		flip-block flip-inline;
+	position-try-fallbacks:
+		flip-block,
+		flip-inline,
+		flip-block flip-inline;
+	margin: unset;
+	margin-top: 4px;
+	border: var(--color-brd-outline) 1px solid;
+	border-radius: 3px;
+	z-index: 100;
+	background: var(--color-bg-main);
+	box-shadow: 0 1px 3px 1px var(--color-shadow-overlay-lite);
+
+	&.isStyled {
+		padding: 2px 6px;
+		line-height: 14px;
+		font-size: 12px;
+		white-space: nowrap;
+		color: var(--color-main);
+	}
+
+	&:popover-open {
+		animation: show-tooltip 0.1s ease-out;
+		animation-fill-mode: backwards;
+	}
+}
+
 @keyframes show-tooltip {
 	from {
 		opacity: 0;
@@ -5,41 +46,5 @@
 
 	to {
 		opacity: 1;
-	}
-}
-
-.root {
-	position: relative;
-}
-
-.tooltip {
-	position: absolute;
-	padding: 2px 6px;
-	border: var(--color-brd-outline) 1px solid;
-	border-radius: 3px;
-	z-index: 100;
-	line-height: 14px;
-	font-size: 12px;
-	white-space: nowrap;
-	color: var(--color-main);
-	background: var(--color-bg-main);
-	box-shadow: 0 1px 3px 1px var(--color-shadow-overlay-lite);
-	animation: show-tooltip 0.1s ease-out 0.6s;
-	animation-fill-mode: backwards;
-
-	&.expand-x-to-start {
-		right: 0;
-	}
-
-	&.expand-x-to-end {
-		left: 0;
-	}
-
-	&.expand-y-to-start {
-		bottom: calc(100% + 4px);
-	}
-
-	&.expand-y-to-end {
-		top: calc(100% + 4px);
 	}
 }

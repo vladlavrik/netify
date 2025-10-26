@@ -1,39 +1,34 @@
-import {action, makeObservable, observable} from 'mobx';
+import {action, observable} from 'mobx';
 
 export class DebuggerStateStore {
-	/** If the debugging is allowed by user */
-	enabled = true;
+	/** If the debugging is allowed by a user */
+	@observable
+	accessor enabled = true;
 
 	/** If the debugging is active now, may differ at the moment of sw Itching and when the rules list is empty */
-	active = false;
+	@observable
+	accessor active = false;
 
 	/** Active state is switching */
-	switching = false;
+	@observable
+	accessor switching = false;
 
-	constructor() {
-		makeObservable(this, {
-			enabled: observable,
-			active: observable,
-			switching: observable,
-			setEnabled: action('setEnabled'),
-			toggleEnabled: action('toggleEnabled'),
-			setActive: action('setActive'),
-			setSwitching: action('setSwitching'),
-		});
-	}
-
+	@action('setEnabled')
 	setEnabled(enabled: boolean) {
 		this.enabled = enabled;
 	}
 
+	@action('toggleEnabled')
 	toggleEnabled() {
 		this.enabled = !this.enabled;
 	}
 
+	@action('setActive')
 	setActive(active: boolean) {
 		this.active = active;
 	}
 
+	@action('setSwitching')
 	setSwitching(switching: boolean) {
 		this.switching = switching;
 	}

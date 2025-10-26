@@ -1,5 +1,23 @@
-@import './reset.css';
-@import './theme.css';
+@import url('./reset.css');
+@import url('./theme.css');
+
+:root {
+	&:not(:global(.theme-light), :global(.theme-dark)) {
+		color-scheme: light;
+
+		@media (prefers-color-scheme: dark) {
+			color-scheme: dark;
+		}
+	}
+
+	&:global(.theme-light) & {
+		color-scheme: light;
+	}
+
+	&:global(.theme-dark) {
+		color-scheme: dark;
+	}
+}
 
 body {
 	margin: 0;
@@ -7,6 +25,18 @@ body {
 	font-size: 11px;
 	color: var(--color-main);
 	background: var(--color-bg-main);
+
+	&:global(.platform-linux) {
+		font-family: Roboto, Ubuntu, Arial, sans-serif;
+	}
+
+	&:global(.platform-mac) {
+		font-family: '.SFNSDisplay-Regular', 'Helvetica Neue', 'Lucida Grande', sans-serif;
+	}
+
+	&:global(.platform-windows) {
+		font-family: 'Segoe UI', Tahoma, sans-serif;
+	}
 }
 
 :global(#netify-sandbox-iframe) {
@@ -15,25 +45,10 @@ body {
 	top: -100000px;
 }
 
-/* stylelint-disable selector-no-qualifying-type */
-:global body.platform-linux {
-	font-family: Roboto, Ubuntu, Arial, sans-serif;
-}
-
-:global body.platform-mac {
-	font-family: '.SFNSDisplay-Regular', 'Helvetica Neue', 'Lucida Grande', sans-serif;
-}
-
-:global body.platform-windows {
-	font-family: 'Segoe UI', Tahoma, sans-serif;
-}
-
-/* stylelint-enable selector-no-qualifying-type */
-
 /* scrollbar styles */
 ::-webkit-scrollbar {
-	width: 8px;
-	height: 8px;
+	width: 6px;
+	height: 6px;
 	background-color: var(--color-bg-main);
 	box-shadow: 0 0 0 1px #0005;
 }

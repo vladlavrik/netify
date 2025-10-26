@@ -1,17 +1,21 @@
-import React, {forwardRef, ReactNode, useCallback, useImperativeHandle, useRef, useState} from 'react';
+import React, {forwardRef, ReactNode, useCallback, useEffect, useImperativeHandle, useRef, useState} from 'react';
 import cn from 'classnames';
-import {Align, useDropdownAutoPosition} from '@/hooks/useDropdownAutoPosition';
-import {useGlobalHotkey} from '@/hooks/useGlobalHotkey';
-import {useOutsideClickListener} from '@/hooks/useOutsideClickListener';
 import styles from './dropdown.css';
 
 export type DropdownRenderContentFn = (props: {collapse(): void}) => ReactNode;
 
-interface DropdownProps {
+export interface DropdownRenderTargetProps {
+	ref(element: HTMLElement | null): void;
+	className: string;
+}
+export interface DropdownRenderMeta {
+	expanded: boolean;
+}
+
+export interface DropdownProps {
 	className?: string;
-	preferExpansionAlignX?: Align;
-	preferExpansionAlignY?: Align;
-	render(props: {ref(element: HTMLElement | null): void; onClick?(): void}, meta: {expanded: boolean}): ReactNode;
+	preferExpansionAlign?: 'left' | 'right';
+	render(props: DropdownRenderTargetProps, meta: DropdownRenderMeta): ReactNode;
 	content: ReactNode | DropdownRenderContentFn;
 }
 
@@ -21,72 +25,70 @@ export interface DropdownRef {
 }
 
 export const Dropdown = forwardRef<DropdownRef, DropdownProps>((props, externalRef) => {
-	const {className, render, preferExpansionAlignX, preferExpansionAlignY, content} = props;
+	const {className, render, preferExpansionAlign, content} = props;
 
 	const targetRef = useRef<HTMLElement | null>(null);
-	const contentRef = useRef<HTMLParagraphElement>(null);
+	const popoverRef = useRef<HTMLDivElement>(null);
 
 	const [expanded, setExpanded] = useState(false);
 
-	const [[expandXTo, expandYTo], [contentMaxWidth, contentMaxHeight]] = useDropdownAutoPosition({
-		targetRef,
-		contentRef,
-		checkByY: true,
-		checkByX: true,
-		preferAlignX: preferExpansionAlignX,
-		preferAlignY: preferExpansionAlignY,
-		expanded,
-	});
-
-	const handleExpandSwitch = () => {
-		setExpanded((prevValue) => !prevValue);
+	const handleExpand = () => {
+		popoverRef.current!.showPopover();
 	};
 
 	const handleCollapse = useCallback(() => {
-		setExpanded(false);
-	}, []);
+		// setExpanded(false);
+		popoverRef.current!.hidePopover();
 
-	useOutsideClickListener([targetRef, contentRef], handleCollapse, expanded);
-	useGlobalHotkey('Escape', handleCollapse, expanded);
+	}, []);
 
 	useImperativeHandle(
 		externalRef,
 		() => ({
-			expand() {
-				setExpanded(true);
-			},
-			collapse() {
-				setExpanded(false);
-			},
+			expand: handleExpand,
+			collapse: handleCollapse,
 		}),
 		[],
 	);
 
+	// Bind popover target to popover content
+	useEffect(() => {
+		const target = targetRef.current;
+		if (!(target instanceof HTMLButtonElement || target instanceof HTMLInputElement)) {
+			throw new Error('NativeDropdown required button or input element as target');
+		}
+
+		target.popoverTargetElement = popoverRef.current;
+	}, []);
+
+	// Enable popover content render on open
+	useEffect(() => {
+		const popoverNode = popoverRef.current!;
+		popoverNode.addEventListener('beforetoggle', (event) => {
+			const isOpen = (event as any).newState === 'open';
+			setExpanded(isOpen);
+		});
+	}, []);
+
 	return (
-		<div className={cn(styles.root, className)}>
+		<>
 			{render(
 				{
 					ref(element) {
 						targetRef.current = element;
 					},
-					onClick: handleExpandSwitch,
+					className: cn(styles.target, expanded && styles.isExpanded, className),
 				},
 				{expanded},
 			)}
 
-			{expanded && (
-				<div
-					ref={contentRef}
-					className={cn(
-						styles.content,
-						styles[`expand-x-to-${expandXTo}`],
-						styles[`expand-y-to-${expandYTo}`],
-					)}
-					style={{maxWidth: contentMaxWidth, maxHeight: contentMaxHeight}}>
-					{content instanceof Function ? content({collapse: handleCollapse}) : content}
-				</div>
-			)}
-		</div>
+			<div
+				ref={popoverRef}
+				className={cn(styles.popover, preferExpansionAlign === 'left' && styles.preferAlignLeft)}
+				{...{popover: 'auto'}}>
+				{expanded && (content instanceof Function ? content({collapse: handleCollapse}) : content)}
+			</div>
+		</>
 	);
 });
 

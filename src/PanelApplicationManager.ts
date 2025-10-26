@@ -1,53 +1,90 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {autorun, reaction, toJS} from 'mobx';
-import {Rule} from '@/interfaces/rule';
+import {RuntimeMessage} from '@/interfaces/runtimeMessage';
+import {RuntimeMode} from '@/interfaces/runtimeMode';
 import {FetchDevtools, FetchRuleStore} from '@/services/devtools/fetch';
-import {ExtensionDevtoolsConnector, ExtensionIcon, ExtensionTab} from '@/services/extension';
+import {RequestListener} from '@/services/devtools/RequestListener';
+import {ExtensionDevtoolsConnector, ExtensionIcon, ExtensionTabManager} from '@/services/extension';
 import {getPlatform} from '@/helpers/browser';
-import {App} from '@/components/app';
+import {randomHex} from '@/helpers/random';
 import {RootStore} from '@/stores/RootStore';
 import {StoresContext} from '@/stores/StoresContext';
+import {App} from '@/components/app';
 
-export class PanelApplicationManager {
+export class ApplicationManager {
+	private appInstanceId = randomHex(8);
+
 	constructor(
-		private readonly tab: ExtensionTab,
+		private readonly runtimeMode: RuntimeMode,
+		private readonly tabId: number,
+		private readonly tabManager: ExtensionTabManager,
 		private readonly extensionIcon: ExtensionIcon,
 		private readonly devtoolsConnector: ExtensionDevtoolsConnector,
 		private readonly fetchRulesStore: FetchRuleStore,
 		private readonly fetchDevtools: FetchDevtools,
+		private readonly requestListener: RequestListener,
 		private readonly rootStore: RootStore,
-		private readonly tabOrigin: string,
 	) {}
 
 	async initialize() {
-		// Prepare data layer
-		this.setTabOrigin(this.tabOrigin);
-
 		// Render the UI
 		this.prepareUI();
 		this.renderUI();
 
+		this.reportAppInstanceOpen();
+
+		// Prepare the data
+		await this.determineTargetTab();
+		await this.readSettings();
 		await this.fetchRulesFromDatabase();
 		this.actualizeRulesList();
 
-		// Start debugging if it is allowed
-		this.actualizeDebuggerState();
+		// Initialize the main business logic
+		this.serveRequestInterceptor();
+		this.serveRequestListener();
+		this.serveDebuggerState();
+		this.serveDebuggerConnect();
 
 		// Provide communication between internal services and external environment
+		this.listenRulesUpdate();
 		this.listenBreakpoints();
 		this.listenLogs();
-		this.listenTabOriginChange();
-		this.listenExtensionEvents();
-		this.listenUserDevtoolsDetach();
-		this.listenUnload();
+		this.listenTabUpdates();
+		this.listenPopupTitleUpdate();
+
+		this.detachOnUnload();
 	}
 
 	/**
-	 * Define a new tab url origin to the application store and to the rules store
+	 * Report to the background script (service worker) the app instance open
 	 */
-	private setTabOrigin(origin: string) {
-		this.rootStore.rulesStore.setCurrentOrigin(origin);
+	private async reportAppInstanceOpen() {
+		chrome.runtime.sendMessage<RuntimeMessage>({
+			name: 'registerInstance',
+			tabId: this.tabId,
+			instanceType: this.runtimeMode,
+			instanceId: this.appInstanceId,
+		});
+	}
+
+	/**
+	 * Read the settings from the persistence store
+	 */
+	private async readSettings() {
+		await this.rootStore.settingsStore.fetchValues();
+	}
+
+	/**
+	 * Define the target (request on which one will be intercepted) tab
+	 */
+	private async determineTargetTab() {
+		const targetTab = await this.tabManager.getTabById(this.tabId);
+		if (!targetTab) {
+			throw new Error(`No active tab with id ${this.tabId} found`);
+		}
+
+		this.rootStore.tabStore.setTargetTab(targetTab);
 	}
 
 	/**
@@ -61,34 +98,34 @@ export class PanelApplicationManager {
 	 * Re-fetch an actual rules list on change a value of the current origin or an origin filtering is active in the store
 	 */
 	private actualizeRulesList() {
-		const {rulesStore} = this.rootStore;
-		reaction(() => [rulesStore.currentOrigin, rulesStore.filterByOrigin], this.fetchRulesFromDatabase.bind(this));
+		const {tabStore, rulesStore} = this.rootStore;
+		reaction(
+			() => [tabStore.targetTabUrlOrigin, rulesStore.filterByOrigin],
+			this.fetchRulesFromDatabase.bind(this),
+		);
 	}
 
 	/**
-	 * Determines a UI color scheme value from the user's devtools setting and define the value for the panel page
+	 * Determines general UI appearance and styles like color scheme and font family
 	 */
 	private prepareUI() {
+		// Set app UI store values
+		this.rootStore.appUiStore.setRuntimeMode(this.runtimeMode);
+
 		// Define current platform styles
 		const platform = getPlatform();
 		document.querySelector('body')!.classList.add(`platform-${platform}`);
 
-		// Define a theme
-		const setTheme = () => {
-			const {themeName} = chrome.devtools.panels;
-			if (themeName === 'dark') {
-				document.documentElement.classList.add('dark-theme');
-			} else {
-				document.documentElement.classList.remove('dark-theme');
+		// Define a color theme and watch its update
+		autorun(() => {
+			const {uiTheme} = this.rootStore.settingsStore;
+			document.documentElement.classList.remove('theme-dark', 'theme-light');
+			if (uiTheme === 'dark') {
+				document.documentElement.classList.add('theme-dark');
+			} else if (uiTheme === 'light') {
+				document.documentElement.classList.add('theme-light');
 			}
-
-			this.rootStore.appUiStore.setThemeName(themeName);
-		};
-
-		setTheme();
-		if ('setThemeChangeHandler' in chrome.devtools.panels) {
-			(chrome.devtools.panels as any).setThemeChangeHandler(setTheme);
-		}
+		});
 	}
 
 	private renderUI() {
@@ -101,61 +138,158 @@ export class PanelApplicationManager {
 	}
 
 	/**
-	 * Starts or stops network debugging depending on the user's permission state and the presence of active rules
-	 * It also restarts the debugger when the rules change.
+	 * Serve a connection to the debugger (browser devtools) connection
 	 */
-	private actualizeDebuggerState() {
-		const {debuggerStateStore, rulesStore} = this.rootStore;
+	serveDebuggerConnect() {
+		const {debuggerStateStore, tabStore} = this.rootStore;
+		reaction(
+			() => ({
+				debuggingAllowed: debuggerStateStore.enabled && tabStore.targetTabHasPage,
+				tabId: tabStore.targetTab?.id,
+			}),
+			async ({debuggingAllowed, tabId}) => {
+				const debuggerState = this.devtoolsConnector.status.type;
+				if (debuggingAllowed && debuggerState === 'disconnected') {
+					// Switch on
+					try {
+						await this.devtoolsConnector.connect(tabId!);
+					} catch (error) {
+						this.rootStore.errorLogsStore.addLogEntry({
+							title: 'Chrome devtools connect error',
+							error,
+						});
+						throw error;
+					}
+				} else if (!debuggingAllowed && debuggerState === 'connected') {
+					// Switch off
+					if (this.devtoolsConnector.status.type === 'connected') {
+						try {
+							await this.devtoolsConnector.disconnect();
+						} catch (error) {
+							console.error(error);
+						}
+					}
+				} else if (debuggingAllowed && debuggerState === 'connected') {
+					// Reconnect with a new tab
+					try {
+						await this.devtoolsConnector.disconnect();
+					} catch (error) {
+						console.error(error);
+					}
+					await this.devtoolsConnector.connect(tabId!);
+				}
+			},
+			{fireImmediately: true},
+		);
+	}
+
+	/**
+	 * Listen to devtool connection state and display it in the app state
+	 */
+	serveDebuggerState() {
+		const {debuggerStateStore} = this.rootStore;
+		this.devtoolsConnector.activeStateChangeEvent.on(async (state) => {
+			// Serve Fetcher service to enable requests handling by rules
+			switch (state.type) {
+				case 'connecting':
+				case 'disconnecting':
+					debuggerStateStore.setSwitching(true);
+					break;
+
+				case 'connected':
+					this.extensionIcon.makeActive();
+					debuggerStateStore.setActive(true);
+					debuggerStateStore.setSwitching(false);
+					break;
+
+				case 'disconnected':
+					this.extensionIcon.makeInactive();
+					if (debuggerStateStore.enabled) {
+						debuggerStateStore.setEnabled(false);
+					}
+					debuggerStateStore.setActive(false);
+					debuggerStateStore.setSwitching(false);
+
+					chrome.runtime.sendMessage({
+						name: 'netifyDevtoolConnectStateChanged',
+						active: false,
+					});
+					break;
+			}
+		});
+	}
+
+	/**
+	 * Serve (enable/disable) the request interceptor service
+	 */
+	serveRequestInterceptor() {
+		this.devtoolsConnector.activeStateChangeEvent.on((state) => {
+			if (state.type === 'connected' || state.type === 'disconnected') {
+				this.actualizeRequestInterceptorState();
+			}
+		});
+	}
+
+	/**
+	 * Serve (enable/disable) the request interceptor service
+	 */
+	serveRequestListener() {
+		this.devtoolsConnector.activeStateChangeEvent.on((state) => {
+			if (state.type === 'connected') {
+				this.requestListener.enable();
+			} else if (state.type === 'disconnected') {
+				this.requestListener.disable();
+			}
+		});
+	}
+
+	/**
+	 * Enable/disable and restart request interceptors on rules list update
+	 */
+	listenRulesUpdate() {
+		const {tabStore, rulesStore, debuggerStateStore} = this.rootStore;
 
 		reaction(
 			() => ({
-				debuggingEnabled: debuggerStateStore.enabled,
-				currentOrigin: rulesStore.currentOrigin,
+				currentOrigin: tabStore.targetTabUrlOrigin,
 				rules: toJS(rulesStore.list), // Used "list" instead of "activeRules" to workaround mobx bug: reaction not fired
 			}),
-			async ({debuggingEnabled, currentOrigin}) => {
-				const rules = rulesStore.activeRules.map((item) => toJS(item));
-				const debuggingActive = debuggerStateStore.active;
-				const debuggingShouldBeActive = debuggingEnabled && rules.length !== 0;
-
-				debuggerStateStore.setSwitching(true);
-				if (debuggingShouldBeActive && !debuggingActive) {
-					// Switch on
-					await this.enableDebugging(rules, currentOrigin);
-				} else if (!debuggingShouldBeActive && debuggingActive) {
-					// Switch off
-					await this.disableDebugging();
-				} else if (debuggingActive) {
-					// Update the rules list and restart debugging service
-					this.fetchRulesStore.setCurrentOrigin(currentOrigin);
-					this.fetchRulesStore.setRulesList(rules);
-					await this.fetchDevtools.restart();
+			() => {
+				if (!debuggerStateStore.switching) {
+					this.actualizeRequestInterceptorState();
 				}
-				debuggerStateStore.setSwitching(false);
-			},
-			{
-				fireImmediately: true,
 			},
 		);
 	}
 
-	private async enableDebugging(rules: Rule[], currentOrigin: string) {
-		this.fetchRulesStore.setRulesList(rules);
-		this.fetchRulesStore.setCurrentOrigin(currentOrigin);
-		await this.devtoolsConnector.initialize();
-		await this.fetchDevtools.enable();
-		this.extensionIcon.makeActive();
-		this.rootStore.debuggerStateStore.setActive(true);
-	}
-
-	private async disableDebugging() {
-		await this.fetchDevtools.disable();
-		if (this.devtoolsConnector.isAttached) {
-			await this.devtoolsConnector.destroy();
+	/**
+	 * Set the actual state of request interceptors enabling and set actual rules list
+	 */
+	async actualizeRequestInterceptorState() {
+		const {tabStore, rulesStore} = this.rootStore;
+		if (rulesStore.listFetching || this.devtoolsConnector.status.type === 'connecting') {
+			return;
 		}
-		this.fetchRulesStore.reset();
-		this.extensionIcon.makeInactive();
-		this.rootStore.debuggerStateStore.setActive(false);
+
+		const shouldBeEnabled = this.devtoolsConnector.status.type === 'connected' && rulesStore.hasActiveRules;
+
+		// Disable request intercepting
+		if (!shouldBeEnabled) {
+			if (this.fetchDevtools.enabled) {
+				await this.fetchDevtools.disable();
+				this.fetchRulesStore.reset();
+			}
+			return;
+		}
+
+		// Enable/restart request intercepting
+		if (this.fetchDevtools.enabled) {
+			await this.fetchDevtools.disable();
+		}
+		const rules = rulesStore.activeRules.map((item) => toJS(item));
+		this.fetchRulesStore.setCurrentOrigin(tabStore.targetTabUrlOrigin!);
+		this.fetchRulesStore.setRulesList(rules);
+		await this.fetchDevtools.enable();
 	}
 
 	/**
@@ -172,8 +306,7 @@ export class PanelApplicationManager {
 	}
 
 	/**
-	 * Listen request breakpoints emit to show it in the UI.
-	 * Also listen debugger
+	 * Listen request's breakpoints emit to show them in the UI.
 	 */
 	private listenBreakpoints() {
 		this.fetchDevtools.events.requestBreakpoint.on((breakpoint) => {
@@ -191,60 +324,49 @@ export class PanelApplicationManager {
 	}
 
 	/**
-	 * Listen the tab navigation to update the tab's url origin value in the store and re-fetch an actual rules list
+	 * Listen to the target tab updates to map it in the store
 	 */
-	private listenTabOriginChange() {
-		// Put updated page url origin to the store
-		this.tab.pageUrlChangeEvent.on(({url, originChanged}) => {
-			if (originChanged) {
-				this.setTabOrigin(url.origin);
+	private listenTabUpdates() {
+		const {tabStore} = this.rootStore;
+
+		// Collect taget tab changes
+		this.tabManager.tabUpdateEvent.on((changes) => {
+			tabStore.updateTargetTab(changes);
+		});
+
+		// Remove the popup when the target tab is closed
+		this.tabManager.tabRemoveEvent.on(() => {
+			if (this.runtimeMode === 'popup') {
+				window.close();
 			}
 		});
 	}
 
-	/**
-	 * Listen to external (in scope of the extension) events
-	 */
-	private listenExtensionEvents() {
-		chrome.runtime.onMessage.addListener((message) => {
-			if (typeof message !== 'object') {
-				return;
+	private listenPopupTitleUpdate() {
+		autorun(() => {
+			const targetTab = this.rootStore.tabStore.targetTab;
+			if (targetTab) {
+				document.title = `Netify | ${targetTab.title || targetTab.url}`;
 			}
-
-			if (message.tabId !== chrome.devtools.inspectedWindow.tabId) {
-				return;
-			}
-
-			switch (message.type) {
-				case 'panelShowChange':
-					this.rootStore.appUiStore.setPanelActive(!!message.shown);
-					break;
-			}
-		});
-	}
-
-	/**
-	 * Make debugging inactive on external detach by a user
-	 */
-	private listenUserDevtoolsDetach() {
-		this.devtoolsConnector.userDetachEvent.on(() => {
-			this.rootStore.debuggerStateStore.setEnabled(false);
-			this.rootStore.debuggerStateStore.setActive(false);
 		});
 	}
 
 	/**
 	 * Detach debugger on the page leave
 	 */
-	private listenUnload() {
+	private detachOnUnload() {
 		self.addEventListener('beforeunload', () => {
-			if (!this.rootStore.debuggerStateStore.active) {
-				return;
-			}
+			chrome.runtime.sendMessage<RuntimeMessage>({
+				name: 'unregisterInstance',
+				tabId: this.tabId,
+				instanceType: this.runtimeMode,
+				instanceId: this.appInstanceId,
+			});
 
-			this.fetchDevtools.disable();
-			this.devtoolsConnector.destroy();
-			this.extensionIcon.makeInactive();
+			if (this.rootStore.debuggerStateStore.active) {
+				this.extensionIcon.makeInactive();
+				this.devtoolsConnector.disconnect();
+			}
 		});
 	}
 }

@@ -9,6 +9,26 @@
 	color: inherit;
 	background: none;
 	user-select: none;
+	transition: fill 0.08s ease-out;
+	cursor: pointer;
+
+	&:disabled {
+		opacity: 0.8;
+		cursor: default;
+	}
+
+	&:not(:disabled):hover,
+	&.isActive {
+		filter: brightness(var(--brightness-hover));
+	}
+
+	&.styleRegular {
+		fill: var(--color-icon-regular);
+	}
+
+	&.styleDangerous {
+		fill: var(--color-icon-dangerous);
+	}
 
 	&:focus {
 		outline: none;
@@ -17,33 +37,14 @@
 	&:focus-visible {
 		outline: var(--color-focus) solid 1px;
 	}
-
-	&:not(:disabled):hover {
-		color: var(--color-content);
-	}
-
-	&.isOutline {
-		padding: 0 8px 0 2px;
-		border: var(--color-brd-main) 1px solid;
-		border-radius: 3px;
-	}
 }
 
 .icon {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 18px;
-	height: 18px;
-	fill: var(--color-icon-regular);
-}
-
-.root:not(:disabled):hover .icon {
-	fill: var(--color-icon-hover);
-}
-
-.root:disabled .icon {
-	fill: var(--color-icon-disabled);
+	min-width: 18px;
+	min-height: 18px;
 }
 
 .title {

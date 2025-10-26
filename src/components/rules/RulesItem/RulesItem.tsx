@@ -1,6 +1,5 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import cn from 'classnames';
-import {toJS} from 'mobx';
 import {observer} from 'mobx-react-lite';
 import {RequestMethod} from '@/constants/RequestMethod';
 import {ResourceType} from '@/constants/ResourceType';
@@ -8,11 +7,10 @@ import {Rule} from '@/interfaces/rule';
 import {IconButton} from '@/components/@common/buttons/IconButton';
 import {Checkbox} from '@/components/@common/forms/Checkbox';
 import {Dropdown, DropdownRef} from '@/components/@common/misc/Dropdown';
-import {PopUpConfirm} from '@/components/@common/popups/PopUpConfirm';
 import {useStores} from '@/stores/useStores';
-import {RulesControl} from '../RulesControl';
-import MoreIcon from './icons/more.svg';
+import {RulesItemControls} from '../RulesItemControls';
 import {stringifyActionsSummary} from './stringifyActionsSummary';
+import MoreIcon from '@/assets/icons/more.svg';
 import styles from './rulesItem.css';
 
 const methodLabelColors: Record<RequestMethod, string> = {
@@ -42,16 +40,15 @@ interface RulesItemProps {
 	isHighlighted: boolean;
 	isExportMode: boolean;
 	isSelected: boolean;
+	onSelect(ruleId: string, selected: boolean, range: boolean): void;
 }
 
 export const RulesItem = observer<RulesItemProps>((props) => {
-	const {data, isStartEdgePosition, isEndEdgePosition, isHighlighted, isExportMode, isSelected} = props;
+	const {data, isStartEdgePosition, isEndEdgePosition, isHighlighted, isExportMode, isSelected, onSelect} = props;
 	const {id: ruleId, label, active, filter, action} = data;
 	const {url, methods, resourceTypes} = filter;
 
 	const {rulesStore} = useStores();
-
-	const [showRemoveAsk, setShowRemoveAsk] = useState(false);
 
 	const rootRef = useRef<HTMLLIElement>(null);
 
@@ -69,39 +66,10 @@ export const RulesItem = observer<RulesItemProps>((props) => {
 		}
 	};
 
-	const handleSelectionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if (event.currentTarget.checked) {
-			rulesStore.selectItem(ruleId);
-		} else {
-			rulesStore.unselectItem(ruleId);
-		}
-	};
-
-	const handleEdit = useCallback(() => {
-		rulesStore.showEditor(ruleId);
-		dropdownRef.current!.collapse();
-	}, [ruleId]);
-
-	const handleActiveToggle = useCallback(async () => {
-		rulesStore.updateRule({...toJS(data), active: !data.active});
-	}, [data]);
-
-	const handleMove = useCallback(async () => {
-		// TODO in future
-	}, [ruleId]);
-
-	const handleRemove = useCallback(() => {
-		setShowRemoveAsk(true);
-		dropdownRef.current!.collapse();
-	}, []);
-
-	const handleRemoveCancel = () => {
-		setShowRemoveAsk(false);
-	};
-
-	const handleRemoveConfirm = async () => {
-		rulesStore.removeRule(ruleId);
-		setShowRemoveAsk(false);
+	const handleSelectionClick = (event: React.MouseEvent<HTMLInputElement>) => {
+		const selected = event.currentTarget.checked;
+		const range = event.shiftKey;
+		onSelect(ruleId, selected, range);
 	};
 
 	useEffect(() => {
@@ -113,7 +81,12 @@ export const RulesItem = observer<RulesItemProps>((props) => {
 	return (
 		<li ref={rootRef} className={cn(styles.root, isHighlighted && styles.highlighted)}>
 			{isExportMode && (
-				<Checkbox className={styles.selectCheckbox} checked={isSelected} onChange={handleSelectionChange} />
+				<Checkbox
+					className={styles.selectCheckbox}
+					checked={isSelected}
+					readOnly
+					onClick={handleSelectionClick}
+				/>
 			)}
 
 			<div className={styles.entry} role='button' onClick={handleShowDetails}>
@@ -160,26 +133,20 @@ export const RulesItem = observer<RulesItemProps>((props) => {
 				<Dropdown
 					ref={dropdownRef}
 					className={styles.control}
-					render={(dropdownProps) => <IconButton {...dropdownProps} icon={<MoreIcon />} />}
-					preferExpansionAlignX='start'
-					content={
-						<RulesControl
+					render={(dropdownProps, {expanded}) => (
+						<IconButton {...dropdownProps} icon={<MoreIcon />} active={expanded} />
+					)}
+					preferExpansionAlign='left'
+					content={({collapse}) => (
+						<RulesItemControls
+							ruleId={ruleId}
 							ruleIsActive={active}
-							allowMoveAbove={!isStartEdgePosition && false /* TODO implement the feature */}
-							allowMoveBelow={!isEndEdgePosition && false}
-							onActiveToggle={handleActiveToggle}
-							onMove={handleMove}
-							onEdit={handleEdit}
-							onRemove={handleRemove}
+							allowMoveAbove={!isStartEdgePosition}
+							allowMoveBelow={!isEndEdgePosition}
+							onClose={collapse}
 						/>
-					}
+					)}
 				/>
-			)}
-
-			{showRemoveAsk && (
-				<PopUpConfirm onConfirm={handleRemoveConfirm} onCancel={handleRemoveCancel}>
-					Remove the rule forever?
-				</PopUpConfirm>
 			)}
 		</li>
 	);

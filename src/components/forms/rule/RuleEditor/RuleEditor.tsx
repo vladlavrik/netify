@@ -10,8 +10,9 @@ export const RuleEditor = observer(() => {
 
 	const initialRule = toJS(rulesStore.editingRule);
 
-	const handleSave = (rule: Rule) => {
-		rulesStore.updateRule(rule);
+	const handleSave = async (rule: Rule) => {
+		await rulesStore.updateRule(rule);
+		rulesStore.closeEditor();
 	};
 
 	const handleClose = () => {
@@ -28,7 +29,7 @@ export const RuleEditor = observer(() => {
 		return null;
 	}
 
-	return <RuleForm initialRule={initialRule} onSave={handleSave} onCancel={handleClose} />;
+	return <RuleForm mode='edit' initialRule={initialRule} onSave={handleSave} onCancel={handleClose} />;
 });
 
 RuleEditor.displayName = 'RuleEditor';

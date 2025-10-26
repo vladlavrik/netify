@@ -5,13 +5,13 @@ import {observer} from 'mobx-react-lite';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 import {ResponseBody} from '@/interfaces/body';
 import {ResponseBreakpoint} from '@/interfaces/breakpoint';
-import {IconButton} from '@/components/@common/buttons/IconButton';
+import {TextButton} from '@/components/@common/buttons/TextButton';
 import {KeyValueArrayField} from '@/components/@common/forms/KeyValueArrayField';
 import {ResponseBodyField} from '@/components/@common/formsKit/ResponseBodyField';
 import {StatusCodeField} from '@/components/@common/formsKit/StatusCodeField';
 import {useStores} from '@/stores/useStores';
 import {BreakpointResponseFormSchema, breakpointResponseFormSchema} from './breakpointResponseFormSchema';
-import ExecuteIcon from './icons/execute.svg';
+import ExecuteIcon from '@/assets/icons/execute.svg';
 import styles from './breakpointResponse.css';
 
 interface BreakpointResponseProps {
@@ -103,9 +103,15 @@ export const BreakpointResponse = observer<BreakpointResponseProps>((props) => {
 		<FormikProvider value={form}>
 			<form className={styles.root} onSubmit={form.handleSubmit}>
 				<div className={styles.controls}>
-					<IconButton className={styles.control} icon={<ExecuteIcon />} outline type='submit'>
+					<TextButton
+						className={styles.control}
+						icon={<ExecuteIcon />}
+						styleType='outlined'
+						iconStyleType='accept'
+						outline
+						type='submit'>
 						Send response
-					</IconButton>
+					</TextButton>
 				</div>
 
 				<div className={styles.row}>

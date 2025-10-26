@@ -1,27 +1,16 @@
-import {action, computed, makeObservable, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {NetworkLogEntry} from '@/interfaces/networkLog';
 
 export class NetworkLogsStore {
-	list: NetworkLogEntry[] = [];
+	@observable
+	accessor list: NetworkLogEntry[] = [];
 
-	/** Log not only mutated request; TODO for future */
-	logAllRequest = false;
-
+	@computed
 	get hasLogs() {
 		return this.list.length !== 0;
 	}
 
-	constructor() {
-		makeObservable(this, {
-			list: observable,
-			logAllRequest: observable,
-			hasLogs: computed,
-			addLogEntry: action('addLogEntry'),
-			cleanList: action('cleanList'),
-			toggleLogAllRequest: action('toggleLogAllRequest'),
-		});
-	}
-
+	@action('addLogEntry')
 	addLogEntry(logEntry: NetworkLogEntry) {
 		if (logEntry.interceptStage === 'Response') {
 			const existingEntry = this.list.find(
@@ -37,11 +26,8 @@ export class NetworkLogsStore {
 		this.list.push(logEntry);
 	}
 
+	@action('cleanList')
 	cleanList() {
 		this.list = [];
-	}
-
-	toggleLogAllRequest() {
-		this.logAllRequest = !this.logAllRequest;
 	}
 }

@@ -1,0 +1,16 @@
+.root {
+	padding: 0;
+	border: transparent solid;
+	border-width: 1px 0;
+	border-bottom-color: currentcolor;
+	line-height: 14px;
+	font-size: 11px;
+	color: var(--color-content);
+	background: transparent;
+	cursor: pointer;
+
+	&:focus {
+		border-bottom-color: var(--color-focus);
+		outline: none;
+	}
+}

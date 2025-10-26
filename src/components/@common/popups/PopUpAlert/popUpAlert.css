@@ -5,5 +5,10 @@
 
 .content {
 	padding-bottom: 16px;
+	font-size: 12px;
 	color: var(--color-main);
+}
+
+.closeButton {
+	margin: 0 auto;
 }
