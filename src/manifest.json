@@ -9,7 +9,7 @@
 		"48": "icons/logo-48.png",
 		"128": "icons/logo-128.png"
 	},
-	"minimum_chrome_version": "88.0.0.0",
+	"minimum_chrome_version": "125",
 	"devtools_page": "devtool.html",
 	"action":  {
 		"default_icon": {
