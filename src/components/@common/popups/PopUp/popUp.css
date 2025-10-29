@@ -9,6 +9,7 @@
 	border: var(--color-brd-outline) 1px solid;
 	border-radius: 3px;
 	overflow: auto;
+	z-index: 11;
 	background: var(--color-bg-main);
 	box-shadow: 0 0 6px 2px var(--color-shadow-overlay-main);
 	transform: translateY(-50%);

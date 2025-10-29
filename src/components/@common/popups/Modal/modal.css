@@ -9,6 +9,7 @@
 	margin: 0;
 	padding: 0;
 	border: 0;
+	z-index: 10;
 	color: var(--color-main);
 	background: var(--color-bg-lite);
 	animation: fade-in 0.12s ease-in-out backwards;
@@ -52,6 +53,7 @@
 }
 
 .body {
+	flex-grow: 1;
 	overflow: auto;
 	scrollbar-gutter: stable;
 }

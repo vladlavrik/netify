@@ -63,7 +63,7 @@ export function stringifyActionsSummary(action: RuleAction) {
 			} else if (request) {
 				actions.push('Request handler script');
 			} else if (response) {
-				actions.push('response handler script');
+				actions.push('Response handler script');
 			}
 			break;
 		}

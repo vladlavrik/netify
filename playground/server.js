@@ -15,7 +15,7 @@ const staticServer = new nodeStatic.Server(path.join(__dirname, './assets'), {
 const server = http.createServer(function (request, response) {
 	console.group(`${request.method} ${request.url}`);
 	for (const [name, value] of Object.entries(request.headers)) {
-		console.log(`${name}: ${value}`);
+		console.log(`${name}: ${name === 'cookie' ? '***' : value}`);
 	}
 
 	const data = [];

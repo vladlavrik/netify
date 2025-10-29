@@ -8,7 +8,9 @@ const settingsMapper = new SettingsMapper();
 chrome.runtime.onInstalled.addListener(async (details) => {
 	const allowDevtoolsPanelValue = await settingsMapper.getValue('allowDevtoolsPanel');
 	if (allowDevtoolsPanelValue === undefined) {
-		settingsMapper.setValue('allowDevtoolsPanel', details.reason === chrome.runtime.OnInstalledReason.UPDATE);
+		const allowDevtoolsPanelNew = details.reason === chrome.runtime.OnInstalledReason.UPDATE;
+		settingsMapper.setValue('allowDevtoolsPanel', allowDevtoolsPanelNew);
+		chrome.contextMenus.update('allowDevtoolsPanel', {checked: allowDevtoolsPanelNew});
 	}
 });
 
@@ -105,7 +107,6 @@ chrome.runtime.onMessage.addListener((message: RuntimeMessage, sender) => {
 		case 'unregisterInstance':
 			if (openedInstances[message.tabId]?.instanceId === message.instanceId) {
 				delete openedInstances[message.tabId];
-
 				// Make icon inactive (in case of popup making icon inactive action on beforeunload if not working)
 				if (message.instanceType === 'popup') {
 					const extensionIcon = new ExtensionIcon(message.tabId, message.instanceType);
