@@ -30,7 +30,11 @@ export const BreakpointResponse = observer<BreakpointResponseProps>((props) => {
 			body: {
 				type: body.type,
 				textValue:
-					body.type === ResponseBodyType.Text || body.type === ResponseBodyType.Base64 ? body.value : '',
+					body.type === ResponseBodyType.Text ||
+					body.type === ResponseBodyType.JSON ||
+					body.type === ResponseBodyType.Base64
+						? body.value
+						: '',
 				fileValue: body.type === ResponseBodyType.File ? body.value : undefined,
 			},
 		};
@@ -50,6 +54,7 @@ export const BreakpointResponse = observer<BreakpointResponseProps>((props) => {
 					};
 					break;
 				case ResponseBodyType.Text:
+				case ResponseBodyType.JSON:
 				case ResponseBodyType.Base64:
 					body = {
 						type: bodySource.type,

@@ -37,7 +37,7 @@ export const BreakpointRequest = observer<BreakpointRequestProps>((props) => {
 			headers: toJS(headers),
 			body: {
 				type: body?.type || 'Original',
-				textValue: body?.type === RequestBodyType.Text ? body.value : '',
+				textValue: body?.type === RequestBodyType.Text || body?.type === RequestBodyType.JSON ? body.value : '',
 				formValue:
 					body?.type === RequestBodyType.MultipartFromData || body?.type === RequestBodyType.UrlEncodedForm
 						? toJS(body.value)
@@ -63,6 +63,7 @@ export const BreakpointRequest = observer<BreakpointRequestProps>((props) => {
 					};
 					break;
 				case RequestBodyType.Text:
+				case RequestBodyType.JSON:
 					body = {
 						type: bodySource.type,
 						value: bodySource.textValue,
