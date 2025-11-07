@@ -25,19 +25,31 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 	const {settingsStore} = useStores();
 
 	const handlePrettify = useCallback(() => {
-		const currentValue = editorViewRef.current?.state.doc.toString() || '';
+		const view = editorViewRef.current;
+		if (!view) return;
+
+		const currentValue = view.state.doc.toString();
 
 		try {
 			const parsed = JSON.parse(currentValue);
 			const prettified = JSON.stringify(parsed, null, 2);
-			console.log('prettified:', prettified);
-			onChange(prettified);
+
+			// Directly update the editor content
+			view.dispatch({
+				changes: {
+					from: 0,
+					to: currentValue.length,
+					insert: prettified,
+				},
+			});
+			// The updateListener will call onChange automatically
 		} catch (error) {
 			// Keep original value if invalid JSON
 			console.warn('[JSONEditor] Failed to prettify JSON:', error);
 		}
-	}, [onChange]);
+	}, []);
 
+	// Initialize editor
 	useEffect(() => {
 		const startState = EditorState.create({
 			doc: value,
