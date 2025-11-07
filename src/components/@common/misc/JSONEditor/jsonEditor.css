@@ -12,12 +12,12 @@
 }
 
 .editor {
-	min-height: 80px; /* Approximately 4 lines at default line height */
+	min-height: 85px;
 	max-height: 400px;
 }
 
 .editor :global(.cm-editor) {
-	min-height: 80px;
+	min-height: 85px;
 	max-height: 400px;
 	border-radius: 2px;
 }
@@ -41,19 +41,19 @@
 	padding: 8px;
 }
 
-:global(.cm-panel.cm-search input[type="text"]),
-:global(.cm-panel.cm-search input[type="checkbox"]) {
+:global(.cm-panel.cm-search input[type='text']),
+:global(.cm-panel.cm-search input[type='checkbox']) {
 	background-color: #2d2d2d;
 	color: #d4d4d4;
 	border: 1px solid #3e3e3e;
 }
 
-:global(.cm-panel.cm-search input[type="text"]) {
+:global(.cm-panel.cm-search input[type='text']) {
 	padding: 4px 8px;
 	border-radius: 3px;
 }
 
-:global(.cm-panel.cm-search input[type="text"]:focus) {
+:global(.cm-panel.cm-search input[type='text']:focus) {
 	outline: none;
 	border-color: #007acc;
 }
@@ -91,7 +91,7 @@
 	vertical-align: bottom;
 }
 
-:global(.cm-panel.cm-search input[type="checkbox"]) {
+:global(.cm-panel.cm-search input[type='checkbox']) {
 	margin: 0;
 	width: 13px;
 	height: 13px;
