@@ -8,6 +8,7 @@ import {EditorView, highlightActiveLine, lineNumbers} from '@codemirror/view';
 import {minimalSetup} from 'codemirror';
 import {isUIColorThemeDark} from '@/helpers/isUIColorThemeDark';
 import {useStores} from '@/stores/useStores';
+import styles from './codeEditor.css';
 
 interface CodeEditorProps {
 	className?: string;
@@ -52,7 +53,7 @@ export const CodeEditor = memo<CodeEditorProps>((props) => {
 		};
 	}, []);
 
-	return <div ref={rootRef} className={className}></div>;
+	return <div ref={rootRef} className={`${styles.editor} ${className || ''}`}></div>;
 });
 
 CodeEditor.displayName = 'CodeEditor';

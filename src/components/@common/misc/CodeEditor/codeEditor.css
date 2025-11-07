@@ -1,0 +1,13 @@
+.editor :global(.cm-editor) {
+	border-radius: 2px;
+}
+
+.editor :global(.cm-scroller) {
+	border-top-right-radius: 2px;
+	border-bottom-right-radius: 2px;
+}
+
+.editor :global(.cm-gutters) {
+	border-top-left-radius: 2px;
+	border-bottom-left-radius: 2px;
+}

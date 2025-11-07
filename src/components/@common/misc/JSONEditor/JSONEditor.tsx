@@ -2,9 +2,10 @@ import React, {memo, useCallback, useEffect, useRef} from 'react';
 import {autocompletion, closeBrackets} from '@codemirror/autocomplete';
 import {json} from '@codemirror/lang-json';
 import {bracketMatching, foldGutter} from '@codemirror/language';
+import {search, openSearchPanel, searchKeymap} from '@codemirror/search';
 import {EditorState} from '@codemirror/state';
 import {oneDark} from '@codemirror/theme-one-dark';
-import {EditorView, highlightActiveLine, lineNumbers} from '@codemirror/view';
+import {EditorView, highlightActiveLine, keymap, lineNumbers} from '@codemirror/view';
 import {minimalSetup} from 'codemirror';
 import {isUIColorThemeDark} from '@/helpers/isUIColorThemeDark';
 import {useStores} from '@/stores/useStores';
@@ -49,6 +50,13 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 		}
 	}, []);
 
+	const handleSearch = useCallback(() => {
+		const view = editorViewRef.current;
+		if (!view) return;
+
+		openSearchPanel(view);
+	}, []);
+
 	// Initialize editor
 	useEffect(() => {
 		const startState = EditorState.create({
@@ -62,6 +70,10 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 				lineNumbers(),
 				json(),
 				highlightActiveLine(),
+				search({
+					top: false,
+				}),
+				keymap.of(searchKeymap),
 				EditorView.updateListener.of((update) => {
 					if (update.docChanged) {
 						onChange(update.state.doc.toString());
@@ -88,8 +100,9 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 		<div className={className}>
 			<div className={styles.controls}>
 				<InlineButton onClick={handlePrettify}>Prettify</InlineButton>
+				<InlineButton onClick={handleSearch}>Search</InlineButton>
 			</div>
-			<div ref={rootRef}></div>
+			<div ref={rootRef} className={styles.editor}></div>
 		</div>
 	);
 });
