@@ -8,6 +8,7 @@ import {oneDark} from '@codemirror/theme-one-dark';
 import {EditorView, highlightActiveLine, keymap, lineNumbers} from '@codemirror/view';
 import {minimalSetup} from 'codemirror';
 import {isUIColorThemeDark} from '@/helpers/isUIColorThemeDark';
+import {useDebounce} from '@/hooks/useDebounce';
 import {useStores} from '@/stores/useStores';
 import {InlineButton} from '@/components/@common/buttons/InlineButton';
 import styles from './jsonEditor.css';
@@ -24,6 +25,22 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 	const rootRef = useRef<HTMLDivElement>(null);
 	const editorViewRef = useRef<EditorView | null>(null);
 	const {settingsStore} = useStores();
+	const [validationError, setValidationError] = React.useState<string | null>(null);
+
+	const validateJSON = useCallback((jsonString: string) => {
+		if (jsonString.trim()) {
+			try {
+				JSON.parse(jsonString);
+				setValidationError(null);
+			} catch (error) {
+				setValidationError(error.message);
+			}
+		} else {
+			setValidationError(null);
+		}
+	}, []);
+
+	const debouncedValidate = useDebounce(validateJSON, 500);
 
 	const handlePrettify = useCallback(() => {
 		const view = editorViewRef.current;
@@ -76,7 +93,9 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 				keymap.of(searchKeymap),
 				EditorView.updateListener.of((update) => {
 					if (update.docChanged) {
-						onChange(update.state.doc.toString());
+						const newValue = update.state.doc.toString();
+						onChange(newValue);
+						debouncedValidate(newValue);
 					}
 				}),
 				...(isUIColorThemeDark(settingsStore.uiTheme) ? [oneDark] : []),
@@ -103,6 +122,7 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 				<InlineButton onClick={handleSearch}>Search</InlineButton>
 			</div>
 			<div ref={rootRef} className={styles.editor}></div>
+			{validationError && <p className={styles.error}>{validationError}</p>}
 		</div>
 	);
 });

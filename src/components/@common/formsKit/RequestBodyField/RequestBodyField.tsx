@@ -36,10 +36,7 @@ export const RequestBodyField = memo<RequestMethodFieldProps>(({name, allowOrigi
 			{typeField.value === RequestBodyType.Text && <TextareaField {...textValueField} />}
 
 			{typeField.value === RequestBodyType.JSON && (
-				<>
-					<JSONEditor value={textValueField.value} onChange={textValueHelpers.setValue} />
-					<FieldError name={`${name}.textValue`} />
-				</>
+				<JSONEditor value={textValueField.value} onChange={textValueHelpers.setValue} />
 			)}
 
 			{(typeField.value === RequestBodyType.UrlEncodedForm ||

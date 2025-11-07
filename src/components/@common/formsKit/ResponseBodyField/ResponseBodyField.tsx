@@ -43,10 +43,7 @@ export const ResponseBodyField = memo<ResponseBodyFieldProps>((props) => {
 			)}
 
 			{typeField.value === ResponseBodyType.JSON && (
-				<>
-					<JSONEditor value={textValueField.value} onChange={textValueHelpers.setValue} />
-					<FieldError name={`${name}.textValue`} />
-				</>
+				<JSONEditor value={textValueField.value} onChange={textValueHelpers.setValue} />
 			)}
 
 			{typeField.value === ResponseBodyType.File && <FileField name={`${name}.fileValue`} note={fileFieldNote} />}

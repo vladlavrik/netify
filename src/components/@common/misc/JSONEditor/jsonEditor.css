@@ -5,6 +5,12 @@
 	margin-bottom: 8px;
 }
 
+.error {
+	width: 100%;
+	margin: 4px 0 0;
+	color: #c00;
+}
+
 .editor {
 	min-height: 80px; /* Approximately 4 lines at default line height */
 	max-height: 400px;
