@@ -145,6 +145,7 @@ export class RequestBuilder {
 
 		switch (this.body.type) {
 			case RequestBodyType.Text:
+			case RequestBodyType.JSON:
 				postData = buildRequestBodyFromText(this.body.value);
 				break;
 

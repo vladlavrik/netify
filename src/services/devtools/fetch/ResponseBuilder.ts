@@ -146,6 +146,7 @@ export class ResponseBuilder {
 
 		switch (this.body.type) {
 			case ResponseBodyType.Text:
+			case ResponseBodyType.JSON:
 				newBody = buildResponseBodyFromText(this.body.value);
 				break;
 

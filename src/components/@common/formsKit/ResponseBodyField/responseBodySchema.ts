@@ -11,21 +11,6 @@ export const responseBodySchema = object({
 			then: (schema) => schema.matches(/^[A-Za-z0-9+/]*(={1,3})?$/, 'Invalid Base 64'),
 			otherwise: (schema) => schema,
 		})
-		.when('type', {
-			is: ResponseBodyType.JSON,
-			then: (schema) =>
-				schema.test('is-valid-json', 'Invalid JSON', (value) => {
-					if (!value) return true;
-
-					try {
-						JSON.parse(value);
-						return true;
-					} catch {
-						return false;
-					}
-				}),
-			otherwise: (schema) => schema,
-		})
 		.default(''),
 	fileValue: mixed<File>().notRequired(),
 });
