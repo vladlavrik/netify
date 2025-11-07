@@ -5,6 +5,7 @@ import {FieldError} from '@/components/@common/forms/FieldError';
 import {FileField} from '@/components/@common/forms/FileField';
 import {RadioGroup} from '@/components/@common/forms/RadioGroup';
 import {TextareaField} from '@/components/@common/forms/TextareaField';
+import {JSONEditor} from '@/components/@common/misc/JSONEditor';
 import styles from './responseBodyField.css';
 
 function typeTitleGetter(type: 'Original' | ResponseBodyType) {
@@ -28,7 +29,7 @@ export const ResponseBodyField = memo<ResponseBodyFieldProps>((props) => {
 	}, [allowOrigin]);
 
 	const [typeField] = useField(`${name}.type`);
-	const [textValueField] = useField(`${name}.textValue`);
+	const [textValueField, , textValueHelpers] = useField(`${name}.textValue`);
 
 	return (
 		<div className={styles.root}>
@@ -37,6 +38,13 @@ export const ResponseBodyField = memo<ResponseBodyFieldProps>((props) => {
 			{(typeField.value === ResponseBodyType.Text || typeField.value === ResponseBodyType.Base64) && (
 				<>
 					<TextareaField {...textValueField} />
+					<FieldError name={`${name}.textValue`} />
+				</>
+			)}
+
+			{typeField.value === ResponseBodyType.JSON && (
+				<>
+					<JSONEditor value={textValueField.value} onChange={textValueHelpers.setValue} />
 					<FieldError name={`${name}.textValue`} />
 				</>
 			)}

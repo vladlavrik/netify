@@ -3,7 +3,7 @@ import {RequestBodyType} from '@/constants/RequestBodyType';
 
 export const requestBodySchema = z.union([
 	z.object({
-		type: z.literal(RequestBodyType.Text),
+		type: z.union([z.literal(RequestBodyType.Text), z.literal(RequestBodyType.JSON)]),
 		value: z.string(),
 	}),
 	z.object({

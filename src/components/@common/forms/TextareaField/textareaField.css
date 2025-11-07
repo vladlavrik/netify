@@ -7,12 +7,15 @@
 	padding: 3px 6px;
 	border: transparent 1px solid;
 	border-radius: 3px;
+	overflow: hidden;
+	overflow-y: auto;
 	line-height: 14px;
 	font-family: inherit;
 	font-size: 11px;
 	color: var(--color-content);
 	background: var(--color-bg-main);
-	resize: vertical;
+	resize: none;
+	field-sizing: content;
 
 	&:focus {
 		border-color: var(--color-focus);

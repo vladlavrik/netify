@@ -2,7 +2,7 @@ import {RequestBodyType} from '@/constants/RequestBodyType';
 import {ResponseBodyType} from '@/constants/ResponseBodyType';
 
 export interface RequestBodyText {
-	type: RequestBodyType.Text;
+	type: RequestBodyType.Text | RequestBodyType.JSON;
 	value: string;
 }
 
@@ -14,7 +14,7 @@ export interface RequestBodyForm {
 export type RequestBody = RequestBodyText | RequestBodyForm;
 
 export interface ResponseBodyText {
-	type: ResponseBodyType.Text | ResponseBodyType.Base64;
+	type: ResponseBodyType.Text | ResponseBodyType.JSON | ResponseBodyType.Base64;
 	value: string;
 }
 
