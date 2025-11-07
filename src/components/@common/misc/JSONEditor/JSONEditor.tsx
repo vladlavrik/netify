@@ -33,7 +33,7 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 				JSON.parse(jsonString);
 				setValidationError(null);
 			} catch (error) {
-				setValidationError(error.message);
+				setValidationError(error instanceof Error ? error.message : 'Invalid JSON');
 			}
 		} else {
 			setValidationError(null);
