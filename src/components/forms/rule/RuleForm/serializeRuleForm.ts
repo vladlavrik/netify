@@ -151,6 +151,7 @@ export function serializeRuleForm(rule: Rule) {
 
 				switch (request.body.type) {
 					case RequestBodyType.Text:
+					case RequestBodyType.JSON:
 						requestValue.body.textValue = request.body.value || '';
 						break;
 
@@ -169,6 +170,7 @@ export function serializeRuleForm(rule: Rule) {
 
 				switch (response.body.type) {
 					case ResponseBodyType.Text:
+					case ResponseBodyType.JSON:
 					case ResponseBodyType.Base64:
 						responseValue.body.textValue = response.body.value || '';
 						break;
@@ -192,6 +194,7 @@ export function serializeRuleForm(rule: Rule) {
 
 			switch (body.type) {
 				case ResponseBodyType.Text:
+				case ResponseBodyType.JSON:
 				case ResponseBodyType.Base64:
 					responseValue.body.textValue = body.value || '';
 					break;

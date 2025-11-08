@@ -27,7 +27,9 @@ export const RuleViewerBodyData = observer<RuleViewerBodyDataProps>(({body}) => 
 
 	switch (body.type) {
 		case RequestBodyType.Text:
-		case ResponseBodyType.Text: {
+		case RequestBodyType.JSON:
+		case ResponseBodyType.Text:
+		case ResponseBodyType.JSON: {
 			const {value} = body;
 
 			return value.length > compactBodyLength && !expanded ? (

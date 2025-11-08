@@ -3,7 +3,7 @@ import {ResponseBodyType} from '@/constants/ResponseBodyType';
 
 export const responseBodySchema = z.union([
 	z.object({
-		type: z.union([z.literal(ResponseBodyType.Text), z.literal(ResponseBodyType.Base64)]),
+		type: z.union([z.literal(ResponseBodyType.Text), z.literal(ResponseBodyType.JSON), z.literal(ResponseBodyType.Base64)]),
 		value: z.string(),
 	}),
 	z.object({

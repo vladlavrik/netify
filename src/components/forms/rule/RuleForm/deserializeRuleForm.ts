@@ -12,6 +12,7 @@ function deserializeRequestBody({type, textValue, formValue}: RequestBodySchema)
 			return undefined;
 
 		case RequestBodyType.Text:
+		case RequestBodyType.JSON:
 			return {
 				type,
 				value: textValue,
@@ -32,6 +33,7 @@ function deserializeResponseBody({type, textValue, fileValue}: ResponseBodySchem
 			return undefined;
 
 		case ResponseBodyType.Text:
+		case ResponseBodyType.JSON:
 		case ResponseBodyType.Base64:
 			return {
 				type,
