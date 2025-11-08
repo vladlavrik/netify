@@ -4,7 +4,6 @@
 		"module": "ES2022",
 		"lib": ["esnext", "dom", "dom.iterable"],
 		"jsx": "react",
-		"noEmit": true,
 		"sourceMap": true,
 		"strict": true,
 		"noImplicitAny": true,
