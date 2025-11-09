@@ -78,9 +78,14 @@ export class RequestBuilder {
 		let body: RequestBody | undefined;
 		const contentType = new Headers(request.headers).get('content-type')?.toLowerCase();
 
-		if (!request.postData) {
+		if (!request.hasPostData) {
+			body = {
+				type: RequestBodyType.Text,
+				value: '',
+			};
+		} else if (!request.postData) {
 			body = undefined;
-		} else if (contentType === 'application/x-www-form-urlencoded') {
+		} else if (contentType?.startsWith('application/x-www-form-urlencoded')) {
 			try {
 				body = {
 					type: RequestBodyType.UrlEncodedForm,
@@ -89,7 +94,7 @@ export class RequestBuilder {
 			} catch (error) {
 				console.error(error);
 			}
-		} else if (contentType && contentType.startsWith('multipart/form-data')) {
+		} else if (contentType?.startsWith('multipart/form-data')) {
 			const boundary = contentType
 				.split(/; ?/)
 				.map((part) => part.split('='))
@@ -105,11 +110,13 @@ export class RequestBuilder {
 					console.error(error);
 				}
 			}
-		} else if (contentType && contentType.startsWith('application/json')) {
+		} else if (contentType?.startsWith('application/json')) {
 			body = {
 				type: RequestBodyType.JSON,
 				value: request.postData || '',
 			};
+		} else if (contentType?.startsWith('application/octet-stream')) {
+			body = undefined;
 		} else {
 			body = {
 				type: RequestBodyType.Text,

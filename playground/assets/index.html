@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
@@ -11,6 +11,7 @@
 		<button onClick="postText()">Post text</button>
 		<button onClick="postJSON()">Post JSON</button>
 		<button onClick="postFile()">Post File</button>
+		<button onClick="postBigFile()">Post big File</button>
 		<button onClick="postTextMultipartForm()">Post Multipart form</button>
 		<button onClick="postBlobMultipartForm()">Post Multipart blob form</button>
 		<form target="ifr" method="post" action="./test.txt?urlencoded-form">
@@ -53,39 +54,54 @@
 			function fetchText() {
 				fetch('./test.txt', {headers: {FFFF: 'bb'}})
 					.then(logResponse)
-					.then(resp => resp.text())
+					.then((resp) => resp.text())
 					.then(appendTextResult);
 			}
 
 			function fetchJSON() {
 				fetch('./test.json')
 					.then(logResponse)
-					.then(resp => resp.json())
-					.then(resp => appendTextResult(JSON.stringify(resp)));
+					.then((resp) => resp.json())
+					.then((resp) => appendTextResult(JSON.stringify(resp)));
 			}
 
 			function postText() {
 				fetch('./test.txt', {method: 'POST', body: 'Secret | Секрет | 👻'})
 					.then(logResponse)
-					.then(resp => resp.text())
+					.then((resp) => resp.text())
 					.then(appendTextResult);
 			}
 
 			function postJSON() {
 				fetch('./test.txt', {
 					method: 'POST',
-          body: JSON.stringify({user: 'Kurt', age: 28}),
-          headers: {'Content-Type': 'application-json'}
+					body: JSON.stringify({user: 'Kurt', age: 28}),
+					headers: {'Content-Type': 'application-json'},
 				})
 					.then(logResponse)
-					.then(resp => resp.text())
+					.then((resp) => resp.text())
 					.then(appendTextResult);
 			}
 
 			function postFile() {
-				fetch('./test.txt?file', {method: 'POST', body: new File(['Post data file ❤️'], 'file with love.txt') })
+				fetch('./test.txt?file', {method: 'POST', body: new File(['Post data file ❤️'], 'file with love.txt')})
 					.then(logResponse)
-					.then(resp => resp.text())
+					.then((resp) => resp.text())
+					.then(appendTextResult);
+			}
+
+			function postBigFile() {
+				const bytes = new Uint8Array(65536);
+				crypto.getRandomValues(bytes);
+
+				fetch('./test.txt?file', {
+					method: 'POST',
+					body: new File([bytes], 'Big file.txt', {
+						type: 'application/octet-stream',
+					}),
+				})
+					.then(logResponse)
+					.then((resp) => resp.text())
 					.then(appendTextResult);
 			}
 
@@ -96,7 +112,7 @@
 
 				fetch('./test.txt?multipart-form-data', {method: 'POST', body: form})
 					.then(logResponse)
-					.then(resp => resp.text())
+					.then((resp) => resp.text())
 					.then(appendTextResult);
 			}
 

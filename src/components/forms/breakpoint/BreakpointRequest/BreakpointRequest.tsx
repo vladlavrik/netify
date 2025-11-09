@@ -7,6 +7,7 @@ import {requestMethodsList} from '@/constants/RequestMethod';
 import {ResponseErrorReason} from '@/constants/ResponseErrorReason';
 import {RequestBody} from '@/interfaces/body';
 import {RequestBreakpoint} from '@/interfaces/breakpoint';
+import {useStores} from '@/stores/useStores';
 import {InlineButton} from '@/components/@common/buttons/InlineButton';
 import {TextButton} from '@/components/@common/buttons/TextButton';
 import {FieldError} from '@/components/@common/forms/FieldError';
@@ -14,7 +15,6 @@ import {KeyValueArrayField} from '@/components/@common/forms/KeyValueArrayField'
 import {SelectField} from '@/components/@common/forms/SelectField';
 import {TextField} from '@/components/@common/forms/TextField';
 import {RequestBodyField} from '@/components/@common/formsKit/RequestBodyField';
-import {useStores} from '@/stores/useStores';
 import {BreakpointRequestFormSchema, breakpointRequestFormSchema} from './breakpointRequestFormSchema';
 import AbortIcon from '@/assets/icons/close.svg';
 import ExecuteIcon from '@/assets/icons/execute.svg';
