@@ -96,7 +96,13 @@ export class FetchDevtools {
 			return;
 		}
 
-		if (!pausedRequest.hasOwnProperty('responseStatusCode')) {
+		// Ignore failed request
+		if (pausedRequest.responseErrorReason !== undefined) {
+			await this.continueRequest({requestId: pausedRequest.requestId});
+		}
+
+		// Process request or response
+		else if (pausedRequest.responseStatusCode === undefined) {
 			await this.processRequest(pausedRequest, rule);
 		} else {
 			await this.processResponse(pausedRequest as ResponsePausedEvent, rule);
