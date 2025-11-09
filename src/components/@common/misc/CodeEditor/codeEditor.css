@@ -1,13 +1,22 @@
-.editor :global(.cm-editor) {
-	border-radius: 2px;
-}
+.editor {
+	:global(.cm-editor) {
+		border: transparent 1px solid;
+		border-radius: 2px;
+		background: var(--color-bg-main);
 
-.editor :global(.cm-scroller) {
-	border-top-right-radius: 2px;
-	border-bottom-right-radius: 2px;
-}
+		&:global(.cm-focused) {
+			border-color: var(--color-focus);
+			outline: none;
+		}
+	}
 
-.editor :global(.cm-gutters) {
-	border-top-left-radius: 2px;
-	border-bottom-left-radius: 2px;
+	:global(.cm-scroller) {
+		border-top-right-radius: 2px;
+		border-bottom-right-radius: 2px;
+	}
+
+	:global(.cm-gutters) {
+		border-top-left-radius: 2px;
+		border-bottom-left-radius: 2px;
+	}
 }

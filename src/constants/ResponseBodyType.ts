@@ -2,7 +2,7 @@ export enum ResponseBodyType {
 	Text = 'Text',
 	JSON = 'JSON',
 	Base64 = 'Base64',
-	File = 'File', // TODO to BLOB
+	File = 'File',
 }
 
 export const responseBodyTypesList = [

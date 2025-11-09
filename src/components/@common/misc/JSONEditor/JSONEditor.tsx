@@ -1,16 +1,17 @@
-import React, {memo, useCallback, useEffect, useRef} from 'react';
+import React, {memo, useEffect, useMemo, useRef} from 'react';
 import {autocompletion, closeBrackets} from '@codemirror/autocomplete';
 import {json} from '@codemirror/lang-json';
 import {bracketMatching, foldGutter} from '@codemirror/language';
-import {search, openSearchPanel, searchKeymap} from '@codemirror/search';
 import {EditorState} from '@codemirror/state';
 import {oneDark} from '@codemirror/theme-one-dark';
-import {EditorView, highlightActiveLine, keymap, lineNumbers} from '@codemirror/view';
+import {EditorView, highlightActiveLine, lineNumbers} from '@codemirror/view';
+import cn from 'classnames';
 import {minimalSetup} from 'codemirror';
+import {debounce} from '@/helpers/debounce';
 import {isUIColorThemeDark} from '@/helpers/isUIColorThemeDark';
-import {useDebounce} from '@/hooks/useDebounce';
 import {useStores} from '@/stores/useStores';
 import {InlineButton} from '@/components/@common/buttons/InlineButton';
+import {WithTooltip} from '@/components/@common/misc/WithTooltip';
 import styles from './jsonEditor.css';
 
 interface JSONEditorProps {
@@ -27,52 +28,45 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 	const {settingsStore} = useStores();
 	const [validationError, setValidationError] = React.useState<string | null>(null);
 
-	const validateJSON = useCallback((jsonString: string) => {
-		if (jsonString.trim()) {
-			try {
-				JSON.parse(jsonString);
+	const validateJSON = useMemo(() => {
+		return debounce((jsonString: string) => {
+			if (jsonString.trim()) {
+				try {
+					JSON.parse(jsonString);
+					setValidationError(null);
+				} catch (error) {
+					setValidationError(error instanceof Error ? error.message : 'Invalid JSON');
+				}
+			} else {
 				setValidationError(null);
-			} catch (error) {
-				setValidationError(error instanceof Error ? error.message : 'Invalid JSON');
 			}
-		} else {
-			setValidationError(null);
-		}
+		}, 500);
 	}, []);
 
-	const debouncedValidate = useDebounce(validateJSON, 500);
-
-	const handlePrettify = useCallback(() => {
+	const handlePrettify = () => {
 		const view = editorViewRef.current;
 		if (!view) return;
 
 		const currentValue = view.state.doc.toString();
 
+		let parsedValue;
 		try {
-			const parsed = JSON.parse(currentValue);
-			const prettified = JSON.stringify(parsed, null, 2);
-
-			// Directly update the editor content
-			view.dispatch({
-				changes: {
-					from: 0,
-					to: currentValue.length,
-					insert: prettified,
-				},
-			});
-			// The updateListener will call onChange automatically
-		} catch (error) {
-			// Keep original value if invalid JSON
-			console.warn('[JSONEditor] Failed to prettify JSON:', error);
+			parsedValue = JSON.parse(value);
+		} catch (_error) {
+			return;
 		}
-	}, []);
 
-	const handleSearch = useCallback(() => {
-		const view = editorViewRef.current;
-		if (!view) return;
+		const prettified = JSON.stringify(parsedValue, null, 2);
+		view.dispatch({
+			changes: {
+				from: 0,
+				to: currentValue.length,
+				insert: prettified,
+			},
+		});
 
-		openSearchPanel(view);
-	}, []);
+		view.focus();
+	};
 
 	// Initialize editor
 	useEffect(() => {
@@ -87,15 +81,11 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 				lineNumbers(),
 				json(),
 				highlightActiveLine(),
-				search({
-					top: false,
-				}),
-				keymap.of(searchKeymap),
 				EditorView.updateListener.of((update) => {
 					if (update.docChanged) {
 						const newValue = update.state.doc.toString();
 						onChange(newValue);
-						debouncedValidate(newValue);
+						validateJSON(newValue);
 					}
 				}),
 				...(isUIColorThemeDark(settingsStore.uiTheme) ? [oneDark] : []),
@@ -116,13 +106,28 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 	}, []);
 
 	return (
-		<div className={className}>
-			<div className={styles.controls}>
-				<InlineButton onClick={handlePrettify}>Prettify</InlineButton>
-				<InlineButton onClick={handleSearch}>Search</InlineButton>
+		<div className={cn(styles.root, className)}>
+			<div className={styles.floating}>
+				{value.trim() && (
+					<div className={styles.controls}>
+						<p className={styles.status}>
+							{!validationError ? (
+								<span className={styles.validStatus}>JSON is valid</span>
+							) : (
+								<WithTooltip
+									className={styles.invalidStatus}
+									render={(tooltipProps) => <span {...tooltipProps}>JSON is invalid</span>}
+									tooltip={validationError}
+								/>
+							)}
+						</p>
+						<InlineButton disabled={!!validationError} onClick={handlePrettify}>
+							Prettify
+						</InlineButton>
+					</div>
+				)}
 			</div>
 			<div ref={rootRef} className={styles.editor}></div>
-			{validationError && <p className={styles.error}>{validationError}</p>}
 		</div>
 	);
 });

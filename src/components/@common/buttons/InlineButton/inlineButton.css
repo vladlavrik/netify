@@ -13,4 +13,9 @@
 		border-bottom-color: var(--color-focus);
 		outline: none;
 	}
+
+	&:disabled {
+		color: var(--color-main);
+		cursor: default;
+	}
 }

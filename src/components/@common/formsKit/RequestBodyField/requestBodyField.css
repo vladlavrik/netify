@@ -1,3 +1,14 @@
 .root {
 	width: 100%;
 }
+
+.textField {
+	width: 100%;
+	min-height: 64px;
+	max-height: 300px;
+}
+
+.codeField {
+	min-height: 64px;
+	max-height: 300px;
+}

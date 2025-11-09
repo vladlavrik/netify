@@ -1,21 +1,22 @@
 .root {
 	display: block;
 	box-sizing: border-box;
-	width: 100%;
-	min-height: 64px;
-	max-height: 300px;
 	padding: 3px 6px;
 	border: transparent 1px solid;
 	border-radius: 3px;
-	overflow: hidden;
-	overflow-y: auto;
 	line-height: 14px;
 	font-family: inherit;
 	font-size: 11px;
 	color: var(--color-content);
 	background: var(--color-bg-main);
-	resize: none;
-	field-sizing: content;
+	resize: vertical;
+
+	@supports (field-sizing: content) {
+		overflow: hidden;
+		overflow-y: auto;
+		resize: none;
+		field-sizing: content;
+	}
 
 	&:focus {
 		border-color: var(--color-focus);

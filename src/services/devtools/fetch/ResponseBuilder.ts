@@ -84,24 +84,25 @@ export class ResponseBuilder {
 	): ResponseBreakpointInput {
 		const {request, responseHeaders, responseStatusCode} = pausedResponse;
 		let body: ResponseBody | undefined;
-		const contentType = //
-			new Headers(responseHeaders.map<[string, string]>(({name, value}) => [name, value])).get('content-type');
+		const contentType = new Headers(responseHeaders.map<[string, string]>(({name, value}) => [name, value]))
+			.get('content-type')
+			?.toLowerCase();
 
 		if (!bodySource) {
 			body = {
 				type: ResponseBodyType.Text,
 				value: '',
 			};
-		} else if (!base64Encoded) {
+		} else if (contentType?.startsWith('application/json')) {
 			body = {
-				type: ResponseBodyType.Text,
-				value: bodySource,
+				type: ResponseBodyType.JSON,
+				value: base64Encoded ? parseTextBodyFromBase64(bodySource) : bodySource,
 			};
-		} else if (contentType && (contentType.startsWith('text/') || contentType.startsWith('application/json'))) {
+		} else if (!base64Encoded || contentType?.startsWith('text/')) {
 			try {
 				body = {
 					type: ResponseBodyType.Text,
-					value: parseTextBodyFromBase64(bodySource),
+					value: base64Encoded ? parseTextBodyFromBase64(bodySource) : bodySource,
 				};
 			} catch (error) {
 				console.error(error);
@@ -146,8 +147,12 @@ export class ResponseBuilder {
 
 		switch (this.body.type) {
 			case ResponseBodyType.Text:
+				newBody = buildResponseBodyFromText(this.body.value);
+				break;
+
 			case ResponseBodyType.JSON:
 				newBody = buildResponseBodyFromText(this.body.value);
+				newBody.type = 'application/json';
 				break;
 
 			case ResponseBodyType.Base64:

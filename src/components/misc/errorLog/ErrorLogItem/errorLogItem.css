@@ -3,7 +3,7 @@
 	padding: 4px;
 	border-radius: 3px;
 	color: var(--color-content-accent);
-	background: var(--color-content-error);
+	background: var(--color-bg-error);
 	cursor: default;
 }
 

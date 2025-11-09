@@ -1,8 +1,6 @@
 import React, {memo, useMemo} from 'react';
 import {useField} from 'formik';
 import {RequestBodyType, requestBodyTypesList, responseBodyTypesHumanTitles} from '@/constants/RequestBodyType';
-import {useAutoDetectJSON} from '@/hooks/useAutoDetectJSON';
-import {FieldError} from '@/components/@common/forms/FieldError';
 import {KeyValueArrayField} from '@/components/@common/forms/KeyValueArrayField';
 import {RadioGroup} from '@/components/@common/forms/RadioGroup';
 import {TextareaField} from '@/components/@common/forms/TextareaField';
@@ -27,28 +25,23 @@ export const RequestBodyField = memo<RequestMethodFieldProps>(({name, allowOrigi
 		return allowOrigin ? ['Original', ...requestBodyTypesList] : requestBodyTypesList;
 	}, [allowOrigin]);
 
-	const [typeField, , typeHelpers] = useField(`${name}.type`);
+	const [typeField] = useField(`${name}.type`);
 	const [textValueField, , textValueHelpers] = useField(`${name}.textValue`);
-
-	// Auto-detect JSON on initial load
-	useAutoDetectJSON(
-		typeField.value,
-		textValueField.value,
-		RequestBodyType.Text,
-		(prettifiedJSON) => {
-			typeHelpers.setValue(RequestBodyType.JSON);
-			textValueHelpers.setValue(prettifiedJSON);
-		},
-	);
 
 	// TODO add file option
 	return (
 		<div className={styles.root}>
 			<RadioGroup options={options} optionTitleGetter={typeTitleGetter} {...typeField} />
-			{typeField.value === RequestBodyType.Text && <TextareaField {...textValueField} />}
+			{typeField.value === RequestBodyType.Text && (
+				<TextareaField className={styles.textField} {...textValueField} />
+			)}
 
 			{typeField.value === RequestBodyType.JSON && (
-				<JSONEditor value={textValueField.value} onChange={textValueHelpers.setValue} />
+				<JSONEditor
+					className={styles.codeField}
+					value={textValueField.value}
+					onChange={textValueHelpers.setValue}
+				/>
 			)}
 
 			{(typeField.value === RequestBodyType.UrlEncodedForm ||

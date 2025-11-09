@@ -4,7 +4,9 @@
 	--color-bg-odd-item: light-dark(#f5f5f5, #292929);
 	--color-bg-accent: light-dark(#e0e0f3, #2f2f42);
 	--color-bg-attention: light-dark(#fffbe5, #332a00);
+	--color-bg-error: light-dark(#fcebeb, #4e3534);
 	--color-bg-hover: light-dark(#00000013, #ffffff14);
+	--color-bg-overlay: light-dark(#e7e7e7bf, #363737ba);
 	--color-brd-main: light-dark(#cdcdcd, #525252);
 	--color-brd-lite: light-dark(#dedede, #4b4b4b);
 	--color-brd-strong: light-dark(#b2b2b2, #777);
@@ -15,13 +17,13 @@
 	--color-accent: light-dark(#8291e4, #484e6d);
 	--color-content-accent: light-dark(#222, #d5d5d5);
 	--color-content-attention: light-dark(#5c3c00, #f2ab26);
-	--color-content-error: light-dark(#fcebeb, #4e3534);
+	--color-content-dangerous: light-dark(#9a3535, #dd3535);
 	--color-content: light-dark(#303942, #bdc6cf);
 	--color-focus: light-dark(#0e639c, #0e639c);
 	--color-inside-focus: light-dark(#d5d5d5, #d5d5d5);
 	--color-placeholder: light-dark(#888, #7e7e7e);
 	--color-icon-regular: light-dark(#535353, #c2c2c2);
-	--color-icon-dangerous: light-dark(#c75555, #a53838);
+	--color-icon-dangerous: light-dark(#c75555, #c51010);
 	--color-icon-accept: light-dark(#0e639c, #0e639c);
 	--color-shadow-overlay-lite: light-dark(#9993, #0003);
 	--color-shadow-overlay-main: light-dark(#ccc5, #0005);

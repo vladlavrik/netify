@@ -76,7 +76,7 @@ export class RequestBuilder {
 
 	static compileBreakpoint({request}: RequestPausedEvent): RequestBreakpointInput {
 		let body: RequestBody | undefined;
-		const contentType = new Headers(request.headers).get('content-type');
+		const contentType = new Headers(request.headers).get('content-type')?.toLowerCase();
 
 		if (!request.postData) {
 			body = undefined;
@@ -105,6 +105,11 @@ export class RequestBuilder {
 					console.error(error);
 				}
 			}
+		} else if (contentType && contentType.startsWith('application/json')) {
+			body = {
+				type: RequestBodyType.JSON,
+				value: request.postData || '',
+			};
 		} else {
 			body = {
 				type: RequestBodyType.Text,
@@ -145,8 +150,11 @@ export class RequestBuilder {
 
 		switch (this.body.type) {
 			case RequestBodyType.Text:
+				postData = buildRequestBodyFromText(this.body.value);
+				break;
 			case RequestBodyType.JSON:
 				postData = buildRequestBodyFromText(this.body.value);
+				postDataType = 'application/json';
 				break;
 
 			case RequestBodyType.UrlEncodedForm:

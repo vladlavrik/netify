@@ -5,6 +5,7 @@ import {bracketMatching, foldGutter} from '@codemirror/language';
 import {EditorState} from '@codemirror/state';
 import {oneDark} from '@codemirror/theme-one-dark';
 import {EditorView, highlightActiveLine, lineNumbers} from '@codemirror/view';
+import cn from 'classnames';
 import {minimalSetup} from 'codemirror';
 import {isUIColorThemeDark} from '@/helpers/isUIColorThemeDark';
 import {useStores} from '@/stores/useStores';
@@ -53,7 +54,7 @@ export const CodeEditor = memo<CodeEditorProps>((props) => {
 		};
 	}, []);
 
-	return <div ref={rootRef} className={`${styles.editor} ${className || ''}`}></div>;
+	return <div ref={rootRef} className={cn(styles.editor, className)}></div>;
 });
 
 CodeEditor.displayName = 'CodeEditor';

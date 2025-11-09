@@ -1,7 +1,6 @@
 import React, {memo, useMemo} from 'react';
 import {useField} from 'formik';
 import {ResponseBodyType, responseBodyTypesHumanTitles, responseBodyTypesList} from '@/constants/ResponseBodyType';
-import {useAutoDetectJSON} from '@/hooks/useAutoDetectJSON';
 import {FieldError} from '@/components/@common/forms/FieldError';
 import {FileField} from '@/components/@common/forms/FileField';
 import {RadioGroup} from '@/components/@common/forms/RadioGroup';
@@ -29,19 +28,8 @@ export const ResponseBodyField = memo<ResponseBodyFieldProps>((props) => {
 		return allowOrigin ? ['Original', ...responseBodyTypesList] : responseBodyTypesList;
 	}, [allowOrigin]);
 
-	const [typeField, , typeHelpers] = useField(`${name}.type`);
+	const [typeField] = useField(`${name}.type`);
 	const [textValueField, , textValueHelpers] = useField(`${name}.textValue`);
-
-	// Auto-detect JSON on initial load
-	useAutoDetectJSON(
-		typeField.value,
-		textValueField.value,
-		ResponseBodyType.Text,
-		(prettifiedJSON) => {
-			typeHelpers.setValue(ResponseBodyType.JSON);
-			textValueHelpers.setValue(prettifiedJSON);
-		},
-	);
 
 	return (
 		<div className={styles.root}>
@@ -49,13 +37,17 @@ export const ResponseBodyField = memo<ResponseBodyFieldProps>((props) => {
 
 			{(typeField.value === ResponseBodyType.Text || typeField.value === ResponseBodyType.Base64) && (
 				<>
-					<TextareaField {...textValueField} />
+					<TextareaField className={styles.textField} {...textValueField} />
 					<FieldError name={`${name}.textValue`} />
 				</>
 			)}
 
 			{typeField.value === ResponseBodyType.JSON && (
-				<JSONEditor value={textValueField.value} onChange={textValueHelpers.setValue} />
+				<JSONEditor
+					className={styles.codeField}
+					value={textValueField.value}
+					onChange={textValueHelpers.setValue}
+				/>
 			)}
 
 			{typeField.value === ResponseBodyType.File && <FileField name={`${name}.fileValue`} note={fileFieldNote} />}
