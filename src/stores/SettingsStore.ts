@@ -2,23 +2,46 @@ import {action, observable} from 'mobx';
 import {Settings} from '@/interfaces/settings';
 import {SettingsMapper} from '@/services/settingsMapper';
 
-export class SettingsStore implements Pick<Settings, 'uiTheme'> {
+type AppSettings = Pick<Settings, 'uiTheme' | 'filterRulesByOrigin'>;
+
+const defaultValues: AppSettings = {uiTheme: 'system', filterRulesByOrigin: true};
+
+export class SettingsStore {
 	@observable
-	accessor uiTheme: Settings['uiTheme'] = 'system';
+	accessor values: AppSettings = {...defaultValues};
 
 	constructor(private readonly settingsMapper: SettingsMapper) {}
 
 	async fetchValues() {
-		const data = await this.settingsMapper.getValues(['uiTheme']);
+		const data = await this.settingsMapper.getValues(['uiTheme', 'filterRulesByOrigin']);
 
-		if (data.uiTheme) {
-			this.uiTheme = data.uiTheme;
+		const keys = Object.keys(data) as (keyof AppSettings)[];
+
+		for (const key of keys) {
+			const value = data[key];
+			if (value !== undefined) {
+				this.setValue(key, value);
+			}
 		}
 	}
 
-	@action('setUITheme')
-	setUITheme(themeName: Settings['uiTheme']) {
-		this.uiTheme = themeName;
-		this.settingsMapper.setValue('uiTheme', themeName);
+	watchChanges() {
+		return this.settingsMapper.watch(
+			['uiTheme', 'filterRulesByOrigin'],
+			action('setChangeValue', (changes) => {
+				Object.assign(this.values, changes);
+			}),
+		);
+	}
+
+	@action('setValue')
+	private setValue<K extends keyof AppSettings>(key: K, value: AppSettings[K]) {
+		this.values[key] = value;
+	}
+
+	@action('updateValues')
+	updateValues(values: Partial<Settings>) {
+		this.settingsMapper.setValues(values);
+		Object.assign(this.values, values);
 	}
 }

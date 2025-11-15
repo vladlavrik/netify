@@ -26,7 +26,7 @@ export const CodePreview = memo<CodePreviewProps>((props) => {
 				javascript(),
 				EditorView.lineWrapping,
 				EditorView.editable.of(false),
-				...(isUIColorThemeDark(settingsStore.uiTheme) ? [oneDark] : []),
+				...(isUIColorThemeDark(settingsStore.values.uiTheme) ? [oneDark] : []),
 			],
 		});
 

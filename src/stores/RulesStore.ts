@@ -8,10 +8,6 @@ export class RulesStore {
 	@observable
 	accessor list: Rule[] = [];
 
-	/** If checked - only rules created within the current page origin are shown in the list of rules */
-	@observable
-	accessor filterByOrigin = true;
-
 	/** Show a rule details on the secondary panel */
 	@observable
 	accessor detailsShownFor: null | string = null;
@@ -54,7 +50,8 @@ export class RulesStore {
 	 * It returns a special value "[empty origin]" when the filter by origin is active, but the selected tab origin is not defined
 	 */
 	get originToFilter() {
-		return this.filterByOrigin ? (this.rootStore.tabStore.targetTabUrlOrigin ?? '[empty origin]') : undefined;
+		const {settingsStore, tabStore} = this.rootStore;
+		return settingsStore.values.filterRulesByOrigin ? (tabStore.targetTabUrlOrigin ?? '[empty origin]') : undefined;
 	}
 
 	@computed
@@ -164,11 +161,6 @@ export class RulesStore {
 	@action('closeEditor')
 	closeEditor() {
 		this.editorShownFor = null;
-	}
-
-	@action('toggleFilterByOrigin')
-	toggleFilterByOrigin() {
-		this.filterByOrigin = !this.filterByOrigin;
 	}
 
 	@action('initRemoveConfirm')

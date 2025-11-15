@@ -36,4 +36,35 @@ export class SettingsMapper {
 			this.fallbackStorage[key] = value;
 		}
 	}
+
+	async setValues(values: Partial<Settings>) {
+		try {
+			await chrome.storage.local.set(values);
+		} catch (error) {
+			console.error(error);
+			Object.assign(this.fallbackStorage, values);
+		}
+	}
+
+	watch<K extends keyof Settings>(keys: K[], callback: (changed: Partial<Pick<Settings, K>>) => void) {
+		const changeHandler = (changes: Record<string, chrome.storage.StorageChange>) => {
+			const changedValues: Partial<Pick<Settings, K>> = {};
+
+			for (const [key, values] of Object.entries(changes)) {
+				if (keys.includes(key as K)) {
+					changedValues[key as K] = values.newValue as Settings[K];
+				}
+			}
+
+			if (Object.keys(changedValues).length !== 0) {
+				callback(changedValues);
+			}
+		};
+
+		chrome.storage.local.onChanged.addListener(changeHandler);
+
+		return () => {
+			chrome.storage.local.onChanged.removeListener(changeHandler);
+		};
+	}
 }

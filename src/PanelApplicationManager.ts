@@ -98,9 +98,9 @@ export class ApplicationManager {
 	 * Re-fetch an actual rules list on change a value of the current origin or an origin filtering is active in the store
 	 */
 	private actualizeRulesList() {
-		const {tabStore, rulesStore} = this.rootStore;
+		const {tabStore, settingsStore} = this.rootStore;
 		reaction(
-			() => [tabStore.targetTabUrlOrigin, rulesStore.filterByOrigin],
+			() => [tabStore.targetTabUrlOrigin, settingsStore.values.filterRulesByOrigin],
 			this.fetchRulesFromDatabase.bind(this),
 		);
 	}
@@ -118,7 +118,7 @@ export class ApplicationManager {
 
 		// Define a color theme and watch its update
 		autorun(() => {
-			const {uiTheme} = this.rootStore.settingsStore;
+			const {uiTheme} = this.rootStore.settingsStore.values;
 			document.documentElement.classList.remove('theme-dark', 'theme-light');
 			if (uiTheme === 'dark') {
 				document.documentElement.classList.add('theme-dark');
@@ -126,6 +126,9 @@ export class ApplicationManager {
 				document.documentElement.classList.add('theme-light');
 			}
 		});
+
+		// Watch changes of the settings store to update the UI
+		this.rootStore.settingsStore.watchChanges();
 	}
 
 	private renderUI() {

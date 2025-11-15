@@ -40,7 +40,7 @@ export const CodeEditor = memo<CodeEditorProps>((props) => {
 						onChange(update.state.doc.toString());
 					}
 				}),
-				...(isUIColorThemeDark(settingsStore.uiTheme) ? [oneDark] : []),
+				...(isUIColorThemeDark(settingsStore.values.uiTheme) ? [oneDark] : []),
 			],
 		});
 

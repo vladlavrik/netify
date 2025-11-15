@@ -17,14 +17,14 @@ interface RulesSettingsProps {
 export const RulesSettings = observer<RulesSettingsProps>((props) => {
 	const {onClose} = props;
 
-	const {rulesStore} = useStores();
+	const {rulesStore, settingsStore} = useStores();
 	const hasRules = rulesStore.hasAnyRules;
-	const filterByOrigin = rulesStore.filterByOrigin;
+	const filterByOrigin = settingsStore.values.filterRulesByOrigin;
 
 	const importFileInputRef = useRef<HTMLInputElement>(null);
 
 	const handleToggleFilterByOrigin = () => {
-		rulesStore.toggleFilterByOrigin();
+		settingsStore.updateValues({filterRulesByOrigin: !filterByOrigin});
 	};
 
 	const handleImportInit = () => {

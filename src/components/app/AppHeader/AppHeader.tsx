@@ -21,7 +21,7 @@ export const AppHeader = observer(() => {
 	};
 
 	const handleThemeSwitch = () => {
-		settingsStore.setUITheme(isUIColorThemeDark(settingsStore.uiTheme) ? 'light' : 'dark');
+		settingsStore.updateValues({uiTheme: isUIColorThemeDark(settingsStore.values.uiTheme) ? 'light' : 'dark'});
 	};
 
 	return (

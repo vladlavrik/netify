@@ -88,7 +88,7 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 						validateJSON(newValue);
 					}
 				}),
-				...(isUIColorThemeDark(settingsStore.uiTheme) ? [oneDark] : []),
+				...(isUIColorThemeDark(settingsStore.values.uiTheme) ? [oneDark] : []),
 			],
 		});
 
