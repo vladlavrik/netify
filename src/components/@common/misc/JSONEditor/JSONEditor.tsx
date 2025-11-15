@@ -110,7 +110,7 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 			<div className={styles.floating}>
 				{value.trim() && (
 					<div className={styles.controls}>
-						<p className={styles.status}>
+						<div className={styles.status}>
 							{!validationError ? (
 								<span className={styles.validStatus}>JSON is valid</span>
 							) : (
@@ -120,7 +120,7 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 									tooltip={validationError}
 								/>
 							)}
-						</p>
+						</div>
 						<InlineButton disabled={!!validationError} onClick={handlePrettify}>
 							Prettify
 						</InlineButton>

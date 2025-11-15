@@ -1,7 +1,6 @@
 .root {
 	display: flex;
 	align-items: center;
-	cursor: pointer;
 
 	&.isDisabled {
 		cursor: default;
@@ -16,4 +15,5 @@
 	padding-left: 8px;
 	font-size: 12px;
 	font-weight: 700;
+	cursor: pointer;
 }

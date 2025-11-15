@@ -22,10 +22,9 @@
 }
 
 .status {
-	margin-right: 12px;
+	margin-right: 8px;
 	padding-right: 6px;
 	border-right: var(--color-brd-main) 1px solid;
-	cursor: pointer;
 }
 
 .validStatus {

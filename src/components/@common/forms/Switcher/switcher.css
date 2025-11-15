@@ -13,6 +13,7 @@
 .imitator {
 	display: block;
 	fill: var(--color-content-accent);
+	cursor: pointer;
 }
 
 .circle {
