@@ -6,7 +6,7 @@ export function parseTextBodyFromBase64(source: string) {
 }
 
 export function parseBlobBodyFromBase64EncodedBody(source: string, fileName: string) {
-	const byteArray = toByteArray(source);
+	const byteArray = toByteArray(source) as BlobPart;
 	return new File([byteArray], fileName);
 }
 

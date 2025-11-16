@@ -30,7 +30,7 @@ export const responseBodySchema = z
 		const contentStartIndex = body.value.content.indexOf(',') + 1;
 		let file;
 		try {
-			const fileSource = toByteArray(body.value.content.substring(contentStartIndex));
+			const fileSource = toByteArray(body.value.content.substring(contentStartIndex)) as BlobPart;
 			file = new File([fileSource], body.value.name);
 		} catch (error) {
 			console.error(error);

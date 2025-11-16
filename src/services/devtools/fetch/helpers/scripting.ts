@@ -63,7 +63,7 @@ export const makeResponseScriptScope = (
 		if (bodySource.body && !bodySource.base64Encoded) {
 			body = new Blob([bodySource.body]);
 		} else if (bodySource.body) {
-			body = new Blob([toByteArray(bodySource.body)]);
+			body = new Blob([toByteArray(bodySource.body) as BlobPart]);
 		}
 	} catch (error) {
 		console.error(error);
