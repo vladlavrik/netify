@@ -5,6 +5,7 @@
 }
 
 .popover {
+	position: fixed;
 	position-anchor: --droprown-ancher;
 	inset-area: bottom span-right; /* Legacy option of position-area */
 	position-area: bottom span-right;

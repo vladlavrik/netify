@@ -37,9 +37,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>((props, externalR
 	};
 
 	const handleCollapse = useCallback(() => {
-		// setExpanded(false);
 		popoverRef.current!.hidePopover();
-
 	}, []);
 
 	useImperativeHandle(
@@ -64,10 +62,14 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>((props, externalR
 	// Enable popover content render on open
 	useEffect(() => {
 		const popoverNode = popoverRef.current!;
-		popoverNode.addEventListener('beforetoggle', (event) => {
-			const isOpen = (event as any).newState === 'open';
-			setExpanded(isOpen);
-		});
+		const handler = (event: ToggleEvent) => {
+			setExpanded(event.newState === 'open');
+		};
+		popoverNode.addEventListener('beforetoggle', handler);
+
+		return () => {
+			popoverNode.removeEventListener('beforetoggle', handler);
+		};
 	}, []);
 
 	return (

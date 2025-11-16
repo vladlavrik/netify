@@ -37,22 +37,38 @@
 		color: var(--color-placeholder);
 	}
 
-	&:focus {
+	&:focus,
+	&.isExpanded {
 		border-color: var(--color-focus);
 		outline: none;
 	}
 }
 
 .content {
-	position: absolute;
-	left: 0;
-	right: 0;
+	position: fixed;
+	inset-area: bottom span-right; /* Legacy option of position-area */
+	position-area: bottom span-right;
+	position-try-options:  /* Legacy option of position-try-fallbacks */
+		flip-block,
+		flip-inline,
+		flip-block flip-inline,
+		--multiselect-center-left-position,
+		--multiselect-center-right-position;
+	position-try-fallbacks:
+		flip-block,
+		flip-inline,
+		flip-block flip-inline,
+		--multiselect-center-left-position,
+		--multiselect-center-right-position;
 	box-sizing: border-box;
+	min-width: anchor-size(width);
+	max-width: max(160px, anchor-size(width));
+	max-height: calc(100vh - 20px);
+	margin: 0;
 	padding: 2px 0;
 	border: var(--color-brd-outline) 1px solid;
 	border-radius: 3px;
-	overflow-y: auto;
-	z-index: 2;
+	overflow: hidden;
 	color: var(--color-main);
 	background: var(--color-bg-main);
 	box-shadow: 0 1px 3px 1px var(--color-shadow-overlay-lite);
@@ -64,37 +80,107 @@
 		background-color: transparent;
 	}
 
-	&.expand-to-start {
-		bottom: 100%;
+	&:popover-open {
+		display: flex;
+		flex-direction: column;
 	}
+}
 
-	&.expand-to-end {
-		top: 100%;
-	}
+@position-try --multiselect-center-left-position {
+	position-area: none;
+	left: anchor(left);
+	top: 10px;
+}
+
+@position-try --multiselect-center-right-position {
+	position-area: none;
+	left: auto;
+	right: anchor(right);
+	top: 10px;
+}
+
+.contentBody {
+	overflow: auto;
+}
+
+.fieldset {
+	max-width: inherit;
+	margin: 0;
+	padding: 0;
+	border: none;
 }
 
 .option {
 	display: block;
+	position: relative;
+	max-width: inherit;
+	cursor: pointer;
+}
+
+.optionCheckbox {
+	position: absolute;
+	left: 0;
+	top: 0;
+	opacity: 0;
+}
+
+.optionLabel {
+	display: flex;
+	align-items: center;
 	padding: 0 6px;
 	overflow: hidden;
 	line-height: 20px;
 	font-size: 12px;
-	white-space: nowrap;
-	text-overflow: ellipsis;
 	color: var(--color-main);
-	cursor: pointer;
 
-	&.empty {
+	.optionCheckbox ~ & {
+		margin-left: 3px;
+	}
+
+	.option.empty & {
 		color: var(--color-placeholder);
 	}
 
-	&.selected {
-		background: #aaa5; /* TODO check with a light theme, maybe should use --color-bg-accent */
-	}
-
-	&:hover,
-	&.highlighted {
+	.optionCheckbox:focus ~ & {
 		color: var(--color-inside-focus);
 		background: var(--color-focus);
 	}
+}
+
+.optionTitle {
+	flex-grow: 1;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.optionCheckmark {
+	flex-shrink: 0;
+	opacity: 0;
+	fill: var(--color-icon-regular);
+
+	.optionCheckbox:checked ~ .optionLabel & {
+		opacity: 1;
+	}
+
+	.optionCheckbox:focus ~ .optionLabel & {
+		fill: #fff;
+	}
+}
+
+.hintFooter {
+	flex-shrink: 0;
+	margin: 2px 6px 0;
+	padding: 4px 0;
+	border-top: var(--color-brd-lite) 1px solid;
+	white-space: nowrap;
+}
+
+.hintTarget {
+	display: flex;
+	align-items: center;
+	font-size: 11px;
+	text-indent: 6px;
+	color: var(--color-placeholder);
+	fill: var(--color-icon-regular);
 }

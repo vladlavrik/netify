@@ -7,7 +7,7 @@ import {MultiselectField} from '@/components/@common/forms/MultiselectField';
 import {TextField} from '@/components/@common/forms/TextField';
 import {PopUpAlert} from '@/components/@common/popups/PopUpAlert';
 import {RuleRow} from '../RuleRow';
-import InfoIcon from './icons/info.svg';
+import InfoIcon from '@/assets/icons/info.svg';
 import styles from './ruleFilter.css';
 
 export const RuleFilter = memo(() => {
@@ -39,14 +39,12 @@ export const RuleFilter = memo(() => {
 					className={styles.resourceTypesField}
 					name='filter.resourceTypes'
 					options={resourceTypesList}
-					multiple
 					placeholder='Any resource'
 				/>
 				<MultiselectField
 					className={styles.methodsField}
 					name='filter.methods'
 					options={requestMethodsList}
-					multiple
 					placeholder='Any method'
 				/>
 
