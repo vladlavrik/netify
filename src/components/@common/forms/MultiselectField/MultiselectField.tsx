@@ -140,20 +140,17 @@ export const MultiselectField = memo<MultiselectFieldProps>((props) => {
 				<div className={styles.hintFooter}>
 					<WithTooltip
 						className={styles.hintTarget}
+						tagName='p'
 						tooltip={
 							<>
 								Use Shift+mouse click to multiple selection.
 								<br />
 								Or focus with keyboard and Space key
 							</>
-						}
-						render={(tooltipTargetProps) => (
-							<p {...tooltipTargetProps}>
-								<InfoIcon />
-								Multiselect allowed
-							</p>
-						)}
-					/>
+						}>
+						<InfoIcon />
+						Multiselect allowed
+					</WithTooltip>
 				</div>
 			</div>
 		</div>

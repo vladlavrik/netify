@@ -1,5 +1,5 @@
 import {action, computed, observable, toJS} from 'mobx';
-import {Rule} from '@/interfaces/rule';
+import {Rule, RuleInitialData} from '@/interfaces/rule';
 import {RulesExporter, RulesImporter} from '@/services/rulesImportExport';
 import {RulesMapper} from '@/services/rulesMapper';
 import {RootStore} from './RootStore';
@@ -13,10 +13,14 @@ export class RulesStore {
 	accessor detailsShownFor: null | string = null;
 
 	@observable
-	accessor composeShown = false;
+	accessor compose: {shown: false} | {shown: true; initialData?: RuleInitialData} = {
+		shown: false,
+	};
 
 	@observable
-	accessor editorShownFor: null | string = null;
+	accessor editor: {shown: false} | {shown: true; ruleId: string} = {
+		shown: false,
+	};
 
 	@observable
 	accessor removeConfirmShownFor: null | string[] | 'all' = null;
@@ -65,9 +69,8 @@ export class RulesStore {
 
 	@computed
 	get editingRule() {
-		const ruleId = this.editorShownFor;
-		if (ruleId) {
-			return this.getById(ruleId);
+		if (this.editor.shown) {
+			return this.getById(this.editor.ruleId);
 		}
 		return undefined;
 	}
@@ -144,23 +147,23 @@ export class RulesStore {
 	}
 
 	@action('showCompose')
-	showCompose() {
-		this.composeShown = true;
+	showCompose(initialData?: RuleInitialData) {
+		this.compose = {shown: true, initialData};
 	}
 
 	@action('closeCompose')
 	closeCompose() {
-		this.composeShown = false;
+		this.compose = {shown: false};
 	}
 
 	@action('showEditor')
 	showEditor(ruleId: string) {
-		this.editorShownFor = ruleId;
+		this.editor = {shown: true, ruleId};
 	}
 
 	@action('closeEditor')
 	closeEditor() {
-		this.editorShownFor = null;
+		this.editor = {shown: false};
 	}
 
 	@action('initRemoveConfirm')

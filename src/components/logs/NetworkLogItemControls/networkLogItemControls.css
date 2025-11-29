@@ -1,0 +1,9 @@
+.root {
+	min-width: 86px;
+	padding: 4px;
+}
+
+.control {
+	width: 100%;
+	margin: 4px 0;
+}

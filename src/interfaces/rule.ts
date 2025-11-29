@@ -66,3 +66,7 @@ export interface Rule {
 	};
 	action: RuleAction;
 }
+
+export interface RuleInitialData {
+	filter?: Partial<Rule['filter']>;
+}

@@ -12,33 +12,70 @@
 
 .time {
 	flex-shrink: 0;
-	width: 56px;
+	width: 52px;
 	margin-left: 8px;
 	opacity: 0.5;
 }
 
-.stage {
+.action {
+	display: flex;
 	flex-shrink: 0;
-	width: 14px;
-	height: 10px;
 	margin-right: 8px;
-	text-align: center;
-	fill: var(--color-icon-regular);
+
+	.actionIconMutation {
+		fill: light-dark(#ab75cf, #b48dce);
+	}
+
+	.actionIconBreakpoint {
+		fill: light-dark(#ec7676, #d75050);
+	}
+
+	.actionIconLocalResponse {
+		fill: light-dark(#6a79d3, #7e8de5);
+	}
+
+	.actionIconFailed {
+		fill: light-dark(#f15f5f, #d83d3d);
+	}
+
+	.actionIconScript {
+		fill: light-dark(#d0b43d, #a99231);
+	}
+
+	.actionIconNoAction {
+		fill: light-dark(#a7b0b9, #bec8d4);
+	}
 }
 
 .method {
 	flex-shrink: 0;
+	box-sizing: border-box;
 	width: 42px;
+	margin-right: 6px;
+	padding-right: 4px;
+	border-right: 1px solid var(--color-brd-lite);
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
 .type {
 	flex-shrink: 0;
-	width: 52px;
-	margin: 0 8px;
+	box-sizing: border-box;
+	width: 58px;
+	margin-right: 6px;
+	padding-right: 4px;
+	border-right: 1px solid var(--color-brd-lite);
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.status {
+	flex-shrink: 0;
+	box-sizing: border-box;
+	width: 30px;
+	margin-right: 6px;
+	padding-right: 4px;
+	border-right: 1px solid var(--color-brd-lite);
 }
 
 .url {
@@ -48,8 +85,13 @@
 	text-overflow: ellipsis;
 }
 
-.followButton {
+.controlsButton {
 	flex-shrink: 0;
 	margin: 0 6px;
-	cursor: pointer;
+	opacity: 0;
+
+	&:focus,
+	.root:hover & {
+		opacity: 1;
+	}
 }

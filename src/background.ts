@@ -4,13 +4,21 @@ import {SettingsMapper} from '@/services/settingsMapper';
 
 const settingsMapper = new SettingsMapper();
 
-// Make opening the panel in devtools available for old users and disallow for new ones
+// Set initial settings values for users updating or first time installing the extensions
 chrome.runtime.onInstalled.addListener(async (details) => {
-	const allowDevtoolsPanelValue = await settingsMapper.getValue('allowDevtoolsPanel');
-	if (allowDevtoolsPanelValue === undefined) {
+	const currentSettingValues = await settingsMapper.getValues(['allowDevtoolsPanel', 'networkLogOnlyAffected']);
+
+	// Make opening the panel in devtools available for old users and disallow for new ones
+	if (currentSettingValues.allowDevtoolsPanel === undefined) {
 		const allowDevtoolsPanelNew = details.reason === chrome.runtime.OnInstalledReason.UPDATE;
 		settingsMapper.setValue('allowDevtoolsPanel', allowDevtoolsPanelNew);
 		chrome.contextMenus.update('allowDevtoolsPanel', {checked: allowDevtoolsPanelNew});
+	}
+
+	// Make network log for all requests enabled by default only for new users
+	if (currentSettingValues.networkLogOnlyAffected === undefined) {
+		const networkLogOnlyAffectedNew = details.reason === chrome.runtime.OnInstalledReason.UPDATE;
+		settingsMapper.setValue('networkLogOnlyAffected', networkLogOnlyAffectedNew);
 	}
 });
 

@@ -2,9 +2,13 @@ import {action, observable} from 'mobx';
 import {Settings} from '@/interfaces/settings';
 import {SettingsMapper} from '@/services/settingsMapper';
 
-type AppSettings = Pick<Settings, 'uiTheme' | 'filterRulesByOrigin'>;
+type AppSettings = Pick<Settings, 'uiTheme' | 'filterRulesByOrigin' | 'networkLogOnlyAffected'>;
 
-const defaultValues: AppSettings = {uiTheme: 'system', filterRulesByOrigin: true};
+const defaultValues: AppSettings = {
+	uiTheme: 'system',
+	filterRulesByOrigin: true,
+	networkLogOnlyAffected: false,
+};
 
 export class SettingsStore {
 	@observable
@@ -13,7 +17,7 @@ export class SettingsStore {
 	constructor(private readonly settingsMapper: SettingsMapper) {}
 
 	async fetchValues() {
-		const data = await this.settingsMapper.getValues(['uiTheme', 'filterRulesByOrigin']);
+		const data = await this.settingsMapper.getValues(['uiTheme', 'filterRulesByOrigin', 'networkLogOnlyAffected']);
 
 		const keys = Object.keys(data) as (keyof AppSettings)[];
 
@@ -27,7 +31,7 @@ export class SettingsStore {
 
 	watchChanges() {
 		return this.settingsMapper.watch(
-			['uiTheme', 'filterRulesByOrigin'],
+			['uiTheme', 'filterRulesByOrigin', 'networkLogOnlyAffected'],
 			action('setChangeValue', (changes) => {
 				Object.assign(this.values, changes);
 			}),

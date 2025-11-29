@@ -6,14 +6,15 @@ import styles from './networkLogsList.css';
 
 export const NetworkLogsList = observer(() => {
 	const {networkLogsStore} = useStores();
-	const {list} = networkLogsStore;
+
+	const list = networkLogsStore.filteredList;
 
 	return list.length === 0 ? (
 		<p className={styles.placeholder}>No logs here</p>
 	) : (
 		<ul>
 			{list.map((log) => (
-				<NetworkLogsItem key={`${log.requestId}-${log.interceptStage}-${log.url}`} data={log} />
+				<NetworkLogsItem key={`${log.requestId}-${log.url}`} data={log} />
 			))}
 		</ul>
 	);

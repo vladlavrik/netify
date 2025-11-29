@@ -303,6 +303,14 @@ export class ApplicationManager {
 			this.rootStore.networkLogsStore.addLogEntry(log);
 		});
 
+		this.requestListener.events.requestsInitialized.on((log) => {
+			this.rootStore.networkLogsStore.addLogEntry(log);
+		});
+
+		this.requestListener.events.requestsFinished.on((event) => {
+			this.rootStore.networkLogsStore.markRequestFinished(event);
+		});
+
 		this.fetchDevtools.events.requestScriptHandleException.on(({title, error}) => {
 			this.rootStore.errorLogsStore.addLogEntry({title: `[Script execution error] ${title}`, error});
 		});

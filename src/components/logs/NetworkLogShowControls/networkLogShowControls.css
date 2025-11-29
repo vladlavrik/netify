@@ -1,0 +1,8 @@
+.root {
+	min-width: 86px;
+	padding: 4px;
+}
+
+.radioOption {
+	white-space: nowrap;
+}

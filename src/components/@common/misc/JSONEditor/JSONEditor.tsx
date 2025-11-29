@@ -114,11 +114,9 @@ export const JSONEditor = memo<JSONEditorProps>((props) => {
 							{!validationError ? (
 								<span className={styles.validStatus}>JSON is valid</span>
 							) : (
-								<WithTooltip
-									className={styles.invalidStatus}
-									render={(tooltipProps) => <span {...tooltipProps}>JSON is invalid</span>}
-									tooltip={validationError}
-								/>
+								<WithTooltip className={styles.invalidStatus} tagName='span' tooltip={validationError}>
+									JSON is invalid
+								</WithTooltip>
 							)}
 						</div>
 						<InlineButton disabled={!!validationError} onClick={handlePrettify}>

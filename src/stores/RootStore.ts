@@ -35,7 +35,7 @@ export class RootStore {
 		this.debuggerStateStore = new DebuggerStateStore();
 		this.rulesStore = new RulesStore(this, rulesMapper);
 		this.breakpointsStore = new BreakpointsStore();
-		this.networkLogsStore = new NetworkLogsStore();
+		this.networkLogsStore = new NetworkLogsStore(this);
 		this.errorLogsStore = new ErrorLogsStore();
 	}
 }

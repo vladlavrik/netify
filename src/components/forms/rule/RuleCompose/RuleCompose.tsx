@@ -1,11 +1,17 @@
 import React, {memo, useMemo} from 'react';
 import {RuleActionsType} from '@/constants/RuleActionsType';
-import {Rule} from '@/interfaces/rule';
+import {Rule, RuleInitialData} from '@/interfaces/rule';
 import {randomHex} from '@/helpers/random';
 import {useStores} from '@/stores/useStores';
 import {RuleForm} from '../RuleForm';
 
-export const RuleCompose = memo(() => {
+interface RuleComposeProps {
+	initialData?: RuleInitialData;
+}
+
+export const RuleCompose = memo<RuleComposeProps>((props) => {
+	const {initialData} = props;
+
 	const {rulesStore} = useStores();
 
 	const handleCreate = (rule: Rule) => {
@@ -20,11 +26,14 @@ export const RuleCompose = memo(() => {
 		() => ({
 			id: randomHex(16),
 			active: true,
-			filter: {
-				url: '',
-				resourceTypes: [],
-				methods: [],
-			},
+			filter: Object.assign(
+				{
+					url: '',
+					resourceTypes: [],
+					methods: [],
+				},
+				initialData?.filter,
+			),
 			action: {
 				type: RuleActionsType.Mutation,
 				request: {

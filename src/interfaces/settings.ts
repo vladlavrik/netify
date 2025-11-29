@@ -4,5 +4,7 @@ export interface Settings {
 	/** If checked - only rules created within the current page origin are shown in the list of rules */
 	filterRulesByOrigin: boolean;
 
+	networkLogOnlyAffected: boolean;
+
 	allowDevtoolsPanel: boolean;
 }

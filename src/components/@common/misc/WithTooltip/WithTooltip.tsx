@@ -16,6 +16,7 @@ export interface WithTooltipRenderTargetProps {
 interface WithTooltipProps {
 	className?: string;
 	id?: string;
+	tagName?: 'div' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'strong' | 'em' | 'i' | 'b' | 'label';
 	tooltip?: ReactNode;
 	tooltipStyled?: boolean;
 	disabled?: boolean;
@@ -24,7 +25,16 @@ interface WithTooltipProps {
 }
 
 export const WithTooltip: FC<WithTooltipProps> = (props) => {
-	const {id: propId, className, tooltip, tooltipStyled = true, disabled, render, children} = props;
+	const {
+		id: propId,
+		className,
+		tagName: TagName = 'div',
+		tooltip,
+		tooltipStyled = true,
+		disabled,
+		render,
+		children,
+	} = props;
 
 	const id = useMemo(() => {
 		return propId || `id-with-tooltip-${pseudoRandomHex(8)}`;
@@ -97,14 +107,14 @@ export const WithTooltip: FC<WithTooltipProps> = (props) => {
 					onMouseLeave: disabled ? undefined : handleCollapse,
 				})
 			) : (
-				<div
+				<TagName
 					className={cn(styles.target, className)}
 					id={id}
 					aria-labelledby={tooltipId}
 					onMouseEnter={disabled ? undefined : handleExpand}
 					onMouseLeave={disabled ? undefined : handleCollapse}>
 					{children}
-				</div>
+				</TagName>
 			)}
 		</>
 	);

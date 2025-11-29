@@ -110,17 +110,19 @@ export class FetchDevtools {
 	}
 
 	private async processRequest(pausedRequest: RequestPausedEvent, rule: Rule) {
-		const {requestId, request, resourceType} = pausedRequest;
-
-		// Report to UI logger about the new handled request
+		// Report to the UI logger about the new-handled request
+		const {requestId, networkId, request, resourceType} = pausedRequest;
 		this.events.requestProcessed.emit({
-			requestId,
-			interceptStage: 'Request',
-			ruleId: rule.id,
+			requestId: networkId || requestId,
 			timestamp: Date.now(),
 			url: request.url,
 			method: request.method as RequestMethod,
 			resourceType: resourceType as ResourceType,
+			modification: {
+				ruleId: rule.id,
+				type: rule.action.type,
+				stage: 'Request',
+			},
 		});
 
 		switch (rule.action.type) {
@@ -152,13 +154,28 @@ export class FetchDevtools {
 	}
 
 	private async processResponse(pausedResponse: ResponsePausedEvent, rule: Rule) {
+		// Report to the UI logger about the new-handled response
+		const {requestId, networkId, request, resourceType} = pausedResponse;
+		this.events.requestProcessed.emit({
+			requestId: networkId || requestId,
+			timestamp: Date.now(),
+			url: request.url,
+			method: request.method as RequestMethod,
+			resourceType: resourceType as ResourceType,
+			modification: {
+				ruleId: rule.id,
+				type: rule.action.type,
+				stage: 'Response',
+			},
+		});
+
 		switch (rule.action.type) {
 			case RuleActionsType.Breakpoint:
 				await this.triggerResponseBreakpoint(pausedResponse, rule.action);
 				break;
 
 			case RuleActionsType.Mutation:
-				await this.processResponseMutation(pausedResponse, rule.action, rule.id);
+				await this.processResponseMutation(pausedResponse, rule.action);
 				break;
 
 			case RuleActionsType.Script:
@@ -322,12 +339,8 @@ export class FetchDevtools {
 		await this.continueRequest(continueParams);
 	}
 
-	private async processResponseMutation(
-		pausedResponse: ResponsePausedEvent,
-		action: MutationRuleAction,
-		ruleId: string,
-	) {
-		const {requestId, request, resourceType} = pausedResponse;
+	private async processResponseMutation(pausedResponse: ResponsePausedEvent, action: MutationRuleAction) {
+		const {requestId} = pausedResponse;
 		const {delay, statusCode, setHeaders, dropHeaders, body} = action.response;
 
 		const noChanges = !delay && !statusCode && setHeaders.length === 0 && dropHeaders.length === 0 && !body;
@@ -353,18 +366,6 @@ export class FetchDevtools {
 		// Build the response from the original response data and patch from the rule
 		const builder = ResponseBuilder.asResponsePatch(pausedResponse, mutation);
 		const fulfilParams = await builder.build();
-
-		// Report to UI logger about the new handled response
-		// TODO move this to "processResponse"
-		this.events.requestProcessed.emit({
-			requestId,
-			interceptStage: 'Response',
-			ruleId,
-			timestamp: Date.now(),
-			url: request.url,
-			method: request.method as RequestMethod,
-			resourceType: resourceType as ResourceType,
-		});
 
 		// Apply the response delay
 		if (delay) {
