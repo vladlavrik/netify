@@ -37,12 +37,12 @@ export const RulesItemControls = memo<RulesItemControlsProps>((props) => {
 		rulesStore.updateRuleActive(ruleId, !ruleIsActive);
 	};
 
-	const handleMove = async () => {
+	const handleMove = async (shift: 1 | -1) => {
 		// TODO in future
 	};
 
-	const handleMoveAbove = () => handleMove();
-	const handleMoveBelow = () => handleMove();
+	const handleMoveAbove = () => handleMove(-1);
+	const handleMoveBelow = () => handleMove(1);
 
 	const handleRemove = () => {
 		rulesStore.initRemoveConfirm([ruleId]);
