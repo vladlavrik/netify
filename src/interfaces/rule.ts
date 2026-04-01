@@ -69,4 +69,7 @@ export interface Rule {
 
 export interface RuleInitialData {
 	filter?: Partial<Rule['filter']>;
+
+	/** When set, compose opens prefilled from this rule (new id, label becomes `Copy of …`); takes precedence over `filter`. */
+	cloneFrom?: Rule;
 }

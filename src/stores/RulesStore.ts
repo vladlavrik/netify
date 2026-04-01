@@ -151,6 +151,15 @@ export class RulesStore {
 		this.compose = {shown: true, initialData};
 	}
 
+	@action('showCloneCompose')
+	showCloneCompose(ruleId: string) {
+		const rule = this.getById(ruleId);
+		if (!rule) {
+			return;
+		}
+		this.showCompose({cloneFrom: toJS(rule)});
+	}
+
 	@action('closeCompose')
 	closeCompose() {
 		this.compose = {shown: false};
