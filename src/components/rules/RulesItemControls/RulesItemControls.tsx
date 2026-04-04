@@ -1,7 +1,8 @@
 import React, {memo, useCallback} from 'react';
-import {TextButton} from '@/components/@common/buttons/TextButton';
 import {useStores} from '@/stores/useStores';
+import {TextButton} from '@/components/@common/buttons/TextButton';
 import AboveIcon from '@/assets/icons/above.svg';
+import AddIcon from '@/assets/icons/add.svg';
 import BelowIcon from '@/assets/icons/below.svg';
 import CheckActiveIcon from '@/assets/icons/check-active.svg';
 import CheckInactiveIcon from '@/assets/icons/check-inactive.svg';
@@ -24,6 +25,11 @@ export const RulesItemControls = memo<RulesItemControlsProps>((props) => {
 
 	const handleEdit = useCallback(() => {
 		rulesStore.showEditor(ruleId);
+		onClose();
+	}, [ruleId]);
+
+	const handleClone = useCallback(() => {
+		rulesStore.showCloneCompose(ruleId);
 		onClose();
 	}, [ruleId]);
 
@@ -65,6 +71,10 @@ export const RulesItemControls = memo<RulesItemControlsProps>((props) => {
 
 			<TextButton className={styles.control} icon={<EditIcon />} onClick={handleEdit}>
 				Edit
+			</TextButton>
+
+			<TextButton className={styles.control} icon={<AddIcon />} onClick={handleClone}>
+				Clone
 			</TextButton>
 
 			<TextButton className={styles.control} icon={<RemoveIcon />} onClick={handleRemove}>
