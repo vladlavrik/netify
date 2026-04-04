@@ -157,7 +157,13 @@ export class RulesStore {
 		if (!rule) {
 			return;
 		}
-		this.showCompose({cloneFrom: toJS(rule)});
+
+		const {label, filter, action: actionData} = toJS(rule);
+		this.showCompose({
+			label: label ? `${label} [COPY]` : undefined,
+			filter,
+			action: actionData,
+		});
 	}
 
 	@action('closeCompose')

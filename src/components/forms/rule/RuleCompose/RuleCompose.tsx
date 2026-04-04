@@ -1,5 +1,4 @@
 import React, {memo, useMemo} from 'react';
-import {toJS} from 'mobx';
 import {RuleActionsType} from '@/constants/RuleActionsType';
 import {Rule, RuleInitialData} from '@/interfaces/rule';
 import {randomHex} from '@/helpers/random';
@@ -24,21 +23,10 @@ export const RuleCompose = memo<RuleComposeProps>((props) => {
 	};
 
 	const ruleValue = useMemo<Rule>(() => {
-		const cloneFrom = initialData?.cloneFrom;
-		if (cloneFrom) {
-			const plain = toJS(cloneFrom);
-			const label = plain.label !== undefined && plain.label !== '' ? `Copy of ${plain.label}` : 'Copied Rule';
-			return {
-				...plain,
-				id: randomHex(16),
-				active: true,
-				label,
-			};
-		}
-
 		return {
 			id: randomHex(16),
 			active: true,
+			label: initialData?.label,
 			filter: Object.assign(
 				{
 					url: '',
@@ -47,7 +35,7 @@ export const RuleCompose = memo<RuleComposeProps>((props) => {
 				},
 				initialData?.filter,
 			),
-			action: {
+			action: initialData?.action || {
 				type: RuleActionsType.Mutation,
 				request: {
 					setHeaders: [],

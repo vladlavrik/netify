@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react';
+import React, {memo} from 'react';
 import {useStores} from '@/stores/useStores';
 import {TextButton} from '@/components/@common/buttons/TextButton';
 import AboveIcon from '@/assets/icons/above.svg';
@@ -23,15 +23,15 @@ export const RulesItemControls = memo<RulesItemControlsProps>((props) => {
 
 	const {rulesStore} = useStores();
 
-	const handleEdit = useCallback(() => {
+	const handleEdit = () => {
 		rulesStore.showEditor(ruleId);
 		onClose();
-	}, [ruleId]);
+	};
 
-	const handleClone = useCallback(() => {
+	const handleClone = () => {
 		rulesStore.showCloneCompose(ruleId);
 		onClose();
-	}, [ruleId]);
+	};
 
 	const handleActiveToggle = async () => {
 		rulesStore.updateRuleActive(ruleId, !ruleIsActive);

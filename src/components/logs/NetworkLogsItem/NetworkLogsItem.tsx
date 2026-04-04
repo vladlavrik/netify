@@ -65,7 +65,7 @@ export const NetworkLogsItem = observer<NetworkLogsItemProps>((props) => {
 			break;
 		case RuleActionsType.Failure:
 			actionIcon = <RequestActionFailedIcon className={styles.actionIconFailed} />;
-			actionIconTitle = 'Was sailure';
+			actionIconTitle = 'Was failure';
 			break;
 		case RuleActionsType.Script:
 			actionIcon = <RequestActionScriptIcon className={styles.actionIconScript} />;
